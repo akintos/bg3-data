@@ -1,0 +1,431 @@
+﻿<ls:UIWidget
+    x:Name="LobbyBroswer"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:System="clr-namespace:System;assembly=mscorlib"
+    xmlns:ls="clr-namespace:ls;assembly=SharedGUI"
+    xmlns:noesis="clr-namespace:NoesisGUIExtensions;assembly=Noesis.GUI.Extensions"
+    xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    mc:Ignorable="d"
+    d:DesignHeight="2160" d:DesignWidth="3840"
+    ls:UIWidget.Focusable="False"
+    ls:UIWidget.ContextName="LobbyBrowser"            
+    Visibility="Visible">
+
+    <ls:UIWidget.Resources>
+        <ResourceDictionary>
+
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/GustavNoesisGUI;component/Library/OptionTemplates_c.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/GustavNoesisGUI;component/Library/NotificationLib.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+            <System:Double x:Key="ServerNameColumnWidth">556</System:Double>
+            <System:Double x:Key="PlayersColumnWidth">250</System:Double>
+            <System:Double x:Key="AdventureColumnWidth">300</System:Double>
+            <System:Double x:Key="MapColumnWidth">300</System:Double>
+            <System:Double x:Key="PartyLevelColumnWidth">300</System:Double>
+            <System:Double x:Key="DifficultyColumnWidth">300</System:Double>
+
+            <ls:LSMessageBoxData x:Key="MessageBoxDirectConnect" 
+                             Title="{Binding Source='h59ea37e4gc13ag493cg9b14g4292e17e80dd', Converter={StaticResource TranslatedStringConverter}}" 
+                             UUID="UUID" InputBox="True" InputBoxMaxLength="14"
+                             DefaultInputText="{Binding DataContext.DefaultDirectConnectAddress, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}">
+                <ls:LSMessageBoxData.Actions>
+                    <ls:LSGameCommandData ActionName="{Binding Source='he6dcb151g841ag44a1gb268gdec480a2998b', Converter={StaticResource TranslatedStringConverter}}"
+                                          BoundInput="{Binding DataContext.CurrentPlayer.UIData.InputEvents, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIPaste'}">
+                        <ls:LSGameCommandData.Style>
+                            <Style TargetType="{x:Type ls:LSGameCommandData}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding DataContext.CommunityType, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" Value="GGP">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ls:LSGameCommandData.Style>
+                    </ls:LSGameCommandData>
+
+                    <ls:LSGameCommandData ActionName="{Binding Source='h31d65d36gfe5fg4f9bg9184g9f8ceee5f3ed', Converter={StaticResource TranslatedStringConverter}}"
+                                          Command="{Binding DataContext.OnDirectConnectLobby, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"
+                                          BoundInput="{Binding DataContext.CurrentPlayer.UIData.InputEvents, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIMessageBoxA'}"/>
+                    <ls:LSGameCommandData ActionName="{Binding Source='he9fced45gde55g4de9g910cg0fe252620556', Converter={StaticResource TranslatedStringConverter}}"
+                                          Command="{Binding DataContext.CustomEvent, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"
+                                          CommandParameter="CloseMessageBox"
+                                          BoundInput="{Binding DataContext.CurrentPlayer.UIData.InputEvents, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIMessageBoxB'}"/>
+                </ls:LSMessageBoxData.Actions>
+            </ls:LSMessageBoxData>
+
+            <ControlTemplate x:Key="LobbyList">
+                <StackPanel Margin="64,20,0,0">
+                    <!-- Header -->
+                    <Grid HorizontalAlignment="Left">
+                        <Image Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Lobby/header_surround_lobby.png" Stretch="None" />
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <StackPanel.Resources>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Foreground" Value="{DynamicResource LS_PrimaryColor}"/>
+                                </Style>
+                            </StackPanel.Resources>
+                            <TextBlock Text="{Binding Source='h8263e6acg0ef5g4987gaf5fg5ab6cc2e5975', Converter={StaticResource TranslatedStringConverter}, ConverterParameter='ToUpper'}" Width="{StaticResource ServerNameColumnWidth}" Margin="40,0,0,0"/>
+                            <TextBlock Text="{Binding Source='h8299f034g7635g49b3g8a0ag43511970942e', Converter={StaticResource TranslatedStringConverter}, ConverterParameter='ToUpper'}" Width="{StaticResource PlayersColumnWidth}" TextAlignment="Center"/>
+                            <TextBlock Text="{Binding Source='hd5bbc9b0gd217g4054g82d0g74ef07b6ea95', Converter={StaticResource TranslatedStringConverter}, ConverterParameter='ToUpper'}" Width="{StaticResource AdventureColumnWidth}"/>
+                            <TextBlock Text="{Binding Source='hdbbba06bgdf39g48a3g8d1bg0573eab3da2e', Converter={StaticResource TranslatedStringConverter}, ConverterParameter='ToUpper'}" Width="{StaticResource MapColumnWidth}"/>
+                            <TextBlock Text="{Binding Source='hc267c7bfg103eg4331gba05g1703604ebedb', Converter={StaticResource TranslatedStringConverter}, ConverterParameter='ToUpper'}" Width="{StaticResource PartyLevelColumnWidth}" TextAlignment="Center"/>
+                            <TextBlock Text="{Binding Source='hcaa54ecfg026ag42f4gb05fg16614cd44f30', Converter={StaticResource TranslatedStringConverter}, ConverterParameter='ToUpper'}" Width="{StaticResource DifficultyColumnWidth}"/>
+                        </StackPanel>
+                    </Grid>
+
+                    <!-- Error Messages -->
+                    <Grid Width="2000" Height="850" Margin="0,50,0,0" Background="#40000000" Visibility="{Binding LobbyMessage, Converter={StaticResource StringToVisibilityConverter}}">
+                        <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="{Binding LobbyMessage}" Foreground="{DynamicResource LS_PrimaryColor}" FontSize="{DynamicResource TitleFontSize}" TextWrapping="Wrap" TextAlignment="Center" Margin="30,0"/>
+                    </Grid>
+
+                    <!-- Filtered Lobbies -->
+                    <ls:LSListBox
+                            Margin="0,8,0,0"
+                            Background="Transparent"
+                            BorderThickness="0"
+                            ActionPrevEvent="UIUp" ActionNextEvent="UIDown"
+                            ItemsSource="{Binding Lobbies}"
+                            SelectedItem="{Binding SelectedLobby, Mode=OneWayToSource}"
+                            SelectedIndex="0"
+                            SelectionMode="Single"
+                            AutoScrollSelectedIntoView="True"
+                            AutoFocusElementOnSelect="True"
+                            Height="1400">
+                        <ls:LSListBox.Style>
+                            <Style TargetType="ls:LSListBox" BasedOn="{StaticResource {x:Type ls:LSListBox}}">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding LobbyMessage}" Value="">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ls:LSListBox.Style>
+                        <ls:LSListBox.Template>
+                            <ControlTemplate TargetType="ls:LSListBox">
+                                <ScrollViewer HorizontalScrollBarVisibility="Hidden">
+                                    <StackPanel IsItemsHost="True" />
+                                </ScrollViewer>
+                            </ControlTemplate>
+                        </ls:LSListBox.Template>
+
+                        <ls:LSListBox.ItemContainerStyle>
+                            <Style TargetType="ls:LSListBoxItem" BasedOn="{StaticResource {x:Type ls:LSListBoxItem}}">
+                                <Setter Property="Padding" Value="0"/>
+                                <Setter Property="Background" Value="Transparent" />
+                                <Setter Property="BorderBrush" Value="Transparent" />
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="ListBoxItem">
+
+                                            <Grid>
+                                                <Image x:Name="rowImage" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Lobby/listItem_lobby.png" Stretch="None" />
+
+                                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,12,0,0">
+                                                    <StackPanel.Style>
+                                                        <Style>
+                                                            <Style.Resources>
+                                                                <Style TargetType="TextBlock">
+                                                                    <Setter Property="Foreground" Value="{DynamicResource LS_PrimaryColor}"/>
+                                                                </Style>
+                                                            </Style.Resources>
+                                                        </Style>
+                                                    </StackPanel.Style>
+                                                    <TextBlock Text="{Binding Name}" Width="{StaticResource ServerNameColumnWidth}" Margin="40,0,0,0"/>
+                                                    <Grid  Width="{StaticResource PlayersColumnWidth}">
+                                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                                            <TextBlock Text="{Binding CurrentPlayers}"/>
+                                                            <TextBlock Text="{Binding MaxPlayers, StringFormat='/{0}'}"/>
+                                                        </StackPanel>
+                                                    </Grid>
+                                                    <TextBlock Text="{Binding Adventure}" Width="{StaticResource AdventureColumnWidth}"/>
+                                                    <TextBlock Text="{Binding Map}" Width="{StaticResource MapColumnWidth}"/>
+                                                    <TextBlock Text="{Binding PartyLevel}" Width="{StaticResource PartyLevelColumnWidth}" TextAlignment="Center"/>
+                                                    <TextBlock Text="{Binding Difficulty}" Width="{StaticResource DifficultyColumnWidth}"/>
+                                                </StackPanel>
+                                            </Grid>
+
+                                            <ControlTemplate.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter TargetName="rowImage" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Lobby/selector_lobby.png"/>
+                                                </Trigger>
+                                                <Trigger Property="IsSelected" Value="True">
+                                                    <Setter TargetName="rowImage" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Lobby/selector_lobby.png"/>
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </ls:LSListBox.ItemContainerStyle>
+
+                    </ls:LSListBox>
+                </StackPanel>
+            </ControlTemplate>
+
+            <ControlTemplate x:Key="LobbyBrowserTopButtons" TargetType="ContentControl">
+                <ControlTemplate.Resources>
+                    <!-- NetworkButton button -->
+                    <ControlTemplate x:Key="NetworkTypeImage" TargetType="ContentControl">
+                        <Grid Height="Auto" Width="Auto">
+                            <Image x:Name="img" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Buttons/topNav_btn_frame.png" Stretch="None" VerticalAlignment="Top" Margin="0,2,4,0" Visibility="Hidden"/>
+                            <Image x:Name="icon" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Lobby/ico_online_d.png" Stretch="None" VerticalAlignment="Top" Margin="0,10,2,0" />
+                            <TextBlock x:Name="label" Text="{Binding Content, RelativeSource={RelativeSource Mode=TemplatedParent}}" Foreground="#c6bbaf" FontSize="{DynamicResource MediumFontSize}" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,7"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsEnabled" Value="True">
+                                <Setter TargetName="img" Property="Visibility" Value="Visible"/>
+                            </Trigger>
+                            <Trigger Property="Tag" Value="LAN">
+                                <Setter Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Lobby/ico_lan_d.png" TargetName="icon"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </ControlTemplate.Resources>
+                <Grid VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0 20 0 0" Height="130">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="200"/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="200"/>
+                    </Grid.ColumnDefinitions>
+
+                    <ls:LSButton Grid.Column="0" HorizontalAlignment="Center" Content=""
+                                 DataContext="{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UITabPrev'}"
+                                 Command="{Binding DataContext.OnSetOnline, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" CommandParameter="{DynamicResource TrueValue}">
+                        <ls:LSButton.Style>
+                            <Style TargetType="{x:Type ls:LSButton}" BasedOn="{StaticResource ControllerButton}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding DataContext.CommunityType, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" Value="GGP">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ls:LSButton.Style>
+                    </ls:LSButton>
+
+                    <ContentControl x:Name="OnlineImage" Template="{StaticResource NetworkTypeImage}" Grid.Column="1"
+                                    Content="{Binding Source='h5c6f6ec7g160ag4ae8g8e5eg30783e304dc3', Converter={StaticResource TranslatedStringConverter}}"/>
+                    <ContentControl x:Name="LANImage" Template="{StaticResource NetworkTypeImage}" Grid.Column="2" Tag="LAN"
+                                    Content="{Binding Source='h6ff20c65ge087g4631ga387g9efd88a1a9e7', Converter={StaticResource TranslatedStringConverter}}">
+                        <ContentControl.Style>
+                            <Style TargetType="ContentControl">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding DataContext.CommunityType, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" Value="GGP">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ContentControl.Style>
+                    </ContentControl>
+
+                    <ls:LSButton Grid.Column="3" HorizontalAlignment="Center" Content=""
+                                 DataContext="{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UITabNext'}"
+                                 Command="{Binding DataContext.OnSetOnline, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" CommandParameter="{DynamicResource FalseValue}">
+                        <ls:LSButton.Style>
+                            <Style TargetType="{x:Type ls:LSButton}" BasedOn="{StaticResource ControllerButton}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding DataContext.CommunityType, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" Value="GGP">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ls:LSButton.Style>
+                    </ls:LSButton>
+                </Grid>
+                <ControlTemplate.Triggers>
+                    <DataTrigger Binding="{Binding Online}" Value="True">
+                        <Setter TargetName="LANImage" Property="IsEnabled" Value="False"/>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Online}" Value="False">
+                        <Setter TargetName="OnlineImage" Property="IsEnabled" Value="False"/>
+                    </DataTrigger>
+                </ControlTemplate.Triggers>
+            </ControlTemplate>
+
+            <ControlTemplate x:Key="LobbyBrowserBottomButtons" TargetType="ContentControl">
+                <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Margin="0,0,0,30">
+
+                    <ls:LSButton x:Name="ConnectBtn" Style="{StaticResource ControllerButton}" Margin="20,0"
+                                 DataContext = "{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIAccept'}"
+                                 Content="{Binding Source='h19b9847cg856ag4022g9769gd6c439ef7873', Converter={StaticResource TranslatedStringConverter}}" 
+                                 Command="{Binding DataContext.OnConnectLobby, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"
+                                 SoundID="UI_Shared_Accept"/>
+
+                    <ls:LSButton x:Name="CreateBtn" Style="{StaticResource ControllerButton}" Margin="20,0"
+                                 DataContext = "{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UICreate'}"
+                                 Content="{Binding Source='h22f5ce71g26aeg4bc8g9a65g99585fc7eb6b', Converter={StaticResource TranslatedStringConverter}}" 
+                                 Command="{Binding DataContext.OnCreateLobby, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"/>
+
+                    <ls:LSButton x:Name="ChangeFocusBtn" Style="{StaticResource ControllerButton}" Margin="20,0"
+                                 DataContext = "{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIMessageBoxY'}"
+                                 Content="{Binding Source='he1927d2age13eg4b53gbbcdg28cffcf7234a', Converter={StaticResource TranslatedStringConverter}}" 
+                                 EatInput="False"/>
+
+                    <ls:LSButton x:Name="BackBtn" Style="{StaticResource ControllerButton}" Margin="20,0"
+                                 DataContext = "{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UICancel'}"
+                                 Content="{Binding Source='hfe928c0dgb014g4eb2g8c52g6ed43b026e20', Converter={StaticResource TranslatedStringConverter}}" 
+                                 Command="{Binding DataContext.CustomEvent, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"
+                                 CommandParameter="CloseWidget"
+                                 SoundID="UI_Shared_Cancel"/>
+
+                    <ls:LSButton Style="{StaticResource ControllerButton}" Margin="20,0" EatInput="False"
+                                 DataContext = "{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIUp'}"
+                                 Content="{Binding Source='h53bb8305ge659g4597g91e5g4109ad901efc',Converter={StaticResource TranslatedStringConverter}}" />
+
+                    <ls:LSButton x:Name="DirectConnectBtn"
+                                 DataContext = "{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIDirectConnect'}"
+                                 Content="{Binding Source='h59ea37e4gc13ag493cg9b14g4292e17e80dd', Converter={StaticResource TranslatedStringConverter}}" 
+                                 Command="{Binding DataContext.OpenMessageBox, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"
+                                 CommandParameter="{DynamicResource MessageBoxDirectConnect}"
+                                 IsEnabled="True">
+                        <ls:LSButton.Style>
+                            <Style TargetType="{x:Type ls:LSButton}" BasedOn="{StaticResource ControllerButton}">
+                                <Setter Property="Visibility" Value="Visible"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding DataContext.CommunityType, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" Value="GGP">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ls:LSButton.Style>
+                    </ls:LSButton>
+
+                    <ls:LSButton x:Name="ChangeOptionBtn" Style="{StaticResource ControllerButton}"
+                                 DataContext = "{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UILeft'}"
+                                 Content="{Binding Source='h9bb2ff32g72c2g4909g8a96g10a74bc760b6', Converter={StaticResource TranslatedStringConverter}}"
+                                 IsEnabled="False" Visibility="Collapsed"/>
+
+                </StackPanel>
+                <ControlTemplate.Triggers>
+                    <DataTrigger Binding="{Binding SelectedIndex, ElementName=MainListBox}" Value="1">
+                        <Setter TargetName="ChangeFocusBtn" Property="Content"  Value="{Binding Source='hadf5f2b6gca49g4c84gb996gc8b8124692f7', Converter={StaticResource TranslatedStringConverter}}" />
+                        <Setter TargetName="ConnectBtn" Property="IsEnabled" Value="False" />
+                        <Setter TargetName="ChangeOptionBtn" Property="IsEnabled" Value="True" />
+                        <Setter TargetName="ChangeOptionBtn" Property="Visibility" Value="Visible"/>
+                        <Setter TargetName="DirectConnectBtn" Property="Visibility" Value="Collapsed"/>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding SelectedLobby}" Value="{x:Null}">
+                        <Setter TargetName="ConnectBtn" Property="IsEnabled" Value="False"/>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding IsConnecting}" Value ="True">
+                        <Setter TargetName="ConnectBtn" Property="IsEnabled" Value="False"/>
+                        <Setter TargetName="CreateBtn" Property="IsEnabled" Value="False"/>
+                        <Setter TargetName="BackBtn" Property="IsEnabled" Value="False"/>
+                    </DataTrigger>
+                </ControlTemplate.Triggers>
+            </ControlTemplate>
+
+            <ControlTemplate x:Key="LobbyBrowserMainTitle" TargetType="ContentControl">
+                <StackPanel Orientation="Horizontal">
+                    <Image Stretch="None" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared/floralFlair.png" RenderTransformOrigin="0.5,0.5">
+                        <Image.RenderTransform>
+                            <ScaleTransform ScaleX="-1"/>
+                        </Image.RenderTransform>
+                    </Image>
+                    <TextBlock HorizontalAlignment="Center" Text="{Binding Content, RelativeSource={RelativeSource Mode=TemplatedParent}}" FontSize="{DynamicResource TitleFontSize}" Foreground="{DynamicResource LS_PrimaryColor}" Margin="48,0,48,0"/>
+                    <Image Stretch="None" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared/floralFlair.png"/>
+                </StackPanel>
+            </ControlTemplate>
+
+            <Style x:Key="EmptyControllerMenuItemStyle" TargetType="ListBoxItem" BasedOn="{StaticResource {x:Type ListBoxItem}}">
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="BorderThickness" Value="0"/>
+                <Setter Property="VerticalAlignment" Value="Top"/>
+                <Setter Property="Tag" Value=""/>
+                <Style.Triggers>
+                    <Trigger Property="IsSelected" Value="True">
+                        <Setter Property="Background" Value="Transparent"/>
+                    </Trigger>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="Background" Value="Transparent"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+
+        </ResourceDictionary>
+    </ls:UIWidget.Resources>
+
+    <Grid Background="Black">
+        <!-- Style 3 doesn't have a proper non 16:9 ratio scaling atm, we make the whole UI fit in a view box.
+             To be removed with Style 4 and add proper scale support.-->
+        <Viewbox Stretch="Uniform">
+            <Grid>
+                <!-- Screen Background -->
+                <Image Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Lobby/lobby_bg.png" Stretch="None"/>
+                <Image Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Lobby/options_frame.png" Stretch="None"/>
+                <DockPanel>
+                    <!-- Top section -->
+                    <ContentControl DockPanel.Dock="Top" Template="{StaticResource LobbyBrowserTopButtons}"/>
+
+                    <!-- Bottom section-->
+                    <ContentControl DockPanel.Dock="Bottom" Template="{StaticResource LobbyBrowserBottomButtons}"/>
+
+                    <!-- Middle section -->
+                    <ls:LSListBox x:Name="MainListBox"
+                                  Margin="0,115,0,32"
+                                  Background="Transparent"
+                                  BorderBrush="Transparent"
+                                  ItemContainerStyle="{StaticResource EmptyControllerMenuItemStyle}"
+                                  ScrollViewer.HorizontalScrollBarVisibility="Hidden"
+                                  ScrollViewer.VerticalScrollBarVisibility="Hidden"
+                                  ActionNextEvent="UIMessageBoxY"
+                                  HorizontalAlignment="Center" VerticalAlignment="Top">
+                        <ListBox.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Horizontal"/>
+                            </ItemsPanelTemplate>
+                        </ListBox.ItemsPanel>
+
+                        <StackPanel VerticalAlignment="Top" HorizontalAlignment="Left">
+                            <ContentControl x:Name="title"
+                                    HorizontalAlignment="Center"
+                                    Template="{StaticResource LobbyBrowserMainTitle}">
+                                <ContentControl.Style>
+                                    <Style TargetType="ContentControl" BasedOn="{StaticResource {x:Type ContentControl}}">
+                                        <Setter Property="Content" Value="{Binding Source='h6ff20c65ge087g4631ga387g9efd88a1a9e7', Converter={StaticResource TranslatedStringConverter}}"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Online}" Value="True">
+                                                <Setter Property="Content" Value="{Binding Source='h5c6f6ec7g160ag4ae8g8e5eg30783e304dc3', Converter={StaticResource TranslatedStringConverter}}"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </ContentControl.Style>
+                            </ContentControl>
+                            <ContentControl Template="{StaticResource LobbyList}"/>
+                        </StackPanel>
+
+                        <!-- Right Panel (TickBox and ComboBox Filters) -->
+                        <StackPanel VerticalAlignment="Top" HorizontalAlignment="Left" Width="1300" Margin="95,0,0,0">
+                            <ContentControl HorizontalAlignment="Center" VerticalAlignment="Top" 
+                                            Content="{Binding Source='h8eb391adgf10dg4ff6g82e0gd51409b06d83', Converter={StaticResource TranslatedStringConverter}, ConverterParameter='ToUpper'}" 
+                                            Template="{StaticResource LobbyBrowserMainTitle}"/>
+
+                            <!-- Lobby Filtering Options -->
+                            <ls:LSListBox x:Name="FilterListBox" Margin="0 100 0 0"
+                                    ActionPrevEvent="UIUp" ActionNextEvent="UIDown"
+                                    ItemsSource="{Binding Options}" VerticalAlignment="Top"
+                                    ItemContainerStyle="{DynamicResource OptionStyle}">
+                                <ls:LSListBox.Template>
+                                    <ControlTemplate TargetType="ListBox">
+                                        <ScrollViewer HorizontalScrollBarVisibility="Hidden">
+                                            <StackPanel IsItemsHost="True"/>
+                                        </ScrollViewer>
+                                    </ControlTemplate>
+                                </ls:LSListBox.Template>
+                            </ls:LSListBox>
+                        </StackPanel>
+                    </ls:LSListBox>
+                </DockPanel>
+
+                <Control x:Name="ConnectFeedback" Template="{StaticResource ConnectionToServerNotificationTemplate}" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding IsConnecting, Converter={StaticResource BoolToVisibleConverter}}"/>
+            </Grid>
+        </Viewbox>
+    </Grid>
+
+</ls:UIWidget>

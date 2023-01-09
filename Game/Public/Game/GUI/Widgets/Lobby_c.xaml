@@ -1,0 +1,450 @@
+﻿<ls:UIWidget
+    x:Name="Lobby"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:System="clr-namespace:System;assembly=mscorlib"
+    xmlns:ls="clr-namespace:ls;assembly=SharedGUI"
+    xmlns:noesis="clr-namespace:NoesisGUIExtensions;assembly=Noesis.GUI.Extensions"
+    xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    mc:Ignorable="d"
+    d:DesignHeight="2160" d:DesignWidth="3840"
+    ls:UIWidget.Focusable="False"
+    ls:UIWidget.ContextName="Lobby">
+
+    <ls:UIWidget.Resources>
+        <ResourceDictionary>
+
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../Library/OptionTemplates_c.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+            <ControlTemplate x:Key="PlayerImageTemplate">
+                <Grid>
+                    <Image Name="bg" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/CharacterAssign/frame_playerSlot_bg.png" Stretch="None"/>
+                    <TextBlock Name="number"  HorizontalAlignment="Center" VerticalAlignment="Top" Foreground="{DynamicResource LS_PrimaryColor}" Margin="0 26 0 0"
+                               Text="{Binding Slot, Converter={StaticResource DecimalToRomanConverter}, ConverterParameter=true}"/>
+                    <Border Background="{Binding Player.CommunityIcon}" Height="152" Width="152"/>
+                    <Image Name="emptyIcon" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/CharacterAssign/frame_playerPortrait_empty_d.png" Stretch="None"/>
+                    <Image Name="fg" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/CharacterAssign/frame_playerPortrait.png" Stretch="None"/>
+                </Grid>
+                <ControlTemplate.Triggers>
+                    <DataTrigger Binding="{Binding IsHost}" Value="False">
+                        <Setter TargetName="fg" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/CharacterAssign/frame_playerPortrait_party.png"/>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Player.CommunityIcon, Converter={StaticResource NullToBoolFalseConverter}}" Value="True">
+                        <Setter TargetName="emptyIcon" Property="Visibility" Value="Hidden"/>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding State}" Value="Closed">
+                        <Setter TargetName="bg" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Lobby/frame_playerSlot_closed_bg.png"/>
+                        <Setter TargetName="fg" Property="Visibility" Value="Hidden"/>
+                        <Setter TargetName="number" Property="Foreground" Value="{DynamicResource LS_LabelColor1}"/>
+                        <Setter TargetName="emptyIcon" Property="Visibility" Value="Hidden"/>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding State}" Value="Open">
+                        <Setter TargetName="fg" Property="Visibility" Value="Hidden"/>
+                    </DataTrigger>
+                </ControlTemplate.Triggers>
+            </ControlTemplate>
+
+            <ControlTemplate x:Key="PlayerStateLabel">
+                <Grid>
+                    <Image Name="bg" 
+                           Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Lobby/status_surround.png" Stretch="None"/>
+                    <TextBlock Name="text" 
+                               HorizontalAlignment="Center" VerticalAlignment="Center"
+                               Foreground="{DynamicResource LS_PrimaryColor}"
+                               FontSize="{DynamicResource DefaultFontSize}"
+                               Text="{Binding Source='hd0893eb3gec78g4c1ag8c10gf4860d887ff9', Converter ={StaticResource TranslatedStringConverter}, ConverterParameter='ToUpper'}"/>
+                </Grid>
+                <ControlTemplate.Triggers>
+                    <DataTrigger Binding="{Binding IsHost}" Value="False">
+                        <Setter TargetName="bg" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Lobby/status_surround_companion.png"/>
+                    </DataTrigger>
+                    <MultiDataTrigger>
+                        <MultiDataTrigger.Conditions>
+                            <Condition Binding="{Binding IsHost}" Value="False"/>
+                            <Condition Binding="{Binding IsReady}" Value="False"/>
+                        </MultiDataTrigger.Conditions>
+                        <MultiDataTrigger.Setters>
+                            <Setter TargetName="bg" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Lobby/status_surround_companion.png"/>
+                            <Setter TargetName="text" Property="Text" Value="{Binding Source='haf8768afg6230g4692gbef8g248da4cca7ec', Converter ={StaticResource TranslatedStringConverter}, ConverterParameter='ToUpper'}"/>
+                        </MultiDataTrigger.Setters>
+                    </MultiDataTrigger>
+                    <MultiDataTrigger>
+                        <MultiDataTrigger.Conditions>
+                            <Condition Binding="{Binding IsHost}" Value="False"/>
+                            <Condition Binding="{Binding IsReady}" Value="True"/>
+                        </MultiDataTrigger.Conditions>
+                        <MultiDataTrigger.Setters>
+                            <Setter TargetName="bg" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Lobby/status_surround_companion.png"/>
+                            <Setter TargetName="text" Property="Text" Value="{Binding Source='hd0893eb3gec78g4c1ag8c10gf4860d887ff9', Converter ={StaticResource TranslatedStringConverter}, ConverterParameter='ToUpper'}"/>
+                        </MultiDataTrigger.Setters>
+                    </MultiDataTrigger>                    
+                    <DataTrigger Binding="{Binding State}" Value="Closed">
+                        <Setter TargetName="bg" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Lobby/status_surround_closed.png"/>
+                        <Setter TargetName="text" Property="Text" Value="{Binding Source='h45dd6ce3g3693g410dga878g190758499fbb', Converter ={StaticResource TranslatedStringConverter}, ConverterParameter='ToUpper'}"/>
+                        <Setter TargetName="text" Property="Opacity" Value="{DynamicResource DisabledOpacity}"/>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding State}" Value="AI">
+                        <Setter TargetName="text" Property="Text" Value="{Binding Source='h1fe97591g5095g4156g9c7dg5335f491d367', Converter ={StaticResource TranslatedStringConverter}, ConverterParameter='ToUpper'}"/>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding State}" Value="Open">
+                        <Setter TargetName="bg" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Lobby/status_surround_empty.png"/>
+                        <Setter TargetName="text" Property="Text" Value="{Binding Source='h6a84976cg0c34g40e9gbe49g97a2a05ab2e9', Converter ={StaticResource TranslatedStringConverter}, ConverterParameter='ToUpper'}"/>
+                    </DataTrigger>
+                </ControlTemplate.Triggers>
+            </ControlTemplate>
+            
+            <DataTemplate x:Key="PlayerTemplate">
+                <Grid Margin="0 0 -10 0">
+                    <Image x:Name="frame" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Lobby/createCampaignColumn.png" Stretch="None"/>
+                    <StackPanel Orientation="Vertical" Margin="0 80 0 0">
+                        <ContentControl Template="{DynamicResource PlayerImageTemplate}"/>
+
+                        <TextBlock HorizontalAlignment="Center" 
+                                   Text="{Binding Player.Name}" 
+                                   FontSize="{DynamicResource LargeFontSize}" 
+                                   Foreground="{DynamicResource LS_PrimaryColor}"/>
+
+                        <TextBlock Name="hostLabel" 
+                                   HorizontalAlignment="Center" Margin="0 20 0 0"
+                                   Text="{Binding Source='h336a8d4cga78dg439dg91d8g19932bdac7cb', Converter ={StaticResource TranslatedStringConverter}}" 
+                                   FontSize="{DynamicResource MediumFontSize}" Foreground="{DynamicResource LS_LabelColor3}"/>
+                    </StackPanel>
+                    <ContentControl Template="{DynamicResource PlayerStateLabel}" 
+                                    VerticalAlignment="Bottom" Margin="0,0,0,72"/>
+                </Grid>
+                <DataTemplate.Triggers>
+                    <DataTrigger Binding="{Binding IsHost}" Value="False">
+                        <Setter TargetName="hostLabel" Property="Visibility" Value="Hidden"/>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListBoxItem}}}" Value="True">
+                        <Setter TargetName="frame" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Lobby/createCampaignColumn_h.png"/>
+                    </DataTrigger>
+                </DataTemplate.Triggers>
+            </DataTemplate>
+
+            <ls:LSMessageBoxData x:Key="MessageBoxRenameLobby"
+                             Text=""
+                             Title="{Binding Source='h76bfcee9g096eg4b30g85c6g577dd5c24e44', Converter={StaticResource TranslatedStringConverter}}"
+                             UUID="RenameLobbyMsgBox"
+                             InputBox="True"
+                             DefaultInputText="{Binding DataContext.LobbyTitle, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}">
+                <ls:LSMessageBoxData.Actions>
+                    <ls:LSGameCommandData ActionName="{Binding Source='h31d65d36gfe5fg4f9bg9184g9f8ceee5f3ed', Converter={StaticResource TranslatedStringConverter}}"
+                                          Command="{Binding DataContext.RenameLobby, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"
+                                          BoundInput="{Binding DataContext.CurrentPlayer.UIData.InputEvents, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIMessageBoxA'}"/>
+                    <ls:LSGameCommandData ActionName="{Binding Source='he9fced45gde55g4de9g910cg0fe252620556', Converter={StaticResource TranslatedStringConverter}}"
+                                          Command="{Binding DataContext.CustomEvent, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"
+                                          CommandParameter="CloseMessageBox"
+                                          BoundInput="{Binding DataContext.CurrentPlayer.UIData.InputEvents, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIMessageBoxB'}"/>
+                </ls:LSMessageBoxData.Actions>
+            </ls:LSMessageBoxData>
+
+            <ControlTemplate x:Key="LobbyBottomBar">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0 46">
+                    <Grid VerticalAlignment="Bottom" HorizontalAlignment="Center"  Height="120" Margin="0,0,0,0">
+                        <ls:LSButton x:Name="LaunchBtn" Margin="20,0"
+                                     Style="{StaticResource ControllerButton}" EatInput="False"
+                                     DataContext="{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIAccept'}"
+                                     Content="{Binding DataContext.LaunchGame.Name, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}">
+                            <b:Interaction.Triggers>
+                                <b:EventTrigger EventName="LSButtonPressed" SourceName="LaunchBtn">
+                                    <b:ControlStoryboardAction Storyboard="{StaticResource ControllerButtonHoldAnimation}"/>
+                                </b:EventTrigger>
+                                <b:EventTrigger EventName="LSButtonReleased" SourceName="LaunchBtn">
+                                    <b:ControlStoryboardAction Storyboard="{StaticResource ControllerButtonHoldAnimation}" ControlStoryboardOption="Stop"/>
+                                </b:EventTrigger>
+                                <b:EventTrigger EventName="IsEnabledChanged" SourceName="LaunchBtn">
+                                    <b:ControlStoryboardAction Storyboard="{StaticResource ControllerButtonHoldAnimation}" ControlStoryboardOption="Stop"/>
+                                </b:EventTrigger>
+                                <b:StoryboardCompletedTrigger Storyboard="{StaticResource ControllerButtonHoldAnimation}">
+                                    <b:InvokeCommandAction Command="{Binding DataContext.LaunchGame.ActionCommand, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"/>
+                                </b:StoryboardCompletedTrigger>
+                            </b:Interaction.Triggers>
+                        </ls:LSButton>
+                        <ls:LSPie x:Name="ButtonHoldVisualizer" Value="0" SweepDirection="Counterclockwise" 
+                                      Visibility="{Binding ElementName=LaunchBtn, Path=IsPressed, Converter={StaticResource BoolToVisibleConverter}}"
+                                      Width="100" Height="100" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,4,28,0">
+                            <Image Source="/GustavNoesisGUI;component/Assets/Shared_c/c_tabSelector.png" Width="100" Height="100" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                        </ls:LSPie>
+                    </Grid>
+                    <TextBlock Text="{Binding Source='hba9c74bbg1f89g4f68gbafbg1bcf7442cfae',Converter={StaticResource TranslatedStringConverter}}" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="-20,0,40,0" Visibility="{Binding ElementName=LaunchBtn, Path=IsEnabled, Converter={StaticResource BoolToVisibleConverter}}"/>
+                    
+                    <ls:LSButton x:Name="ChangeFocusBtn" Style="{StaticResource ControllerButton}"
+                                 DataContext = "{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIMessageBoxY'}"
+                                 Content="{Binding Source='he1927d2age13eg4b53gbbcdg28cffcf7234a', Converter={StaticResource TranslatedStringConverter}}"
+                                 EatInput="False"/>
+
+                    <ls:LSButton x:Name="ActionBtn" Style="{StaticResource ControllerButton}"
+                                 DataContext = "{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UICreate'}"
+                                 Visibility="Collapsed" IsEnabled="False"/>
+
+                    <ls:LSButton x:Name="ChangeOptionBtn" Style="{StaticResource ControllerButton}" EatInput="False" Visibility="Collapsed" IsEnabled="False"
+                                 DataContext = "{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UILeft'}"
+                                 Content="{Binding Source='h9bb2ff32g72c2g4909g8a96g10a74bc760b6', Converter={StaticResource TranslatedStringConverter}}"/>
+
+                    <ls:LSButton x:Name="MoveHorizontalBtn" Style="{StaticResource ControllerButton}" EatInput="False" 
+                                 Content="{Binding Source='h53bb8305ge659g4597g91e5g4109ad901efc',Converter={StaticResource TranslatedStringConverter}}"
+                                 DataContext="{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIUp'}"/>
+
+                    <ls:LSButton x:Name="CancelBtn" Style="{StaticResource ControllerButton}"
+                                 DataContext = "{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UICancel'}"
+                                 Content="{Binding DataContext.ReturnToMainMenu.Name, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" 
+                                 Command="{Binding DataContext.ReturnToMainMenu.ActionCommand, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" 
+                                 SoundID="UI_Shared_Cancel"/>
+
+                    <ls:LSButton x:Name="RenameBtn" Style="{StaticResource ControllerButton}"
+                                 Content="{Binding Source='h79bf3456gee66g4890gbcecg1f27533ad9ad',Converter={StaticResource TranslatedStringConverter}}"
+                                 DataContext="{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIDirectConnect'}"
+                                 Command="{Binding DataContext.OpenMessageBox, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"
+                                 CommandParameter="{DynamicResource MessageBoxRenameLobby}"/>
+
+                </StackPanel>
+                <ControlTemplate.Triggers>
+                    <!-- Not host -->
+                    <DataTrigger Binding="{Binding IsMaster}" Value="False">
+                        <Setter Property="Visibility" Value="Collapsed" TargetName="LaunchBtn"/>
+                        <Setter Property="IsEnabled" Value="False" TargetName="LaunchBtn"/>
+                        <Setter Property="Visibility" Value="Collapsed" TargetName="RenameBtn"/>
+                        <Setter Property="IsEnabled" Value="False" TargetName="RenameBtn"/>
+                        <Setter Property="Visibility" Value="Collapsed" TargetName="ChangeFocusBtn"/>
+                        <Setter Property="IsEnabled" Value="False" TargetName="ChangeFocusBtn"/>
+                        <Setter Property="Visibility" Value="Collapsed" TargetName="ActionBtn"/>
+                        <Setter Property="IsEnabled" Value="False" TargetName="ActionBtn"/>
+                    </DataTrigger>
+                    <!-- Options focused -->
+                    <DataTrigger Binding="{Binding SelectedIndex, ElementName=MainListBox}" Value="1">
+                        <Setter Property="Content" Value="{Binding Source='h3f440459gc693g4ad4g8389g6a1596b0d62e', Converter={StaticResource TranslatedStringConverter}}" TargetName="ChangeFocusBtn"/>
+                        <Setter Property="Visibility" Value="Collapsed" TargetName="ActionBtn"/>
+                        <Setter Property="IsEnabled" Value="False" TargetName="ActionBtn"/>
+                        <Setter Property="Visibility" Value="Visible" TargetName="ChangeOptionBtn"/>
+                        <Setter Property="IsEnabled" Value="True" TargetName="ChangeOptionBtn"/>
+                    </DataTrigger>
+                    <!-- Taken slot focused -->
+                    <MultiDataTrigger>
+                        <MultiDataTrigger.Conditions>
+                            <Condition Binding="{Binding SelectedItem.State, ElementName=PlayersListBox}" Value="Taken"/>
+                            <Condition Binding="{Binding IsMaster}" Value="True"/>
+                        </MultiDataTrigger.Conditions>
+                        <MultiDataTrigger.Setters>
+                            <Setter Property="Visibility" Value="Visible" TargetName="ActionBtn"/>
+                            <Setter Property="IsEnabled" Value="True" TargetName="ActionBtn"/>
+                            <Setter Property="Content" Value="{Binding Source='h0487803bgd9e5g4e29gbcf3gfefce7a32e52', Converter={StaticResource TranslatedStringConverter}}" TargetName="ActionBtn"/>
+                            <Setter Property="Command" Value="{Binding DataContext.KickPlayer, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" TargetName="ActionBtn"/>
+                            <Setter Property="CommandParameter" Value="{Binding SelectedItem.Slot, ElementName=PlayersListBox}" TargetName="ActionBtn"/>
+                        </MultiDataTrigger.Setters>
+                    </MultiDataTrigger>
+                    <!-- Chat Focused -->
+                    <DataTrigger Binding="{Binding SelectedIndex, ElementName=LobbyListBox}" Value="1">
+                        <Setter Property="Visibility" Value="Visible" TargetName="ActionBtn"/>
+                        <!-- TODO: Change it to True when Chat will be implemented -->
+                        <Setter Property="IsEnabled" Value="False" TargetName="ActionBtn"/>
+                        <Setter Property="Content" Value="{Binding Source='h4eea22d1gee96g4812gafb6g75268d188768', Converter={StaticResource TranslatedStringConverter}}" TargetName="ActionBtn"/>
+                    </DataTrigger>
+                    <!-- Empty slot focused -->
+                    <MultiDataTrigger>
+                        <MultiDataTrigger.Conditions>
+                            <Condition Binding="{Binding SelectedItem.State, ElementName=PlayersListBox}" Value="Open"/>
+                            <Condition Binding="{Binding IsMaster}" Value="True"/>
+                        </MultiDataTrigger.Conditions>
+                        <MultiDataTrigger.Setters>
+                            <Setter Property="Visibility" Value="Visible" TargetName="ActionBtn"/>
+                            <Setter Property="IsEnabled" Value="True" TargetName="ActionBtn"/>
+                            <Setter Property="Content" Value="{Binding Source='h15c1d20cg87cag4c0egb74agbfb43ade0541', Converter={StaticResource TranslatedStringConverter}}" TargetName="ActionBtn"/>
+                            <Setter Property="Command" Value="{Binding DataContext.InvitePlayer, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" TargetName="ActionBtn"/>
+                        </MultiDataTrigger.Setters>
+                    </MultiDataTrigger>
+                    <!-- Host's slot focused -->
+                    <DataTrigger Binding="{Binding SelectedIndex, ElementName=PlayersListBox}" Value="0">
+                        <Setter Property="Visibility" Value="Collapsed" TargetName="ActionBtn"/>
+                        <Setter Property="IsEnabled" Value="False" TargetName="ActionBtn"/>
+                    </DataTrigger>
+                    <!-- Local players slot focused -->
+                    <MultiDataTrigger>
+                        <MultiDataTrigger.Conditions>
+                            <Condition Binding="{Binding IsMaster}" Value="False"/>
+                            <Condition Binding="{Binding SelectedItem.Player.IsLocalPlayer, ElementName=PlayersListBox}" Value="True"/>
+                        </MultiDataTrigger.Conditions>
+                        <MultiDataTrigger.Setters>
+                            <Setter Property="Visibility" Value="Visible" TargetName="ActionBtn"/>
+                            <Setter Property="IsEnabled" Value="True" TargetName="ActionBtn"/>
+                            <Setter Property="Content" Value="{Binding Source='hd0893eb3gec78g4c1ag8c10gf4860d887ff9', Converter={StaticResource TranslatedStringConverter}}" TargetName="ActionBtn"/>
+                            <Setter Property="Command" Value="{Binding DataContext.ReadyPressed, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" TargetName="ActionBtn"/>
+                            <Setter Property="CommandParameter" Value="{Binding SelectedItem.Slot, ElementName=PlayersListBox}" TargetName="ActionBtn"/>
+                        </MultiDataTrigger.Setters>
+                    </MultiDataTrigger>
+                    <MultiDataTrigger>
+                        <MultiDataTrigger.Conditions>
+                            <Condition Binding="{Binding SelectedItem.Player.IsLocalPlayer, ElementName=PlayersListBox}" Value="True"/>
+                            <Condition Binding="{Binding SelectedItem.IsReady, ElementName=PlayersListBox}" Value="True"/>
+                        </MultiDataTrigger.Conditions>
+                        <Setter Property="Content" Value="{Binding Source='haf8768afg6230g4692gbef8g248da4cca7ec', Converter={StaticResource TranslatedStringConverter}}" TargetName="ActionBtn"/>
+                    </MultiDataTrigger>
+                    <MultiDataTrigger>
+                        <MultiDataTrigger.Conditions>
+                            <Condition Binding="{Binding IsMaster}" Value="True"/>
+                            <Condition Binding="{Binding CanStart}" Value="False"/>
+                        </MultiDataTrigger.Conditions>
+                        <Setter Property="IsEnabled" Value="False" TargetName="LaunchBtn"/>
+                    </MultiDataTrigger>
+
+                </ControlTemplate.Triggers>
+            </ControlTemplate>
+
+            <Style x:Key="ControllerItemStyle" TargetType="ListBoxItem" BasedOn="{StaticResource {x:Type ListBoxItem}}">
+                <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Hidden"/>
+                <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Hidden"/>
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="BorderThickness" Value="0"/>
+                <Style.Triggers>
+                    <Trigger Property="IsSelected" Value="True">
+                        <Setter Property="Background" Value="Transparent"/>
+                    </Trigger>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="Background" Value="Transparent"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+
+            <ControlTemplate x:Key="Chat">
+                <Grid Margin="0 0 0 0">
+                    <Image x:Name="bg" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Lobby/lobby_chat_element.png" Stretch="None"/>
+                    <DockPanel Margin="115 50">
+                        <TextBlock Text="{Binding Source='h2bce92e0g7e1bg4b48g9b37gb412a4dc8501', Converter={StaticResource TranslatedStringConverter}}" 
+                                           TextAlignment="Left" HorizontalAlignment="Left" DockPanel.Dock="Top"
+                                           Foreground="{DynamicResource LS_SecondaryColor}"/>
+
+                        <StackPanel Margin="10">
+                            <!-- Chat Lines -->
+                            <TextBlock Text="" Foreground="{DynamicResource LS_PrimaryColor}"/>
+                        </StackPanel>
+                    </DockPanel>
+                </Grid>
+                <ControlTemplate.Triggers>
+                    <DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListBoxItem}}}" Value="True">
+                        <Setter TargetName="bg" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Lobby/lobby_chat_element_h.png"/>
+                    </DataTrigger>
+                </ControlTemplate.Triggers>
+            </ControlTemplate>
+        </ResourceDictionary>
+    </ls:UIWidget.Resources>
+
+    <Grid Background="Black">
+        <!-- Style 3 doesn't have a proper non 16:9 ratio scaling atm, we make the whole UI fit in a view box.
+             To be removed with Style 4 and add proper scale support.-->
+        <Viewbox>
+            <Grid>
+        <!-- Background -->
+        <Image Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Lobby/lobby_bg.png" Stretch="None"/>
+        <DockPanel Width="3840" Height="2160">
+            <!-- TopBar -->
+            <Grid DockPanel.Dock="Top" Margin="0 13">
+                <Image Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Lobby/lobby_header_bg.png" Stretch="None"/>
+                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{DynamicResource LS_PrimaryColor}" Text="{Binding Source='h6738ffcfgb345g49d3g980dg6d182c32c4c4', Converter ={StaticResource TranslatedStringConverter}}"/>
+            </Grid>
+            <!-- Bottom bar -->
+            <Control DockPanel.Dock="Bottom" Template="{DynamicResource LobbyBottomBar}"/>
+            
+            <!-- Content -->
+            <ls:LSListBox x:Name="MainListBox" HorizontalAlignment="Center" VerticalAlignment="Center"
+                          ItemContainerStyle="{StaticResource ControllerItemStyle}"
+                          ActionNextEvent="UIMessageBoxY" SelectedIndex="0">
+                <ListBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Horizontal"/>
+                    </ItemsPanelTemplate>
+                </ListBox.ItemsPanel>
+
+                <!-- Left Panel -->
+                <ls:LSListBoxItem>
+                    <StackPanel Orientation="Vertical">
+                        <!-- Title -->
+                        <TextBlock Text="{Binding LobbyTitle}"
+                                   HorizontalAlignment="Center"
+                                   FontSize="{DynamicResource LargeFontSize}" 
+                                   Foreground="{DynamicResource LS_PrimaryColor}"/>
+
+                        <ls:LSListBox x:Name="LobbyListBox" HorizontalContentAlignment="Center"
+                                      ItemContainerStyle="{StaticResource ControllerItemStyle}"
+                                      ActionPrevEvent="UIUp" ActionNextEvent="UIDown" SelectedIndex="0"
+                                      KeyboardNavigation.DirectionalNavigation="Continue">
+                            <ListBox.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Vertical"/>
+                                </ItemsPanelTemplate>
+                            </ListBox.ItemsPanel>
+                            
+                            <!-- Lobby's slots -->
+                            <ls:LSListBox x:Name="PlayersListBox" 
+                                            ItemContainerStyle="{StaticResource ControllerItemStyle}"
+                                            ItemTemplate="{StaticResource PlayerTemplate}"
+                                            ItemsSource="{Binding PlayerSlots}"
+                                            HorizontalAlignment="Center"
+                                            ActionPrevEvent="UILeft" ActionNextEvent="UIRight" SelectedIndex="0">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Horizontal"/>
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                            </ls:LSListBox>
+
+                            <!-- Chat -->
+                            <ls:LSListBox ItemContainerStyle="{StaticResource ControllerItemStyle}">
+                                <ContentControl Template="{StaticResource Chat}"/>
+                            </ls:LSListBox>
+                            
+                        </ls:LSListBox>
+                    </StackPanel>
+                </ls:LSListBoxItem>
+
+                <!-- Right panel -->
+                <ls:LSListBoxItem VerticalAlignment="Top">
+                    <StackPanel Orientation="Vertical" Width="1330" Margin="40 30 -40 0">
+                        <!-- Title -->
+                        <TextBlock Text="{Binding Source='ha1114645g6104g4cafga220g9e7ed65b7e79', Converter ={StaticResource TranslatedStringConverter}}" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="{DynamicResource LargeFontSize}" Foreground="{DynamicResource LS_PrimaryColor}"/>
+
+                        <!-- Lobby Filtering Options -->
+                        <ls:LSListBox x:Name="OptionListBox" ActionPrevEvent="UIUp" ActionNextEvent="UIDown" Focusable="False" ItemsSource="{Binding Options}" ItemContainerStyle="{DynamicResource OptionStyle}" Margin="0 100 0 0">
+                            <ls:LSListBox.Template>
+                                <ControlTemplate TargetType="ListBox">
+                                    <ScrollViewer HorizontalScrollBarVisibility="Hidden">
+                                        <StackPanel IsItemsHost="True"/>
+                                    </ScrollViewer>
+                                </ControlTemplate>
+                            </ls:LSListBox.Template>
+                        </ls:LSListBox>
+
+                        <StackPanel>
+                            <TextBlock Text="{Binding Source='haf666ef6gd33fg456cg830bg4158a2107a5e', Converter={StaticResource TranslatedStringConverter}, ConverterParameter='ToUpper'}" HorizontalAlignment="Center" VerticalAlignment="Top" 
+                                       FontSize="{DynamicResource MediumFontSize}" Foreground="{DynamicResource LS_SecondaryColor}" Margin="0 15"/>
+
+                            <TextBlock x:Name="DirectConnectionID" Text="{Binding DirectConnectionID}" HorizontalAlignment="Center" VerticalAlignment="Top" 
+                                       FontSize="{DynamicResource LargeFontSize}" Foreground="{DynamicResource LS_PrimaryColor}" Margin="0 15"/>
+
+                            <ls:LSButton x:Name="CopyBtn" Style="{StaticResource ControllerButton}" Content="{Binding Source='h68f975abgec41g4751g9d2bgc35b400b6fe0',Converter={StaticResource TranslatedStringConverter}}" Margin="0 15 0 0"
+                                         DataContext="{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='NextObject'}"
+                                         Command="{Binding DataContext.CopyToClipboardCommand, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" CommandParameter="{Binding Text, ElementName=DirectConnectionID}"/>
+
+                            <StackPanel.Style>
+                                <Style TargetType="StackPanel">
+                                    <Setter Property="Visibility" Value="{Binding DirectConnectionID, Converter={StaticResource StringToVisibilityConverter}}"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding DataContext.CommunityType, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" Value="GGP">
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </StackPanel.Style>
+                        </StackPanel>
+                    </StackPanel>
+                </ls:LSListBoxItem>
+            </ls:LSListBox>
+        </DockPanel>
+    </Grid>
+        </Viewbox>
+    </Grid>
+
+</ls:UIWidget> 

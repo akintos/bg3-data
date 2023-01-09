@@ -1,0 +1,398 @@
+<ls:UIWidget x:Name="JournalDialogues"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:ls="clr-namespace:ls;assembly=SharedGUI"
+             xmlns:noesis="clr-namespace:NoesisGUIExtensions;assembly=Noesis.GUI.Extensions"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:System="clr-namespace:System;assembly=mscorlib"
+             mc:Ignorable="d"
+             d:DesignHeight="2160" d:DesignWidth="3840"
+			 ls:UIWidget.SoundID="UI_HUD_Journal_Dialogs"
+             ls:UIWidget.ContextName="JournalDialogues"
+             Template="{StaticResource StandardFraming}">
+
+    <ls:UIWidget.Resources>
+        <ResourceDictionary Source="../Library/JournalTemplates.xaml"/>
+    </ls:UIWidget.Resources>
+
+    <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+        <Grid.Resources>
+            <!-- Custom expander for the Dialogue treeview nodes -->
+            <Style x:Key="ExpandCollapseToggleStyle" TargetType="{x:Type ToggleButton}">
+                <Setter Property="Focusable" Value="False"/>
+                <Setter Property="Width" Value="50"/>
+                <Setter Property="Height" Value="50"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type ToggleButton}">
+                            <Path Name="Arrow" Width="50" Data="M 7 0 L 21 14 L 7 28 Z" Fill="{DynamicResource LS_accent75TxtColor}" VerticalAlignment="Center"/>
+
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsChecked" Value="True">
+                                    <Setter TargetName="Arrow" Property="Data" Value="M 0 0 L 14 14 L 28 0 Z"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <!-- Style for all Dialogue treeview nodes with custom expander (+/-) -->
+            <Style x:Key="DialoguesTreeViewItemStyle" TargetType="{x:Type TreeViewItem}">
+                <Setter Property="IsExpanded" Value="True"/>
+                <Setter Property="BorderBrush" Value="Transparent" />
+                <Setter Property="Background" Value="Transparent" />
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="BorderThickness" Value="0" />
+                <Setter Property="FontSize" Value="{StaticResource LargeFontSize}"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type TreeViewItem}">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <ToggleButton Margin="20,0,0,0" x:Name="Expander" ClickMode="Press" IsChecked="{Binding IsExpanded, RelativeSource={RelativeSource TemplatedParent}}" Style="{StaticResource ExpandCollapseToggleStyle}"/>
+                                <Border x:Name="Bd" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" Grid.Column="1" Padding="{TemplateBinding Padding}" SnapsToDevicePixels="true">
+                                    <ContentPresenter x:Name="PART_Header" ContentSource="Header" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                                </Border>
+                                <ItemsPresenter x:Name="ItemsHost" Grid.ColumnSpan="2" Grid.Column="0" Grid.Row="1" Margin="22,0,0,0"/>
+                                <b:Interaction.Triggers>
+                                    <b:EventTrigger EventName="MouseLeftButtonDown">
+                                        <ls:LSPlaySound Sound="UI_Shared_Select"/>
+                                    </b:EventTrigger>
+                                </b:Interaction.Triggers>
+                            </Grid>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsExpanded" Value="false">
+                                    <Setter Property="Visibility" TargetName="ItemsHost" Value="Collapsed"/>
+                                </Trigger>
+                                <Trigger Property="HasItems" Value="false">
+                                    <Setter Property="Visibility" TargetName="Expander" Value="Hidden"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+
+                <Style.Triggers>
+                    <Trigger Property="IsSelected" Value="True">
+                        <Setter Property="BorderBrush" Value="Transparent" />
+                        <Setter Property="Background" Value="Transparent" />
+                    </Trigger>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="BorderBrush" Value="Transparent" />
+                        <Setter Property="Background" Value="Transparent" />
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+
+            <!-- Group Day and Group Map text block style -->
+            <Style x:Key="DialoguesGroupNodesTextBlockStyle" TargetType="TextBlock">
+                <Setter Property="Foreground" Value="{StaticResource LS_accent75TxtColor}"/>
+            </Style>
+
+            <!-- Text run handling the selection state of a dialogue -->
+            <Style x:Key="DialogueSelectionHighlightTextRunStyle" TargetType="Run">
+                <Setter Property="Foreground" Value="{StaticResource LS_baseTxtColor}"/>
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType={x:Type TreeViewItem}}}" Value="True">
+                        <Setter Property="Foreground" Value="{StaticResource LS_accent100TxtColor}"/>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+
+            <!-- Text run handling the selection state of a dialogue -->
+            <Style x:Key="DialogueTimeHighlightTextRunStyle" TargetType="Run">
+                <Setter Property="Foreground" Value="{StaticResource LS_accent75TxtColor}"/>
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType={x:Type TreeViewItem}}}" Value="True">
+                        <Setter Property="Foreground" Value="{StaticResource LS_accent100TxtColor}"/>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+
+            <!-- Text run handling the selection state of a speaker name -->
+            <Style x:Key="DialogueSpeakerNameHighlightTextRunStyle" TargetType="Run">
+                <Setter Property="Foreground" Value="{StaticResource LS_baseTxtColor}"/>
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType={x:Type TreeViewItem}}}" Value="True">
+                        <Setter Property="Foreground" Value="{StaticResource LS_accent100TxtColor}"/>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+
+            <!-- Text run conditionally showing the "+" sign when concatenating dialogue participant names -->
+            <Style x:Key="ParticipantPlusSignTextRunStyle" TargetType="Run">
+                <Setter Property="Text" Value=","/>
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding ParticipantNames}" Value="">
+                        <Setter Property="Text" Value=""/>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+
+            <!-- Text run conditionally showing the "+" sign when concatenating dialogue participant names and handling the selection color -->
+            <Style x:Key="ParticipantPlusSignAndSelectionTextRunStyle" TargetType="Run" BasedOn="{StaticResource DialogueSelectionHighlightTextRunStyle}">
+                <Setter Property="Text" Value=","/>
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding ParticipantNames}" Value="">
+                        <Setter Property="Text" Value=""/>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+
+            <!-- Day group top treeview node -->
+            <HierarchicalDataTemplate DataType="ls:JournalDialogueDayGroup" ItemsSource="{Binding Dialogues}">
+                <TextBlock Margin="5,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Style="{StaticResource DialoguesGroupNodesTextBlockStyle}">
+					<TextBlock.Text>
+						<MultiBinding Converter="{StaticResource ParameterizedTranslatedStringConverter}">
+							<Binding Source="had1bcc36gaedcg4cd0gbd2cgb9568ddce937"/>
+							<Binding Path="DataContext.DayOfMonth" RelativeSource="{RelativeSource Mode=Self}"/>
+							<Binding Path="DataContext.MonthName" RelativeSource="{RelativeSource Mode=Self}"/>
+						</MultiBinding>
+					</TextBlock.Text>
+				</TextBlock>
+            </HierarchicalDataTemplate>
+
+            <!-- Map group top treeview node -->
+            <HierarchicalDataTemplate DataType="ls:JournalDialogueMapGroup" ItemsSource="{Binding Dialogues}">
+                <TextBlock Margin="5,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Text="{Binding Map}" Style="{StaticResource DialoguesGroupNodesTextBlockStyle}"/>
+            </HierarchicalDataTemplate>
+
+            <!-- Dialogue treeview node in the map group -->
+            <ControlTemplate x:Key="JournalDialogueGroupedByMapTemplate">
+                <Grid >
+                    <Image Margin="-48,0,0,0" HorizontalAlignment="Left"  x:Name="hl" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Journal/selector_journal.png" Stretch="Fill" Width="1272" Visibility="{Binding IsSelected, RelativeSource={RelativeSource AncestorType={x:Type TreeViewItem}}, Converter={StaticResource BoolToVisibleConverter}, ConverterParameter='True'}"/>
+                    <Image Margin="0,10,0,0"  HorizontalAlignment="Right" VerticalAlignment="Top" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Journal/ico_pointer.png" Stretch="None" Visibility="{Binding IsSelected, RelativeSource={RelativeSource AncestorType={x:Type TreeViewItem}}, Converter={StaticResource BoolToVisibleConverter}, ConverterParameter='True'}"/>
+                    <TextBlock VerticalAlignment="Center" TextWrapping="Wrap" MaxWidth="1400" Margin="0,0,80,10" FontSize="{StaticResource LargeFontSize}">
+                            <Run Text="{Binding SpeakerName}" Style="{StaticResource DialogueSpeakerNameHighlightTextRunStyle}"/>
+                            <Run Style="{StaticResource ParticipantPlusSignAndSelectionTextRunStyle}"/>
+                            <Run Text="{Binding ParticipantNames}" Style="{StaticResource DialogueSelectionHighlightTextRunStyle}"/>
+                    </TextBlock>
+                </Grid>
+            </ControlTemplate>
+
+            <!-- Dialogue treeview node in the day group -->
+            <ControlTemplate x:Key="JournalDialogueGroupedByDateTemplate">
+                <Grid >
+                    <Image Margin="-48,0,0,0" HorizontalAlignment="Left"  x:Name="hl" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Journal/selector_journal.png" Stretch="Fill" Width="1272" Visibility="{Binding IsSelected, RelativeSource={RelativeSource AncestorType={x:Type TreeViewItem}}, Converter={StaticResource BoolToVisibleConverter}, ConverterParameter='True'}"/>
+                    <Image Margin="0,10,0,0" HorizontalAlignment="Right"  VerticalAlignment="Top" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Journal/ico_pointer.png" Stretch="None" Visibility="{Binding IsSelected, RelativeSource={RelativeSource AncestorType={x:Type TreeViewItem}}, Converter={StaticResource BoolToVisibleConverter}, ConverterParameter='True'}"/>
+
+                    <TextBlock VerticalAlignment="Center"  TextWrapping="Wrap" MaxWidth="1400" Margin="0,0,80,10" FontSize="{StaticResource LargeFontSize}">
+                            <Run Text="{Binding TimeInDay}" Style="{StaticResource DialogueTimeHighlightTextRunStyle}"/>
+                            <Run Text="-" Style="{StaticResource DialogueSelectionHighlightTextRunStyle}"/>
+                            <Run Text="{Binding SpeakerName}" Style="{StaticResource DialogueSelectionHighlightTextRunStyle}"/>
+                            <Run Style="{StaticResource ParticipantPlusSignAndSelectionTextRunStyle}"/>
+                            <Run Text="{Binding ParticipantNames}" Style="{StaticResource DialogueSelectionHighlightTextRunStyle}"/>
+                    </TextBlock>
+                </Grid>
+            </ControlTemplate>
+
+            <!-- Actual Dialogue treeview node -->
+            <HierarchicalDataTemplate DataType="ls:JournalDialogue">
+                <ContentControl >
+                    <ContentControl.Style>
+                        <Style TargetType="ContentControl">
+                            <Setter Property="Template" Value="{x:Null}"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding DataContext.GroupingTab, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" Value="ByMap">
+                                    <Setter Property="Template" Value="{StaticResource JournalDialogueGroupedByMapTemplate}"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding DataContext.GroupingTab, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" Value="ByDate">
+                                    <Setter Property="Template" Value="{StaticResource JournalDialogueGroupedByDateTemplate}"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ContentControl.Style>
+                </ContentControl>
+            </HierarchicalDataTemplate>
+        </Grid.Resources>
+
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="100,50,0,0">
+            <Image Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Journal/header_journal.png" Stretch="None" Margin="0,-20,0,0"/>
+            <TextBlock Text="{Binding Source='hb4bac393g5295g4e80g8dacge61e914d2313',Converter={StaticResource TranslatedStringConverter}}" Foreground="{DynamicResource LS_baseTxtColor}" FontSize="{DynamicResource TitleFontSize}"/>
+        </StackPanel>
+
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Top">
+            <Control HorizontalAlignment="Center" Template="{DynamicResource PanelNavButtons}" Tag="Journal"/>
+            <Control HorizontalAlignment="Center" Template="{DynamicResource JournalHeader}"/>
+            <TextBlock Text="{Binding Source='hc610c4aeg0285g4e2agbc31g4bb458c1c7b3',Converter={StaticResource TranslatedStringConverter}}" Foreground="{DynamicResource LS_accent100TxtColor}" FontSize="{DynamicResource TitleFontSize}" HorizontalAlignment="Center" Margin="0,26,0,0"/>
+        </StackPanel>
+
+        <Viewbox>
+            <StackPanel Orientation="Horizontal" Margin="50,300">
+                <!-- Dialogues treeview grouped by date or by map -->
+                <ContentControl Template="{DynamicResource LeftPanelFrame}" Width="1740" Height="1500">
+                    <ls:LSTreeView x:Name="DialoguesTreeView" BorderBrush="Transparent" ItemContainerStyle="{StaticResource DialoguesTreeViewItemStyle}" Background="Transparent">
+                        <ls:LSTreeView.Style>
+                            <Style TargetType="TreeView" BasedOn="{StaticResource {x:Type TreeView}}">
+                                <Setter Property="ItemsSource" Value="{x:Null}"/>
+                                <Setter Property="VirtualizingPanel.VirtualizationMode" Value="Recycling"/>
+                                <Setter Property="VirtualizingPanel.ScrollUnit" Value="Pixel"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding GroupingTab}" Value="ByMap">
+                                        <Setter Property="ItemsSource" Value="{Binding DialoguesGroupedByMap}"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding GroupingTab}" Value="ByDate">
+                                        <Setter Property="ItemsSource" Value="{Binding DialoguesGroupedByDate}"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ls:LSTreeView.Style>
+
+                        <ls:LSTreeView.Template>
+                            <ControlTemplate>
+                                <ScrollViewer Template="{StaticResource FlippedScrollViewerTemplate}" VerticalScrollBarVisibility="Visible" Height="1300" Width="1740">
+                                    <ScrollViewer.Resources>
+                                        <GridLength x:Key="Top">100</GridLength>
+                                        <GridLength x:Key="Bottom">100</GridLength>
+                                    </ScrollViewer.Resources>
+                                    <Grid Background="Transparent" Width="1740" >
+                                        <ItemsPresenter Margin="100,0,0,0"/>
+                                    </Grid>
+                                </ScrollViewer>
+                            </ControlTemplate>
+                        </ls:LSTreeView.Template>
+
+                        <b:Interaction.Triggers>
+                            <b:EventTrigger EventName="SelectedItemChanged">
+                                <b:InvokeCommandAction Command="{Binding DialoguesSelectionChanged.ActionCommand}" CommandParameter="{Binding ElementName=DialoguesTreeView, Path=SelectedItem}"/>
+                            </b:EventTrigger>
+                        </b:Interaction.Triggers>
+                    </ls:LSTreeView>
+                </ContentControl>
+
+                <ContentControl Template="{DynamicResource RightPanelFrame}" Width="1740" Height="1500">
+
+                    <!-- Details pane for the selected Dialogue in the treeview -->
+                    <Grid DataContext="{Binding SelectedDialogue}" Width="1740" Height="1500" HorizontalAlignment="Right" Margin="0,0,-24,0">
+	                    <TextBlock VerticalAlignment="Top" Margin="0,0,130,0"
+	                               MaxHeight="138" TextWrapping="Wrap" MaxWidth="1540" HorizontalAlignment="Center" 
+	                               Foreground="{DynamicResource LS_bar50TxtColor}" FontSize="{StaticResource TitleFontSize}"
+	                               Text="{Binding DialogFileName}"
+	                               Visibility="{Binding ., Converter={StaticResource NullToCollapsedConverter}}" />
+						<StackPanel Margin="-130,50,130,0" Visibility="{Binding DataContext.SelectedDialogue, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}, Converter={StaticResource NullToHiddenConverter}}">
+	                        <TextBlock VerticalAlignment="Top" MaxHeight="138" TextWrapping="Wrap" MaxWidth="1540" HorizontalAlignment="Center" Foreground="{DynamicResource LS_accent100TxtColor}" FontSize="{StaticResource TitleFontSize}">
+                                <Run Text="{Binding SpeakerName}"/>
+                                <Run Style="{StaticResource ParticipantPlusSignTextRunStyle}"/>
+                                <Run Text="{Binding ParticipantNames}"/>
+                            </TextBlock>
+							<TextBlock VerticalAlignment="Top" HorizontalAlignment="Center" Foreground="{DynamicResource LS_accent75TxtColor}" FontSize="{StaticResource MediumFontSize}">
+								<Run>
+									<Run.Text>
+										<MultiBinding Converter="{StaticResource ParameterizedTranslatedStringConverter}" Mode="OneWay">
+											<Binding Source="had1bcc36gaedcg4cd0gbd2cgb9568ddce937"/>
+											<Binding Path="DataContext.DayOfMonth" RelativeSource="{RelativeSource Mode=Self}"/>
+											<Binding Path="DataContext.MonthName" RelativeSource="{RelativeSource Mode=Self}"/>
+										</MultiBinding>
+									</Run.Text>
+								</Run>
+                                <Run Text=" - "/><Run Text="{Binding TimeInDay}"/><Run Text=" - "/><Run Text="{Binding Map}"/>
+                            </TextBlock>
+                        </StackPanel>
+
+                        <ScrollViewer HorizontalAlignment="Right" Width="1740" Height="1200" VerticalScrollBarVisibility="Visible" VerticalAlignment="Top" Margin="0,180,0,100" Template="{StaticResource ScrollViewerTemplate}"  Background="Transparent">
+                            <ScrollViewer.Resources>
+                                <GridLength x:Key="Top">20</GridLength>
+                                <GridLength x:Key="Bottom">80</GridLength>
+                            </ScrollViewer.Resources>
+                            <ItemsControl Width="1600" ItemsSource="{Binding DialogueLines}" Margin="80,72,0,0" HorizontalAlignment="Left">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Grid.Column="0" HorizontalAlignment="Left" LineHeight="48" LineStackingStrategy="BlockLineHeight" FontSize="{StaticResource LargeFontSize}">
+                                                <Run Text="{Binding SpeakerName}" Foreground="{DynamicResource LS_accent75TxtColor}"/>
+                                                <Run Text=" - " Foreground="{DynamicResource LS_baseTxtColor}"/>
+                                            </TextBlock>
+                                            <TextBlock Grid.Column="1" HorizontalAlignment="Left" LineHeight="48" LineStackingStrategy="BlockLineHeight" Foreground="{DynamicResource LS_baseTxtColor}" FontSize="{StaticResource LargeFontSize}" ls:TextBlockFormatter.SourceText="{Binding Text}" MaxWidth="1200" TextWrapping="Wrap"/>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                                <ItemsControl.ItemContainerStyle>
+                                    <Style TargetType="ContentPresenter">
+                                        <Setter Property="Margin" Value="0,0,0,24"/>
+                                    </Style>
+                                </ItemsControl.ItemContainerStyle>
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Vertical"/>
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                            </ItemsControl>
+                        </ScrollViewer>
+                    </Grid>
+                </ContentControl>
+
+            </StackPanel>
+        </Viewbox>
+
+        <ls:LSToggleButton Margin="20,0,-20,174" VerticalAlignment="Bottom" HorizontalAlignment="Center" Command="{Binding SetGroupingTab}">
+            <ls:LSToggleButton.Style>
+                <Style TargetType="ls:LSToggleButton">
+                    <Setter Property="SoundID" Value="{DynamicResource soundEvent}"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="ls:LSToggleButton">
+                                <Grid HorizontalAlignment="Center">
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <TextBlock x:Name="off" Text="{Binding Source='hb6976931gfe2ag4d25g9693ge2ec4c35059c', Converter={StaticResource TranslatedStringConverter}}" VerticalAlignment="Center" Foreground="{DynamicResource LS_accent75TxtColor}"/>
+                                        <Grid Margin="8,0,8,0">
+                                            <Image x:Name="bg" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared/toggle_bg.png" Stretch="None"/>
+                                            <Image x:Name="btn" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared/toggle_nob.png" Stretch="None" HorizontalAlignment="Left" Margin="4,0,0,0"/>
+                                        </Grid>
+                                        <TextBlock x:Name="on" Text="{Binding Source='h2ea0e387gcaaag45bbg876bg39bf417decdc', Converter={StaticResource TranslatedStringConverter}}" VerticalAlignment="Center" Foreground="{DynamicResource LS_baseTxtColor}"/>
+                                    </StackPanel>
+                                </Grid>
+                                <ControlTemplate.Triggers>
+                                    <DataTrigger Binding="{Binding GroupingTab}" Value="ByMap">
+                                        <Setter Property="IsChecked" Value="True"/>
+                                        <Setter Property="CommandParameter" Value="ByDate"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding GroupingTab}" Value="ByDate">
+                                        <Setter Property="CommandParameter" Value="ByMap"/>
+                                    </DataTrigger>
+                                    <Trigger Property="IsChecked" Value="True">
+                                        <Setter Property="Foreground" Value="{DynamicResource LS_accent75TxtColor}" TargetName="on"/>
+                                        <Setter Property="Foreground" Value="{DynamicResource LS_InactivePanelFontColor}" TargetName="off"/>
+                                        <Trigger.EnterActions>
+                                            <BeginStoryboard>
+                                                <Storyboard>
+                                                    <ThicknessAnimation Duration="0:0:0.1" Storyboard.TargetName="btn" Storyboard.TargetProperty="Margin" To="40,0,0,0"/>
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </Trigger.EnterActions>
+                                        <Trigger.ExitActions>
+                                            <BeginStoryboard>
+                                                <Storyboard>
+                                                    <ThicknessAnimation Duration="0:0:0.1" Storyboard.TargetName="btn" Storyboard.TargetProperty="Margin" To="4,0,0,0"/>
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </Trigger.ExitActions>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding DataContext.CurrentPlayer.SelectedCharacter.IsDualWieldingAllowed, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ls:UIWidget}}}" Value="True">
+                            <Setter Property="IsHitTestVisible" Value="True"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </ls:LSToggleButton.Style>
+        </ls:LSToggleButton>
+
+    </Grid>
+</ls:UIWidget>

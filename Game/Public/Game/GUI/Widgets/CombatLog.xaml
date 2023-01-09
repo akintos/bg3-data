@@ -1,0 +1,368 @@
+<ls:UIWidget
+             x:Name="CombatLog"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:ls="clr-namespace:ls;assembly=SharedGUI"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:noesis="clr-namespace:NoesisGUIExtensions;assembly=Noesis.GUI.Extensions"
+             xmlns:System="clr-namespace:System;assembly=mscorlib"
+             Template="{StaticResource Hud.Root}"
+             mc:Ignorable="d"
+             ls:UIWidget.ContextName="CombatLog" d:DataContext="{d:DesignInstance {x:Type ls:DCCombatLog}, IsDesignTimeCreatable=True}"
+             d:DesignHeight="2160" d:DesignWidth="3840">
+
+    <ls:UIWidget.Resources>
+        <ResourceDictionary>
+            <ImageSource x:Key="CombatLog.ScrollBG.Expanded">pack://application:,,,/GustavNoesisGUI;component/Assets/CombatLog/combatlog_bg_expanded_scrollBG.png</ImageSource>
+            <ImageSource x:Key="CombatLog.ScrollBG.SuperExpanded" >pack://application:,,,/GustavNoesisGUI;component/Assets/CombatLog/combatlog_bg_superExpanded_scrollBG.png</ImageSource>
+
+           
+
+            <ControlTemplate x:Key="CombatLog.Expander.ButtonIncrease" TargetType="Button">
+                <Grid>
+                    <Image x:Name="img" Margin="-4,0,4,0" Stretch="None" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/CombatLog/ico_expand_d.png"/>
+                </Grid>
+                <ControlTemplate.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter TargetName="img" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/CombatLog/ico_expand_h.png"/>
+                    </Trigger>
+                    <Trigger Property="IsPressed" Value="True">
+                        <Setter TargetName="img" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/CombatLog/ico_expand_d.png"/>
+                    </Trigger>
+                </ControlTemplate.Triggers>
+            </ControlTemplate>
+
+            <ControlTemplate x:Key="CombatLog.Expander.ButtonDecrease" TargetType="Button">
+                <Grid>
+                    <Image x:Name="img" Margin="-4,0,4,0" Stretch="None" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/CombatLog/ico_contract_d.png"/>
+                </Grid>
+                <ControlTemplate.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter TargetName="img" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/CombatLog/ico_contract_h.png"/>
+                    </Trigger>
+                    <Trigger Property="IsPressed" Value="True">
+                        <Setter TargetName="img" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/CombatLog/ico_contract_d.png"/>
+                    </Trigger>
+                </ControlTemplate.Triggers>
+            </ControlTemplate>
+
+            <ControlTemplate x:Key="CombatLog.ScrollViewer" TargetType="{x:Type ScrollViewer}">
+                <DockPanel HorizontalAlignment="Stretch">
+                    <!-- scrollbar -->
+                    <Border x:Name="PART_VerticalScrollBarHolder" DockPanel.Dock="Right" Background="{TemplateBinding Background}" Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}">
+                        <ScrollBar x:Name="PART_VerticalScrollBar" Value="{TemplateBinding VerticalOffset}" Maximum="{TemplateBinding ScrollableHeight}" ViewportSize="{TemplateBinding ViewportHeight}" Margin="0,18,8,18" Style="{DynamicResource GoldScrollBar}"/>
+                    </Border>
+
+                    <!-- content -->
+                    <Border Margin="0" HorizontalAlignment="Stretch">
+                        <ScrollContentPresenter Margin="22 14" />
+                    </Border>
+                </DockPanel>
+                <ControlTemplate.Triggers>
+                    <Trigger SourceName="PART_VerticalScrollBarHolder" Property="Visibility" Value="Visible">
+                        <Trigger.EnterActions>
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <DoubleAnimationUsingKeyFrames Storyboard.TargetName="PART_VerticalScrollBar" Storyboard.TargetProperty="(UIElement.Opacity)" >
+                                        <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="1"/>
+                                    </DoubleAnimationUsingKeyFrames>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </Trigger.EnterActions>
+                        <Trigger.ExitActions>
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <DoubleAnimationUsingKeyFrames Storyboard.TargetName="PART_VerticalScrollBar" Storyboard.TargetProperty="(UIElement.Opacity)" >
+                                        <EasingDoubleKeyFrame KeyTime="0:0:0.0" Value="0" />
+                                    </DoubleAnimationUsingKeyFrames>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </Trigger.ExitActions>
+                    </Trigger>
+                </ControlTemplate.Triggers>
+            </ControlTemplate>
+            <DataTemplate x:Key="CombatLog.Entry" DataType="{x:Type ls:CombatLogGroupedEntries}">
+                <DataTemplate.Resources>
+                    <Style BasedOn="{StaticResource CombatLog.GeneratedRunWithTooltip}" TargetType="ls:LSRun"/>
+                </DataTemplate.Resources>
+                <Grid x:Name="root" Background="Transparent" ToolTipService.InitialShowDelay="{StaticResource ToolTipInitialShowDelay}" ToolTipService.Placement="Top" ToolTipService.VerticalOffset="-5" ToolTipService.HorizontalOffset="-14" >
+                    <Grid.ToolTip>
+                        <ls:LSTooltip CanBePinned="False"  Content="{Binding Path=DataContext, ElementName=root}" ContentTemplate="{DynamicResource CombatLog.Tooltip}" PlayerId="{Binding ElementName=CombatLog,Path=DataContext.CurrentPlayer.PlayerId}" IsHitTestVisible="False"  Placement="Top" />
+                    </Grid.ToolTip>
+                    <TextBlock x:Name="ParentBlock" Style="{StaticResource CombatLog.Entry.Text}" >
+                        <b:Interaction.Behaviors>
+                            <!--Don't use basedon Styles in CtxTransStringRunGeneratorBehavior since it doesn't get copied for lsspans-->
+                            <ls:CtxTransStringRunGeneratorBehavior Source="{Binding CtxTransText}" ParamRunStyle="{StaticResource CombatLog.Entry.ParamRun}" />
+                        </b:Interaction.Behaviors>
+                    </TextBlock>
+                    <ItemsControl x:Name="PingEntries" ItemsSource="{Binding Entries}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock x:Name="LogEntry" Style="{StaticResource CombatLog.Entry.Text}" Tag="{Binding Source='h8eb32f43g65dfg4691ga17agca8c8e91bf78', Converter={StaticResource TranslatedStringConverter}}">
+                                    <b:Interaction.Behaviors>
+                                        <ls:CtxTransStringRunGeneratorBehavior x:Name="PingEntryBehavior" LocaSource="{Binding Path=Tag, ElementName=LogEntry}" 
+                                                                               ParamRunStyle="{StaticResource CombatLog.Entry.ParamRun}">
+                                            <ls:CtxTransStringRunGeneratorBehavior.ParamList>
+                                                <MultiBinding Converter="{StaticResource PassThroughConverter}">
+                                                   <Binding Path="PingSourceParam"/>
+                                                   <Binding Path="PingTargetParam"/>
+                                                </MultiBinding>
+                                            </ls:CtxTransStringRunGeneratorBehavior.ParamList>
+                                        </ls:CtxTransStringRunGeneratorBehavior>
+                                    </b:Interaction.Behaviors>
+                                </TextBlock>
+                                <DataTemplate.Triggers>
+                                    <DataTrigger Binding="{Binding HasPingTarget}" Value="True">
+                                        <Setter TargetName="LogEntry" Property="Tag" Value="{Binding Source='h8bb590d5gffb3g4acega9a6g54d1ce796626', Converter={StaticResource TranslatedStringConverter}}"/>
+                                    </DataTrigger>
+                                </DataTemplate.Triggers>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                    <TextBlock x:Name="PingSourceEntry" Text="{Binding Entries[0].PingSourceParam.Text}" Visibility="Collapsed"/>
+                </Grid>
+                <DataTemplate.Triggers>
+                    <DataTrigger Binding="{Binding TooltipEntries.Count}" Value="0">
+                        <Setter TargetName="root" Property="ToolTipService.IsEnabled" Value="False" />
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding ElementName=PingSourceEntry, Path=Text}" Value="">
+                        <Setter TargetName="PingEntries" Property="Visibility" Value="Collapsed"/>
+                    </DataTrigger>
+                </DataTemplate.Triggers>
+            </DataTemplate>
+
+        </ResourceDictionary>
+    </ls:UIWidget.Resources>
+
+    <Grid ls:TooltipExtender.Owner="{Binding CurrentPlayer.SelectedCharacter}">
+        <Grid VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,0,314" Panel.ZIndex="10">
+            <ls:LSButton x:Name="ShowCombatLog" Visibility="{Binding CombatLogCollapsed, Converter={StaticResource BoolToVisibleConverter}}" Command="{Binding ToggleCombatLogCommand}" VerticalAlignment="Bottom" Margin="0,0,0,-40">
+                <ls:LSButton.Template>
+                    <ControlTemplate TargetType="ls:LSButton">
+                        <Grid>
+                            <Image x:Name="bg" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/CombatLog/combatlog_collapsed_d.png" Stretch="None"/>
+                            <Image x:Name="img" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/CombatLog/combatlog_expand_d.png" Stretch="None" Margin="-16,-4,16,4"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="true">
+                                <Setter TargetName="bg" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/CombatLog/combatlog_collapsed_h.png"/>
+                                <Setter TargetName="img" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/CombatLog/combatlog_expand_h.png"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="true">
+                                <Setter TargetName="bg" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/CombatLog/combatlog_collapsed_d.png"/>
+                                <Setter TargetName="img" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/CombatLog/combatlog_expand_d.png"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </ls:LSButton.Template>
+            </ls:LSButton>
+            <ls:LSButton x:Name="HideCombatLog" Visibility="{Binding CombatLogCollapsed, Converter={StaticResource BoolToCollapsedConverter}}" Command="{Binding ToggleCombatLogCommand}" VerticalAlignment="Bottom" Margin="-26,0,26,46">
+                <ls:LSButton.Template>
+                    <ControlTemplate TargetType="ls:LSButton">
+                        <Grid>
+                            <Image x:Name="bg" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/CombatLog/combatlog_expanded_d.png" Stretch="None"/>
+                            <Image x:Name="img" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/CombatLog/combatlog_expand_d.png" Stretch="None" Margin="6,-2,-6,2">
+                                <Image.RenderTransform>
+                                    <ScaleTransform ScaleX="-1" CenterX="16"/>
+                                </Image.RenderTransform>
+                            </Image>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="true">
+                                <Setter TargetName="bg" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/CombatLog/combatlog_expanded_h.png"/>
+                                <Setter TargetName="img" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/CombatLog/combatlog_expand_h.png"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="true">
+                                <Setter TargetName="bg" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/CombatLog/combatlog_expanded_d.png"/>
+                                <Setter TargetName="img" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/CombatLog/combatlog_expand_d.png"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </ls:LSButton.Template>
+            </ls:LSButton>
+        </Grid>
+
+        <Grid x:Name="parentGrid" SnapsToDevicePixels="True" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,44,292" Visibility="{Binding CombatLogCollapsed, Converter={StaticResource BoolToCollapsedConverter}}">
+
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <Image Grid.Row="0" x:Name="TopBorder" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/CombatLog/combatlog_top.png" Stretch="None" Margin="0,0,0,-30" IsHitTestVisible="False" Panel.ZIndex="1"/>
+                <Rectangle Grid.Row="1" Width="1000" Panel.ZIndex="0">
+                    <Rectangle.Fill>
+                        <ImageBrush ImageSource="pack://application:,,,/GustavNoesisGUI;component/Assets/CombatLog/combatlog_bg_default.png" Stretch="Fill"/>
+                    </Rectangle.Fill>
+                </Rectangle>
+                <Image Grid.Row="2" x:Name="BottomBorder" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/CombatLog/combatlog_bar_bottom.png" Stretch="None" IsHitTestVisible="False" Panel.ZIndex="1"/>
+            </Grid>
+
+            <ContentControl x:Name="CombatLogItems" HorizontalAlignment="Left" Margin="0,12,0,36">
+                <ContentControl.Template>
+                    <ControlTemplate TargetType="ContentControl">
+                        <ControlTemplate.Resources>
+                            <KeyTime x:Key="CmbtLogExpandTime">0:0:0.4</KeyTime>
+                        </ControlTemplate.Resources>
+                        <Grid x:Name="ExpanderHolder" Width="1000" Height="200" Margin="8,0,10,0" HorizontalAlignment="{TemplateBinding HorizontalAlignment}">
+                            <ls:LSScrollViewer x:Name="CmbtLogScrollViewer" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Auto" ls:AutoScrollBehavior.VerticalAutoScroll="True" Template="{StaticResource CombatLog.ScrollViewer}" Visibility="{Binding Visibility, ElementName=ParentGrid}">
+                                <ContentPresenter />
+                            </ls:LSScrollViewer>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <DataTrigger Binding="{Binding CurrentPlayer.UIData.CombatLogSize}" Value="Small">
+                                <DataTrigger.EnterActions>
+                                    <BeginStoryboard >
+                                        <Storyboard>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="ExpanderHolder" Storyboard.TargetProperty="Height" >
+                                                <EasingDoubleKeyFrame KeyTime="{StaticResource CmbtLogExpandTime}" Value="200">
+                                                    <EasingDoubleKeyFrame.EasingFunction>
+                                                        <CubicEase EasingMode="EaseOut"/>
+                                                    </EasingDoubleKeyFrame.EasingFunction>
+                                                </EasingDoubleKeyFrame>
+                                            </DoubleAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </DataTrigger.EnterActions>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding CurrentPlayer.UIData.CombatLogSize}" Value="Expanded">
+                                <DataTrigger.EnterActions>
+                                    <BeginStoryboard >
+                                        <Storyboard>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="ExpanderHolder" Storyboard.TargetProperty="Height" >
+                                                <EasingDoubleKeyFrame KeyTime="{StaticResource CmbtLogExpandTime}" Value="400">
+                                                    <EasingDoubleKeyFrame.EasingFunction>
+                                                        <CubicEase EasingMode="EaseOut"/>
+                                                    </EasingDoubleKeyFrame.EasingFunction>
+                                                </EasingDoubleKeyFrame>
+                                            </DoubleAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </DataTrigger.EnterActions>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding CurrentPlayer.UIData.CombatLogSize}" Value="SuperExpanded">
+                                <DataTrigger.EnterActions>
+                                    <BeginStoryboard >
+                                        <Storyboard>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="ExpanderHolder" Storyboard.TargetProperty="Height" >
+                                                <EasingDoubleKeyFrame KeyTime="{StaticResource CmbtLogExpandTime}" Value="800">
+                                                    <EasingDoubleKeyFrame.EasingFunction>
+                                                        <CubicEase EasingMode="EaseOut"/>
+                                                    </EasingDoubleKeyFrame.EasingFunction>
+                                                </EasingDoubleKeyFrame>
+                                            </DoubleAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </DataTrigger.EnterActions>
+                            </DataTrigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </ContentControl.Template>
+                <ItemsControl ItemsSource="{Binding Data.CombatLog.EntryGroups}" ItemTemplate="{StaticResource CombatLog.Entry}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
+            </ContentControl>
+
+            <Grid>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,84,20">
+                    <ls:LSButton x:Name="btnIncreaseSize" Template="{StaticResource CombatLog.Expander.ButtonIncrease}" Command="{Binding IncreaseCombatLogSizeCommand}"/>
+                    <ls:LSButton x:Name="btnDecreaseSize" Template="{StaticResource CombatLog.Expander.ButtonDecrease}" Command="{Binding DecreaseCombatLogSizeCommand}" Margin="32,0,0,0"/>
+                </StackPanel>
+            </Grid>
+
+            <Grid.Resources>
+                <KeyTime x:Key="SlideInHudTime">0:0:0.7</KeyTime>
+                <KeyTime x:Key="SlideInHudBeginTime">0:0:0.3</KeyTime>
+                <Storyboard x:Key="Hud.AnimIn">
+                    <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" >
+                        <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                        <EasingDoubleKeyFrame KeyTime="{StaticResource SlideInHudBeginTime}" Value="0"/>
+                        <EasingDoubleKeyFrame KeyTime="{StaticResource SlideInHudTime}" Value="1">
+                            <EasingDoubleKeyFrame.EasingFunction>
+                                <CubicEase EasingMode="EaseOut"/>
+                            </EasingDoubleKeyFrame.EasingFunction>
+                        </EasingDoubleKeyFrame>
+                    </DoubleAnimationUsingKeyFrames>
+
+                    <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.Y)">
+                        <EasingDoubleKeyFrame KeyTime="0" Value="200"/>
+                        <EasingDoubleKeyFrame KeyTime="{StaticResource SlideInHudBeginTime}" Value="200"/>
+                        <EasingDoubleKeyFrame KeyTime="{StaticResource SlideInHudTime}" Value="0">
+                            <EasingDoubleKeyFrame.EasingFunction>
+                                <CubicEase EasingMode="EaseOut"/>
+                            </EasingDoubleKeyFrame.EasingFunction>
+                        </EasingDoubleKeyFrame>
+                    </DoubleAnimationUsingKeyFrames>
+
+                    <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)">
+                        <EasingDoubleKeyFrame KeyTime="0" Value="200"/>
+                        <EasingDoubleKeyFrame KeyTime="{StaticResource SlideInHudBeginTime}" Value="200"/>
+                        <EasingDoubleKeyFrame KeyTime="{StaticResource SlideInHudTime}" Value="0">
+                            <EasingDoubleKeyFrame.EasingFunction>
+                                <CubicEase EasingMode="EaseOut"/>
+                            </EasingDoubleKeyFrame.EasingFunction>
+                        </EasingDoubleKeyFrame>
+                    </DoubleAnimationUsingKeyFrames>
+                </Storyboard>
+            </Grid.Resources>
+
+            <Grid.Style>
+                <Style TargetType="Grid">
+                    <Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
+                    <Setter Property="RenderTransform">
+                        <Setter.Value>
+                            <TransformGroup>
+                                <ScaleTransform/>
+                                <SkewTransform/>
+                                <RotateTransform/>
+                                <TranslateTransform/>
+                            </TransformGroup>
+                        </Setter.Value>
+                    </Setter>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding CurrentPlayer.UIData.PreviousState}" Value="PartyInventory">
+                            <DataTrigger.EnterActions>
+                                <BeginStoryboard  Storyboard="{StaticResource Hud.AnimIn}" />
+                            </DataTrigger.EnterActions>
+                        </DataTrigger>
+
+                        <DataTrigger Binding="{Binding CurrentPlayer.UIData.PreviousState}" Value="PartyEquipment">
+                            <DataTrigger.EnterActions>
+                                <BeginStoryboard  Storyboard="{StaticResource Hud.AnimIn}" />
+                            </DataTrigger.EnterActions>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding CurrentPlayer.UIData.PreviousState}" Value="Dialogue">
+                            <DataTrigger.EnterActions>
+                                <BeginStoryboard  Storyboard="{StaticResource Hud.AnimIn}" />
+                            </DataTrigger.EnterActions>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding CurrentPlayer.UIData.PreviousState}" Value="CharacterOverview">
+                            <DataTrigger.EnterActions>
+                                <BeginStoryboard  Storyboard="{StaticResource Hud.AnimIn}" />
+                            </DataTrigger.EnterActions>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding CurrentPlayer.UIData.PreviousState}" Value="PartyCharacterSheet">
+                            <DataTrigger.EnterActions>
+                                <BeginStoryboard  Storyboard="{StaticResource Hud.AnimIn}" />
+                            </DataTrigger.EnterActions>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding CurrentPlayer.UIData.PreviousState}" Value="SpellBook">
+                            <DataTrigger.EnterActions>
+                                <BeginStoryboard  Storyboard="{StaticResource Hud.AnimIn}" />
+                            </DataTrigger.EnterActions>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+
+            </Grid.Style>
+        </Grid>
+    </Grid>
+</ls:UIWidget>

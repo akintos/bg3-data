@@ -1,0 +1,42 @@
+<ls:UIWidget x:Name="TurnModeInfo"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:ls="clr-namespace:ls;assembly=SharedGUI"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance {x:Type ls:Widget}, IsDesignTimeCreatable=True}"
+             d:DesignWidth="3840" d:DesignHeight="2160">
+
+    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Top" Orientation="Horizontal">
+        <StackPanel.Style>
+            <Style TargetType="StackPanel">
+                <Setter Property="Visibility" Value="Collapsed"/>
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding DataContext.CurrentPlayer.SelectedCharacter.CharacterMode, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ls:UIWidget}}}" Value="InFTB">
+                        <Setter Property="Visibility" Value="Visible"/>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+        </StackPanel.Style>
+
+        <Image Source="pack://application:,,,/GustavNoesisGUI;component/Assets/HUD/sideDecorShort_left.png" Stretch="None" Margin="0,-2,0,2" Panel.ZIndex="1"/>
+        
+        <ls:LSNineSliceImage x:Name="img" ImageSource="pack://application:,,,/GustavNoesisGUI;component/Assets/HUD/modeStatsBg.png" Slices="78,20" Padding="180,12, 180, 24" Margin="-104,0">
+            <StackPanel Orientation="Horizontal" Margin="0,-16,0,0" Height="64">
+                <TextBlock Text="{Binding Source='h4be39006g604dg47cbg98c4g6cb5238b645d',Converter={StaticResource TranslatedStringConverter}}" VerticalAlignment="Center" Margin="16,0" FontSize="{DynamicResource DefaultFontSize}" Foreground="{DynamicResource LS_SecondaryColor}"/>
+
+                <ls:LSButton Style="{StaticResource SmallCloseButton}" VerticalAlignment="Center" Command="{Binding DataContext.ToggleTurnBasedMode, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ls:UIWidget}}}">
+                    <b:Interaction.Triggers>
+                        <b:EventTrigger EventName="MouseEnter">
+                            <b:InvokeCommandAction Command="{Binding DataContext.PlaySoundEvent, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" CommandParameter="UI_Shared_Hover"/>
+                        </b:EventTrigger>
+                    </b:Interaction.Triggers>
+                </ls:LSButton>
+            </StackPanel>
+        </ls:LSNineSliceImage>
+        
+        <Image Source="pack://application:,,,/GustavNoesisGUI;component/Assets/HUD/sideDecorShort_right.png" Stretch="None" Margin="0,-2,0,2"/>
+    </StackPanel>
+</ls:UIWidget>

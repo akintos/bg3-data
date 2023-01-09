@@ -1,0 +1,923 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:System="clr-namespace:System;assembly=mscorlib"
+                    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+					xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			        xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
+
+                    xmlns:ls="clr-namespace:ls;assembly=SharedGUI"
+                    xmlns:noesis="clr-namespace:NoesisGUIExtensions;assembly=Noesis.GUI.Extensions"
+					mc:Ignorable="d">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="../Library/DataTemplates.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+
+    <System:Double x:Key="CharacterPanelWidth">900</System:Double>
+
+    <System:Double x:Key="ActionResources.ResourceTileSize">48</System:Double>
+    <System:Double x:Key="ActionResources.TileWidth">72</System:Double>
+    <System:Double x:Key="ActionResources.TileHeight">120</System:Double>
+
+    <ControlTemplate x:Key="DefaultProgressBar" TargetType="{x:Type ProgressBar}">
+        <Grid x:Name="TemplateRoot" MinHeight="{TemplateBinding MinHeight}">
+            <Border x:Name="PART_Track"
+            Background="{TemplateBinding Background}" 
+            BorderBrush="{TemplateBinding BorderBrush}"
+            BorderThickness="{TemplateBinding BorderThickness}"
+            CornerRadius="1"/>
+            <Grid x:Name="PART_Indicator"
+            HorizontalAlignment="Left">
+                <Border x:Name="IndicatorBorder"
+                Margin="{TemplateBinding Padding}"
+                Background="{TemplateBinding Foreground}"/>
+            </Grid>
+        </Grid>
+        <ControlTemplate.Triggers>
+            <Trigger Property="Orientation" Value="Vertical">
+                <Setter Property="LayoutTransform" TargetName="TemplateRoot">
+                    <Setter.Value>
+                        <RotateTransform Angle="-90"/>
+                    </Setter.Value>
+                </Setter>
+            </Trigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+
+    <Style x:Key="CharacterPortraitBarStyle" TargetType="ProgressBar">
+        <Setter Property="Foreground" Value="{StaticResource LS_PortraitHPColor}"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderBrush" Value="Transparent"/>
+        <Setter Property="Value" Value="{Binding Stats.Health.PercentValue, Mode=OneWay, Converter={StaticResource InvertPercConverter}}"/>
+        <Setter Property="Minimum" Value="0"/>
+        <Setter Property="Maximum" Value="1"/>
+        <Setter Property="Orientation" Value="Vertical"/>
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding Stats.IsAlive}" Value="False">
+                <Setter Property="Foreground" Value="{StaticResource LS_PortraitDeadColor}"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <ControlTemplate x:Key="CharacterPanelGold">
+        <StackPanel Orientation="Horizontal">
+            <TextBlock VerticalAlignment="Center" Margin="0 7 5 0"
+                       Text="{Binding}" 
+                       Foreground="{TemplateBinding Foreground}"
+                       FontSize="{StaticResource DefaultFontSize}"
+                       FontWeight="Bold"/>
+            <Image VerticalAlignment="Center" 
+                   Stretch="None" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared_c/c_ico_gold.png" />
+        </StackPanel>
+    </ControlTemplate>
+
+    <ControlTemplate x:Key="CharacterClassDisplay">
+        <StackPanel Orientation="Horizontal">
+            <TextBlock Text="{Binding ClassDisplayName}" Foreground="{DynamicResource LS_SecondaryColor}"/>
+            <TextBlock Text="{Binding SubclassDisplayName, StringFormat=' ({0})'}" Foreground="{DynamicResource LS_SecondaryColor}" Visibility="{Binding SubclassDisplayName, Converter={StaticResource StringToVisibilityConverter}}"/>
+        </StackPanel>
+    </ControlTemplate>
+
+
+    <ControlTemplate x:Key="OnFrameCharacterType">
+        <TextBlock x:Name="text" 
+                   Text="{Binding Source='hf9de073cgfc9bg498cg97c5ga20d486d9e3a',Converter={StaticResource TranslatedStringConverter}, ConverterParameter='ToUpper'}" 
+                   FontSize="{DynamicResource TinyFontSize}" 
+                   Foreground="{DynamicResource LS_LabelColor1}"/>
+        <ControlTemplate.Triggers>
+            <DataTrigger Binding="{Binding Path=CharacterType}" Value="Avatar">
+                <Setter  TargetName="text" Property="Text" Value="{Binding Source='hefe0dbf0geb1ag48f8g88b0gba0c5e053381',Converter={StaticResource TranslatedStringConverter}, ConverterParameter='ToUpper'}" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding Path=CharacterType}" Value="Companion">
+                <Setter TargetName="text" Property="Text" Value="{Binding Source='h1971457egef06g4b81g971egf30997b9bd22',Converter={StaticResource TranslatedStringConverter}, ConverterParameter='ToUpper'}" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding Path=CharacterType}" Value="Summon">
+                <Setter TargetName="text" Property="Text" Value="{Binding Source='h329b540dgbab9g4999g999dg371e10359d25',Converter={StaticResource TranslatedStringConverter}, ConverterParameter='ToUpper'}" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding Path=CharacterType}" Value="Follower">
+                <Setter TargetName="text" Property="Text" Value="{Binding Source='hc6195bc3g1dfcg4e77gb619g147fd0f74ec8',Converter={StaticResource TranslatedStringConverter}, ConverterParameter='ToUpper'}" />
+            </DataTrigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+
+    <!-- Vacant Slots -->
+    <ControlTemplate x:Key="VacantSlot">
+        <Grid Width="{StaticResource CharacterPanelWidth}">
+            <Image VerticalAlignment="Top" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared_c/c_frame_vacant.png" Stretch="None"/>
+        </Grid>
+    </ControlTemplate>
+
+    <ResourceDictionary x:Key="SquareVacantSlot">
+        <ControlTemplate x:Key="VacantSlot">
+            <Grid HorizontalAlignment="Left" VerticalAlignment="Top">
+                <Image VerticalAlignment="Top" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared/frame_vacant.png" Stretch="None"/>
+                <ContentControl HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,822,0,0" Template="{StaticResource OnFrameCharacterType}"/>
+            </Grid>
+        </ControlTemplate>
+    </ResourceDictionary>
+
+    <!-- Arched Vacant Slot -->
+    <ResourceDictionary x:Key="ArchedVacantSlot">
+        <ControlTemplate x:Key="VacantSlot">
+            <Grid Width="{StaticResource CharacterPanelWidth}" HorizontalAlignment="Left" VerticalAlignment="Top">
+                <Image Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Equipment/characterArch_vacant.png" Stretch="None"/>
+                <ContentControl HorizontalAlignment="Center" Margin="0,864,0,0" Template="{StaticResource OnFrameCharacterType}"/>
+            </Grid>
+        </ControlTemplate>
+    </ResourceDictionary>
+
+    <Style x:Key="VacantSlotStyle" TargetType="{x:Type Control}">
+        <Setter Property="Template" Value="{DynamicResource VacantSlot}"/>
+        <Setter Property="RenderTransform">
+            <Setter.Value>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform/>
+                    <RotateTransform/>
+                    <TranslateTransform/>
+                </TransformGroup>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Opacity" Value="0"/>
+        <Setter Property="Visibility" Value="Hidden"/>
+        <Setter Property="Margin" Value="0,0,18,0"/>
+    </Style>    
+    
+    <ControlTemplate x:Key="VacantSlots">
+
+        <StackPanel Orientation="Horizontal" Margin="0,11,0,0">
+            <Control x:Name="Slot1" Style="{StaticResource VacantSlotStyle}"/>
+            <Control x:Name="Slot2" Style="{StaticResource VacantSlotStyle}"/>
+            <Control x:Name="Slot3" Style="{StaticResource VacantSlotStyle}"/>
+            <Control x:Name="Slot4" Style="{StaticResource VacantSlotStyle}"/>
+            <StackPanel.Triggers>
+                <EventTrigger RoutedEvent="FrameworkElement.Loaded">
+                    <BeginStoryboard>
+                        <BeginStoryboard.Storyboard>
+                            <Storyboard TargetName="Slot1">
+                                <Storyboard.Children>
+                                    <Storyboard Children="{StaticResource TCAnimInCharacterSlot}"  />
+                                </Storyboard.Children>
+                            </Storyboard>
+                        </BeginStoryboard.Storyboard>
+                    </BeginStoryboard>
+                    <BeginStoryboard>
+                        <BeginStoryboard.Storyboard>
+                            <Storyboard TargetName="Slot2">
+                                <Storyboard.Children>
+                                    <Storyboard BeginTime="0:0:0.1" Children="{StaticResource TCAnimInCharacterSlot}"  />
+                                </Storyboard.Children>
+                            </Storyboard>
+                        </BeginStoryboard.Storyboard>
+                    </BeginStoryboard>
+                    <BeginStoryboard>
+                        <BeginStoryboard.Storyboard>
+                            <Storyboard TargetName="Slot3">
+                                <Storyboard.Children>
+                                    <Storyboard BeginTime="0:0:0.2" Children="{StaticResource TCAnimInCharacterSlot}"  />
+                                </Storyboard.Children>
+                            </Storyboard>
+                        </BeginStoryboard.Storyboard>
+                    </BeginStoryboard>
+
+                    <BeginStoryboard>
+                        <BeginStoryboard.Storyboard>
+                            <Storyboard TargetName="Slot4">
+                                <Storyboard.Children>
+                                    <Storyboard BeginTime="0:0:0.3" Children="{StaticResource TCAnimInCharacterSlot}"  />
+                                </Storyboard.Children>
+                            </Storyboard>
+                        </BeginStoryboard.Storyboard>
+                    </BeginStoryboard>
+
+                </EventTrigger>
+            </StackPanel.Triggers>
+        </StackPanel>
+        <ControlTemplate.Triggers>
+            <DataTrigger Binding="{Binding Path=Count}" Value="0">
+                <Setter TargetName="Slot1" Property="Visibility" Value="Visible"/>
+                <Setter TargetName="Slot2" Property="Visibility" Value="Visible"/>
+                <Setter TargetName="Slot3" Property="Visibility" Value="Visible"/>
+                <Setter TargetName="Slot4" Property="Visibility" Value="Visible"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding Path=Count}" Value="1">
+                <Setter TargetName="Slot2" Property="Visibility" Value="Visible"/>
+                <Setter TargetName="Slot3" Property="Visibility" Value="Visible"/>
+                <Setter TargetName="Slot4" Property="Visibility" Value="Visible"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding Path=Count}" Value="2">
+                <Setter TargetName="Slot3" Property="Visibility" Value="Visible"/>
+                <Setter TargetName="Slot4" Property="Visibility" Value="Visible"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding Path=Count}" Value="3">
+                <Setter TargetName="Slot4" Property="Visibility" Value="Visible"/>
+            </DataTrigger>
+        </ControlTemplate.Triggers>        
+    </ControlTemplate>
+
+    <DataTemplate x:Key="PartyVacantSlots">
+        <Control Template="{StaticResource VacantSlots}" DataContext="{Binding CurrentPlayer.UIData.PartyInventoryViews}"/>
+    </DataTemplate>
+
+    <Style x:Key="AvatarCrownImageStyle" TargetType="Image">
+        <Setter Property="Stretch" Value="None"/>
+        <Setter Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared/avatar_crown.png"/>
+        <Setter Property="Visibility" Value="Hidden" />
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding CharacterType}" Value="Avatar">
+                <Setter Property="Visibility" Value="Visible" />
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <DataTemplate x:Key="CharacterPortraitTemplate">
+        <Grid Margin="0,49,0,0">
+            <Image VerticalAlignment="Top" HorizontalAlignment="Center" Style="{DynamicResource AvatarCrownImageStyle}" IsHitTestVisible="False" Margin="0,-100,0,0"/>
+            <Grid VerticalAlignment="Top" HorizontalAlignment="Center">
+                <Path Stretch="None" VerticalAlignment="Center" HorizontalAlignment="Center" Width="134" Height="200" Fill="{Binding Icon}" RenderTransformOrigin="0.5,0.534">
+                    <Path.Data>
+                        <Geometry >M0,27 A90,90 0 0 1 27,0 H105 A90,90 0 0 1 134,27 V171 A90,90 0 0 1 105,200 H27 A90,90 0 0 1 0,171 V42 Z</Geometry>
+                    </Path.Data>
+                </Path>
+                <!-- For the moment, we fill the portrait of dead characters as the shaders effect are not available in Noesis yet.
+                         TODO : See GUS-153582-->
+                <Path Stretch="None" VerticalAlignment="Center" HorizontalAlignment="Center" Width="134" Height="200" Visibility="{Binding Stats.IsAlive, Converter={StaticResource BoolToCollapsedConverter}}"
+                          Fill="{DynamicResource LS_PortraitDeadColor}" RenderTransformOrigin="0.5,0.534">
+                    <Path.Data>
+                        <Geometry >M0,27 A90,90 0 0 1 27,0 H105 A90,90 0 0 1 134,27 V171 A90,90 0 0 1 105,200 H27 A90,90 0 0 1 0,171 V42 Z</Geometry>
+                    </Path.Data>
+                </Path>
+                <Image Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared/character_image_frame.png" Stretch="None" VerticalAlignment="Top" Margin="0,-16,0,0" ClipToBounds="False"/>
+            </Grid>
+        </Grid>
+    </DataTemplate>
+
+    <DataTemplate x:Key="FrameAttachedCharacterPortraitTemplate">
+        <ContentControl>
+            <b:Interaction.Behaviors>
+                <ls:DropOnCharacterBehavior TargetCharacter="{Binding}"/>
+            </b:Interaction.Behaviors>
+            <b:Interaction.Triggers>
+                <b:EventTrigger EventName="MouseLeftButtonDown">
+                    <!-- Select this Character when panel is clicked -->
+                    <b:InvokeCommandAction Command="{Binding DataContext.SelectCharacter,RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" CommandParameter="{Binding}" />
+                    <b:InvokeCommandAction Command="{Binding DataContext.PlaySelectCharacterReaction,RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" CommandParameter="{Binding}" />
+                </b:EventTrigger>
+            </b:Interaction.Triggers>
+
+            <ContentPresenter x:Name="Portrait" ContentTemplate="{StaticResource CharacterPortraitTemplate}" Content="{Binding}"/>
+
+        </ContentControl>
+    </DataTemplate>
+
+    <ControlTemplate x:Key="SingleBasicPanel" TargetType="ContentControl">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Image Grid.Row="1" x:Name="Background" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared_c/c_frame_standard.png" Stretch="None"/>
+            <Control Grid.Row="1" x:Name="GoldLabel" DataContext="{Binding Inventory.Gold, Mode=OneWay}" Template="{StaticResource CharacterPanelGold}" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,30,70,0"/>
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="100"/>
+                    <RowDefinition Height="120"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Control Grid.Row="1" x:Name="NameLabel" Template="{DynamicResource NameAndDescriptionTemplate}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <ContentPresenter Grid.Row="2" Margin="0,10,0,20"/>
+            </Grid>
+            <ContentControl ContentTemplate="{StaticResource FrameAttachedCharacterPortraitTemplate}" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,0,0,-120" Content="{Binding}"/>
+            <Grid.Triggers>
+                <EventTrigger RoutedEvent="FrameworkElement.Loaded">
+                    <BeginStoryboard >
+                        <Storyboard TargetName="GoldLabel">
+                            <Storyboard.Children>
+                                <Storyboard Children="{StaticResource FadeInSecElements}"  />
+                            </Storyboard.Children>
+                        </Storyboard>
+                    </BeginStoryboard>
+                    <BeginStoryboard >
+                        <Storyboard TargetName="NameLabel" >
+                            <Storyboard.Children>
+                                <Storyboard Children="{StaticResource FadeInTertElements}"  />
+                            </Storyboard.Children>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+
+            </Grid.Triggers>
+        </Grid>
+        <ControlTemplate.Triggers>
+            <DataTrigger Binding="{Binding IsSelectedCharacter}" Value="True">
+                <Setter Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared_c/c_frame_standard_selected.png" TargetName="Background"/>
+            </DataTrigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+
+    <!--Status Effects START -->
+
+    <DataTemplate x:Key="StatusTemplate">
+        <ContentControl ToolTip="{StaticResource ManagedTooltip}" ToolTipService.Placement="Right" ToolTipService.VerticalOffset="-100" Focusable="False">
+            <Grid x:Name="StatusContainer" Width="{DynamicResource StatusWidth}" Height="{DynamicResource StatusHeight}" Tag="">
+                <Grid.Background>
+                    <ImageBrush ImageSource="pack://application:,,,/GustavNoesisGUI;component/Assets/BottomBar/status_bg.png"/>
+                </Grid.Background>
+                <ls:LSPie x:Name="StatusPie" Value="{Binding RemainingPercentage}" SweepDirection="Clockwise" Width="115" Height="115" VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <Image Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared/statusBG_floating_bar.png" Stretch="UniformToFill" Width="82" Height="82" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="2 2 0 0"/>
+                </ls:LSPie>
+                <Ellipse Width="40" Height="40" Fill="{Binding Icon}"/>
+                <Label x:Name="StatusLabel" VerticalAlignment="Bottom" HorizontalAlignment="Right" IsHitTestVisible="False" Content="{Binding Duration}" Margin="0,0,16,8" Foreground="{StaticResource LS_tint100}" FontWeight="Bold" FontSize="{DynamicResource SmallFontSize}" noesis:Text.Stroke="Black" noesis:Text.StrokeThickness="2"/>
+
+                <Rectangle x:Name="BlinkRectangle" Fill="White" Width="80" Height="80" HorizontalAlignment="Center" VerticalAlignment="Center" Opacity="0" IsHitTestVisible="False"/>
+                <ls:AnimatedImage x:Name="WMPopExplosion" Template="{StaticResource BaseAnimatedImage}" Time="0:0:0.033" ClipSize="216,240" RepeatBehavior="1x" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/BottomBar/VFX/popExplosion.png" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Hidden" IsHitTestVisible="False">
+                    <ls:AnimatedImage.RenderTransform>
+                        <TransformGroup>
+                            <TranslateTransform X="-8" Y="-10"/>
+                        </TransformGroup>
+                    </ls:AnimatedImage.RenderTransform>
+                </ls:AnimatedImage>
+
+                <b:Interaction.Triggers>
+                    <b:DataTrigger Binding="{Binding ElementName=StatusContainer, Path=Tag}" Value="PlayWMSound">
+                        <ls:LSPlaySound Sound="UI_HUD_WildMagic_Status"/>
+                    </b:DataTrigger>
+
+                    <b:DataTrigger Binding="{Binding ElementName=StatusContainer, Path=Tag}" Value="WMAnimationValidated">
+                        <b:InvokeCommandAction Command="{Binding DataContext.WildMagicStatusAnimationDoneCommand, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" CommandParameter="{Binding .}"/>
+                    </b:DataTrigger>
+                </b:Interaction.Triggers>
+            </Grid>
+        </ContentControl>
+        <DataTemplate.Triggers>
+            <DataTrigger Binding="{Binding Duration}" Value="-1">
+                <Setter TargetName="StatusPie" Property="Visibility" Value="Hidden"/>
+                <Setter TargetName="StatusLabel" Property="Visibility" Value="Hidden"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding Duration}" Value="0">
+                <Setter TargetName="StatusLabel" Property="Visibility" Value="Hidden"/>
+            </DataTrigger>
+
+            <DataTrigger Binding="{Binding IsWildMagicStatus}" Value="True">
+                <DataTrigger.EnterActions>
+                    <BeginStoryboard>
+                        <BeginStoryboard.Storyboard>
+                            <Storyboard TargetName="StatusContainer">
+                                <Storyboard.Children>
+                                    <Storyboard>
+                                        <DoubleAnimationUsingKeyFrames Storyboard.TargetName="StatusContainer" Storyboard.TargetProperty="(UIElement.Opacity)">
+                                            <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                                            <EasingDoubleKeyFrame KeyTime="0:0:1.75" Value="0"/>
+                                            <EasingDoubleKeyFrame KeyTime="0:0:2" Value="1"/>
+                                        </DoubleAnimationUsingKeyFrames>
+                                    </Storyboard>
+
+                                    <Storyboard>
+                                        <DoubleAnimationUsingKeyFrames Storyboard.TargetName="BlinkRectangle" Storyboard.TargetProperty="(UIElement.Opacity)">
+                                            <EasingDoubleKeyFrame KeyTime="0:0:0.00" Value="0.0"/>
+                                            <EasingDoubleKeyFrame KeyTime="0:0:2.00" Value="0.0"/>
+                                            <EasingDoubleKeyFrame KeyTime="0:0:2.25" Value="0.6"/>
+                                            <EasingDoubleKeyFrame KeyTime="0:0:2.50" Value="0.0"/>
+                                            <EasingDoubleKeyFrame KeyTime="0:0:2.60" Value="0.0"/>
+                                            <EasingDoubleKeyFrame KeyTime="0:0:2.85" Value="0.6"/>
+                                            <EasingDoubleKeyFrame KeyTime="0:0:3.10" Value="0.0"/>
+                                            <EasingDoubleKeyFrame KeyTime="0:0:3.20" Value="0.0"/>
+                                            <EasingDoubleKeyFrame KeyTime="0:0:3.45" Value="0.6"/>
+                                            <EasingDoubleKeyFrame KeyTime="0:0:3.70" Value="0.0"/>
+                                        </DoubleAnimationUsingKeyFrames>
+                                    </Storyboard>
+
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="WMPopExplosion" Storyboard.TargetProperty="Visibility">
+                                            <DiscreteObjectKeyFrame KeyTime="0:0:1.75" Value="{x:Static Visibility.Visible}"/>
+                                            <DiscreteObjectKeyFrame KeyTime="0:0:2.0" Value="{x:Static Visibility.Hidden}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="StatusContainer" Storyboard.TargetProperty="Tag">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value=""/>
+                                            <DiscreteObjectKeyFrame KeyTime="0:0:1.75" Value="PlayWMSound"/>
+                                            <!-- The animation is not done yet, but the status appeared, to which we don't need to replay the animation after that.-->
+                                            <DiscreteObjectKeyFrame KeyTime="0:0:2.00" Value="WMAnimationValidated"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+
+                                </Storyboard.Children>
+                            </Storyboard>
+                        </BeginStoryboard.Storyboard>
+                    </BeginStoryboard>
+                </DataTrigger.EnterActions>
+            </DataTrigger>
+        </DataTemplate.Triggers>
+    </DataTemplate>
+
+
+    <DataTemplate x:Key="BiggerStatusTemplate">
+        <ContentControl ToolTip="{StaticResource ManagedTooltip}" ToolTipService.Placement="Right" ToolTipService.VerticalOffset="-100">
+            <Grid Width="{DynamicResource BiggerStatusWidth}" Height="{DynamicResource BiggerStatusHeight}">
+                <Grid.Background>
+                    <ImageBrush ImageSource="pack://application:,,,/GustavNoesisGUI;component/Assets/BottomBar/status_bg.png"/>
+                </Grid.Background>
+                <ls:LSPie x:Name="StatusPie" Value="{Binding RemainingPercentage}" SweepDirection="Clockwise" Width="140" Height="140" VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <Image Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared_c/c_status_surround.png" Stretch="UniformToFill" Width="100" Height="100" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="2 2 0 0"/>
+                </ls:LSPie>
+                <Ellipse Width="48" Height="48" Fill="{Binding Icon}"/>
+                <Label x:Name="StatusLabel" VerticalAlignment="Bottom" HorizontalAlignment="Right" IsHitTestVisible="False" Content="{Binding Duration}" Margin="0,0,20,14" Foreground="{StaticResource LS_tint100}" FontWeight="Bold" FontSize="{DynamicResource SmallFontSize}" noesis:Text.Stroke="Black" noesis:Text.StrokeThickness="2"/>
+            </Grid>
+        </ContentControl>
+        <DataTemplate.Triggers>
+            <DataTrigger Binding="{Binding Duration}" Value="-1">
+                <Setter TargetName="StatusPie" Property="Visibility" Value="Hidden"/>
+                <Setter TargetName="StatusLabel" Property="Visibility" Value="Hidden"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding Duration}" Value="0">
+                <Setter TargetName="StatusLabel" Property="Visibility" Value="Hidden"/>
+            </DataTrigger>
+        </DataTemplate.Triggers>
+    </DataTemplate>
+    <!--Status Effects END -->
+
+    <!-- Marker Highlight -->
+    <ControlTemplate x:Key="Map.HighlightDataTemplate" TargetType="{x:Type ls:LSWorldMapHighlight}">
+        <Canvas x:Name="canvas">
+            <Grid x:Name="PART_Area" Width="{TemplateBinding AreaSize}" Height="{TemplateBinding AreaSize}"
+                             Canvas.Left="{Binding ActualWidth, ElementName=PART_Area, Converter={StaticResource MultiplierConverter}, ConverterParameter='-0.5'}" 
+                             Canvas.Top="{Binding ActualHeight, ElementName=PART_Area, Converter={StaticResource MultiplierConverter}, ConverterParameter='-0.5'}"
+                             RenderTransformOrigin="0.5 0.5">
+                <Ellipse x:Name="AreaLocation"
+                             Stroke="#FFCC00" StrokeThickness="4"
+                              RenderTransformOrigin="0.5 0.5">
+                    <Ellipse.Fill>
+                        <RadialGradientBrush>
+                            <GradientStop Offset="0" Color="#4CFFCC00" />
+                            <GradientStop Offset="0.5" Color="#4CFFCC00"/>
+                            <GradientStop Offset="1" Color="#B2FFCC00"/>
+                        </RadialGradientBrush>
+                    </Ellipse.Fill>
+                </Ellipse>
+
+                <Ellipse x:Name="AreaLocationHighlight"
+                                 StrokeThickness="0"
+                                 RenderTransformOrigin="0.5 0.5">
+                    <Ellipse.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform x:Name="ScaleTransForm" />
+                        </TransformGroup>
+                    </Ellipse.RenderTransform>
+                    <Ellipse.Fill>
+                        <RadialGradientBrush>
+                            <GradientStop Offset="0" Color="#4CFFCC00" />
+                            <GradientStop Offset="0.5" Color="#4CFFCC00"/>
+                            <GradientStop Offset="1" Color="#B2FFCC00"/>
+                        </RadialGradientBrush>
+                    </Ellipse.Fill>
+                </Ellipse>
+            </Grid>
+        </Canvas>
+        <ControlTemplate.Triggers>
+            <Trigger Property="IsVisible" Value="True">
+                <Trigger.EnterActions>
+                    <BeginStoryboard>
+                        <Storyboard RepeatBehavior="Forever">
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)" Storyboard.TargetName="AreaLocationHighlight">
+                                <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                                <EasingDoubleKeyFrame KeyTime="0:0:2" Value="0"/>
+                                <EasingDoubleKeyFrame KeyTime="0:0:3" Value="1"/>
+                            </DoubleAnimationUsingKeyFrames>
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleY)" Storyboard.TargetName="AreaLocationHighlight">
+                                <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                                <EasingDoubleKeyFrame KeyTime="0:0:2" Value="0"/>
+                                <EasingDoubleKeyFrame KeyTime="0:0:3" Value="1"/>
+                            </DoubleAnimationUsingKeyFrames>
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="AreaLocationHighlight" >
+                                <EasingDoubleKeyFrame KeyTime="0" Value="1"/>
+                                <EasingDoubleKeyFrame KeyTime="0:0:3" Value="1"/>
+                                <EasingDoubleKeyFrame KeyTime="0:0:3.5" Value="0"/>
+                            </DoubleAnimationUsingKeyFrames>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </Trigger.EnterActions>
+            </Trigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+
+
+    <!-- Map marker (inside viewport) -->
+    <ControlTemplate x:Key="Map.MarkerDataTemplate" TargetType="{x:Type ls:LSWorldMapMarker}">
+        <Canvas x:Name="canvas">
+            <Canvas.ToolTip>
+                <ls:LSTooltip Content="{Binding Name}"/>
+            </Canvas.ToolTip>
+
+            <!-- we need this wrapper to be able to horizontally center the text on the origin of the canvas -->
+            <Border x:Name="nameContainer" Visibility="Collapsed" Canvas.Left="{Binding ElementName=name, Path=ActualWidth, Converter={StaticResource MultiplierConverter}, ConverterParameter='-0.5'}" Canvas.Bottom="20">
+                <TextBlock x:Name="name" Text="{Binding Name}" Style="{DynamicResource Map.MarkerText}" />
+            </Border>
+
+            <Image x:Name="Icon" Stretch="Uniform" Width="64" Canvas.Left="{Binding ActualWidth, RelativeSource={RelativeSource Self}, Converter={StaticResource MultiplierConverter}, ConverterParameter='-0.5'}" 
+                   Canvas.Top="{Binding ActualHeight, RelativeSource={RelativeSource Self}, Converter={StaticResource MultiplierConverter}, ConverterParameter='-0.5'}" RenderTransformOrigin="0.5 0.5">
+                <Image.RenderTransform>
+                    <RotateTransform Angle="{Binding Rotation, RelativeSource={RelativeSource TemplatedParent}}"/>
+                </Image.RenderTransform>
+            </Image>
+        </Canvas>
+        <ControlTemplate.Triggers>
+            <DataTrigger Binding="{Binding Type}" Value="Player">
+                <Setter TargetName="Icon" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Map/ico_selChar.png" />
+                <Setter TargetName="Icon" Property="RenderTransformOrigin" Value="0.5, 0.58" />
+                <Setter TargetName="canvas" Property="ToolTip" Value="{x:Null}" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding Type}" Value="CharacterFriendly">
+                <Setter TargetName="Icon" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Map_c/c_ico_ally.png" />
+                <Setter TargetName="Icon" Property="RenderTransform" Value="{x:Null}" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding Type}" Value="CharacterEnemy">
+                <Setter TargetName="Icon" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Map_c/c_ico_enemy.png" />
+                <Setter TargetName="Icon" Property="RenderTransform" Value="{x:Null}" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding Type}" Value="CharacterParty">
+                <Setter TargetName="Icon" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Map_c/c_ico_party.png" />
+                <Setter TargetName="Icon" Property="RenderTransformOrigin" Value="0.5, 0.58" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding Type}" Value="CharacterNeutral">
+                <Setter TargetName="Icon" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Map_c/c_ico_neutral.png" />
+                <Setter TargetName="Icon" Property="RenderTransform" Value="{x:Null}" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding Type}" Value="Waypoint">
+                <Setter TargetName="Icon" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Map/ico_waypoint.png" />
+                <Setter TargetName="Icon" Property="RenderTransform" Value="{x:Null}" />
+                <Setter TargetName="nameContainer" Property="Visibility" Value="Visible" />
+                <Setter TargetName="canvas" Property="ToolTip" Value="{x:Null}" />
+                <Setter TargetName="canvas" Property="IsHitTestVisible" Value="False" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding Type}" Value="Portal">
+                <Setter TargetName="Icon" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Map/ico_portal.png" />
+                <Setter TargetName="Icon" Property="RenderTransform" Value="{x:Null}" />
+                <Setter TargetName="nameContainer" Property="Visibility" Value="Visible" />
+                <Setter TargetName="canvas" Property="ToolTip" Value="{x:Null}" />
+                <Setter TargetName="canvas" Property="IsHitTestVisible" Value="False" />
+            </DataTrigger>
+
+            <DataTrigger Binding="{Binding Type}" Value="QuestMarker">
+                <Setter TargetName="Icon" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Map_c/c_mapSelector_quest.png" />
+                <Setter TargetName="Icon" Property="RenderTransform" Value="{x:Null}" />
+                <Setter TargetName="Icon" Property="Width" Value="72" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding Type}" Value="LocationMarker">
+                <Setter TargetName="Icon" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Map/ico_POI.png" />
+                <Setter TargetName="Icon" Property="RenderTransform" Value="{x:Null}" />
+                <Setter TargetName="nameContainer" Property="Visibility" Value="Visible" />
+                <Setter TargetName="canvas" Property="ToolTip" Value="{x:Null}" />
+                <Setter TargetName="canvas" Property="IsHitTestVisible" Value="False" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding Type}" Value="SecretMarker">
+                <Setter TargetName="Icon" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Map/ico_secret.png" />
+                <Setter TargetName="Icon" Property="RenderTransform" Value="{x:Null}" />
+            </DataTrigger>
+
+            <DataTrigger Binding="{Binding IsSelected}" Value="True">
+                <Setter TargetName="Icon" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Map_c/c_mapSelector_selected.png" />
+            </DataTrigger>
+
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+
+    <!--PlayerPortraits BEGIN -->
+    <ControlTemplate x:Key="PortraitHealth">
+        <TextBlock IsHitTestVisible="False" FontSize="{StaticResource SmallFontSize}" FontWeight="Bold" noesis:Text.Stroke="Black" noesis:Text.StrokeThickness="4" Visibility="{Binding Stats.Health.IsValid, Converter={StaticResource BoolToVisibleConverter}}">
+            <TextBlock.Style>
+                <Style TargetType="TextBlock">
+                    <Setter Property="Foreground" Value="{StaticResource LS_PrimaryColor}"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Stats.Health.PercentValue, Mode=OneWay, Converter={StaticResource LessThanConverter}, ConverterParameter='0.6'}" Value="True">
+                            <Setter Property="Foreground" Value="#ffd065"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding Stats.Health.PercentValue, Mode=OneWay, Converter={StaticResource LessThanConverter}, ConverterParameter='0.3'}" Value="True">
+                            <Setter Property="Foreground" Value="{StaticResource LS_alertTxtColor}"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBlock.Style>
+            <Run Text="{Binding Stats.Health.Value, Mode=OneWay}"/><Run
+            Text="{Binding Stats.Health.Max, Mode=OneWay, StringFormat='/{0}'}"/>
+        </TextBlock>
+    </ControlTemplate>
+
+    <!--Summon Portrait Representation -->
+
+    <ControlTemplate x:Key="HasResourcesTemplate">
+        <Image Stretch="None">
+            <Image.Style>
+                <Style TargetType="Image">
+                    <Setter Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/PlayerPortraits/ico_AP_available.png"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding HasAction}" Value="False">
+                            <Setter Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/PlayerPortraits/ico_AP_spent.png"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Image.Style>
+        </Image>
+    </ControlTemplate>
+
+    <DataTemplate x:Key="SummonPortrait">
+        <StackPanel Orientation="Vertical" VerticalAlignment="Bottom" Margin="0,-16,0,0">
+            <Grid Height="140" Style="{StaticResource PortraitGridStyle}">
+                
+                <ls:LSEntityObject EntityRef="{Binding EntityHandle}" VerticalAlignment="Top" Margin="0,-30,0,0" Background="Transparent">
+                    <Rectangle Fill="{Binding Icon}" Width="132" Height="196">
+                        <Rectangle.Clip>
+                            <RectangleGeometry Rect="0,48,132,94"/>
+                        </Rectangle.Clip>
+                    </Rectangle>
+                    <ProgressBar Template="{StaticResource DefaultProgressBar}" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="16,48,0,0" Width="132" Height="94" Style="{StaticResource CharacterPortraitBarStyle}"/>
+                </ls:LSEntityObject>
+
+                <Image x:Name="ConditionsIndicator" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared/ico_conditionsBigMark_d.png" Stretch="None" HorizontalAlignment="Right" VerticalAlignment="Top" Visibility="{Binding StatusEffects.Count, Converter={StaticResource CountToVisibilityConverter}}" Margin="0,10,10,0"/>
+                <ProgressBar VerticalAlignment = "Bottom" Margin="-1,0,0,16" Width="132" Height="12" Value="{Binding Stats.Health.PercentValue, Mode=OneWay}" Maximum="1" Minimum="0" Background="{StaticResource LS_HealthBarBackgound}" Foreground="{StaticResource LS_HealthBarForegound}" BorderBrush="Transparent" Focusable="False"/>
+                <Image Stretch="None">
+                    <Image.Style>
+                        <Style TargetType="Image">
+                            <Setter Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/PlayerPortraits/portrait_frame_summon_d.png"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsSelectedCharacter}" Value="True">
+                                    <Setter Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/PlayerPortraits/portrait_frame_summon_active_d.png"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Image.Style>
+                </Image>
+
+                <Image Stretch="None" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="0,0,0,8">
+                    <Image.Style>
+                        <Style TargetType="Image">
+                            <Setter Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/PlayerPortraits/ico_mode_combat.png"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding CharacterMode}" Value="Idle">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding CharacterMode}" Value="InFTB">
+                                    <Setter Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/PlayerPortraits/ico_mode_FTB.png"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding CharacterMode}" Value="InDialogue">
+                                    <Setter Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/PlayerPortraits/ico_mode_dialogue.png"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding CharacterMode}" Value="InTrade">
+                                    <Setter Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/PlayerPortraits/ico_mode_trade.png"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Image.Style>
+                </Image>
+                <Control Template="{StaticResource PortraitHealth}" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,18,22" Focusable="False"/>
+            </Grid>
+        </StackPanel>
+    </DataTemplate>
+
+    <Style x:Key="LevelUpButtonStyle" TargetType="{x:Type ls:LSButton}">
+        <Setter Property="Template" Value="{DynamicResource ButtonTemplate}"/>
+        <Style.Resources>
+            <ImageSource x:Key="ButtonNormal">pack://application:,,,/GustavNoesisGUI;component/Assets/PlayerPortraits/ico_lvlUp_d.png</ImageSource>
+            <ImageSource x:Key="ButtonHighlight">pack://application:,,,/GustavNoesisGUI;component/Assets/PlayerPortraits/ico_lvlUp_h.png</ImageSource>
+            <ImageSource x:Key="ButtonPressed">pack://application:,,,/GustavNoesisGUI;component/Assets/PlayerPortraits/ico_lvlUp_d.png</ImageSource>
+            <ImageSource x:Key="ButtonDisabled">pack://application:,,,/GustavNoesisGUI;component/Assets/PlayerPortraits/ico_lvlUp_d.png</ImageSource>
+        </Style.Resources>
+    </Style>
+
+    <!-- CharacterPortrait Template -->
+    <DataTemplate x:Key="CharacterPortrait">
+        <Grid x:Name="ParentControl" Background="Transparent" Margin="0,0,-16,0">
+            <Grid.Tag>
+                <MultiBinding Converter="{StaticResource EqualConverter}">
+                    <Binding RelativeSource="{RelativeSource AncestorType={x:Type ls:UIWidget}}" Path="DataContext.CurrentPlayer.UserId"/>
+                    <Binding Path="OwnerUserID"/>
+                </MultiBinding>
+            </Grid.Tag>
+            <StackPanel Orientation="Vertical" VerticalAlignment="Bottom">
+                <ItemsControl ItemsSource="{Binding Followers}" ItemTemplate="{StaticResource SummonPortrait}" Background="Transparent" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled" BorderBrush="Transparent" Margin="0,0,0,-6">
+                    <ItemsControl.Style>
+                        <Style TargetType="ItemsControl">
+                            <Setter Property="Visibility" Value="Visible"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Followers.Count}" Value="0">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ItemsControl.Style>
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <VirtualizingStackPanel IsItemsHost="True" Orientation="Vertical"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
+
+                <ContentControl>
+                    <b:Interaction.Triggers>
+                        <b:EventTrigger EventName="MouseLeftButtonUp">
+                            <b:InvokeCommandAction Command="{Binding DataContext.SelectCharacter,RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" CommandParameter="{Binding}"/>
+                            <b:InvokeCommandAction Command="{Binding DataContext.PlaySelectCharacterReaction,RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" CommandParameter="{Binding}"/>
+                        </b:EventTrigger>
+                        <b:EventTrigger EventName="MouseDoubleClick" >
+                            <b:InvokeCommandAction Command="{Binding DataContext.SetCameraOnGameObject,RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" CommandParameter="{Binding}" />
+                        </b:EventTrigger>
+                        <b:EventTrigger EventName="MouseEnter">
+                            <b:InvokeCommandAction Command="{Binding DataContext.HighlightGameobject, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" CommandParameter="{Binding}"/>
+                        </b:EventTrigger>
+                        <b:EventTrigger EventName="MouseLeave">
+                            <b:InvokeCommandAction Command="{Binding DataContext.ClearHighlightGameobject, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" CommandParameter="{Binding}"/>
+                        </b:EventTrigger>
+                    </b:Interaction.Triggers>
+
+                    <Grid Style="{StaticResource PortraitGridStyle}">
+
+                        <ls:LSEntityObject EntityRef="{Binding EntityHandle}" Background="Transparent" Margin="0,-16,0,0" Height="240" Opacity="1">
+                            <Grid IsHitTestVisible="False">
+                                <Rectangle Margin="0,18,0,0" VerticalAlignment="Top" Width="128" Height="198" Fill="{Binding Icon}"/>
+                                <ProgressBar Template="{DynamicResource DefaultProgressBar}" VerticalAlignment="Top" Margin="0,18,0,0" Width="128" Height="196" Style="{StaticResource CharacterPortraitBarStyle}"/>
+                                <ProgressBar VerticalAlignment="Bottom" Margin="0,0,0,10" Width="128" Height="12" Value="{Binding Stats.Health.PercentValue, Mode=OneWay}" Maximum="1" Minimum="0" Background="{StaticResource LS_HealthBarBackgound}" Foreground="{StaticResource LS_HealthBarForegound}" BorderBrush="Transparent"/>
+                                <Image Stretch="None">
+                                    <Image.Style>
+                                        <Style TargetType="Image">
+                                            <Setter Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/PlayerPortraits/portrait_frame_inactive_d.png"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsSelectedCharacter}" Value="True">
+                                                    <Setter Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/PlayerPortraits/portrait_frame_active_d.png"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Image.Style>
+                                </Image>
+                                <Image x:Name="highlite" Stretch="None" Visibility="Hidden">
+                                    <Image.Style>
+                                        <Style TargetType="Image">
+                                            <Setter Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/PlayerPortraits/portrait_frame_inactive_h.png"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsSelectedCharacter}" Value="True">
+                                                    <Setter Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/PlayerPortraits/portrait_frame_active_h.png"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Image.Style>
+                                </Image>
+
+                                <Image Stretch="None" VerticalAlignment="Bottom" Margin="0,0,0,40">
+                                    <Image.Style>
+                                        <Style TargetType="Image">
+                                            <Setter Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/PlayerPortraits/ico_mode_combat.png"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding CharacterMode}" Value="Idle">
+                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding CharacterMode}" Value="InFTB">
+                                                    <Setter Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/PlayerPortraits/ico_mode_FTB.png"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding CharacterMode}" Value="InDialogue">
+                                                    <Setter Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/PlayerPortraits/ico_mode_dialogue.png"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding CharacterMode}" Value="InTrade">
+                                                    <Setter Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/PlayerPortraits/ico_mode_trade.png"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Image.Style>
+                                </Image>
+                                <Control Template="{StaticResource PortraitHealth}" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,18,20"/>
+                            </Grid>
+
+                            <Grid VerticalAlignment="Top" HorizontalAlignment="Left" ToolTip="{StaticResource ManagedTooltip}" ToolTipService.Placement="Right" ToolTipService.IsEnabled="True" DataContext="{Binding ConcentrationSpell}" Visibility="{Binding DataContext.ConcentrationSpell, RelativeSource={RelativeSource AncestorType=ls:LSEntityObject}, Converter={StaticResource NullToCollapsedConverter}}" Margin="6,14,0,0">
+                                <Ellipse Fill="{Binding Icon}" Width="42" Height="42"/>
+                                <Image Source="pack://application:,,,/GustavNoesisGUI;component/Assets/TargetInfo/hud_target_CharacterConcentration.png" Stretch="Uniform" Width="82"/>
+                            </Grid>
+
+                            <StackPanel VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,18,10,0">
+                                <Image x:Name="LevelUpIcon" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/PlayerPortraits/ico_lvlUp_d.png" Stretch="None" Visibility="{Binding Stats.Level.LevelUpAvailable, Converter={StaticResource BoolToVisibleConverter}}"/>
+                                <Image x:Name="ConditionsIndicator" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared/ico_conditionsBigMark_d.png" Stretch="None" HorizontalAlignment="Right" Visibility="{Binding StatusEffects.Count, Converter={StaticResource CountToVisibilityConverter}}"/>
+                            </StackPanel>
+                        </ls:LSEntityObject>
+                    </Grid>
+
+                </ContentControl>
+            </StackPanel>
+        </Grid>
+    </DataTemplate>
+
+    <!--PlayerPortraits Representation -->
+    <Style x:Key="PlayerPortraits" TargetType="ContentPresenter" >
+        <Setter Property="ContentTemplate" Value="{StaticResource CharacterPortrait}" />
+        <Setter Property="VerticalAlignment" Value="Bottom"/>
+        <Setter Property="Opacity" Value="1"/>
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding IsDragged}" Value="True">
+                <Setter Property="Visibility" Value="Collapsed"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+    
+    <!--PlayerPortraits END -->
+
+    <ControlTemplate x:Key="CharacterListBgTemplate">
+        <Grid>
+            <Grid x:Name="bgFade" Background="{DynamicResource LS_PopUpBackgroundColor}"/>
+
+            <ContentPresenter/>
+
+            <Grid.Triggers>
+                <EventTrigger RoutedEvent="FrameworkElement.Loaded">
+                    <BeginStoryboard>
+                        <Storyboard >
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="bgFade" >
+                                <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                                <EasingDoubleKeyFrame KeyTime="0:0:0.70" Value="1">
+                                    <EasingDoubleKeyFrame.EasingFunction>
+                                        <CubicEase EasingMode="EaseOut"/>
+                                    </EasingDoubleKeyFrame.EasingFunction>
+                                </EasingDoubleKeyFrame>
+                            </DoubleAnimationUsingKeyFrames>
+
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)"  Storyboard.TargetName="characterList">
+                                <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                                <EasingDoubleKeyFrame KeyTime="0:0:0.45" Value="1">
+                                    <EasingDoubleKeyFrame.EasingFunction>
+                                        <CubicEase EasingMode="EaseOut"/>
+                                    </EasingDoubleKeyFrame.EasingFunction>
+                                </EasingDoubleKeyFrame>
+                            </DoubleAnimationUsingKeyFrames>
+
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)" Storyboard.TargetName="characterList">
+                                <EasingDoubleKeyFrame KeyTime="0:0:0.0" Value="0.6"/>
+
+                                <EasingDoubleKeyFrame KeyTime="0:0:0.48" Value="1">
+                                    <EasingDoubleKeyFrame.EasingFunction>
+                                        <CubicEase EasingMode="EaseOut"/>
+                                    </EasingDoubleKeyFrame.EasingFunction>
+                                </EasingDoubleKeyFrame>
+                            </DoubleAnimationUsingKeyFrames>
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleY)" Storyboard.TargetName="characterList">
+                                <EasingDoubleKeyFrame KeyTime="0:0:0.0" Value="0.6"/>
+
+                                <EasingDoubleKeyFrame KeyTime="0:0:0.48" Value="1">
+                                    <EasingDoubleKeyFrame.EasingFunction>
+                                        <CubicEase EasingMode="EaseOut"/>
+                                    </EasingDoubleKeyFrame.EasingFunction>
+                                </EasingDoubleKeyFrame>
+                            </DoubleAnimationUsingKeyFrames>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </Grid.Triggers>
+        </Grid>
+    </ControlTemplate>
+
+    <ControlTemplate x:Key="InventoryLock">
+        <Image x:Name="InventoryLockImage_c" HorizontalAlignment="Center" VerticalAlignment="Center" Stretch="None">
+            <Image.Tag>
+                <MultiBinding Converter="{StaticResource EqualConverter}">
+                    <Binding RelativeSource="{RelativeSource AncestorType={x:Type ls:UIWidget}}" Path="DataContext.CurrentPlayer.UserId"/>
+                    <Binding Path="OwnerUserID"/>
+                </MultiBinding>
+            </Image.Tag>
+
+            <Image.Style>
+                <Style TargetType="Image">
+                    <Setter Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Inventory/ico_lock_active_off_d.png"/>
+                    <Setter Property="Visibility" Value="Collapsed"/>
+
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Tag, ElementName=InventoryLockImage_c}" Value="False">
+                            <Setter Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Inventory/ico_lock_inactive_off_d.png"/>
+                        </DataTrigger>
+
+                        <DataTrigger Binding="{Binding IsInventoryLocked}" Value="True">
+                            <Setter Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Inventory/ico_lock_active_on_d.png"/>
+                            <Setter Property="Visibility" Value="Visible"/>
+                        </DataTrigger>
+
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding IsInventoryLocked}" Value="True"/>
+                                <Condition Binding="{Binding Tag, ElementName=InventoryLockImage_c}" Value="False"/>
+                            </MultiDataTrigger.Conditions>
+                            <MultiDataTrigger.Setters>
+                                <Setter Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Inventory/ico_lock_inactive_on_d.png"/>
+                            </MultiDataTrigger.Setters>
+                        </MultiDataTrigger>
+
+                        <DataTrigger Binding="{Binding Tag, ElementName=InventoryLockImage_c}" Value="True">
+                            <Setter Property="Visibility" Value="Visible"/>
+                        </DataTrigger>
+
+                        <!-- If we're not in MP, you don't need to display the lock state-->
+                        <DataTrigger Binding="{Binding DataContext.Data.Players.Count, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}, Converter={StaticResource GreaterThanConverter}, ConverterParameter=1}" Value="False">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Image.Style>
+        </Image>
+    </ControlTemplate>
+
+</ResourceDictionary>

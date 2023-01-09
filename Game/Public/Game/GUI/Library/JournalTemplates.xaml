@@ -1,0 +1,642 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+			        xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
+
+					xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                    xmlns:System="clr-namespace:System;assembly=mscorlib"
+                    xmlns:ls="clr-namespace:ls;assembly=SharedGUI"
+                    xmlns:noesis="clr-namespace:NoesisGUIExtensions;assembly=Noesis.GUI.Extensions"
+					mc:Ignorable="d">
+
+    <!-- Controller bottom checkbox templates -->
+    <Storyboard x:Key="BottomCheckboxSlideRight">
+        <DoubleAnimation To="38" Duration="0:0:0.25" Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)" Storyboard.TargetName="ToggleFilterButton">
+            <DoubleAnimation.EasingFunction>
+                <PowerEase EasingMode="EaseInOut"/>
+            </DoubleAnimation.EasingFunction>
+        </DoubleAnimation>
+    </Storyboard>
+
+    <Storyboard x:Key="BottomCheckboxSlideLeft">
+        <DoubleAnimation To="-38" Duration="0:0:0.25" Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)" Storyboard.TargetName="ToggleFilterButton">
+            <DoubleAnimation.EasingFunction>
+                <PowerEase EasingMode="EaseInOut"/>
+            </DoubleAnimation.EasingFunction>
+        </DoubleAnimation>
+    </Storyboard>
+
+    <Storyboard x:Key="BottomCheckboxActivate">
+        <DoubleAnimation Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="BackgroundInactive"
+                                         To="0" Duration="0:0:0.25">
+            <DoubleAnimation.EasingFunction>
+                <PowerEase EasingMode="EaseInOut"/>
+            </DoubleAnimation.EasingFunction>
+        </DoubleAnimation>
+        <DoubleAnimation Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="IconInactive"
+                                         To="0" Duration="0:0:0.25">
+            <DoubleAnimation.EasingFunction>
+                <PowerEase EasingMode="EaseInOut"/>
+            </DoubleAnimation.EasingFunction>
+        </DoubleAnimation>
+        <DoubleAnimation Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="BackgroundActive"
+                                         To="1" Duration="0:0:0.25">
+            <DoubleAnimation.EasingFunction>
+                <PowerEase EasingMode="EaseInOut"/>
+            </DoubleAnimation.EasingFunction>
+        </DoubleAnimation>
+        <DoubleAnimation Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="IconActive"
+                                         To="1" Duration="0:0:0.25">
+            <DoubleAnimation.EasingFunction>
+                <PowerEase EasingMode="EaseInOut"/>
+            </DoubleAnimation.EasingFunction>
+        </DoubleAnimation>
+    </Storyboard>
+
+    <Storyboard x:Key="BottomCheckboxDeactivate">
+        <DoubleAnimation Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="BackgroundInactive"
+                                         To="1" Duration="0:0:0.25">
+            <DoubleAnimation.EasingFunction>
+                <PowerEase EasingMode="EaseInOut"/>
+            </DoubleAnimation.EasingFunction>
+        </DoubleAnimation>
+        <DoubleAnimation Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="IconInactive"
+                                         To="1" Duration="0:0:0.25">
+            <DoubleAnimation.EasingFunction>
+                <PowerEase EasingMode="EaseInOut"/>
+            </DoubleAnimation.EasingFunction>
+        </DoubleAnimation>
+        <DoubleAnimation Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="BackgroundActive"
+                                         To="0" Duration="0:0:0.25">
+            <DoubleAnimation.EasingFunction>
+                <PowerEase EasingMode="EaseInOut"/>
+            </DoubleAnimation.EasingFunction>
+        </DoubleAnimation>
+        <DoubleAnimation Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="IconActive"
+                                         To="0" Duration="0:0:0.25">
+            <DoubleAnimation.EasingFunction>
+                <PowerEase EasingMode="EaseInOut"/>
+            </DoubleAnimation.EasingFunction>
+        </DoubleAnimation>
+    </Storyboard>
+
+    <ControlTemplate x:Key="BottomCheckboxTemplate" TargetType="ls:LSCheckBox" >
+        <Grid>
+            <Image x:Name="BackgroundInactive" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Journal/c_journalToggle_inactive.png" Stretch="None"/>
+            <Image x:Name="BackgroundActive" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Journal/c_journalToggle_active.png" Stretch="None"/>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <Grid>
+                    <Image x:Name="IconInactive" Source="{DynamicResource IconInactive}" Stretch="None"/>
+                    <Image x:Name="IconActive" Source="{DynamicResource IconActive}" Stretch="None"/>
+                </Grid>
+                <TextBlock x:Name="CheckBoxText" Text="{Binding Content, RelativeSource={RelativeSource Mode=TemplatedParent}}" VerticalAlignment="Center"
+                                   Foreground="{StaticResource LS_PrimaryColor}"/>
+            </StackPanel>
+        </Grid>
+        <ControlTemplate.Triggers>
+            <Trigger Property="IsChecked" Value="True">
+                <Trigger.EnterActions>
+                    <BeginStoryboard Storyboard="{StaticResource BottomCheckboxActivate}"/>
+                </Trigger.EnterActions>
+            </Trigger>
+            <Trigger Property="IsChecked" Value="False">
+                <Trigger.EnterActions>
+                    <BeginStoryboard Storyboard="{StaticResource BottomCheckboxDeactivate}"/>
+                </Trigger.EnterActions>
+            </Trigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+
+    <!-- Journal background and header -->
+    <Style x:Key="JournalHeaderListBoxStyle" TargetType="ls:LSListBox" BasedOn="{StaticResource {x:Type ls:LSListBox}}">
+        <Style.Resources>
+            <Style TargetType="ls:LSRadioButton">
+                <Setter Property="Command" Value="{Binding DataContext.CustomEvent, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"/>
+                <Setter Property="GroupName" Value="JournalCategory"/>
+                <Setter Property="SoundID" Value="UI_HUD_Journal_Tab"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="ls:LSRadioButton">
+                            <Grid x:Name="contentRoot" Background="Transparent" ToolTipService.Placement="Center" ToolTipService.VerticalOffset="120" ToolTipService.ShowOnDisabled="True">
+                                <Grid.ToolTip>
+                                    <ls:LSTooltip Content="{Binding Content, RelativeSource={RelativeSource TemplatedParent},Converter={StaticResource TranslatedStringConverter}}"/>
+                                </Grid.ToolTip>
+                                <Image x:Name="bgImg" Source="{DynamicResource Button_d}" Stretch="None"/>
+                                <Image x:Name="imgIcon" Stretch="None" Source="{DynamicResource NormalIconImg}"/>
+                                <!--Can't use the normal soundID since this sound event has the wrong format-->
+                                <b:Interaction.Triggers>
+                                    <b:EventTrigger EventName="MouseEnter">
+                                        <b:InvokeCommandAction Command="{Binding DataContext.PlaySoundEvent, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" CommandParameter="UI_HUD_Journal_TabOver"/>
+                                    </b:EventTrigger>
+                                    <b:EventTrigger EventName="MouseLeave">
+                                        <b:InvokeCommandAction Command="{Binding DataContext.PlaySoundEvent, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" CommandParameter="UI_HUD_Journal_TabLeave"/>
+                                    </b:EventTrigger>
+                                </b:Interaction.Triggers>
+                            </Grid>
+                            <ControlTemplate.Triggers>
+                                <DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType={x:Type ls:LSListBoxItem}}}" Value="True">
+                                    <Setter Property="IsChecked" Value="True"/>
+                                </DataTrigger>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Source" Value="{DynamicResource Button_h}" TargetName="bgImg"/>
+                                    <Setter Property="Source" Value="{DynamicResource SelectedIconImg}" TargetName="imgIcon"/>
+                                </Trigger>
+                                <Trigger Property="IsEnabled" Value="False">
+                                    <Setter Property="Source" Value="{DynamicResource Button_dis}" TargetName="bgImg"/>
+                                </Trigger>
+                                <Trigger Property="IsChecked" Value="True">
+                                    <Setter Property="Source" Value="{DynamicResource Button_h}" TargetName="bgImg"/>
+                                    <Setter Property="Source" Value="{DynamicResource SelectedIconImg}" TargetName="imgIcon"/>
+                                    <Setter Property="IsEnabled" Value="False"/>
+                                </Trigger>
+                                <Trigger Property="IsPressed" Value="True">
+                                    <Setter Property="Source" Value="{DynamicResource Button_p}" TargetName="bgImg"/>
+                                    <Setter Property="Margin" Value="0,4,0,0" TargetName="imgIcon"/>
+                                </Trigger>
+                                <Trigger Property="Tag" Value="NoInternalTooltip">
+                                    <Setter Property="ToolTipService.IsEnabled" Value="False" TargetName="contentRoot"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+        </Style.Resources>
+        <Setter Property="ItemsPanel">
+            <Setter.Value>
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Horizontal"/>
+                </ItemsPanelTemplate>
+            </Setter.Value>
+        </Setter>
+
+        <Setter Property="ItemContainerStyle">
+            <Setter.Value>
+                <Style TargetType="ls:LSListBoxItem">
+                    <Setter Property="Panel.ZIndex" Value="1"/>
+                    <Setter Property="Focusable" Value="False"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate>
+                                <ContentPresenter/>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                    <Style.Triggers>
+                        <Trigger Property="Tag" Value="Below">
+                            <Setter Property="Panel.ZIndex" Value="0"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Setter.Value>
+        </Setter>
+
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding Path=Name, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" Value="JournalQuest">
+                <Setter Property="SelectedIndex" Value="1"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding Path=Name, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" Value="JournalInspiration">
+                <Setter Property="SelectedIndex" Value="3"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding Path=Name, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" Value="JournalDialogues">
+                <Setter Property="SelectedIndex" Value="5"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding Path=Name, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" Value="JournalTutorial">
+                <Setter Property="SelectedIndex" Value="7"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <ControlTemplate x:Key="JournalHeader">
+        <ls:LSListBox x:Name="JournalHeaderListbox" Style="{StaticResource JournalHeaderListBoxStyle}" Tag="{TemplateBinding Tag}" KeyboardNavigation.DirectionalNavigation="Contained" ActionPrevEvent="UITabPrev" ActionNextEvent="UITabNext">
+            <ls:LSListBox.Resources>
+                <ImageSource x:Key="Button_d">pack://application:,,,/GustavNoesisGUI;component/Assets/Buttons/hotbar_btn_d.png</ImageSource>
+                <ImageSource x:Key="Button_h">pack://application:,,,/GustavNoesisGUI;component/Assets/Buttons/hotbar_btn_h.png</ImageSource>
+                <ImageSource x:Key="Button_p">pack://application:,,,/GustavNoesisGUI;component/Assets/Buttons/hotbar_btn_p.png</ImageSource>
+                <ImageSource x:Key="Button_dis">pack://application:,,,/GustavNoesisGUI;component/Assets/Buttons/hotbar_btn_disabled.png</ImageSource>
+            </ls:LSListBox.Resources>
+            
+            <ls:LSListBoxItem Tag="Below" Margin="0,0,-64,0">
+                <Image Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Journal/submenu_decor.png" Stretch="None"/>
+            </ls:LSListBoxItem>
+
+            <ls:LSRadioButton x:Name="RBtnQuests" ToolTipService.ShowOnDisabled="True" CommandParameter="ToggleJournalQuests" Margin="0,0,-6,0" SoundID="UI_HUD_Journal_Category" Tag="NoInternalTooltip" >
+                <ls:LSRadioButton.Resources>
+                    <ImageSource x:Key="NormalIconImg">pack://application:,,,/GustavNoesisGUI;component/Assets/Shared/ico_journal_inactive.png</ImageSource>
+                    <ImageSource x:Key="SelectedIconImg">pack://application:,,,/GustavNoesisGUI;component/Assets/Shared/ico_journal_active.png</ImageSource>
+                </ls:LSRadioButton.Resources>
+                <ls:LSRadioButton.ToolTip>
+                    <ls:LSTooltip IsHitTestVisible="False" Content="{Binding Path=DataContext.CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='ToggleJournal', ElementName=RBtnQuests}"/>
+                </ls:LSRadioButton.ToolTip>
+            </ls:LSRadioButton>
+
+            <ls:LSListBoxItem Margin="-22,0" IsEnabled="False">
+                <Image Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Buttons/hotbar_btn_fill.png" Stretch="None"/>
+            </ls:LSListBoxItem>
+
+            <ls:LSRadioButton x:Name="RBtnInspiration" CommandParameter="ToggleJournalInspiration" Margin="-6,0" SoundID="UI_HUD_Journal_Category" ToolTipService.ShowOnDisabled="True" Tag="NoInternalTooltip">
+                <ls:LSRadioButton.Resources>
+                    <ImageSource x:Key="NormalIconImg">pack://application:,,,/GustavNoesisGUI;component/Assets/Shared/ico_inspiration.png</ImageSource>
+                    <ImageSource x:Key="SelectedIconImg">pack://application:,,,/GustavNoesisGUI;component/Assets/Shared/ico_inspiration_h1.png</ImageSource>
+                </ls:LSRadioButton.Resources>
+                <ls:LSRadioButton.ToolTip>
+                    <ls:LSTooltip IsHitTestVisible="False" Content="{Binding Path=DataContext.CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='ToggleInspiration', ElementName=RBtnInspiration}"/>
+                </ls:LSRadioButton.ToolTip>
+            </ls:LSRadioButton>
+
+            <ls:LSListBoxItem Margin="-22,0" IsEnabled="False">
+                <Image Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Buttons/hotbar_btn_fill.png" Stretch="None"/>
+            </ls:LSListBoxItem>
+
+            <ls:LSRadioButton  x:Name="RBtnDialogues" CommandParameter="ToggleJournalDialogues" Content="hc610c4aeg0285g4e2agbc31g4bb458c1c7b3" Margin="-6,0" SoundID="UI_HUD_Journal_Category">
+                <ls:LSRadioButton.Resources>
+                    <ImageSource x:Key="NormalIconImg">pack://application:,,,/GustavNoesisGUI;component/Assets/Shared/ico_dialogues_inactive.png</ImageSource>
+                    <ImageSource x:Key="SelectedIconImg">pack://application:,,,/GustavNoesisGUI;component/Assets/Shared/ico_dialogues_active.png</ImageSource>
+                </ls:LSRadioButton.Resources>
+            </ls:LSRadioButton>
+
+            <ls:LSListBoxItem Margin="-22,0" IsEnabled="False">
+                <Image Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Buttons/hotbar_btn_fill.png" Stretch="None"/>
+            </ls:LSListBoxItem>
+
+            <ls:LSRadioButton x:Name="RBtnTutorials" CommandParameter="ToggleJournalTutorial" Content="h20907681g950fg42f3g844fg251c11592d4d" Margin="-6,0,0,0" SoundID="UI_HUD_Journal_Category">
+                <ls:LSRadioButton.Resources>
+                    <ImageSource x:Key="NormalIconImg">pack://application:,,,/GustavNoesisGUI;component/Assets/Shared/ico_info_inactive.png</ImageSource>
+                    <ImageSource x:Key="SelectedIconImg">pack://application:,,,/GustavNoesisGUI;component/Assets/Shared/ico_info_active.png</ImageSource>
+                </ls:LSRadioButton.Resources>
+            </ls:LSRadioButton>
+            
+            <ls:LSListBoxItem Tag="Below" Margin="-64,0,0,0">
+                <Image Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Journal/submenu_decor.png" Stretch="None">
+                    <Image.RenderTransform>
+                        <ScaleTransform ScaleX="-1" CenterX="94"/>
+                    </Image.RenderTransform>
+                </Image>
+            </ls:LSListBoxItem>
+        </ls:LSListBox>
+
+    </ControlTemplate>
+
+    <ControlTemplate x:Key="JournalHeaderController">
+        <ls:LSListBox x:Name="JournalHeaderListbox" Style="{StaticResource JournalHeaderListBoxStyle}" Tag="{TemplateBinding Tag}" KeyboardNavigation.DirectionalNavigation="Cycle" ActionPrevEvent="UITabPrev" ActionNextEvent="UITabNext">
+            <ls:LSListBox.Resources>
+                <ImageSource x:Key="Button_d">pack://application:,,,/GustavNoesisGUI;component/Assets/Shared_c/c_navBtnSquare_d.png</ImageSource>
+                <ImageSource x:Key="Button_h">pack://application:,,,/GustavNoesisGUI;component/Assets/Shared_c/c_navBtnSquare_h.png</ImageSource>
+                <ImageSource x:Key="Button_p">pack://application:,,,/GustavNoesisGUI;component/Assets/Shared_c/c_navBtnSquare_d.png</ImageSource>
+                <ImageSource x:Key="Button_dis">pack://application:,,,/GustavNoesisGUI;component/Assets/Shared_c/c_navBtnSquare_d.png</ImageSource>
+            </ls:LSListBox.Resources>
+
+            <ls:LSListBoxItem Tag="Below" Margin="0,0,-64,0" Focusable="False">
+                <Grid>
+                    <Image Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Journal/c_submenu_decor.png" Stretch="None"/>
+                    <ls:LSButton Style="{StaticResource ControllerButton}" DataContext = "{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UITabPrev'}" Content="" EatInput="False"/>
+                </Grid>
+            </ls:LSListBoxItem>
+            
+            <ls:LSRadioButton x:Name="JournalQuest" CommandParameter="ToggleJournalQuests" Content="hb4bac393g5295g4e80g8dacge61e914d2313" Margin="0,0,-6,0">
+                <ls:LSRadioButton.Resources>
+                    <ImageSource x:Key="NormalIconImg">pack://application:,,,/GustavNoesisGUI;component/Assets/Journal/c_ico_journal_d.png</ImageSource>
+                    <ImageSource x:Key="SelectedIconImg">pack://application:,,,/GustavNoesisGUI;component/Assets/Journal/c_ico_journal_h.png</ImageSource>
+                </ls:LSRadioButton.Resources>
+            </ls:LSRadioButton>
+
+            <ls:LSListBoxItem Margin="-22,0" IsEnabled="False">
+                <Image Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared_c/c_navBtnSquare_pins.png" Stretch="None"/>
+            </ls:LSListBoxItem>
+
+            <ls:LSRadioButton x:Name="JournalInspiration" CommandParameter="ToggleJournalInspiration" Content="hf915ab82gc327g4b89g9380g9befc60565d6" Margin="-6,0" SoundID="UI_HUD_Journal_Category">
+                <ls:LSRadioButton.Resources>
+                    <ImageSource x:Key="NormalIconImg">pack://application:,,,/GustavNoesisGUI;component/Assets/Shared_c/c_ico_inspirationPoints.png</ImageSource>
+                    <ImageSource x:Key="SelectedIconImg">pack://application:,,,/GustavNoesisGUI;component/Assets/Shared_c/c_ico_inspirationPoints.png</ImageSource>
+                </ls:LSRadioButton.Resources>
+            </ls:LSRadioButton>
+
+            <ls:LSListBoxItem Margin="-22,0" IsEnabled="False">
+                <Image Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared_c/c_navBtnSquare_pins.png" Stretch="None"/>
+            </ls:LSListBoxItem>
+
+            <ls:LSRadioButton x:Name="JournalDialogues" CommandParameter="ToggleJournalDialogues" Content="hc610c4aeg0285g4e2agbc31g4bb458c1c7b3" Margin="-6,0">
+                <ls:LSRadioButton.Resources>
+                    <ImageSource x:Key="NormalIconImg">pack://application:,,,/GustavNoesisGUI;component/Assets/Journal/c_ico_dialogues_d.png</ImageSource>
+                    <ImageSource x:Key="SelectedIconImg">pack://application:,,,/GustavNoesisGUI;component/Assets/Journal/c_ico_dialogues_h.png</ImageSource>
+                </ls:LSRadioButton.Resources>
+            </ls:LSRadioButton>
+
+            <ls:LSListBoxItem Margin="-22,0" IsEnabled="False">
+                <Image Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared_c/c_navBtnSquare_pins.png" Stretch="None"/>
+            </ls:LSListBoxItem>
+
+            <ls:LSRadioButton x:Name="JournalTutorial" CommandParameter="ToggleJournalTutorial" Content="h20907681g950fg42f3g844fg251c11592d4d" Margin="-6,0,0,0">
+                <ls:LSRadioButton.Resources>
+                    <ImageSource x:Key="NormalIconImg">pack://application:,,,/GustavNoesisGUI;component/Assets/Journal/c_ico_tutorials_d.png</ImageSource>
+                    <ImageSource x:Key="SelectedIconImg">pack://application:,,,/GustavNoesisGUI;component/Assets/Journal/c_ico_tutorials_h.png</ImageSource>
+                </ls:LSRadioButton.Resources>
+            </ls:LSRadioButton>
+
+            <ls:LSListBoxItem Tag="Below" Margin="-64,0,0,0" Focusable="False">
+                <Grid>
+                    <Image Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Journal/c_submenu_decor.png" Stretch="None">
+                        <Image.RenderTransform>
+                            <ScaleTransform ScaleX="-1" CenterX="94"/>
+                        </Image.RenderTransform>
+                    </Image>
+                    <ls:LSButton Style="{StaticResource ControllerButton}" DataContext = "{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UITabNext'}" Content="" EatInput="False" />
+                </Grid>
+            </ls:LSListBoxItem>
+
+            <b:Interaction.Triggers>
+               
+                <b:EventTrigger EventName="SelectionChanged">
+                    <b:Interaction.Behaviors>
+                        <b:ConditionBehavior>
+                            <b:ConditionalExpression>
+                                <b:ComparisonCondition LeftOperand="{Binding Path=Name, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" Operator="NotEqual" RightOperand="{Binding Path=SelectedItem.Name, ElementName=JournalHeaderListbox}" />
+                            </b:ConditionalExpression>
+                        </b:ConditionBehavior>
+                    </b:Interaction.Behaviors>
+                    <b:InvokeCommandAction Command="{Binding CustomEvent}" CommandParameter="{Binding Path=SelectedItem.CommandParameter, ElementName=JournalHeaderListbox}"/>
+                </b:EventTrigger>
+            </b:Interaction.Triggers>
+        </ls:LSListBox>
+
+    </ControlTemplate>
+
+    <DataTemplate x:Key="MarkerIsSelected">
+        <StackPanel x:Name="hl" Visibility="Collapsed" Height="60" Margin="-90,0,0,0" Orientation="Horizontal">
+	        <Image Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Journal/selector_journal.png" Stretch="Fill" Width="1390"/>
+            <Image Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Journal/ico_pointer.png" Stretch="None" HorizontalAlignment="Right"/>
+        </StackPanel>
+        <DataTemplate.Triggers>
+            <DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType={x:Type TreeViewItem}}}" Value="True">
+                <Setter TargetName="hl" Property="Visibility" Value="Visible"/>
+            </DataTrigger>
+
+            <DataTrigger Binding="{Binding IsSelected}" Value="True">
+                <Setter TargetName="hl" Property="Visibility" Value="Visible"/>
+            </DataTrigger>
+        </DataTemplate.Triggers>
+    </DataTemplate>
+
+    <ControlTemplate x:Key="LeftPanelFrame" TargetType="ContentControl">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <Image Grid.Column="0" Grid.Row="0" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Journal/frame_pageL_01.png" Stretch="None" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+            <Image Grid.Column="1" Grid.Row="0" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Journal/frame_pageL_02.png" Stretch="None" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,38,0,0"/>
+            <Image Grid.Column="0" Grid.Row="1" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Journal/frame_pageL_03.png" Stretch="None" VerticalAlignment="Bottom" HorizontalAlignment="Left"/>
+            <Image Grid.Column="1" Grid.Row="1" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Journal/frame_pageL_04.png" Stretch="None" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,0,38"/>
+            <Image Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Journal/journal_footer.png" Stretch="None" VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="0,0,0,-260"/>
+
+            <ContentPresenter Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Grid.RowSpan="2"/>
+        </Grid>
+    </ControlTemplate>
+
+    <ControlTemplate x:Key="RightPanelFrame" TargetType="ContentControl">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <Image Grid.Column="0" Grid.Row="0" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Journal/frame_pageR_01.png" Stretch="None" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,38,0,0"/>
+            <Image Grid.Column="1" Grid.Row="0" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Journal/frame_pageR_02.png" Stretch="None" VerticalAlignment="Top" HorizontalAlignment="Right"/>
+            <Image Grid.Column="0" Grid.Row="1" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Journal/frame_pageR_03.png" Stretch="None" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="0,0,0,38"/>
+            <Image Grid.Column="1" Grid.Row="1" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Journal/frame_pageR_04.png" Stretch="None" VerticalAlignment="Bottom" HorizontalAlignment="Right"/>
+            <Image Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Journal/journal_footer.png" Stretch="None" VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="0,0,0,-260"/>
+
+            <ContentPresenter Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Grid.RowSpan="2"/>
+        </Grid>
+    </ControlTemplate>
+
+    <!-- Journal background and header for controller -->
+    <ControlTemplate x:Key="JournalHeader_c">
+        <ControlTemplate.Resources>
+            <ImageSource x:Key="journalBg">pack://application:,,,/GustavNoesisGUI;component/Assets/Journal/journal_bg.png</ImageSource>
+
+            <DataTemplate x:Key="JournalHeaderItemUnselected" >
+                <Grid Background="Transparent">
+                    <Image x:Name="bg" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Buttons/topNav_btn_frame.png" Stretch="None" Opacity="0.7" Visibility="Hidden"/>
+                    <StackPanel>
+                        <Image x:Name="imgIcon" Stretch="None" Margin="0,0,0,-22">
+                            <Image.Style>
+                                <Style TargetType="Image">
+                                    <Setter Property="Source" Value="{x:Null}"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Path=Tag, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListBoxItem}}}" Value="ToggleJournalQuests">
+                                            <Setter Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared_c/c_ico_journal_d.png" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Path=Tag, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListBoxItem}}}" Value="ToggleJournalMap">
+                                            <Setter Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared_c/c_ico_map_d.png" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Path=Tag, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListBoxItem}}}" Value="ToggleJournalDialogues">
+                                            <Setter Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared_c/c_ico_dialogues_d.png" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Path=Tag, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListBoxItem}}}" Value="ToggleJournalInfo">
+                                            <Setter Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared_c/c_ico_barks_d.png" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Image.Style>
+                        </Image>
+                        <TextBlock Text="{Binding Content, RelativeSource={RelativeSource Mode=TemplatedParent}}" FontSize="{DynamicResource MediumFontSize}" Foreground="{StaticResource LS_SecondaryColor}" HorizontalAlignment="Center"/>
+                    </StackPanel>
+                </Grid>
+                <DataTemplate.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="Visibility" Value="Visible" TargetName="bg"/>
+                    </Trigger>
+                </DataTemplate.Triggers>
+            </DataTemplate>
+
+            <!-- Selected Journal Header Button (ListboxItem) -->
+            <DataTemplate x:Key="JournalHeaderItemSelected" >
+                <Grid>
+                    <Image x:Name="bg" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Buttons/topNav_btn_frame.png" Stretch="None"/>
+                    <StackPanel>
+                        <Image x:Name="imgIcon" Stretch="None" Margin="0,0,0,-22">
+                            <Image.Style>
+                                <Style TargetType="Image">
+                                    <Setter Property="Source" Value="{x:Null}"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Path=Tag, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListBoxItem}}}" Value="ToggleJournalQuests">
+                                            <Setter Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared_c/c_ico_journal_h.png" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Path=Tag, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListBoxItem}}}" Value="ToggleJournalMap">
+                                            <Setter Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared_c/c_ico_map_h.png" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Path=Tag, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListBoxItem}}}" Value="ToggleJournalDialogues">
+                                            <Setter Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared_c/c_ico_dialogues_h.png" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Path=Tag, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListBoxItem}}}" Value="ToggleJournalInfo">
+                                            <Setter Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared_c/c_ico_barks_h.png" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Image.Style>
+                        </Image>
+                        <TextBlock Text="{Binding Content, RelativeSource={RelativeSource Mode=TemplatedParent}}" FontSize="{DynamicResource MediumFontSize}" Foreground="{StaticResource LS_PrimaryColor}" HorizontalAlignment="Center"/>
+                    </StackPanel>
+                </Grid>
+            </DataTemplate>
+        </ControlTemplate.Resources>
+        <Grid>
+            <Image Source="{DynamicResource journalBg}" Stretch="None"/>
+
+            <!-- Gold -->
+            <StackPanel Width="198" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,34,128,0">
+                <TextBlock Text="{Binding Source='h4ef69730g7c3fg424ag8a7cge91e33fe7cee',Converter={StaticResource TranslatedStringConverter}}" FontSize="{DynamicResource SmallFontSize}" Foreground="{DynamicResource LS_PrimaryColor}" HorizontalAlignment="Center" Margin="0,0,0,-8"/>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <TextBlock Text="{Binding CurrentPlayer.PartyGold, StringFormat={}{0:N0}}" TextAlignment="Right" Margin="10 0 10 0" Foreground="{DynamicResource LS_PrimaryColor}"/>
+                    <Image Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared_c/c_ico_gold.png" Stretch="None"/>
+                </StackPanel>
+            </StackPanel>
+
+            <ls:LSListBox x:Name="JournalHeaderListbox"
+                     Margin="0,18,0,0" HorizontalAlignment="Center" VerticalAlignment="Top"
+                     Background="Transparent" BorderBrush="Transparent"
+                     ActionPrevEvent="UITabPrev" ActionNextEvent="UITabNext">
+                <ls:LSListBox.ItemContainerStyle>
+
+                    <Style TargetType="ls:LSListBoxItem" BasedOn="{StaticResource {x:Type ls:LSListBoxItem}}">
+                        <Setter Property="BorderBrush" Value="Transparent" />
+                        <Setter Property="Background" Value="Transparent" />
+                        <Setter Property="Padding" Value="0" />
+                        <Setter Property="BorderThickness" Value="0" />
+                        <Setter Property="Margin" Value="53,0"/>
+                        <Setter Property="ContentTemplate" Value="{StaticResource JournalHeaderItemUnselected}"/>
+                        <Style.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter Property="BorderBrush" Value="Transparent" />
+                                <Setter Property="Background" Value="Transparent" />
+                                <Setter Property="ContentTemplate" Value="{StaticResource JournalHeaderItemSelected}"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="BorderBrush" Value="Transparent" />
+                                <Setter Property="Background" Value="Transparent" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </ls:LSListBox.ItemContainerStyle>
+
+                <ls:LSListBoxItem Tag="ToggleJournalQuests" Content="{Binding Source='hb4bac393g5295g4e80g8dacge61e914d2313',Converter={StaticResource TranslatedStringConverter}}"/>
+                <ls:LSListBoxItem Tag="ToggleJournalMap" Content="{Binding Source='h20153f3fgbdd3g488fg9edfgc3ea58c19e9c',Converter={StaticResource TranslatedStringConverter}}"/>
+                <ls:LSListBoxItem Tag="ToggleJournalDialogues" Content="{Binding Source='hc610c4aeg0285g4e2agbc31g4bb458c1c7b3',Converter={StaticResource TranslatedStringConverter}}" />
+
+                <ls:LSListBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Horizontal"/>
+                    </ItemsPanelTemplate>
+                </ls:LSListBox.ItemsPanel>
+
+                <b:Interaction.Triggers>
+                    <b:EventTrigger EventName="SelectionChanged">
+                        <b:InvokeCommandAction 
+                            Command="{Binding DataContext.CustomEvent, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"
+                            CommandParameter="{Binding ElementName=JournalHeaderListbox, Path=SelectedItem.Tag}"/>
+                    </b:EventTrigger>
+                </b:Interaction.Triggers>
+
+                <ls:LSListBox.Style>
+                    <Style TargetType="ls:LSListBox" BasedOn="{StaticResource {x:Type ls:LSListBox}}">
+                        <Setter Property="SelectedIndex" Value="{DynamicResource tabIndex}"/>
+                    </Style>
+                </ls:LSListBox.Style>
+            </ls:LSListBox>
+        </Grid>
+    </ControlTemplate>
+
+    <!-- Journal header with book image -->
+    <ControlTemplate x:Key="JournalPage">
+        <Grid>
+            <ContentControl>
+                <ContentControl.Style>
+                    <Style TargetType="ContentControl" BasedOn="{StaticResource {x:Type ContentControl}}">
+                        <Setter Property="Template" Value="{StaticResource JournalHeader}"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding DataContext.Data.UIInputMethod, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" Value="Controller">
+                                <Setter Property="Template" Value="{StaticResource JournalHeader_c}"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </ContentControl.Style>
+            </ContentControl>
+        </Grid>
+    </ControlTemplate>
+
+    <ControlTemplate x:Key="OverMapPanels">
+        <Grid>
+            <!-- zone name -->
+            <Grid x:Name="ZoneName" Margin="50,52,0,0" IsHitTestVisible="False" VerticalAlignment="Top" HorizontalAlignment="Left" Visibility="{Binding DataContext.CurrentPlayer.SelectedCharacter.CurrentSubregionName, Converter={StaticResource StringToVisibilityConverter}, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}">
+                <Image Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Map/locationBanner.png" Stretch="None"/>
+                <TextBlock Text="{Binding DataContext.CurrentPlayer.SelectedCharacter.CurrentSubregionName, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" Margin="0,16,0,0" VerticalAlignment="Top" HorizontalAlignment="Center" Foreground="{StaticResource LS_PaperColor}" />
+            </Grid>
+
+            <!-- legend -->
+            <Grid x:Name="Legend" Margin="30,0,0,38" IsHitTestVisible="False" VerticalAlignment="Bottom" HorizontalAlignment="Left">
+
+                <Image Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Map/legendPane.png" Stretch="None"/>
+
+                <Grid Margin="40,100,0,0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="80"/>
+                        <RowDefinition Height="80"/>
+                        <RowDefinition Height="80"/>
+                        <RowDefinition Height="80"/>
+                        <RowDefinition Height="80"/>
+                        <RowDefinition Height="80"/>
+                        <RowDefinition Height="80"/>
+                        <RowDefinition Height="80"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="100"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- location -->
+                    <Image Grid.Row="0" Grid.Column="0" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Map/ico_POI.png" Stretch="None" />
+                    <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Source='hbdf03d69g4510g4132ga6b9g9954ea3bf29b', Converter ={StaticResource TranslatedStringConverter}}" VerticalAlignment="Center" Foreground="{StaticResource LS_PaperColor}" />
+
+                    <!-- party member -->
+                    <Image Grid.Row="1" Grid.Column="0" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Map/ico_party2.png" Stretch="None"/>
+                    <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding Source='h5afeb434g0770g4002g87e3gf1968baa10ae', Converter ={StaticResource TranslatedStringConverter}}" VerticalAlignment="Center" Foreground="{StaticResource LS_PaperColor}"/>
+
+                    <!-- ally -->
+                    <Image Grid.Row="2" Grid.Column="0" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Map/ico_ally.png" Stretch="None"/>
+                    <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding Source='h2b3750f8gafacg4320g85d3gc39e0eaa3712', Converter ={StaticResource TranslatedStringConverter}}" VerticalAlignment="Center" Foreground="{StaticResource LS_PaperColor}" />
+
+                    <!-- neutral -->
+                    <Image Grid.Row="3" Grid.Column="0" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Map/ico_neutral.png" Stretch="None"/>
+                    <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding Source='h557baa31gfb89g4addg97fege669e89c1e3a', Converter ={StaticResource TranslatedStringConverter}}" VerticalAlignment="Center" Foreground="{StaticResource LS_PaperColor}" />
+
+                    <!-- enemy -->
+                    <Image Grid.Row="4" Grid.Column="0" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Map/ico_enemy.png" Stretch="None"/>
+                    <TextBlock Grid.Row="4" Grid.Column="1" Text="{Binding Source='h17310606ga5c4g4650gaaf7g6fda279b5b9c', Converter ={StaticResource TranslatedStringConverter}}" VerticalAlignment="Center" Foreground="{StaticResource LS_PaperColor}" />
+
+                    <!-- quest marker -->
+                    <Image Grid.Row="5" Grid.Column="0" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Map/mapSelector_quest.png" Stretch="None"/>
+                    <TextBlock Grid.Row="5" Grid.Column="1" Text="{Binding Source='h01e85b06g85bdg4626g83ccgb35104b04cd1', Converter ={StaticResource TranslatedStringConverter}}" VerticalAlignment="Center" Foreground="{StaticResource LS_PaperColor}" />
+
+                    <!-- secret marker -->
+                    <Image Grid.Row="6" Grid.Column="0" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Map/ico_secret.png" Stretch="None"/>
+                    <TextBlock Grid.Row="6" Grid.Column="1" Text="{Binding Source='h6e7300c7ge312g48a0gaf7bgef7aba11e811', Converter ={StaticResource TranslatedStringConverter}}" VerticalAlignment="Center" Foreground="{StaticResource LS_PaperColor}" />
+
+                    <!-- waypoint -->
+                    <Image Grid.Row="7" Grid.Column="0" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Map/ico_waypoint.png" Stretch="None"/>
+                    <TextBlock Grid.Row="7" Grid.Column="1" Text="{Binding Source='h2020fdf6g224eg40cfg80ecg91fed5d32d11', Converter ={StaticResource TranslatedStringConverter}}" VerticalAlignment="Center" Foreground="{StaticResource LS_PaperColor}" />
+                </Grid>
+            </Grid>
+        </Grid>
+    </ControlTemplate>
+
+</ResourceDictionary>

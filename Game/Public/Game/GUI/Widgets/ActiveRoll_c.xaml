@@ -1,0 +1,1658 @@
+<ls:UIWidget 
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:ls="clr-namespace:ls;assembly=SharedGUI"
+             xmlns:noesis="clr-namespace:NoesisGUIExtensions;assembly=Noesis.GUI.Extensions"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:System="clr-namespace:System;assembly=mscorlib"
+             
+             mc:Ignorable="d"
+             x:Name="ActiveRoll"
+             ls:UIWidget.UseCustomDC="True" Tag="0"
+             ls:UIWidget.ContextName="ActiveRoll"
+             d:DesignHeight="2160" d:DesignWidth="3840">
+
+    <ls:UIWidget.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../Library/DiceAnimation.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            
+            <Style x:Key="BaseTxtStyle" TargetType="{x:Type TextBlock}">
+                <Setter Property="FontSize" Value="{StaticResource DefaultFontSize}"/>
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="Foreground" Value="{StaticResource LS_baseTxtColor}"/>
+                <Setter Property="noesis:Text.Stroke" Value="{StaticResource LS_tint00}"/>
+                <Setter Property="noesis:Text.StrokeThickness" Value="6"/>
+                <Setter Property="TextAlignment" Value="Center"/>
+                <Setter Property="TextWrapping" Value="Wrap"/>
+                <Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
+                <Setter Property="RenderTransform" >
+                    <Setter.Value>
+                        <TransformGroup>
+                            <ScaleTransform/>
+                            <SkewTransform/>
+                            <RotateTransform/>
+                            <TranslateTransform />
+                        </TransformGroup>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style x:Key="BonusNameTxtStyle" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource BaseTxtStyle}">
+                <Setter Property="FontSize" Value="{StaticResource SmallishFontSize}"/>
+                <Setter Property="MaxWidth" Value="220"/>
+                <Setter Property="LineHeight" Value="{StaticResource SmallFontSizeLineHeight}"/>
+                <Setter Property="LineStackingStrategy" Value="BlockLineHeight"/>
+            </Style>
+
+            <Style x:Key="BonusValueTxtStyle" TargetType="{x:Type TextBlock}"  BasedOn="{StaticResource BaseTxtStyle}">
+                <Setter Property="FontSize" Value="{StaticResource LargeFontSize}"/>
+                <Setter Property="Foreground" Value="{StaticResource LS_extraspecialTxtColor}"/>
+            </Style>
+            
+            <System:Double x:Key="BoostContentHeight">280</System:Double>
+            <System:Double x:Key="BoostContentWidth">260</System:Double>
+
+            <System:Double x:Key="BoostIconHeight">82</System:Double>
+            <System:Double x:Key="BoostIconWidth">82</System:Double>
+
+
+            <ControlTemplate x:Key="ModifierTemplate" TargetType="ls:LSListBoxItem">
+                <Grid Opacity="0">
+                    <Grid.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform/>
+                            <SkewTransform/>
+                            <RotateTransform/>
+                            <TranslateTransform />
+                        </TransformGroup>
+                    </Grid.RenderTransform>
+                    <b:Interaction.Triggers>
+
+                        <b:DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType=ls:LSListBoxItem}}" Value="True">
+                            <ls:LSPlaySound Sound="UI_Shared_Hover" />
+                        </b:DataTrigger>
+
+                        <b:DataTrigger Binding="{Binding Path=Tag, RelativeSource={RelativeSource AncestorType=ls:LSListBoxItem}}" Value="BlinkHl">
+                            <b:ControlStoryboardAction ControlStoryboardOption="Play">
+                                <b:ControlStoryboardAction.Storyboard>
+                                    <Storyboard FillBehavior="Stop">
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="bgImgHL">
+                                            <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="{x:Static Visibility.Visible}"/>
+                                            <DiscreteObjectKeyFrame KeyTime="{StaticResource HLAnimTime2}" Value="{x:Static Visibility.Hidden}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+
+                                        <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="Opacity" Storyboard.TargetName="bgImgHL">
+                                            <DiscreteDoubleKeyFrame KeyTime="0:0:0" Value="0"/>
+                                            <LinearDoubleKeyFrame KeyTime="{StaticResource HLAnimTime1}" Value="1"/>
+                                            <LinearDoubleKeyFrame KeyTime="{StaticResource HLAnimTime2}" Value="1"/>
+                                            <LinearDoubleKeyFrame KeyTime="{StaticResource HLAnimTime3}" Value="0"/>
+                                        </DoubleAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </b:ControlStoryboardAction.Storyboard>
+                            </b:ControlStoryboardAction>
+                        </b:DataTrigger>
+
+                        <b:DataTrigger Binding="{Binding Path=(ls:SequenceBehavior.PlayElement), RelativeSource={RelativeSource AncestorType=ls:LSListBoxItem}}" Value="True">
+                            <b:ControlStoryboardAction ControlStoryboardOption="Play">
+                                <b:ControlStoryboardAction.Storyboard>
+                                    <Storyboard Children="{StaticResource SlideInModAnim}"/>
+                                </b:ControlStoryboardAction.Storyboard>
+                            </b:ControlStoryboardAction>
+                        </b:DataTrigger>
+                    </b:Interaction.Triggers>
+
+                    <Image x:Name="bgImg" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/ActiveRoll_c/c_activeRoll_bonusBox_d.png" Stretch="None" VerticalAlignment="Top" Visibility="Visible" Margin="-8,0,-8,0"/>
+                    <Image x:Name="bgImgHL" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/ActiveRoll_c/c_activeRoll_bonusBox_h.png" Stretch="None" VerticalAlignment="Top" Visibility="Hidden" Margin="-8,0,-8,0"/>
+                    <ContentPresenter x:Name="modContent"  Margin="0,30" VerticalAlignment="Top" />
+					<Image x:Name="fgDisabledIco" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/ActiveRoll/ico_bonusDisabled.png" Stretch="None" VerticalAlignment="Top" Visibility="{Binding IsDisabled, Converter={StaticResource BoolToVisibleConverter}}" Margin="-8,100,-8,0"/>
+                </Grid>
+                <ControlTemplate.Triggers>
+
+                    <Trigger Property="IsSelected" Value="True">
+                        <Setter Property="Visibility" Value="Hidden" TargetName="bgImg"/>
+                        <Setter Property="Visibility" Value="Visible" TargetName="bgImgHL"/>
+                    </Trigger>
+
+                    <DataTrigger Binding="{Binding IsAdvantage}" Value="True">
+                        <Setter Property="IsEnabled" Value="False"/>
+                    </DataTrigger>
+                    <MultiDataTrigger >
+                        <MultiDataTrigger.Conditions>
+                            <Condition Binding="{Binding IsAdvantage}" Value="True"/>
+                            <Condition Binding="{Binding DataContext.RollState,RelativeSource={RelativeSource AncestorType=ls:UIWidget}}" Value="WaitForStart"/>
+                        </MultiDataTrigger.Conditions>
+                        <Setter Property="IsEnabled" Value="True"/>
+
+                    </MultiDataTrigger>
+                    <DataTrigger Binding="{Binding IsDisabled}" Value="True">
+						<Setter Property="Opacity" Value="{StaticResource DisabledOpacity}" TargetName="bgImg"/>
+						<Setter Property="Visibility" Value="Hidden" TargetName="bgImgHL"/>						
+						<Setter Property="Visibility" Value="Visible" TargetName="bgImg"/>						
+						<Setter Property="Opacity" Value="{StaticResource DisabledOpacity}" TargetName="modContent"/>	
+					</DataTrigger>
+                </ControlTemplate.Triggers>
+            </ControlTemplate>
+
+
+            <ControlTemplate x:Key="InactiveModifierTemplate" TargetType="ls:LSListBoxItem">
+                <Grid>
+                    <Image x:Name="arrowImg" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/ActiveRoll/addArrow.png" Stretch="None" VerticalAlignment="Top" Visibility="Collapsed"/>
+                    <Image x:Name="bgImgDouble" Visibility="Collapsed" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/ActiveRoll_c/c_activeRoll_bonusBox_extra_d.png" Stretch="None" VerticalAlignment="Top" Margin="0,50,0,0"/>
+                    <Image x:Name="bgImg" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/ActiveRoll_c/c_activeRoll_bonusBox_extra_d.png" Stretch="None" VerticalAlignment="Top" Margin="0,56,0,0"/>
+                    <Grid Margin="0,80" VerticalAlignment="Top" >
+                        <TextBlock x:Name="BonusTxt" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,0,0,20" Style="{StaticResource BonusValueTxtStyle}">
+                            <TextBlock.Tag>
+                                <MultiBinding Converter="{StaticResource EqualConverter}">
+                                    <Binding Path="MinBonusValue"/>
+                                    <Binding Path="MaxBonusValue"/>
+                                </MultiBinding>
+                            </TextBlock.Tag>
+                            <TextBlock.Text>
+                                <MultiBinding StringFormat="{}{0}...{1}">
+                                    <Binding Path="MinBonusValue" StringFormat="{}{0:+#;-#;+0}"/>
+                                    <Binding Path="MaxBonusValue"/>
+                                </MultiBinding>
+                            </TextBlock.Text>
+                        </TextBlock>
+                        <ContentPresenter Content="{Binding BoostModifier}"/>
+                        <Image x:Name="ContainerImage" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/BottomBar/ico_spellSubSelectIndicator.png" Stretch="None" Margin="56,0,0,56" Visibility="Collapsed"/>
+                        
+                        <b:Interaction.Triggers>
+                            <b:DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType=ls:LSListBoxItem}}" Value="True">
+                                <ls:LSPlaySound Sound="UI_Shared_Hover" />
+                            </b:DataTrigger>
+                        </b:Interaction.Triggers>
+
+                    </Grid>
+
+                    <ls:LSInputBinding PlayerId="{Binding DataContext.CurrentPlayer.PlayerId, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" BoundEvent="UIAccept"  Focusable="False" Command="{Binding DataContext.AddModifierCommand, RelativeSource={RelativeSource AncestorType=ls:UIWidget}}">
+                        <ls:LSInputBinding.CommandParameter>
+                            <MultiBinding Converter="{StaticResource PassThroughConverter}">
+                                <Binding ElementName="BonusTxt" Mode="OneWay"/>
+                                <Binding Source="Top"/>
+                                <Binding Path="DataContext.AddModifierCommand" RelativeSource="{RelativeSource AncestorType={x:Type ls:UIWidget}}"/>
+                            </MultiBinding>
+                        </ls:LSInputBinding.CommandParameter>
+                        <b:Interaction.Triggers>
+                            <b:EventTrigger EventName="LSInputBindingReleased">
+                                <ls:LSPlaySound Sound="UI_HUD_DiceRoll_Bonus_Release" />
+                            </b:EventTrigger>
+                            <b:EventTrigger EventName="LSInputBindingPressed">
+                                <ls:LSPlaySound Sound="UI_HUD_DiceRoll_Bonus_Press" />
+                            </b:EventTrigger>
+                        </b:Interaction.Triggers>
+                        
+                        <ls:LSInputBinding.Style>
+                            <Style TargetType="ls:LSInputBinding">
+                                <Setter Property="IsEnabled" Value="False"/>
+                                <Style.Triggers>
+                                    <MultiDataTrigger>
+                                        <MultiDataTrigger.Conditions>
+                                            <Condition  Value="True">
+                                                <Condition.Binding>
+                                                    <MultiBinding Converter="{StaticResource EqualConverter}">
+                                                        <Binding Path="DataContext.Owner.OwnerUserID" RelativeSource="{RelativeSource Mode=Self}"/>
+                                                        <Binding Path="DataContext.CurrentPlayer.SelectedCharacter.OwnerUserID" RelativeSource="{RelativeSource AncestorType={x:Type ls:UIWidget}}"/>
+                                                    </MultiBinding>
+                                                </Condition.Binding>
+                                            </Condition>
+                                            <Condition Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType=ls:LSListBoxItem}}" Value="True"/>
+                                        </MultiDataTrigger.Conditions>
+                                        <Setter Property="IsEnabled" Value="True"/>
+                                    </MultiDataTrigger>
+
+                                </Style.Triggers>
+                            </Style>
+                        </ls:LSInputBinding.Style>
+                    </ls:LSInputBinding>
+
+                </Grid>
+                <ControlTemplate.Triggers>
+                    <DataTrigger Binding="{Binding ElementName=BonusTxt, Path=Tag}" Value="True">
+                        <Setter TargetName="BonusTxt" Property="Text" >
+                            <Setter.Value>
+                                <MultiBinding StringFormat="{}{0:+#;-#;+0}">
+                                    <Binding Path="MinBonusValue" />
+                                </MultiBinding>
+                            </Setter.Value>
+                        </Setter>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding BoostModifier.Count,Converter={StaticResource GreaterThanConverter},ConverterParameter=1}" Value="True">
+                        <Setter TargetName="bgImgDouble" Property="Visibility" Value="Visible"/>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding IsAdvantage}" Value="True">
+                        <Setter TargetName="BonusTxt" Property="Text" Value="{Binding Source=he770672cgd25bg4ec8g8bb6g6745e6e7576f  , Converter={StaticResource TranslatedStringConverter}, Mode=OneWay}"/>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding DiceTypeSet.Amount,Converter={StaticResource GreaterThanConverter},ConverterParameter=0}" Value="True">
+                        <Setter TargetName="BonusTxt" Property="Text" Value="{Binding DiceTypeSet.Str, StringFormat='{}+{0}'}"/>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding BoostModifier.IsContainer, FallbackValue=False}" Value="True">
+                        <Setter TargetName="ContainerImage" Property="Visibility" Value="Visible"/>
+                    </DataTrigger>
+                    <Trigger Property="IsSelected" Value="True">
+                        <Setter Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/ActiveRoll_c/c_activeRoll_bonusBox_extra_h.png" TargetName="bgImg"/>
+                        <Setter Property="Visibility" Value="Visible" TargetName="arrowImg"/>
+                    </Trigger>
+                    <MultiDataTrigger>
+                        <MultiDataTrigger.Conditions>
+                            <Condition Value="False">
+                                <Condition.Binding>
+                                    <MultiBinding Converter="{StaticResource EqualConverter}">
+                                        <Binding Path="DataContext.Owner.OwnerUserID" RelativeSource="{RelativeSource Mode=Self}"/>
+                                        <Binding Path="DataContext.CurrentPlayer.SelectedCharacter.OwnerUserID" RelativeSource="{RelativeSource AncestorType={x:Type ls:UIWidget}}"/>
+                                    </MultiBinding>
+                                </Condition.Binding>
+                            </Condition>
+                        </MultiDataTrigger.Conditions>
+                        <Setter Property="Visibility" Value="Collapsed" TargetName="arrowImg"/>
+                    </MultiDataTrigger>
+                </ControlTemplate.Triggers>
+            </ControlTemplate>
+
+
+
+            <DataTemplate DataType="ls:VMCharacterAction">
+                <ContentControl  ToolTip="{StaticResource ManagedTooltip}" ToolTipService.ShowOnDisabled="True" >
+                    <Grid Height="{StaticResource BoostContentHeight}" Width="{StaticResource BoostContentWidth}" Background="Transparent">
+                        <Grid Width="{StaticResource BoostIconWidth}" Height="{StaticResource BoostIconHeight}" VerticalAlignment="Center">
+                            <Rectangle Fill="{Binding Icon}"/>
+                            <TextBlock Text="{Binding SpellSlotLevel, Converter={StaticResource DecimalToRomanConverter}}" Foreground="{StaticResource LS_specialTxtColor}" VerticalAlignment="Bottom" HorizontalAlignment="Right" Height="35" Margin="0,0,3,0" FontSize="32" FontWeight="Bold" noesis:Text.Stroke="#FF000000" noesis:Text.StrokeThickness="5"/>
+                        </Grid>
+                        <TextBlock x:Name="SpellNameText" Text="{Binding Name}" Style="{StaticResource BonusNameTxtStyle}" VerticalAlignment="Bottom"  />
+
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <Image x:Name="img" Stretch="None" Visibility="Collapsed" />
+                            <TextBlock x:Name="desc" Text="{Binding Description}" />
+                        </StackPanel>
+
+                        <b:Interaction.Triggers>
+                            <b:DataTrigger Binding="{Binding Path=Tag, RelativeSource={RelativeSource AncestorType=ls:LSListBoxItem}}" Value="BlinkHl">
+                                <b:InvokeCommandAction Command="{Binding DataContext.PlaySoundEventOnElement, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}">
+                                    <b:InvokeCommandAction.CommandParameter>
+                                        <MultiBinding Converter="{StaticResource PassThroughConverter}">
+                                            <Binding Mode="OneWay" ElementName="img" />
+                                            <Binding Source="UI_HUD_DiceRoll_Bonus_Appear"/>
+                                        </MultiBinding>
+                                    </b:InvokeCommandAction.CommandParameter>
+                                </b:InvokeCommandAction>
+                                <b:InvokeCommandAction Command="{Binding DataContext.PlaySoundEventOnElement, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}">
+                                    <b:InvokeCommandAction.CommandParameter>
+                                        <MultiBinding Converter="{StaticResource PassThroughConverter}">
+                                            <Binding Mode="OneWay" ElementName="img" />
+                                            <Binding Source="UI_HUD_DiceRoll_BonusType_Spell"/>
+                                        </MultiBinding>
+                                    </b:InvokeCommandAction.CommandParameter>
+                                </b:InvokeCommandAction>
+                            </b:DataTrigger>
+                        </b:Interaction.Triggers>
+                    </Grid>
+                </ContentControl>
+            </DataTemplate>
+
+            <DataTemplate DataType="ls:VMItem">
+                <Grid Height="{StaticResource BoostContentHeight}" Width="{StaticResource BoostContentWidth}">
+                    <ContentControl  ToolTip="{StaticResource ManagedTooltip}" ToolTipService.ShowOnDisabled="True" >
+                    <Grid Width="{DynamicResource ItemIconSize}" Height="{DynamicResource ItemIconSize}" Background="Transparent" VerticalAlignment="Center">
+                        <Image Style="{StaticResource RarityFrameBackgroundImageStyle}"/>
+                        <ls:LSEntityObject Context="Inventory" EntityRef="{Binding EntityHandle}" Background="{Binding Icon}">
+                            <Image Style="{StaticResource InventoryWaresCellItemImageStyle}"/>
+                            <Label Style="{StaticResource InventoryCellLabelStyle}" IsHitTestVisible="False"/>
+                            <Image Style="{StaticResource NewInventoryCellItemImageStyle}"/>
+                        </ls:LSEntityObject>
+                        <Image Style="{StaticResource RarityFrameForegroundImageStyle}"/>
+                        <TextBlock Text="{Binding Count}" VerticalAlignment="Bottom" HorizontalAlignment="Right"/>
+                    </Grid>
+                    </ContentControl>
+                    <TextBlock x:Name="label" Tag="UI_HUD_DiceRoll_BonusType_Default" Text="{Binding Name}" VerticalAlignment="Bottom" Style="{StaticResource BonusNameTxtStyle}" />
+                    <b:Interaction.Triggers>
+                        <b:DataTrigger Binding="{Binding Path=Tag, RelativeSource={RelativeSource AncestorType=ls:LSListBoxItem}}" Value="BlinkHl">
+                            <b:InvokeCommandAction Command="{Binding DataContext.PlaySoundEventOnElement, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}">
+                                <b:InvokeCommandAction.CommandParameter>
+                                    <MultiBinding Converter="{StaticResource PassThroughConverter}">
+                                        <Binding Mode="OneWay" ElementName="label" />
+                                        <Binding Source="UI_HUD_DiceRoll_Bonus_Appear"/>
+                                    </MultiBinding>
+                                </b:InvokeCommandAction.CommandParameter>
+                            </b:InvokeCommandAction>
+                            <b:InvokeCommandAction Command="{Binding DataContext.PlaySoundEventOnElement, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}">
+                                <b:InvokeCommandAction.CommandParameter>
+                                    <MultiBinding Converter="{StaticResource PassThroughConverter}">
+                                        <Binding Mode="OneWay" ElementName="label" />
+                                        <Binding Path="Tag" ElementName="label"/>
+                                    </MultiBinding>
+                                </b:InvokeCommandAction.CommandParameter>
+                            </b:InvokeCommandAction>
+                        </b:DataTrigger>
+                    </b:Interaction.Triggers>
+                </Grid>
+                <DataTemplate.Triggers>
+                    <DataTrigger Binding="{Binding UseType}" Value="Potion">
+                        <Setter TargetName="label" Property="Tag" Value="UI_HUD_DiceRoll_BonusType_Potion" />
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding UseType}" Value="Scroll">
+                        <Setter TargetName="label" Property="Tag" Value="UI_HUD_DiceRoll_BonusType_Scroll" />
+                    </DataTrigger>
+                </DataTemplate.Triggers>
+            </DataTemplate>
+
+            <DataTemplate DataType="ls:VMAdvantage">
+                <ContentControl  ToolTipService.ShowOnDisabled="True" >
+                    <ContentControl.ToolTip>
+                        <ls:LSTooltip PlayerId="{Binding Path=DataContext.CurrentPlayer.PlayerId, ElementName=ActiveRoll}" ls:TooltipExtender.Owner="{Binding Path=DataContext.CurrentPlayer.SelectedCharacter, ElementName=ActiveRoll}">
+                            <ls:LSTooltip.Style>
+                                <Style TargetType="ls:LSTooltip" BasedOn="{StaticResource {x:Type ls:LSTooltip}}">
+                                    <Setter Property="Content" Value="{Binding Path=DataContext.SourceVM, ElementName=BoostHolder}"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Path=DataContext.SourceVM, ElementName=BoostHolder, Converter={StaticResource NullToBoolFalseConverter}, FallbackValue=False}" Value="False">
+                                            <Setter Property="Content" Value="{Binding DataContext, RelativeSource={RelativeSource Mode=TemplatedParent}}" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </ls:LSTooltip.Style>
+                        </ls:LSTooltip>
+                    </ContentControl.ToolTip>
+                    <Grid Height="{StaticResource BoostContentHeight}" Width="{StaticResource BoostContentWidth}">
+                        <TextBlock x:Name="AdvantageText" Text="" TextAlignment="Center" VerticalAlignment="Top" FontSize="{StaticResource MediumFontSize}"/>
+                        <Image x:Name="img" Stretch="None" Visibility="Collapsed" />
+                        <Rectangle x:Name="SourceImage" Visibility="Hidden" Width="{StaticResource BoostIconWidth}" Height="{StaticResource BoostIconHeight}" Stretch="Uniform" Margin="0,0,0,20"/>
+                        <TextBlock x:Name="desc" Text="{Binding Description}" Style="{StaticResource BonusNameTxtStyle}" VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
+                    </Grid>
+                </ContentControl>
+                <DataTemplate.Triggers>
+                    <DataTrigger Binding="{Binding AdvantageType}" Value="Advantage">
+                        <Setter TargetName="img" Property="Visibility" Value="Visible" />
+                        <Setter TargetName="AdvantageText" Property="Text" Value="{Binding Source=hfc9b8156g8e4fg4086g9c6cg26dbb03aa466, Converter={StaticResource TranslatedStringConverter}, Mode=OneWay}"/>
+                        <Setter TargetName="img" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared/ico_advantage.png" />
+                        <Setter TargetName="desc" Property="Foreground" Value="{DynamicResource LS_bonusTxtColor}"/>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding AdvantageType}" Value="Disadvantage">
+                        <Setter TargetName="img" Property="Visibility" Value="Visible" />
+                        <Setter TargetName="AdvantageText" Property="Text" Value="{Binding Source=h34944186g018cg474dg96d8gd56417c3e086, Converter={StaticResource TranslatedStringConverter}, Mode=OneWay}"/>
+                        <Setter TargetName="img" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared/ico_disadvantage.png" />
+                        <Setter TargetName="desc" Property="Foreground" Value="{DynamicResource LS_alertTxtColor}"/>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Description}" Value="">
+                        <Setter TargetName="desc" Property="Text" Value="{Binding Source=h7c258c4fg5467g48e5ga704g2ccd2e80dfe6, Converter={StaticResource TranslatedStringConverter}, Mode=OneWay}"/>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding SourceVM,Converter={StaticResource NullToBoolFalseConverter}}" Value="True">
+                        <Setter TargetName="img" Property="VerticalAlignment" Value="Top" />
+                        <Setter TargetName="SourceImage" Property="Visibility" Value="Visible" />
+                        <Setter TargetName="AdvantageText" Property="Visibility" Value="Hidden" />
+                        <Setter TargetName="SourceImage" Property="Fill" Value="{Binding SourceVM.Icon}" />
+                    </DataTrigger>
+                </DataTemplate.Triggers>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type ls:VMBoost}">
+                <ContentControl x:Name="BoostHolder" ToolTipService.ShowOnDisabled="True" ToolTipService.IsEnabled="True"  ToolTipService.Placement="Right" ToolTipService.PlacementTarget="{Binding ElementName=ContentHolder}">
+                    <ContentControl.ToolTip>
+                        <ls:LSTooltip PlayerId="{Binding Path=DataContext.CurrentPlayer.PlayerId, ElementName=ActiveRoll}" Content="{Binding Path=DataContext.SourceVM, ElementName=BoostHolder}"/>
+                    </ContentControl.ToolTip>
+                    <Grid x:Name="ContentHolder" Height="{StaticResource BoostContentHeight}" Width="{StaticResource BoostContentWidth}" Background="Transparent" IsHitTestVisible="False">
+                        <Image x:Name="img" Stretch="Uniform" Tag="UI_HUD_DiceRoll_BonusType_Default" Margin="40,0,40,20" Visibility="Collapsed" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                        <Control x:Name="die" Template="{StaticResource DiceImage}" IsHitTestVisible="False" Visibility="Collapsed" Margin="0,-32,0,0" VerticalAlignment="Center" HorizontalAlignment="Center" DataContext="{Binding }"/>
+
+                        <TextBlock x:Name="value" VerticalAlignment="Top" Text="{Binding Path=Value, StringFormat={}{0:+#;-#;+0}}" FontSize="{StaticResource IntermediateFontSize}" Style="{StaticResource BonusValueTxtStyle}" HorizontalAlignment="Center"/>
+                        <TextBlock x:Name="label"  VerticalAlignment="Bottom" Style="{StaticResource BonusNameTxtStyle}" >
+                            <TextBlock.Text>
+                                <MultiBinding StringFormat="{}{0} {1}">
+                                    <Binding Path="Name"/>
+                                    <Binding Path="AdditionalValue"/>
+                                </MultiBinding>
+                            </TextBlock.Text>
+                        </TextBlock>
+
+                        <Rectangle x:Name="SourceImage" Visibility="Hidden" Width="{StaticResource BoostIconWidth}" Height="{StaticResource BoostIconHeight}" Stretch="Uniform" Margin="0,0,0,20"/>
+
+                        <b:Interaction.Triggers>
+                            <b:DataTrigger Binding="{Binding Path=Tag, RelativeSource={RelativeSource AncestorType=ls:LSListBoxItem}}" Value="BlinkHl">
+                                <b:InvokeCommandAction Command="{Binding DataContext.PlaySoundEventOnElement, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}">
+                                    <b:InvokeCommandAction.CommandParameter>
+                                        <MultiBinding Converter="{StaticResource PassThroughConverter}">
+                                            <Binding Mode="OneWay" ElementName="img" />
+                                            <Binding Source="UI_HUD_DiceRoll_Bonus_Appear"/>
+                                        </MultiBinding>
+                                    </b:InvokeCommandAction.CommandParameter>
+                                </b:InvokeCommandAction>
+                                <b:InvokeCommandAction Command="{Binding DataContext.PlaySoundEventOnElement, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}">
+                                    <b:InvokeCommandAction.CommandParameter>
+                                        <MultiBinding Converter="{StaticResource PassThroughConverter}">
+                                            <Binding Mode="OneWay" ElementName="img" />
+                                            <Binding Path="Tag" ElementName="img"/>
+                                        </MultiBinding>
+                                    </b:InvokeCommandAction.CommandParameter>
+                                </b:InvokeCommandAction>
+                            </b:DataTrigger>
+                        </b:Interaction.Triggers>
+                    </Grid>
+                </ContentControl>
+                <DataTemplate.Triggers>
+                    <DataTrigger Binding="{Binding BoostType}" Value="RollBonus">
+                        <Setter TargetName="die" Property="Visibility" Value="Visible" />
+                    </DataTrigger>
+
+                    <DataTrigger Binding="{Binding BoostType}" Value="Ability">
+                        <Setter TargetName="img" Property="Visibility" Value="Visible" />
+                        <Setter TargetName="img" Property="Style" Value="{StaticResource AbilityIconStatStyle}" />
+                        <Setter TargetName="img" Property="Tag" Value="UI_HUD_DiceRoll_BonusType_Ability" />
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding SourceType}" Value="Item">
+                        <Setter TargetName="img" Property="Tag" Value="UI_HUD_DiceRoll_BonusType_Equipment" />
+                        <Setter TargetName="SourceImage" Property="Visibility" Value="Visible" />
+                        <Setter TargetName="SourceImage" Property="Fill" Value="{Binding SourceVM.Icon}" />
+                        <Setter TargetName="die" Property="Visibility" Value="Collapsed" />
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding SourceType}" Value="Status">
+                        <Setter TargetName="img" Property="Tag" Value="UI_HUD_DiceRoll_BonusType_Status" />
+                        <Setter TargetName="SourceImage" Property="Visibility" Value="Visible" />
+                        <Setter TargetName="SourceImage" Property="Fill" Value="{Binding SourceVM.Icon}" />
+                        <Setter TargetName="die" Property="Visibility" Value="Collapsed" />
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding SourceType}" Value="Passive">
+                        <Setter TargetName="img" Property="Tag" Value="UI_HUD_DiceRoll_BonusType_Feature" />
+                    </DataTrigger>
+
+                    <DataTrigger Binding="{Binding AdditionalValue}" Value="0">
+                        <Setter TargetName="label" Property="Text" Value="{Binding Name}" />
+                    </DataTrigger>
+                    <MultiDataTrigger>
+                        <MultiDataTrigger.Conditions>
+                            <Condition Binding="{Binding BoostType}" Value="RollBonus"/>
+                            <Condition Binding="{Binding DiceTypeSet.Amount, Converter={StaticResource GreaterThanConverter}, ConverterParameter='0'}" Value="True"/>
+                        </MultiDataTrigger.Conditions>
+                        <Setter TargetName="value" Property="Text" Value="{Binding Path=DiceTypeSet.Str, StringFormat='{}+{0}'}" />
+                    </MultiDataTrigger>
+
+                    <DataTrigger Binding="{Binding BoostType}" Value="ProficiencyBonus">
+                        <Setter TargetName="label" Property="Text" >
+                            <Setter.Value>
+                                <MultiBinding StringFormat="{}{0} {1}">
+                                    <Binding Path="Name"/>
+                                    <Binding Source="h613ff7ddg32f4g43cagabd9g158fd1d7a4ec" Converter="{StaticResource TranslatedStringConverter}" Mode="OneWay"/>
+                                </MultiBinding>
+                            </Setter.Value>
+                        </Setter>
+
+                        <Setter TargetName="img" Property="Visibility" Value="Visible" />
+                        <Setter TargetName="img" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/AbilityIcons/Proficiency.png" />
+                    </DataTrigger>
+					
+					<DataTrigger Binding="{Binding BoostType}" Value="ExpertiseBonus">
+                        <Setter TargetName="label" Property="Text" >
+                            <Setter.Value>
+                                <MultiBinding StringFormat="{}{0} {1}">
+                                    <Binding Path="Name"/>
+                                    <Binding Source="h62318286g57b2g4dfeg9ecag827942dd85f7" Converter="{StaticResource TranslatedStringConverter}" Mode="OneWay"/>
+                                </MultiBinding>
+                            </Setter.Value>
+                        </Setter>
+
+                        <Setter TargetName="img" Property="Visibility" Value="Visible" />
+                        <Setter TargetName="img" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/AbilityIcons/Proficiency.png" />
+                    </DataTrigger>
+
+                </DataTemplate.Triggers>
+            </DataTemplate>
+        </ResourceDictionary>
+    </ls:UIWidget.Resources>
+
+
+    <Grid Background="{StaticResource LS_PanelBackground}" ls:TooltipExtender.Owner="{Binding CurrentPlayer.SelectedCharacter}">
+        <Grid.Resources>
+            <Style x:Key="TargetScoreGridStyle" TargetType="Grid">
+                <Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
+                <Setter Property="VerticalAlignment" Value="Top"/>
+                <Setter Property="HorizontalAlignment" Value="Center"/>
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="Width" Value="320"/>
+                <Setter Property="Height" Value="140"/>
+                <Setter Property="Margin" Value="0,80,0,0"/>
+            </Style>
+
+            <Style x:Key="boostmodlistStyle" TargetType="ls:LSListBox" BasedOn="{StaticResource {x:Type ls:LSListBox}}">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type ls:LSListBox}">
+                            <ItemsPresenter/>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="ItemsPanel">
+                    <Setter.Value>
+                        <ItemsPanelTemplate>
+                            <VirtualizingStackPanel Orientation="Horizontal"/>
+                        </ItemsPanelTemplate>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="ItemContainerStyle">
+                    <Setter.Value>
+                        <Style TargetType="ls:LSListBoxItem" >
+                            <Setter Property="Visibility" Value="Visible"/>
+                            <Setter Property="Focusable" Value="True"/>
+                            <Setter Property="Background" Value="{x:Null}"/>
+                            <Setter Property="Template" Value="{StaticResource InactiveModifierTemplate}" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsSelected}" Value="True">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                    <Setter Property="Focusable" Value="False"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            
+            <!--MiniPlayerPortraits Representation -->
+            <Style x:Key="ActiveRoll.PlayerPortraits" TargetType="{x:Type ls:LSListBoxItem}" BasedOn="{StaticResource {x:Type ls:LSListBoxItem}}">
+                <Setter Property="ContentTemplate">
+                    <Setter.Value>
+                        <DataTemplate >
+                            <Grid Height="460">
+                                <ls:LSNineSliceImage ImageSource="pack://application:,,,/GustavNoesisGUI;component/Assets/ActiveRoll_c/c_activeRoll_characterTray.png" Slices="44,0,44,0" Margin="10,0,10,0" IconWidth="100" Height="96" VerticalAlignment="Bottom" MinWidth="240">
+                                    <Ellipse Fill="{Binding Owner.Icon}" HorizontalAlignment="Center" VerticalAlignment="Center" Width="64" Height="64"/>
+                                </ls:LSNineSliceImage>
+                                <ls:LSListBox x:Name="boostmodlist" ItemsSource="{Binding BoostModifierList}"  Focusable="False" KeyboardNavigation.DirectionalNavigation="Continue" ActionPrevEvent="UILeft" ActionNextEvent="UIRight" HorizontalAlignment="Center" VerticalAlignment="Top"  Style="{StaticResource boostmodlistStyle}"/>
+                                
+                            </Grid>
+                            <DataTemplate.Triggers>
+                                <MultiDataTrigger>
+                                    <MultiDataTrigger.Conditions>
+                                        <Condition Value="False">
+                                            <Condition.Binding>
+                                                <MultiBinding Converter="{StaticResource EqualConverter}">
+                                                    <Binding Path="DataContext.Owner.OwnerUserID" RelativeSource="{RelativeSource Mode=Self}"/>
+                                                    <Binding Path="DataContext.CurrentPlayer.SelectedCharacter.OwnerUserID" RelativeSource="{RelativeSource AncestorType={x:Type ls:UIWidget}}"/>
+                                                </MultiBinding>
+                                            </Condition.Binding>
+                                        </Condition>
+                                    </MultiDataTrigger.Conditions>
+                                    <Setter Property="Opacity" Value="0.75"/>
+                                </MultiDataTrigger>
+                            </DataTemplate.Triggers>                            
+                        </DataTemplate>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="BorderBrush" Value="Transparent" />
+                <Setter Property="Background" Value="Transparent" />
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="Focusable" Value="False" />
+                <Setter Property="Visibility" Value="Visible"/>
+                <Setter Property="BorderThickness" Value="0" />
+                <Setter Property="VerticalContentAlignment" Value="Bottom"/>
+                <Style.Triggers>
+                    <Trigger Property="IsSelected" Value="True">
+                        <Setter Property="BorderBrush" Value="Transparent" />
+                        <Setter Property="Background" Value="Transparent" />
+                    </Trigger>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="BorderBrush" Value="Transparent" />
+                        <Setter Property="Background" Value="Transparent" />
+                    </Trigger>
+                    <DataTrigger Binding="{Binding BoostModifierList.Count}" Value="0" >
+                        <Setter Property="Visibility" Value="Collapsed"/>
+                    </DataTrigger>
+
+                </Style.Triggers>
+            </Style>
+
+        </Grid.Resources>
+        <b:Interaction.Triggers>
+
+
+            <!--SOUND TRIGGERS FOR RESULT-->
+            <b:DataTrigger Binding="{Binding RollState}" Value="ResultReady" >
+                <b:Interaction.Behaviors>
+                    <b:ConditionBehavior>
+                        <b:ConditionalExpression>
+                            <b:ComparisonCondition LeftOperand="{Binding Success}" Operator="Equal" RightOperand="True"/>
+                            <b:ComparisonCondition LeftOperand="{Binding SkippedRoll}" Operator="Equal" RightOperand="False"/>
+                            <b:ComparisonCondition LeftOperand="{Binding FinalResult}" Operator="NotEqual" RightOperand="20"/>
+                        </b:ConditionalExpression>
+                    </b:ConditionBehavior>
+                </b:Interaction.Behaviors>
+                <ls:LSPlaySound Sound="UI_HUD_DiceRoll_Result_Success"/>
+            </b:DataTrigger>
+
+            <b:DataTrigger Binding="{Binding RollState}" Value="ResultReady" >
+                <b:Interaction.Behaviors>
+                    <b:ConditionBehavior>
+                        <b:ConditionalExpression>
+                            <b:ComparisonCondition LeftOperand="{Binding Success}" Operator="Equal" RightOperand="True"/>
+                            <b:ComparisonCondition LeftOperand="{Binding SkippedRoll}" Operator="Equal" RightOperand="False"/>
+                            <b:ComparisonCondition LeftOperand="{Binding FinalResult}" Operator="Equal" RightOperand="20"/>
+                        </b:ConditionalExpression>
+                    </b:ConditionBehavior>
+                </b:Interaction.Behaviors>
+                <ls:LSPlaySound Sound="UI_HUD_DiceRoll_Result_20"/>
+            </b:DataTrigger>
+
+            <b:DataTrigger Binding="{Binding RollState}" Value="ResultReady" >
+                <b:Interaction.Behaviors>
+                    <b:ConditionBehavior>
+                        <b:ConditionalExpression>
+                            <b:ComparisonCondition LeftOperand="{Binding Success}" Operator="Equal" RightOperand="False"/>
+                            <b:ComparisonCondition LeftOperand="{Binding SkippedRoll}" Operator="Equal" RightOperand="False"/>
+                            <b:ComparisonCondition LeftOperand="{Binding FinalResult}" Operator="NotEqual" RightOperand="1"/>
+                        </b:ConditionalExpression>
+                    </b:ConditionBehavior>
+                </b:Interaction.Behaviors>
+                <ls:LSPlaySound Sound="UI_HUD_DiceRoll_Result_Fail"/>
+            </b:DataTrigger>
+
+
+
+            <b:DataTrigger Binding="{Binding RollState}" Value="ResultReady" >
+                <b:Interaction.Behaviors>
+                    <b:ConditionBehavior>
+                        <b:ConditionalExpression>
+                            <b:ComparisonCondition LeftOperand="{Binding Success}" Operator="Equal" RightOperand="False"/>
+                            <b:ComparisonCondition LeftOperand="{Binding SkippedRoll}" Operator="Equal" RightOperand="False"/>
+                            <b:ComparisonCondition LeftOperand="{Binding FinalResult}" Operator="Equal" RightOperand="1"/>
+                        </b:ConditionalExpression>
+                    </b:ConditionBehavior>
+                </b:Interaction.Behaviors>
+                <ls:LSPlaySound Sound="UI_HUD_DiceRoll_Result_1"/>
+            </b:DataTrigger>
+
+            <!--SKIPPED-->
+            <b:DataTrigger Binding="{Binding RollState}" Value="ResultReady" >
+                <b:Interaction.Behaviors>
+                    <b:ConditionBehavior>
+                        <b:ConditionalExpression>
+                            <b:ComparisonCondition LeftOperand="{Binding Success}" Operator="Equal" RightOperand="True"/>
+                            <b:ComparisonCondition LeftOperand="{Binding SkippedRoll}" Operator="Equal" RightOperand="True"/>
+                            <b:ComparisonCondition LeftOperand="{Binding FinalResult}" Operator="NotEqual" RightOperand="20"/>
+                        </b:ConditionalExpression>
+                    </b:ConditionBehavior>
+                </b:Interaction.Behaviors>
+                <ls:LSPlaySound Sound="UI_HUD_DiceRoll_Result_Success_Skipped"/>
+            </b:DataTrigger>
+
+            <b:DataTrigger Binding="{Binding RollState}" Value="ResultReady" >
+                <b:Interaction.Behaviors>
+                    <b:ConditionBehavior>
+                        <b:ConditionalExpression>
+                            <b:ComparisonCondition LeftOperand="{Binding Success}" Operator="Equal" RightOperand="True"/>
+                            <b:ComparisonCondition LeftOperand="{Binding SkippedRoll}" Operator="Equal" RightOperand="True"/>
+                            <b:ComparisonCondition LeftOperand="{Binding FinalResult}" Operator="Equal" RightOperand="20"/>
+                        </b:ConditionalExpression>
+                    </b:ConditionBehavior>
+                </b:Interaction.Behaviors>
+                <ls:LSPlaySound Sound="UI_HUD_DiceRoll_Result_20_Skipped"/>
+            </b:DataTrigger>
+
+            <b:DataTrigger Binding="{Binding RollState}" Value="ResultReady" >
+                <b:Interaction.Behaviors>
+                    <b:ConditionBehavior>
+                        <b:ConditionalExpression>
+                            <b:ComparisonCondition LeftOperand="{Binding Success}" Operator="Equal" RightOperand="False"/>
+                            <b:ComparisonCondition LeftOperand="{Binding SkippedRoll}" Operator="Equal" RightOperand="True"/>
+                            <b:ComparisonCondition LeftOperand="{Binding FinalResult}" Operator="NotEqual" RightOperand="1"/>
+                        </b:ConditionalExpression>
+                    </b:ConditionBehavior>
+                </b:Interaction.Behaviors>
+                <ls:LSPlaySound Sound="UI_HUD_DiceRoll_Result_Fail_Skipped"/>
+            </b:DataTrigger>
+
+            <b:DataTrigger Binding="{Binding RollState}" Value="ResultReady" >
+                <b:Interaction.Behaviors>
+                    <b:ConditionBehavior>
+                        <b:ConditionalExpression>
+                            <b:ComparisonCondition LeftOperand="{Binding Success}" Operator="Equal" RightOperand="False"/>
+                            <b:ComparisonCondition LeftOperand="{Binding SkippedRoll}" Operator="Equal" RightOperand="True"/>
+                            <b:ComparisonCondition LeftOperand="{Binding FinalResult}" Operator="Equal" RightOperand="1"/>
+                        </b:ConditionalExpression>
+                    </b:ConditionBehavior>
+                </b:Interaction.Behaviors>
+                <ls:LSPlaySound Sound="UI_HUD_DiceRoll_Result_1_Skipped"/>
+            </b:DataTrigger>
+        </b:Interaction.Triggers>
+
+        <Grid x:Name="headerSection" VerticalAlignment="Top" HorizontalAlignment="Center" Width="2000" Margin="0,95,0,0">
+
+            <!-- Extra details about this Roll -->
+            <StackPanel HorizontalAlignment="Right" Margin="0,0,1100,0">
+                <StackPanel.Style>
+                    <Style TargetType="StackPanel">
+                        <Setter Property="Visibility" Value="Collapsed"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding RollContext}" Value="LockPick">
+                                <Setter Property="Visibility" Value="Visible"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </StackPanel.Style>
+                <StackPanel>
+                    <TextBlock Text="{Binding Source=h5ea785fdg0e4bg4915g8ebbge7072220ccc0, Converter={StaticResource TranslatedStringConverter}, Mode=OneWay}" Style="{DynamicResource ActiveRollTextBlock}" FontSize="{StaticResource TitleFontSize}" HorizontalAlignment="Right"/>
+                    <TextBlock Style="{DynamicResource ActiveRollTextBlock}" Text="{Binding Source=h7d909190g6f27g4dabg8f7fgfc992a436ab3, Converter={StaticResource TranslatedStringConverter}, Mode=OneWay}" Foreground="{StaticResource LS_accent75TxtColor}" HorizontalAlignment="Right"/>
+                </StackPanel>
+
+            </StackPanel>
+
+            <Grid HorizontalAlignment="Center">
+                <Grid.Style>
+                    <Style TargetType="Grid">
+                        <Setter Property="Visibility" Value="Collapsed"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding RollContext}" Value="LockPick">
+                                <Setter Property="Visibility" Value="Visible"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Grid.Style>
+                <Image Source="/GustavNoesisGUI;component/Assets/ActiveRoll/slot.png" Stretch="None"/>
+                <Grid Background="{Binding ContextObject.Icon}" Width="80" Height="80">
+                    <TextBlock Text="{Binding ContextObjectCount}" Style="{DynamicResource ActiveRollTextBlock}" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,0,-12"/>
+                </Grid>
+            </Grid>
+
+            <StackPanel>
+                <StackPanel.Style>
+                    <Style TargetType="StackPanel">
+                        <Setter Property="HorizontalAlignment" Value="Center"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding RollContext}" Value="LockPick">
+                                <Setter Property="HorizontalAlignment" Value="Left"/>
+                                <Setter Property="Margin" Value="1100,0,0,0"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </StackPanel.Style>
+                <TextBlock Text="{Binding AbilityCheckText}" FontSize="{StaticResource TitleFontSize}">
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock" BasedOn="{StaticResource ActiveRollTextBlock}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding RollContext}" Value="LockPick">
+                                    <Setter Property="HorizontalAlignment" Value="Left"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+                <TextBlock Text="{Binding SkillOrAbility}" FontSize="{StaticResource DefaultFontSize}" Foreground="{StaticResource LS_accent75TxtColor}">
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock" BasedOn="{StaticResource ActiveRollTextBlock}">
+                            <Setter Property="Visibility" Value="Visible"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsPureAbilityRoll}" Value="True">
+                                    <Setter Property="Visibility" Value="Hidden"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding RollContext}" Value="LockPick">
+                                    <Setter Property="HorizontalAlignment" Value="Left"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+            </StackPanel>
+
+        </Grid>
+
+        <Image Source="/GustavNoesisGUI;component/Assets/ActiveRoll_c/c_ActiveRollFrame.png" Margin="0,282,0,0" VerticalAlignment="Top" Stretch="None"/>
+
+        <Control x:Name="Lock" Template="{StaticResource LockTemplate}" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,724,0,0"/>
+        <Control x:Name="ResultAnimation" Style="{StaticResource ResultControlStyle}" IsHitTestVisible="False">
+            <Control.RenderTransform>
+                <TranslateTransform Y="-60"/>
+            </Control.RenderTransform>
+        </Control>
+        <Grid x:Name="rollSection" Margin="0,0,0,322">
+            <Grid.Resources>
+                <Style x:Key="TextElementHolderStyle" TargetType="Grid" >
+                    <Setter Property="Height" Value="860"/>
+                    <Setter Property="Margin" Value="0,368,0,0"/>
+                </Style>
+
+                <Style x:Key="RollBonusStyle" TargetType="Control" >
+                    <Setter Property="Margin" Value="0,0,0,10"/>
+                </Style>
+                <Style x:Key="TargetTextHolderStyle" TargetType="StackPanel" >
+                    <Setter Property="Height" Value="580"/>
+                    <Setter Property="Margin" Value="0,40,0,0"/>
+                </Style>
+
+                <Style x:Key="textBlockTargetStyle" TargetType="TextBlock" BasedOn="{StaticResource ActiveRollTextBlock}" >
+                    <Setter Property="FontSize" Value="{StaticResource MediumFontSize}"/>
+                    <Setter Property="LineHeight" Value="{StaticResource SmallFontSizeLineHeight}"/>
+                    <Setter Property="LineStackingStrategy" Value="BlockLineHeight"/>
+                </Style>
+                
+                <Style x:Key="targetScoreAnimationStyle" TargetType="Grid" >
+                    <Setter Property="Margin" Value="0,6,0,0"/>
+                </Style>
+
+                <Style x:Key="DCTextStyle" TargetType="TextBlock" BasedOn="{StaticResource DCTextStyleBase}">
+                    <Setter Property="FontSize" Value="{StaticResource GiganticFontSize}"/>
+                </Style>
+
+                <Style x:Key="DieHolderStyle" TargetType="Grid" BasedOn="{StaticResource BaseDieHolderStyle}">
+                    <Setter Property="VerticalAlignment" Value="Top"/>
+                    <Setter Property="Margin" Value="0,690,0,0"/>
+                </Style>
+
+            </Grid.Resources>
+
+            <Control x:Name="DieControlHolder" Template="{StaticResource DieControlHolderTemplate}"/>
+
+            <Grid IsHitTestVisible="False" x:Name="prompt" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,160,0,0" >
+                <Image Source="/GustavNoesisGUI;component/Assets/ActiveRoll_c/c_promptFrame_startRoll.png" Stretch="None"/>
+                <TextBlock TextAlignment="Center" VerticalAlignment="Center" FontSize="{StaticResource IntermediateFontSize}" Foreground="{StaticResource LS_specialTxtColor}">
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="ls:TextBlockFormatter.SourceText" Value="{Binding Source=h7bb9bbfbg5fc0g4728g9947g9a9e6c862e93, Converter={StaticResource TranslatedStringConverter}, Mode=OneWay}"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding CanRespondToCommands}" Value="False" >
+                                    <Setter Property="ls:TextBlockFormatter.SourceText">
+                                        <Setter.Value>
+                                            <MultiBinding Converter="{StaticResource ParameterizedTranslatedStringConverter}">
+                                                <Binding Source="hdd2befabg0819g4729g9c0egda41572787ee"/>
+                                                <Binding Path="DataContext.SourceObject.Name" RelativeSource="{RelativeSource Mode=Self}"/>
+                                            </MultiBinding>
+                                        </Setter.Value>
+                                    </Setter>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+
+                        <ls:LSButton x:Name="rollTheDiceBtn" VerticalAlignment="Bottom" HorizontalAlignment="Center"
+                                 DataContext="{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIStartPoll'}"
+                                 Content="" Margin="0,0,0,0" IsEnabled="{Binding Path=IsVisible,RelativeSource={RelativeSource Mode=Self}}"
+                                 Command="{Binding DataContext.UserTriggeredNextPhaseCommand,RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"
+                                 CommandParameter="True">
+                    <ls:LSButton.Style>
+                        <Style TargetType="ls:LSButton" BasedOn="{StaticResource ControllerButton}">
+                            <Setter Property="IsEnabled" Value="False"/>
+                            <Style.Triggers>
+
+                                <DataTrigger Binding="{Binding DataContext.RollState,RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" Value="WaitForStart">
+                                    <Setter Property="IsEnabled" Value="True"/>
+                                </DataTrigger>
+
+                                <DataTrigger Binding="{Binding DataContext.RollState,RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" Value="WaitForReRoll">
+                                    <Setter Property="IsEnabled" Value="True"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ls:LSButton.Style>
+                </ls:LSButton>
+                <Grid.Style>
+                    <Style TargetType="Grid">
+                        <Setter Property="Visibility" Value="Collapsed" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding RollState}" Value="IntroductionAnimation" >
+                                <Setter Property="Visibility" Value="Visible" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding RollState}" Value="WaitForStart" >
+                                <Setter Property="Visibility" Value="Visible" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding RollState}" Value="WaitForReRoll" >
+                                <Setter Property="Visibility" Value="Visible" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Grid.Style>
+            </Grid>
+
+        </Grid>
+        
+
+        <Grid x:Name="buttonGroup" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,1340,0,0" Panel.ZIndex="3">
+            <Grid.Style>
+                <Style TargetType="Grid">
+                    <Setter Property="Visibility" Value="Collapsed" />
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding RollState}" Value="ResultReady" >
+                            <Setter Property="Visibility" Value="Visible" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Grid.Style>
+            <b:Interaction.Triggers>
+                <b:DataTrigger Binding="{Binding RollState}" Value="ResultReady" >
+                    <b:Interaction.Behaviors>
+                        <b:ConditionBehavior>
+                            <b:ConditionalExpression>
+                                <b:ComparisonCondition LeftOperand="{Binding Success}" Operator="Equal" RightOperand="False"/>
+                            </b:ConditionalExpression>
+                        </b:ConditionBehavior>
+                    </b:Interaction.Behaviors>
+                    <b:ControlStoryboardAction ControlStoryboardOption="Play" Storyboard="{StaticResource FailButtonAnimation}" />
+                    <b:ControlStoryboardAction ControlStoryboardOption="Play" Storyboard="{StaticResource toplist.FadeOut}" />
+                </b:DataTrigger>
+
+                <b:DataTrigger Binding="{Binding RollState}" Value="StartRoll" >
+                    <b:ControlStoryboardAction ControlStoryboardOption="Play" Storyboard="{StaticResource BoostList.FadeOut}" />
+                </b:DataTrigger>
+
+                <b:DataTrigger Binding="{Binding RollState}" Value="ResultReady" >
+                    <b:Interaction.Behaviors>
+                        <b:ConditionBehavior>
+                            <b:ConditionalExpression>
+                                <b:ComparisonCondition LeftOperand="{Binding Success}" Operator="Equal" RightOperand="True"/>
+                            </b:ConditionalExpression>
+                        </b:ConditionBehavior>
+                    </b:Interaction.Behaviors>
+                    <b:ControlStoryboardAction ControlStoryboardOption="Play" Storyboard="{StaticResource SuccessButtonAnimation}" />
+                    <b:ControlStoryboardAction ControlStoryboardOption="Play" Storyboard="{StaticResource toplist.FadeOut}" />
+                </b:DataTrigger>
+
+                <b:DataTrigger Binding="{Binding RollState}" Value="IntroductionAnimation" >
+                    <b:ChangePropertyAction TargetName="ActiveRoll" PropertyName="Tag" Value="" />
+                    <b:ChangePropertyAction TargetName="AnimTargetPlaceHolder" PropertyName="Tag" Value="" />
+                    <b:ChangePropertyAction TargetName="FailButtons" PropertyName="Visibility" Value="Collapsed" />
+                    <b:ControlStoryboardAction ControlStoryboardOption="Stop" Storyboard="{StaticResource toplist.FadeOut}" />
+                    <b:ControlStoryboardAction ControlStoryboardOption="Stop" Storyboard="{StaticResource FailButtonAnimation}" />
+                    <b:ControlStoryboardAction ControlStoryboardOption="Stop" Storyboard="{StaticResource BonussesTitle.FadeOut}" />
+                    <b:ControlStoryboardAction ControlStoryboardOption="Stop" Storyboard="{StaticResource BoostList.FadeOut}" />
+                </b:DataTrigger>
+
+                <b:DataTrigger Binding="{Binding RollState}" Value="StartRoll">
+                    <b:ControlStoryboardAction ControlStoryboardOption="Play" Storyboard="{StaticResource BonussesTitle.FadeOut}" />
+                </b:DataTrigger>
+                <!---->
+            </b:Interaction.Triggers>
+            <StackPanel x:Name="FailButtons" Visibility="Collapsed" Orientation="Vertical" RenderTransformOrigin="0.5,0.5" IsEnabled="False" >
+                <StackPanel.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform/>
+                        <SkewTransform/>
+                        <RotateTransform/>
+                        <TranslateTransform Y="0"/>
+                    </TransformGroup>
+                </StackPanel.RenderTransform>
+                <Grid Visibility="{Binding InspirationPoints, Converter={StaticResource CountToVisibilityConverter}}" >
+                    <Grid x:Name="RerollPaneBg" Visibility="Hidden" Opacity="0" >
+                        <Grid.RenderTransform>
+                            <TranslateTransform Y="0"/>
+                        </Grid.RenderTransform>
+                        <Image Source="pack://application:,,,/GustavNoesisGUI;component/Assets/ActiveRoll_c/c_rerollFrame.png" Stretch="None" Margin="-10,0,0,0"/>
+                    </Grid>
+                    <Grid x:Name="RerollPaneContent" Opacity="0" Visibility="Hidden">
+                        <Grid.RenderTransform>
+                            <TranslateTransform Y="0"/>
+                        </Grid.RenderTransform>
+                        <ls:LSButton x:Name="ReRollBtn" DataContext="{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIAddPoints', Mode=OneWay}" Style="{StaticResource ControllerButton}" IsEnabled="{Binding DataContext.CanRespondToCommands,RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"  Content="{Binding Converter={StaticResource TranslatedStringConverter}, Source=h62c407a0g5c70g4d88g8510gecdb08a44236}" Command="{Binding DataContext.RollAgainCommand,RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" VerticalAlignment="Top" Margin="0,90,0,0" SoundID="UI_HUD_ActiveRoll_RollAgain" />
+                        <TextBlock Foreground="{StaticResource LS_baseTxtColor}" FontSize="{StaticResource MediumFontSize}" Margin="0,0,0,30" VerticalAlignment="Bottom" HorizontalAlignment="Center" TextAlignment="Center">
+                            <Run Text="{Binding Converter={StaticResource TranslatedStringConverter}, Source=he6adfaa2g81bag42f1g844egb23de6220031, Mode=OneWay}" />
+                            <Run Text="{Binding InspirationPoints, Mode=OneWay, StringFormat='({0})'}"/>
+                        </TextBlock>
+                    </Grid>
+                </Grid>
+
+                <StackPanel>
+                    <!--Try Again is for actions like pickpocket , it's not an inspiration reroll-->
+                    <Grid x:Name="TryAgainPaneBg" Visibility="Hidden" Opacity="0">
+                        <Grid.RenderTransform>
+                            <TranslateTransform Y="0"/>
+                        </Grid.RenderTransform>
+                    </Grid>
+                    <StackPanel x:Name="TryAgainPaneContent" Opacity="0" Visibility="Hidden">
+                        <StackPanel.RenderTransform>
+                            <TranslateTransform Y="0"/>
+                        </StackPanel.RenderTransform>
+                        <ls:LSButton x:Name="TryAgainBtn" Style="{StaticResource ControllerButton}" DataContext="{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIRemovePoints'}" Content="{Binding Converter={StaticResource TranslatedStringConverter}, Source=h0ab67992g5f7cg4402gbd1dg07ea74fa5309}" Command="{Binding DataContext.TryAgainCommand,RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" Margin="0,0,0,0" SoundID="UI_HUD_ActiveRoll_RollAgain"/>
+                        <TextBlock Foreground="{StaticResource LS_baseTxtColor}" FontSize="{StaticResource MediumFontSize}" Margin="0,0,0,30" HorizontalAlignment="Center" TextAlignment="Center">
+                            <Run Text="{Binding Converter={StaticResource TranslatedStringConverter}, Source=h46fcf911ga536g481fg9384gaabff3bf7720, Mode=OneWay}" />
+                            <Run Text="{Binding ContextObjectCount, Converter={StaticResource AddConverter}, ConverterParameter='-1', Mode=OneWay, StringFormat='({0})'}"/>
+                        </TextBlock>
+                    </StackPanel>
+                    <StackPanel.Style>
+                        <Style TargetType="StackPanel">
+                            <Setter Property="Visibility" Value="Collapsed" />
+                            <Style.Triggers>
+                                <MultiDataTrigger>
+                                    <MultiDataTrigger.Conditions>
+                                        <Condition Binding="{Binding RollContext}" Value="LockPick"/>
+                                        <Condition Binding="{Binding ContextObjectCount, Converter={StaticResource GreaterThanConverter}, ConverterParameter=1}" Value="True"/>
+                                    </MultiDataTrigger.Conditions>
+                                    <Setter Property="Visibility" Value="Visible" />
+                                </MultiDataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </StackPanel.Style>
+                </StackPanel>
+
+                    <Grid x:Name="FailButton">
+                        <Grid.RenderTransform>
+                            <TransformGroup>
+                                <ScaleTransform/>
+                                <SkewTransform/>
+                                <RotateTransform/>
+                                <TranslateTransform />
+                            </TransformGroup>
+                        </Grid.RenderTransform>
+                        <Image Source="pack://application:,,,/GustavNoesisGUI;component/Assets/ActiveRoll_c/c_promptFrame_endCheck.png" Stretch="None" Margin="0,0,0,0"/>
+                    <TextBlock Text="{Binding Converter={StaticResource TranslatedStringConverter},Source=h560d086ag3144g4595g9129ge69f0383a226, Mode=OneWay}" Margin="0,50,0,0" FontSize="{StaticResource LargeFontSize}" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Top" Foreground="{StaticResource LS_extraspecialTxtColor}"/>
+                    <ls:LSButton x:Name="ContinueBtn" Command="{Binding DataContext.ContinueCommand,RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" Content="" SoundID="UI_HUD_ActiveRoll_Continue" VerticalAlignment="Bottom" HorizontalAlignment="Center" DataContext="{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIAccept'}" Margin="0,0,0,90">
+                        <ls:LSButton.RenderTransform>
+                            <TransformGroup>
+                                <ScaleTransform/>
+                                <SkewTransform/>
+                                <RotateTransform/>
+                                <TranslateTransform Y="0"/>
+                            </TransformGroup>
+                        </ls:LSButton.RenderTransform>
+                        <ls:LSButton.Style>
+                            <Style TargetType="ls:LSButton" BasedOn="{StaticResource ControllerButton}">
+                                <Setter Property="IsEnabled" Value="False"/>
+                                <Style.Triggers>
+                                    <MultiDataTrigger >
+                                        <MultiDataTrigger.Conditions>
+                                            <Condition Binding="{Binding ElementName=FailButtons,Path=Visibility}" Value="Visible"/>
+                                        </MultiDataTrigger.Conditions>
+                                        <Setter Property="IsEnabled" Value="True"/>
+                                    </MultiDataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ls:LSButton.Style>
+                    </ls:LSButton>
+                </Grid>
+                
+            </StackPanel>
+            <Grid x:Name="SuccessButtons" Visibility="Collapsed" Opacity="0">
+                <Grid.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform/>
+                        <SkewTransform/>
+                        <RotateTransform/>
+                        <TranslateTransform />
+                    </TransformGroup>
+                </Grid.RenderTransform>
+                <Image Source="pack://application:,,,/GustavNoesisGUI;component/Assets/ActiveRoll_c/c_promptFrame_endCheck.png" Stretch="None" Margin="0,0,0,0"/>
+                <TextBlock Text="{Binding Converter={StaticResource TranslatedStringConverter},Source=h560d086ag3144g4595g9129ge69f0383a226, Mode=OneWay}" Margin="0,50,0,0" FontSize="{StaticResource LargeFontSize}" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Top" Foreground="{StaticResource LS_extraspecialTxtColor}"/>
+                <ls:LSButton Command="{Binding DataContext.ContinueCommand,RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" Content="" SoundID="UI_HUD_ActiveRoll_Continue" VerticalAlignment="Bottom" HorizontalAlignment="Center" DataContext="{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIAccept'}" Margin="0,0,0,90">
+                    <ls:LSButton.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform/>
+                            <SkewTransform/>
+                            <RotateTransform/>
+                            <TranslateTransform Y="0"/>
+                        </TransformGroup>
+                    </ls:LSButton.RenderTransform>
+                    <ls:LSButton.Style>
+                        <Style TargetType="ls:LSButton" BasedOn="{StaticResource ControllerButton}">
+                            <Setter Property="IsEnabled" Value="False"/>
+                            <Style.Triggers>
+                                <MultiDataTrigger >
+                                    <MultiDataTrigger.Conditions>
+                                        <Condition Binding="{Binding ElementName=SuccessButtons,Path=Visibility}" Value="Visible"/>
+                                    </MultiDataTrigger.Conditions>
+                                    <Setter Property="IsEnabled" Value="True"/>
+                                </MultiDataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ls:LSButton.Style>
+                </ls:LSButton>
+            </Grid>
+           
+        </Grid>
+      
+        <StackPanel x:Name="ControllerHints" Orientation="Horizontal" Visibility="Visible" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,50,38" Panel.ZIndex="4">
+            <ls:LSButton x:Name="ToggleTooltipBtn" DataContext="{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIShowInfo'}"
+                             Content="{Binding Converter={StaticResource TranslatedStringConverter}, Source=h07aaca85g63dbg4e60g88a2g0590077ea7e2, Mode=OneWay}" 
+                              >
+                <ls:LSButton.Style>
+                    <Style TargetType="ls:LSButton" BasedOn="{StaticResource ControllerButton}" >
+                        <Setter Property="CommandParameter" Value="{Binding ElementName=selectorLb,Path=LocalFocus}"/>
+                        <Setter Property="Command" Value="{Binding DataContext.ToggleTooltipOnUIElement,RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"/>
+                        
+                    </Style> 
+            </ls:LSButton.Style>
+            </ls:LSButton>
+        </StackPanel>
+
+
+        <Grid x:Name="BonusModifiers" HorizontalAlignment="Center" VerticalAlignment="Bottom" Panel.ZIndex="2" Height="860" >
+            <Grid.Style>
+                <Style TargetType="Grid">
+                    <Setter Property="Visibility" Value="Visible"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding RollState}" Value="ResultReady" >
+                            <Setter Property="Visibility" Value="Hidden"/>
+                            <Setter Property="IsEnabled" Value="False"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Grid.Style>
+            <Grid.Resources>
+                    <Style x:Key="ControllerSelectionLBI" TargetType="ls:LSListBoxItem" >
+                        <Setter Property="Background" Value="{x:Null}"/>
+                        <Setter Property="IsEnabled" Value="True" />
+                        <Setter Property="Focusable" Value="False" />
+                        <Setter Property="Padding" Value="0"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate>
+                                    <ContentPresenter/>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                        
+
+                    </Style>
+
+                    <Style TargetType="ls:LSListBox" x:Key="NavigationList" BasedOn="{StaticResource {x:Type ls:LSListBox}}">
+                        <Setter Property="KeyboardNavigation.DirectionalNavigation" Value="Contained"/>
+                        <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Disabled"/>
+                        <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled"/>
+                        <Setter Property="ItemContainerStyle" Value="{StaticResource ControllerSelectionLBI}"/>
+                        <Setter Property="Focusable" Value="False"/>
+                        <Setter Property="KeyboardNavigation.DirectionalNavigation" Value="Continue"/>
+                        <Setter Property="NavigateFocus" Value="False"/>
+                        <Setter Property="Opacity" Value="1"/>
+                        <Setter Property="Background" Value="Transparent"/>
+                        <Setter Property="AutoFocusElementOnSelect" Value="False"/>
+                        <Setter Property="Visibility" Value="Visible"/>
+                    </Style>
+
+                    <Style TargetType="ls:LSListBox" BasedOn="{StaticResource {x:Type ls:LSListBox}}">
+                        <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Disabled"/>
+                        <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled"/>
+                        <Setter Property="Focusable" Value="False"/>
+                        <Setter Property="NavigateFocus" Value="False"/>
+                        <Setter Property="AutoFocusElementOnSelect" Value="False"/>
+                        <Setter Property="ItemsPanel">
+                            <Setter.Value>
+                                <ItemsPanelTemplate>
+                                    <VirtualizingStackPanel Orientation="Horizontal"/>
+                                </ItemsPanelTemplate>
+                            </Setter.Value>
+                        </Setter>
+                        <Setter Property="ItemContainerStyle">
+                            <Setter.Value>
+                                <Style TargetType="ls:LSListBoxItem" >
+                                    <Setter Property="Background" Value="{x:Null}"/>
+                                    <Setter Property="IsEnabled" Value="True" />
+                                    <Setter Property="Template" Value="{StaticResource ModifierTemplate}" />
+                                    <Style.Triggers>
+                                        <Trigger Property="IsEnabled" Value="False">
+                                            <Setter Property="Opacity" Value="{StaticResource DisabledOpacity}"/>
+                                        </Trigger>
+                                        <DataTrigger Binding="{Binding DataContext.RollState,RelativeSource={RelativeSource AncestorType=ls:UIWidget}}" Value="ResultReady" >
+                                            <Setter Property="IsEnabled" Value="False" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+
+                                </Style>
+                            </Setter.Value>
+                        </Setter>
+                        
+                       
+                    </Style>
+
+                    
+
+                </Grid.Resources>
+            <StackPanel x:Name="BonussesTitle"  Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Center">
+                <StackPanel.Resources>
+                    <Style TargetType="TextBlock" BasedOn="{StaticResource ActiveRollTextBlock}" >
+                        <Setter Property="FontSize" Value="{StaticResource MediumFontSize}"/>
+
+                    </Style>
+                </StackPanel.Resources>
+                <TextBlock Text="{Binding Source=ha87d5467gfc76g42b7g82aega958176e3494 , Converter={StaticResource TranslatedStringConverter}, Mode=OneWay}" VerticalAlignment="Center"/>
+                <Control Template="{StaticResource MinMaxText}" VerticalAlignment="Center" Margin="20,0,0,0"/>
+            </StackPanel>
+
+                <Grid Margin="0,0,0,0" >
+                    <Control x:Name="SelectorHidden" Template="{StaticResource SelectorTemplate}" Visibility="Hidden" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+
+                    <ls:LSListBox ActionPrevEvent="UIUp" ActionNextEvent="UIDown" Margin="0,57,0,0" x:Name="selectorLb" IsEnabled="True"  Style="{StaticResource NavigationList}" LocalFocusSelector="{Binding ElementName=SelectorHidden,Mode=OneWay}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" >
+                    <b:Interaction.Triggers>
+                        <b:EventTrigger EventName="LocalFocusChanged">
+                            <b:InvokeCommandAction Command="{Binding DataContext.ShowTooltipOnUIElement,RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" 
+                                                                       CommandParameter="{Binding ElementName=selectorLb,Path=LocalFocus}"/>
+                        </b:EventTrigger>
+                    </b:Interaction.Triggers>
+                    <ls:LSListBox.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel IsItemsHost="True" />
+                            </ItemsPanelTemplate>
+                        </ls:LSListBox.ItemsPanel>
+                    <ls:LSListBox x:Name="TopNavigationList" Opacity="1" HorizontalAlignment="Center" ActionPrevEvent="UILeft" ActionNextEvent="UIRight" Style="{StaticResource NavigationList}" >
+                        <b:Interaction.Triggers>
+                            <b:EventTrigger EventName="Loaded">
+                                <b:ChangePropertyAction TargetName="RollModSeq" PropertyName="Animate" Value="True"/>
+                            </b:EventTrigger>
+                            <b:DataTrigger Binding="{Binding ElementName=RollModSeq ,Path=SequenceCompleted}" Value="True">
+                                <b:ChangePropertyAction TargetName="RollAdvSeq" PropertyName="Animate" Value="True"/>
+                            </b:DataTrigger>
+                        </b:Interaction.Triggers>
+                            <ls:LSListBox.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel IsItemsHost="True" Orientation="Horizontal"/>
+                                </ItemsPanelTemplate>
+                            </ls:LSListBox.ItemsPanel>
+
+                            <ls:LSListBoxItem>
+                            <ls:LSListBox ActionPrevEvent="UILeft" ActionNextEvent="UIRight" x:Name="modlist" SelectedItem="" ItemsSource="{Binding Roll.Modifiers}" >
+                                <b:Interaction.Behaviors>
+                                    <ls:SequenceBehavior x:Name="RollModSeq" TimeOffset="0:0:0.2" CompletedDelay="0:0:0.2" />
+                                </b:Interaction.Behaviors>
+                            </ls:LSListBox>
+
+                            <ls:LSListBoxItem.Style>
+                                    <Style TargetType="ls:LSListBoxItem" BasedOn="{StaticResource ControllerSelectionLBI}">
+                                        <Setter Property="Visibility" Value="Visible"/>
+
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Roll.Modifiers.Count, Converter={StaticResource GreaterThanConverter}, ConverterParameter=0}" Value="False">
+                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </ls:LSListBoxItem.Style>
+                            </ls:LSListBoxItem>
+                            <ls:LSListBoxItem>
+                            <ls:LSListBox ActionPrevEvent="UILeft" ActionNextEvent="UIRight" ItemsSource="{Binding Roll.Advantages}">
+                                <b:Interaction.Behaviors>
+                                    <ls:SequenceBehavior x:Name="RollAdvSeq" TimeOffset="0:0:0.2"  />
+                                </b:Interaction.Behaviors>
+                            </ls:LSListBox>
+                            <ls:LSListBoxItem.Style>
+                                    <Style TargetType="ls:LSListBoxItem" BasedOn="{StaticResource ControllerSelectionLBI}">
+                                        <Setter Property="Visibility" Value="Visible"/>
+
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Roll.Advantages.Count, Converter={StaticResource GreaterThanConverter}, ConverterParameter=0}" Value="False">
+                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </ls:LSListBoxItem.Style>
+                            </ls:LSListBoxItem>
+                            
+                            <ls:LSListBoxItem Focusable="False" x:Name="divider" >
+                                <Grid  Margin="-64,-8,-64,0" Visibility="{Binding SelectedBoostModifierList.Count, Converter={StaticResource CountToVisibilityConverter}}" >
+                                    <Image VerticalAlignment="Top" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/ActiveRoll_c/c_activeRoll_Vdivider.png" Stretch="None" />
+                                </Grid>
+
+                                <ls:LSListBoxItem.Style>
+                                    <Style TargetType="ls:LSListBoxItem" BasedOn="{StaticResource ControllerSelectionLBI}">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Roll.Modifiers.Count, Converter={StaticResource GreaterThanConverter}, ConverterParameter=0}" Value="True">
+                                                <Setter Property="Visibility" Value="Visible"/>
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding Roll.Advantages.Count, Converter={StaticResource GreaterThanConverter}, ConverterParameter=0}" Value="True">
+                                                <Setter Property="Visibility" Value="Visible"/>
+                                            </DataTrigger>
+
+                                            <DataTrigger Binding="{Binding Path=Visibility,ElementName=AdvantageHolder}" Value="Visible">
+                                                <Setter Property="Visibility" Value="Visible"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </ls:LSListBoxItem.Style>
+                            </ls:LSListBoxItem>
+
+                            <ls:LSListBoxItem>
+                                <ls:LSListBox x:Name="selectedboostmodlist" Opacity="1" ActionPrevEvent="UILeft" ActionNextEvent="UIRight" ItemsSource="{Binding SelectedBoostModifierList}" HorizontalAlignment="Center" VerticalAlignment="Top"  ScrollViewer.HorizontalScrollBarVisibility="Disabled" KeyboardNavigation.DirectionalNavigation="Continue" ScrollViewer.VerticalScrollBarVisibility="Disabled">
+
+                                    <ls:LSListBox.ItemContainerStyle>
+                                        <Style TargetType="ls:LSListBoxItem" >
+                                            <Setter Property="Background" Value="{x:Null}"/>
+                                            <Setter Property="Template" >
+                                                <Setter.Value>
+                                                    <ControlTemplate TargetType="ls:LSListBoxItem">
+                                                        <Grid>
+                                                            <Image x:Name="bgImg" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/ActiveRoll_c/c_activeRoll_bonusBox_d.png" Stretch="None" VerticalAlignment="Top" Margin="-8,0,-8,0"/>
+
+                                                            <Grid Margin="0,30" VerticalAlignment="Top" >
+                                                            <TextBlock x:Name="BonusTxt" VerticalAlignment="Top" HorizontalAlignment="Center" Style="{StaticResource BonusValueTxtStyle}">
+                                                                    <TextBlock.Tag>
+                                                                        <MultiBinding Converter="{StaticResource EqualConverter}">
+                                                                            <Binding Path="MinBonusValue"/>
+                                                                            <Binding Path="MaxBonusValue"/>
+                                                                        </MultiBinding>
+                                                                    </TextBlock.Tag>
+                                                                </TextBlock>
+                                                                <ContentPresenter Content="{Binding BoostModifier}"/>
+                                                            </Grid>
+
+                                                            <Grid VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,120,60,0">
+                                                                <ls:LSEntityObject EntityRef="{Binding Owner.EntityHandle}" ToolTipService.ShowOnDisabled="True" Background="Transparent">
+                                                                    <ls:LSEntityObject.ToolTip>
+                                                                        <ls:LSTooltip Content="{Binding Owner.Name}"  Placement="Top"/>
+                                                                    </ls:LSEntityObject.ToolTip>
+                                                                    <Ellipse Fill="{Binding Owner.Icon}" Width="50" Height="50">
+
+                                                                    </Ellipse>
+                                                                    <Image Source="pack://application:,,,/GustavNoesisGUI;component/Assets/ActiveRoll/companionAidFrame.png" Stretch="None"/>
+                                                                </ls:LSEntityObject>
+
+                                                            </Grid>
+
+                                                        <ls:LSInputBinding PlayerId="{Binding DataContext.CurrentPlayer.PlayerId, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" BoundEvent="UIAccept" Focusable="False"
+                           Command="{Binding DataContext.RemoveModifierCommand, RelativeSource={RelativeSource AncestorType=ls:UIWidget}}" CommandParameter="{Binding}">
+                                                            <b:Interaction.Triggers>
+                                                                <b:EventTrigger EventName="LSInputBindingReleased">
+                                                                    <ls:LSPlaySound Sound="UI_HUD_DiceRoll_Bonus_Click" />
+                                                                </b:EventTrigger>
+                                                                <b:EventTrigger EventName="LSInputBindingPressed">
+                                                                    <ls:LSPlaySound Sound="UI_HUD_DiceRoll_Bonus_Press" />
+                                                                </b:EventTrigger>
+                                                            </b:Interaction.Triggers>
+                                                            <ls:LSInputBinding.Style>
+                                                                <Style TargetType="ls:LSInputBinding">
+                                                                    <Setter Property="IsEnabled" Value="False"/>
+                                                                    <Style.Triggers>
+                                                                        <MultiDataTrigger>
+                                                                            <MultiDataTrigger.Conditions>
+                                                                                <Condition  Value="True">
+                                                                                    <Condition.Binding>
+                                                                                        <MultiBinding Converter="{StaticResource EqualConverter}">
+                                                                                            <Binding Path="DataContext.Owner.OwnerUserID" RelativeSource="{RelativeSource Mode=Self}"/>
+                                                                                            <Binding Path="DataContext.CurrentPlayer.SelectedCharacter.OwnerUserID" RelativeSource="{RelativeSource AncestorType={x:Type ls:UIWidget}}"/>
+                                                                                        </MultiBinding>
+                                                                                    </Condition.Binding>
+                                                                                </Condition>
+                                                                                <Condition Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType=ls:LSListBoxItem}}" Value="True"/>
+                                                                            </MultiDataTrigger.Conditions>
+                                                                            <Setter Property="IsEnabled" Value="True"/>
+                                                                        </MultiDataTrigger>
+                                                                    </Style.Triggers>
+                                                                </Style>
+                                                            </ls:LSInputBinding.Style>
+                                                        </ls:LSInputBinding>
+
+                                                        <b:Interaction.Triggers>
+                                                                <b:DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType=ls:LSListBoxItem}}" Value="True">
+                                                                    <ls:LSPlaySound Sound="UI_Shared_Hover" />
+                                                                </b:DataTrigger>
+
+                                                                <!-- When a selected boost is loaded, play a sound for if the boost adds/removes advantage or adds disadvantage -->
+                                                                <!-- NOTE: RollAdvantageType = the dice's advantage type WITH this bonus already applied and AdvantageType is this Bonus's advantage type -->
+                                                                <!-- Case Advantage + Disadvantage bonus, it gives a Flat roll (final advantage type will be None), play BonusRemoves_Advantage (very rare) -->
+                                                                <b:EventTrigger EventName="Loaded">
+                                                                    <b:Interaction.Behaviors>
+                                                                        <b:ConditionBehavior>
+                                                                            <b:ConditionalExpression>
+                                                                                <b:ComparisonCondition LeftOperand="{Binding Path=DataContext.Roll.RollAdvantageType, RelativeSource={RelativeSource AncestorType=ls:UIWidget}}" Operator="Equal" RightOperand="None" />
+                                                                                <b:ComparisonCondition LeftOperand="{Binding AdvantageType}" Operator="Equal" RightOperand="Disadvantage" />
+                                                                            </b:ConditionalExpression>
+                                                                        </b:ConditionBehavior>
+                                                                    </b:Interaction.Behaviors>
+                                                                    <ls:LSPlaySound Sound="UI_HUD_DiceRoll_BonusRemoves_Advantage" />
+                                                                </b:EventTrigger>
+
+                                                                <!-- Case Disadvantage + Advantage bonus, it gives a Flat roll (final advantage type will be None), play BonusRemoves_Disadvantage (somewhat common) -->
+                                                                <b:EventTrigger EventName="Loaded">
+                                                                    <b:Interaction.Behaviors>
+                                                                        <b:ConditionBehavior>
+                                                                            <b:ConditionalExpression>
+                                                                                <b:ComparisonCondition LeftOperand="{Binding Path=DataContext.Roll.RollAdvantageType, RelativeSource={RelativeSource AncestorType=ls:UIWidget}}" Operator="Equal" RightOperand="None" />
+                                                                                <b:ComparisonCondition LeftOperand="{Binding AdvantageType}" Operator="Equal" RightOperand="Advantage" />
+                                                                            </b:ConditionalExpression>
+                                                                        </b:ConditionBehavior>
+                                                                    </b:Interaction.Behaviors>
+                                                                    <ls:LSPlaySound Sound="UI_HUD_DiceRoll_BonusRemoves_Disadvantage" />
+                                                                </b:EventTrigger>
+
+                                                                <!-- Case flat roll + Advantage bonus, it gives an Advantage roll (final advantage type will be Advantage), play BonusAdds_Advantage (somewhat common) -->
+                                                                <b:EventTrigger EventName="Loaded">
+                                                                    <b:Interaction.Behaviors>
+                                                                        <b:ConditionBehavior>
+                                                                            <b:ConditionalExpression>
+                                                                                <b:ComparisonCondition LeftOperand="{Binding Path=DataContext.Roll.RollAdvantageType, RelativeSource={RelativeSource AncestorType=ls:UIWidget}}" Operator="Equal" RightOperand="Advantage" />
+                                                                                <b:ComparisonCondition LeftOperand="{Binding AdvantageType}" Operator="Equal" RightOperand="Advantage" />
+                                                                            </b:ConditionalExpression>
+                                                                        </b:ConditionBehavior>
+                                                                    </b:Interaction.Behaviors>
+                                                                    <ls:LSPlaySound Sound="UI_HUD_DiceRoll_BonusAdds_Advantage" />
+                                                                </b:EventTrigger>
+                                                                    
+                                                                <!--  Case flat roll + Disadvantage bonus, it gives an Disadvantage roll (final advantage type will be Disadvantage), play BonusAdds_Disadvantage (very rare) -->
+                                                                <b:EventTrigger EventName="Loaded">
+                                                                    <b:Interaction.Behaviors>
+                                                                        <b:ConditionBehavior>
+                                                                            <b:ConditionalExpression>
+                                                                                <b:ComparisonCondition LeftOperand="{Binding Path=DataContext.Roll.RollAdvantageType, RelativeSource={RelativeSource AncestorType=ls:UIWidget}}" Operator="Equal" RightOperand="Disadvantage" />
+                                                                                <b:ComparisonCondition LeftOperand="{Binding AdvantageType}" Operator="Equal" RightOperand="Disadvantage" />
+                                                                            </b:ConditionalExpression>
+                                                                        </b:ConditionBehavior>
+                                                                    </b:Interaction.Behaviors>
+                                                                    <ls:LSPlaySound Sound="UI_HUD_DiceRoll_BonusAdds_Disadvantage" />
+                                                                </b:EventTrigger>
+                                                            </b:Interaction.Triggers>
+
+                                                       
+                                                        </Grid>
+                                                    <ControlTemplate.Triggers>
+                                                            <DataTrigger Binding="{Binding ElementName=BonusTxt, Path=Tag}" Value="True">
+                                                                <Setter TargetName="BonusTxt" Property="Text" >
+                                                                    <Setter.Value>
+                                                                        <MultiBinding StringFormat="{}{0:+#;-#;+0}">
+                                                                            <Binding Path="MinBonusValue" />
+                                                                        </MultiBinding>
+                                                                    </Setter.Value>
+                                                                </Setter>
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding IsAdvantage}" Value="True">
+                                                            <Setter TargetName="BonusTxt" Property="Text" Value="{Binding Source=he770672cgd25bg4ec8g8bb6g6745e6e7576f  , Converter={StaticResource TranslatedStringConverter}, Mode=OneWay}"/>
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding DiceTypeSet.Amount,Converter={StaticResource GreaterThanConverter},ConverterParameter=0}" Value="True">
+                                                                <Setter TargetName="BonusTxt" Property="Text" Value="{Binding DiceTypeSet.Str, StringFormat='{}+{0}'}"/>
+                                                            </DataTrigger>
+                                                            <Trigger Property="IsSelected" Value="True">
+                                                                <Setter Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/ActiveRoll_c/c_activeRoll_bonusBox_h.png" TargetName="bgImg"/>
+                                                            </Trigger>
+                                                        </ControlTemplate.Triggers>
+                                                    </ControlTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                            <Setter Property="IsEnabled" Value="True" />
+                                            <Style.Triggers>
+                                                <Trigger Property="IsEnabled" Value="False">
+                                                    <Setter Property="Opacity" Value="{StaticResource DisabledOpacity}"/>
+                                                </Trigger>
+                                                <DataTrigger Binding="{Binding DataContext.RollState, RelativeSource={RelativeSource AncestorType=ls:UIWidget}}" Value="ResultReady" >
+                                                    <Setter Property="IsEnabled" Value="False" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </ls:LSListBox.ItemContainerStyle>
+                                </ls:LSListBox>
+
+                                <ls:LSListBoxItem.Style>
+                                    <Style TargetType="ls:LSListBoxItem" BasedOn="{StaticResource ControllerSelectionLBI}">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                        <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding SelectedBoostModifierList.Count, Converter={StaticResource GreaterThanConverter}, ConverterParameter=0}" Value="False">
+                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </ls:LSListBoxItem.Style>
+                            </ls:LSListBoxItem>
+                        </ls:LSListBox>
+
+                    <ls:LSListBoxItem x:Name="BoostListLBI" IsEnabled="False" Visibility="Hidden" Focusable="False">
+                            <ls:LSListBox x:Name="BoostList" HorizontalAlignment="Center" Margin="0,-80,0,0" ItemsSource="{Binding NearbyPartyCharacters}" ItemContainerStyle="{StaticResource ActiveRoll.PlayerPortraits}" 
+                            ActionPrevEvent="UILeft" ActionNextEvent="UIRight" Focusable="False" KeyboardNavigation.DirectionalNavigation="Continue"
+                            Background="Transparent" ScrollViewer.VerticalScrollBarVisibility="Disabled" BorderBrush="Transparent">
+
+                                <ls:LSListBox.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <VirtualizingStackPanel IsItemsHost="True" Orientation="Horizontal"/>
+                                    </ItemsPanelTemplate>
+                                </ls:LSListBox.ItemsPanel>
+                            </ls:LSListBox>
+                        </ls:LSListBoxItem>
+                    </ls:LSListBox>
+
+                <b:Interaction.Triggers>
+                    <b:DataTrigger Binding="{Binding RollState}" Value="IntroductionAnimation" >
+                        <b:ChangePropertyAction TargetName="TopNavigationList" PropertyName="Opacity" Value="1" />
+                        <b:ChangePropertyAction TargetName="TopNavigationList" PropertyName="Visibility" Value="Visible" />
+                    </b:DataTrigger>
+                </b:Interaction.Triggers>
+
+                </Grid>
+                <Grid Margin="-90,0,-90,98" VerticalAlignment="Bottom" x:Name="BoostListBtn">
+                    <Image Source="/GustavNoesisGUI;component/Assets/ActiveRoll_c/c_promptFrame_addBonus.png" Stretch="None"/>
+                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="{StaticResource LargeFontSize}" Margin="0,46,0,0" Foreground="{StaticResource LS_baseTxtColor}" Text="{Binding Source=h10b87da6ge266g44f0gaf03gec4ceb367dc8, Converter={StaticResource TranslatedStringConverter}, Mode=OneWay}"/>
+                    <ls:LSButton VerticalAlignment="Bottom" Style="{StaticResource ControllerButton}" Margin="0,0,0,98"  Content="" DataContext="{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIAddPoints'}">
+                        <b:Interaction.Triggers>
+                            <b:EventTrigger EventName="LSButtonPressed" >
+                                <b:ChangePropertyAction TargetName="BoostListLBI" PropertyName="Visibility" Value="Visible" />
+                                <b:ChangePropertyAction TargetName="BoostListLBI" PropertyName="IsEnabled" Value="True" />
+                                <b:ChangePropertyAction TargetName="selectorLb" PropertyName="IsEnabled" Value="True" />
+                                <b:ChangePropertyAction TargetName="BoostListBtn" PropertyName="Visibility" Value="Collapsed" />
+                                <b:ChangePropertyAction TargetName="ControllerHints" PropertyName="Opacity" Value="0" />
+                            </b:EventTrigger>
+                        </b:Interaction.Triggers>
+                        
+                    </ls:LSButton>
+
+                <Grid.Style>
+                    <Style TargetType="Grid" >
+                        <Setter Property="Visibility" Value="Collapsed" />
+                        <Style.Triggers>
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding Path=DataContext.HasBoostsToAdd,RelativeSource={RelativeSource AncestorType=ls:UIWidget}}" Value="True"/>
+                                    <Condition Binding="{Binding RollState}" Value="WaitForStart"/>
+                                </MultiDataTrigger.Conditions>
+                                <MultiDataTrigger.Setters>
+                                    <Setter Property="Visibility" Value="Visible" />
+                                </MultiDataTrigger.Setters>
+                            </MultiDataTrigger>
+
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding Path=DataContext.HasBoostsToAdd,RelativeSource={RelativeSource AncestorType=ls:UIWidget}}" Value="True"/>
+                                    <Condition Binding="{Binding RollState}" Value="WaitForReRoll"/>
+                                </MultiDataTrigger.Conditions>
+                                <MultiDataTrigger.Setters>
+                                    <Setter Property="Visibility" Value="Visible" />
+                                </MultiDataTrigger.Setters>
+                            </MultiDataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Grid.Style>
+            </Grid>
+
+           
+        </Grid>
+        <ContentControl x:Name="ResultHolder" Margin="0,696,0,0" HorizontalAlignment="Center" VerticalAlignment="Top" Style="{StaticResource ResultCountTemplateStyle}"  >
+            <Grid x:Name="AnimTargetPlaceHolder" HorizontalAlignment="Center" VerticalAlignment="Center" Width="4" Height="4" Background="Transparent" />
+        </ContentControl>
+        <Control x:Name="DieRollAnimation" IsHitTestVisible="False" Style="{StaticResource DieRollStyle}" VerticalAlignment="Top" Margin="0,-56,0,0">
+            <b:Interaction.Triggers>
+                <b:DataTrigger Binding="{Binding Path=Tag,ElementName=DieRollAnimation}" Value="AnimPlaying">
+                    <b:ChangePropertyAction PropertyName="Tag" TargetName="ActiveRoll" Value="Rollingdice"/>
+                </b:DataTrigger>
+                <b:DataTrigger Binding="{Binding Path=Tag,ElementName=DieRollAnimation}" Value="AnimDone">
+                    <b:ChangePropertyAction PropertyName="Tag" TargetName="ActiveRoll" Value="RevealResultAnimation"/>
+                </b:DataTrigger>
+            </b:Interaction.Triggers>
+        </Control>
+
+
+
+
+        <Grid x:Name="AnimationOverlayHolder" Tag="Init" IsHitTestVisible="False" Panel.ZIndex="100">
+            <Grid.Style>
+                <Style TargetType="Grid">
+                    <Setter Property="Visibility" Value="Hidden" />
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Path=Tag,RelativeSource={RelativeSource AncestorType=ls:UIWidget}}" Value="RevealResultAnimation">
+                            <Setter Property="Visibility" Value="Visible" />
+                        </DataTrigger>
+
+                        <DataTrigger Binding="{Binding DataContext.RollState,RelativeSource={RelativeSource AncestorType=ls:UIWidget}}" Value="ResultReady" >
+                            <Setter Property="Visibility" Value="Hidden" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Grid.Style>
+            
+            <ls:OverlayConnector x:Name="AnimationConnectorBaseBoosts" Source="{Binding ElementName=modlist}" >
+                <b:Interaction.Behaviors>
+                    <ls:SequenceBehavior x:Name="AnimSeqBase" TimeOffset="0:0:0.8" CompletedDelay="0:0:1" />
+                </b:Interaction.Behaviors>
+            </ls:OverlayConnector>
+            <ls:OverlayConnector x:Name="AnimationConnectorSelectedBoosts" Source="{Binding ElementName=selectedboostmodlist}" >
+                <b:Interaction.Behaviors>
+                    <ls:SequenceBehavior x:Name="AnimSeqSelected" TimeOffset="0:0:0.8" CompletedDelay="0:0:1.2" />
+                </b:Interaction.Behaviors>
+
+                <b:Interaction.Triggers>
+                    <b:DataTrigger Binding="{Binding ElementName=AnimSeqBase ,Path=SequenceCompleted}" Value="True">
+                        <b:Interaction.Behaviors>
+                            <b:ConditionBehavior>
+                                <b:ConditionalExpression>
+                                    <b:ComparisonCondition LeftOperand="{Binding ElementName=AnimationOverlayHolder,Path=Tag}" Operator="Equal" RightOperand="Step1"/>
+                                </b:ConditionalExpression>
+                            </b:ConditionBehavior>
+                        </b:Interaction.Behaviors>
+
+                        <b:ChangePropertyAction TargetName="AnimationOverlayHolder" PropertyName="Tag" Value="Step2"/>
+                        <b:ChangePropertyAction TargetName="AnimSeqSelected" PropertyName="Animate" Value="True"/>
+                    </b:DataTrigger>
+
+                </b:Interaction.Triggers>
+            </ls:OverlayConnector>
+
+            <b:Interaction.Triggers>
+
+                <b:DataTrigger Binding="{Binding ElementName=AnimSeqSelected ,Path=SequenceCompleted}" Value="True">
+                    <b:Interaction.Behaviors>
+                        <b:ConditionBehavior>
+                            <b:ConditionalExpression>
+                                <b:ComparisonCondition LeftOperand="{Binding ElementName=AnimationOverlayHolder,Path=Tag}" Operator="Equal" RightOperand="Step2"/>
+                            </b:ConditionalExpression>
+                        </b:ConditionBehavior>
+                    </b:Interaction.Behaviors>
+                    <b:InvokeCommandAction Command="{Binding TriggerNextPhaseCommand}"/>
+                </b:DataTrigger>
+
+                <b:DataTrigger Binding="{Binding Path=Tag,ElementName=ResultHolder}" Value="AnimDone">
+                    <b:Interaction.Behaviors>
+                        <b:ConditionBehavior>
+                            <b:ConditionalExpression>
+                                <b:ComparisonCondition LeftOperand="{Binding FinalResult}" Operator="NotEqual" RightOperand="1"/>
+                                <b:ComparisonCondition LeftOperand="{Binding FinalResult}" Operator="NotEqual" RightOperand="20"/>
+                            </b:ConditionalExpression>
+                        </b:ConditionBehavior>
+                    </b:Interaction.Behaviors>
+                    <b:ChangePropertyAction TargetName="AnimationOverlayHolder" PropertyName="Tag" Value="Step1"/>
+                    <b:ChangePropertyAction TargetName="AnimSeqBase" PropertyName="Animate" Value="True"/>
+                </b:DataTrigger>
+
+                <b:DataTrigger Binding="{Binding Path=Tag,ElementName=ResultHolder}" Value="AnimDone">
+                    <b:Interaction.Behaviors>
+                        <b:ConditionBehavior>
+                            <b:ConditionalExpression>
+                                <b:ComparisonCondition LeftOperand="{Binding FinalResult}" Operator="Equal" RightOperand="20"/>
+                            </b:ConditionalExpression>
+                        </b:ConditionBehavior>
+                    </b:Interaction.Behaviors>
+                    <b:InvokeCommandAction Command="{Binding TriggerNextPhaseCommand}"/>
+                </b:DataTrigger>
+
+                <b:DataTrigger Binding="{Binding Path=Tag,ElementName=ResultHolder}" Value="AnimDone">
+                    <b:Interaction.Behaviors>
+                        <b:ConditionBehavior>
+                            <b:ConditionalExpression>
+                                <b:ComparisonCondition LeftOperand="{Binding FinalResult}" Operator="Equal" RightOperand="1"/>
+                            </b:ConditionalExpression>
+                        </b:ConditionBehavior>
+                    </b:Interaction.Behaviors>
+                    <b:InvokeCommandAction Command="{Binding TriggerNextPhaseCommand}"/>
+                </b:DataTrigger>
+            </b:Interaction.Triggers>
+
+        </Grid>
+
+    </Grid>
+
+</ls:UIWidget>

@@ -1,0 +1,607 @@
+<ls:UIWidget x:Name="SpellSelecting_c"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ls="clr-namespace:ls;assembly=SharedGUI"
+    xmlns:System="clr-namespace:System;assembly=mscorlib"
+    xmlns:noesis="clr-namespace:NoesisGUIExtensions;assembly=Noesis.GUI.Extensions"
+    xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
+    
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+    mc:Ignorable="d"
+    d:DesignHeight="2160" d:DesignWidth="3840"
+    ls:UIWidget.Focusable="False"
+    ls:UIWidget.UseCustomDC="true"
+    ls:UIWidget.ContextName="SpellSelecting"
+    FocusDown="UIDown" FocusLeft="UILeft" FocusRight="UIRight" FocusUp="UIUp">
+
+    <ls:UIWidget.Resources>
+        <ResourceDictionary>
+
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../Library/CharacterCreationLib_c.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+            <System:Double x:Key="SpellCellSize">140</System:Double>
+            <System:Double x:Key="SpellGridWidth">1060</System:Double>
+            <System:Double x:Key="ReplaceSpellGridWidth">900</System:Double>
+
+            <ControlTemplate x:Key="BottomButtons">
+
+                <StackPanel>
+                    <Image Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared_c/c_panel_bottom.png" Stretch="None"/>
+
+                    <Grid>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top">
+                            <TextBlock Text="{Binding Source='h7a174735g0099g4ca9ga1f7ga53ad66b1aa4',Converter={StaticResource TranslatedStringConverter}}" Foreground="{StaticResource LS_ButtonHintFontColor}" VerticalAlignment="Center" />
+                            <TextBlock Text="{Binding Source='hba9c74bbg1f89g4f68gbafbg1bcf7442cfae',Converter={StaticResource TranslatedStringConverter} , StringFormat='{} ({0})'}" Foreground="{StaticResource LS_InputTypeColor}" VerticalAlignment="Center"  />
+                        </StackPanel>
+                        <Image Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared_c/c_callToAction_wide_bg.png" Stretch="None" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,-46,0,-220" >
+                            <Image.RenderTransform>
+                                <ScaleTransform ScaleY="-1" />
+                            </Image.RenderTransform>
+                        </Image>
+
+                        <Control Template="{DynamicResource HoldButtonTemplate}"  HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,54,0,0">
+                            <b:Interaction.Triggers>
+                                <b:StoryboardCompletedTrigger Storyboard="{DynamicResource HoldAnimation}">
+                                    <b:InvokeCommandAction Command="{Binding DataContext.ApplySpellSelecting, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"/>
+                                </b:StoryboardCompletedTrigger>
+                            </b:Interaction.Triggers>
+                        </Control>
+
+                        <Grid HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,54,0,0">
+                            <Grid.Resources>
+                                <Storyboard x:Key="HoldAnimation">
+                                    <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(ls:LSPie.Value)" Storyboard.TargetName="ButtonHoldVisualizer" BeginTime="0:0:0.5">
+                                        <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                                        <EasingDoubleKeyFrame KeyTime="0:0:1" Value="1"/>
+                                    </DoubleAnimationUsingKeyFrames>
+                                </Storyboard>
+                            </Grid.Resources>
+                            <ls:LSButton x:Name="DoneBtn" TapTime="300"
+                                                 Style="{StaticResource ControllerButton}" EatInput="False" EatEventInUI="True" DataContext="{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIAccept'}"
+                                                 Content="">
+                                <b:Interaction.Triggers>
+                                    <b:EventTrigger EventName="LSButtonPressed" SourceName="DoneBtn">
+                                        <b:ControlStoryboardAction Storyboard="{StaticResource HoldAnimation}"/>
+                                    </b:EventTrigger>
+                                    <b:EventTrigger EventName="LSButtonReleased" SourceName="DoneBtn">
+                                        <b:ControlStoryboardAction Storyboard="{StaticResource HoldAnimation}" ControlStoryboardOption="Stop"/>
+                                    </b:EventTrigger>
+                                    <b:EventTrigger EventName="IsEnabledChanged" SourceName="DoneBtn">
+                                        <b:ControlStoryboardAction Storyboard="{StaticResource HoldAnimation}" ControlStoryboardOption="Stop"/>
+                                    </b:EventTrigger>
+                                    <b:StoryboardCompletedTrigger Storyboard="{StaticResource HoldAnimation}">
+                                        <b:InvokeCommandAction Command="{Binding DataContext.ApplySpellSelecting, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"/>
+                                    </b:StoryboardCompletedTrigger>
+                                </b:Interaction.Triggers>
+                            </ls:LSButton>
+                            <ls:LSPie x:Name="ButtonHoldVisualizer" Value="0" SweepDirection="Counterclockwise" 
+                                                  Visibility="{Binding ElementName=DoneBtn, Path=IsPressed, Converter={StaticResource BoolToVisibleConverter}}"
+                                                  Width="100" Height="100" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,4,28,0">
+                                <Image Source="/GustavNoesisGUI;component/Assets/Shared_c/c_tabSelector.png" Width="100" Height="100" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                            </ls:LSPie>
+                        </Grid>
+                    </Grid>
+
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,20,0,0">
+
+                        <ls:LSButton x:Name="deselectSpell" Visibility="Collapsed" TapTime="300" Style="{StaticResource ControllerButtonWBG}" Margin="20,0" 
+                                     DataContext = "{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIAccept'}"
+                                     Content="{Binding Source='hd0c08193ga7f2g4a7eg8225g63748c7b3096',Converter={StaticResource TranslatedStringConverter}}">
+                            <b:Interaction.Triggers>
+                                <b:EventTrigger EventName="LSButtonReleased" SourceName="deselectSpell">
+                                    <b:InvokeCommandAction Command="{Binding DataContext.DeselectSpell, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" 
+                                                           CommandParameter="{Binding FocusedElement.DataContext, ElementName=SpellSelecting_c}"/>
+                                    <b:InvokeCommandAction Command="{Binding DataContext.HideTooltipOnUIElement, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"/>
+                                </b:EventTrigger>
+                            </b:Interaction.Triggers>
+                        </ls:LSButton>
+
+                        <ls:LSButton x:Name="selectSpell" Visibility="Collapsed" TapTime="300"
+                        Style="{StaticResource ControllerButtonWBG}" Margin="20,0" 
+                        DataContext = "{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIAccept'}"
+                        Content="{Binding Source='hd0c08193ga7f2g4a7eg8225g63748c7b3096',Converter={StaticResource TranslatedStringConverter}}"
+                        Command="{Binding DataContext.SelectSpell, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"
+                        CommandParameter="{Binding FocusedElement.DataContext, ElementName=SpellSelecting_c}"/>
+
+                        <ls:LSButton x:Name="replaceOutSpell" Visibility="Collapsed" TapTime="300"
+                        Style="{StaticResource ControllerButtonWBG}" Margin="20,0" 
+                        DataContext = "{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIAccept'}"
+                        Content="{Binding Source='hd0c08193ga7f2g4a7eg8225g63748c7b3096',Converter={StaticResource TranslatedStringConverter}}"
+                        Command="{Binding DataContext.SelectReplacementOutSpell, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"
+                        CommandParameter="{Binding FocusedElement.DataContext, ElementName=SpellSelecting_c}"/>
+
+                        <ls:LSButton x:Name="replaceInSpell" Visibility="Collapsed" TapTime="300"
+                        Style="{StaticResource ControllerButtonWBG}" Margin="20,0" 
+                        DataContext = "{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIAccept'}"
+                        Content="{Binding Source='hd0c08193ga7f2g4a7eg8225g63748c7b3096',Converter={StaticResource TranslatedStringConverter}}"
+                        Command="{Binding DataContext.SelectReplacementInSpell, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"
+                        CommandParameter="{Binding FocusedElement.DataContext, ElementName=SpellSelecting_c}"/>
+
+                        <ls:LSButton Style="{StaticResource ControllerButtonWBG}" 
+                        DataContext = "{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIShowInfo'}"
+                        Margin="20,0" 
+                        Content="{Binding Source='h07aaca85g63dbg4e60g88a2g0590077ea7e2',Converter={StaticResource TranslatedStringConverter}}" 
+                        Command="{Binding DataContext.ToggleTooltipOnUIElement, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"
+                        CommandParameter="{Binding Path=FocusedElement, ElementName=SpellSelecting_c}"/>
+
+                        <ls:LSButton Style="{StaticResource ControllerButton}" Margin="20,0" 
+                        DataContext = "{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UICancel'}"
+                        Content="{Binding Source='h6045c6eag7befg4886g8493g9b28407a77d7',Converter={StaticResource TranslatedStringConverter}}" 
+                        SoundID="UI_Shared_Cancel"
+                        Command="{Binding DataContext.CustomEvent, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" CommandParameter="CloseWidget"/>
+                    </StackPanel>
+                </StackPanel>
+
+                <ControlTemplate.Triggers>
+                    <DataTrigger Binding="{Binding FocusedElement.(ls:AttachedProperties.InheritedTag), ElementName=SpellSelecting_c}" Value="SpellsChosen">
+                        <Setter TargetName="deselectSpell" Property="Visibility" Value="Visible"/>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding FocusedElement.(ls:AttachedProperties.InheritedTag), ElementName=SpellSelecting_c}" Value="SpellsAvailable">
+                        <Setter TargetName="selectSpell" Property="Visibility" Value="Visible"/>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding FocusedElement.(ls:AttachedProperties.InheritedTag), ElementName=SpellSelecting_c}" Value="ReplacerOutSpell">
+                        <Setter TargetName="replaceOutSpell" Property="Visibility" Value="Visible"/>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding FocusedElement.(ls:AttachedProperties.InheritedTag), ElementName=SpellSelecting_c}" Value="ReplacerInSpell">
+                        <Setter TargetName="replaceInSpell" Property="Visibility" Value="Visible"/>
+                    </DataTrigger>
+                </ControlTemplate.Triggers>
+            </ControlTemplate>
+
+            <ControlTemplate x:Key="SpellIcon">
+                <Border x:Name="border" Style="{StaticResource SpellOverrideBorder}" VerticalAlignment="Center">
+                    <Grid Background="{Binding Spell.Icon}" Width="{DynamicResource InvSlotSize}" Height="{DynamicResource InvSlotSize}">
+                        <TextBlock Text="{Binding Spell.Level, Converter={StaticResource DecimalToRomanConverter}}" Margin="0,0,8,8" Foreground="{StaticResource LS_specialTxtColor}" VerticalAlignment="Bottom" HorizontalAlignment="Right" Height="40" FontSize="44" FontWeight="Bold" noesis:Text.Stroke="#FF000000" noesis:Text.StrokeThickness="5"/>    
+                    </Grid>
+                </Border>
+                <ControlTemplate.Triggers>
+                    <DataTrigger Binding="{Binding Spell.Override}" Value="Worse">
+                        <Setter TargetName="border" Property="BorderBrush" Value="{DynamicResource LS_SpellOverrideWorse}"/>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Spell.Override}" Value="Equal">
+                        <Setter TargetName="border" Property="BorderBrush" Value="{DynamicResource LS_SpellOverrideEqual}"/>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Spell.Override}" Value="Better">
+                        <Setter TargetName="border" Property="BorderBrush" Value="{DynamicResource LS_SpellOverrideBetter}"/>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Spell.Override}" Value="Different">
+                        <Setter TargetName="border" Property="BorderBrush" Value="{DynamicResource LS_SpellOverrideDifferent}"/>
+                    </DataTrigger>
+                </ControlTemplate.Triggers>
+            </ControlTemplate>
+
+            <ControlTemplate x:Key="FocusableSpellIcon">
+                <Border x:Name="focusedBorder" BorderThickness="4" BorderBrush="Transparent">
+                    <ContentControl x:Name="selector" ls:MoveFocus.Focusable="True"  ToolTipService.IsEnabled="{Binding Spell,Converter={StaticResource NullToBoolFalseConverter}}" ToolTip="{StaticResource CCSpellRefTooltip}">
+                        <Control Template="{StaticResource SpellIcon}"/>
+                    </ContentControl>
+                </Border>
+                <ControlTemplate.Triggers>
+                    <DataTrigger Binding="{Binding Path=IsFocused, ElementName=selector}" Value="True">
+                        <Setter TargetName="focusedBorder" Property="BorderBrush" Value="{DynamicResource LS_PrimaryColor}"/>
+                    </DataTrigger>
+                </ControlTemplate.Triggers>
+            </ControlTemplate>
+
+            <DataTemplate x:Key="EmptySpellCellTemplate">
+                <ContentControl >
+                    <Grid>
+                        <Image Stretch="None" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared_c/c_frame_grid.png"/>
+                    </Grid>
+                </ContentControl>
+            </DataTemplate>
+
+            <DataTemplate x:Key="SpellCellTemplate">
+                <Control Template="{StaticResource FocusableSpellIcon}"/>
+            </DataTemplate>
+
+            <DataTemplate x:Key="SelectedSpellCellTemplate">
+                <DataTemplate.Resources>
+                    <ImageSource x:Key="defaultSelected">pack://application:,,,/GustavNoesisGUI;component/Assets/Shared_c/c_frame_grid_selected.png</ImageSource>
+                </DataTemplate.Resources>
+                <Grid>
+                    <Control Template="{StaticResource FocusableSpellIcon}"/>
+                    <Image Source="{DynamicResource defaultSelected}" Width="116" Height="116">
+                        <Image.Style>
+                            <Style TargetType="Image">
+                                <Setter Property="Visibility" Value="Hidden"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Selected}" Value="True">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Image.Style>
+                    </Image>
+                </Grid>
+            </DataTemplate>
+
+            <DataTemplate x:Key="SelectedOutSpellCellTemplate">
+                <ContentPresenter ContentTemplate="{StaticResource SelectedSpellCellTemplate}" Content="{Binding}">
+                    <ContentPresenter.Resources>
+                        <ImageSource x:Key="defaultSelected">pack://application:,,,/GustavNoesisGUI;component/Assets/CharacterLevelup/selector_spellOut.png</ImageSource>
+                    </ContentPresenter.Resources>
+                </ContentPresenter>
+            </DataTemplate>
+
+            <DataTemplate x:Key="SelectedInSpellCellTemplate">
+                <ContentPresenter ContentTemplate="{StaticResource SelectedSpellCellTemplate}" Content="{Binding}">
+                    <ContentPresenter.Resources>
+                        <ImageSource x:Key="defaultSelected">pack://application:,,,/GustavNoesisGUI;component/Assets/CharacterLevelup/selector_spelIn.png</ImageSource>
+                    </ContentPresenter.Resources>
+                </ContentPresenter>
+            </DataTemplate>
+
+            <Style x:Key="SpellGridStyle" TargetType="ls:LSGrid" BasedOn="{StaticResource {x:Type ls:LSGrid}}">
+                <Setter Property="AutoIndex" Value="True"/>
+                <Setter Property="ExtendedRows" Value="False"/>
+                <Setter Property="DisableScrolling" Value="True"/>
+                <Setter Property="Columns" Value="8"/>
+                <Setter Property="Rows" Value="1"/>
+                <Setter Property="CellWidth" Value="{StaticResource SpellCellSize}"/>
+                <Setter Property="CellHeight" Value="{StaticResource SpellCellSize}"/>
+                <Setter Property="ActionUpEvent" Value="UIUp"/>
+                <Setter Property="ActionDownEvent" Value="UIDown"/>
+                <Setter Property="ActionRightEvent" Value="UIRight"/>
+                <Setter Property="ActionLeftEvent" Value="UILeft"/>
+            </Style>
+
+            <Style x:Key="SpellSelectorStyle" TargetType="Control">
+                <Setter Property="Template" Value="{StaticResource SelectorTemplate}"/>
+                <Setter Property="VerticalAlignment" Value="Top"/>
+                <Setter Property="HorizontalAlignment" Value="Left"/>
+                <Setter Property="Width" Value="{StaticResource SpellCellSize}"/>
+                <Setter Property="Height" Value="{StaticResource SpellCellSize}"/>
+            </Style>
+
+            <ControlTemplate x:Key="SpellSelectorTemplate" TargetType="Control">
+                <Grid>
+                    <Image Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared/dialog_fade.png" Stretch="Fill"/>
+                    <Image Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared/mainpane_vignette.png" Stretch="Fill"/>
+
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,200,0,0">
+                            <Image Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared/ico_spellbook.png" Width="100" Stretch="Uniform" Margin="0,10,10,0"/>
+                            <TextBlock Text="{Binding SpellSelector.Title}" Style="{StaticResource PanelHeaderText}"/>
+                        </StackPanel>
+                        <TextBlock Width="1420" ls:TextBlockFormatter.SourceText="{Binding SpellSelector.Description}" Foreground="{DynamicResource LS_ActivePanelFontColor}" FontSize="{DynamicResource MediumFontSize}" LineHeight="60" TextWrapping="Wrap" TextAlignment="Center"/>
+                        <Image Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared_c/c_panel_headerElement.png" Stretch="None" Margin="0,50,0,0"/>
+
+                        <Grid HorizontalAlignment="Center" Margin="0,20,0,0">
+
+                            <StackPanel>
+
+                                <!-- Chosen spells -->
+                                <TextBlock Foreground="{DynamicResource LS_ActivePanelFontColor}" FontSize="{DynamicResource MediumFontSize}" HorizontalAlignment="Center" Margin="0,0,0,0">
+                                    <Run>
+                                        <Run.Style>
+                                            <Style TargetType="Run">
+                                                <Setter Property="Text" Value="{Binding Source='h7b9fbccfgfd13g4909gb80fgf3323d6ebed6', Converter={StaticResource TranslatedStringConverter}}"/>
+                                            </Style>
+                                        </Run.Style>
+                                    </Run><Run Text="{Binding NumberOfSpellsChosen, StringFormat=' ({0}'}"/><Run Text="{Binding SpellsChosen.Count, StringFormat='/{0})'}"/>
+                                </TextBlock>
+
+                                <ItemsControl ls:AttachedProperties.InheritedTag="SpellsChosen" ItemsSource="{Binding SpellsChosen}" ItemTemplate="{StaticResource SpellCellTemplate}" HorizontalAlignment="Center" Margin="0,20,0,0">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <WrapPanel MaxWidth="{StaticResource SpellGridWidth}"/>
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                </ItemsControl>
+
+                                <Image Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared_c/c_panel_horizontalDivide.png" Stretch="None" Margin="0,0,0,0"/>
+
+                                <!-- Available spells -->
+                                <TextBlock Foreground="{DynamicResource LS_ActivePanelFontColor}" FontSize="{DynamicResource MediumFontSize}" HorizontalAlignment="Center" Margin="0,0,0,0">
+                                <Run>
+                                    <Run.Style>
+                                        <Style TargetType="Run">
+                                            <Setter Property="Text" Value="{Binding Source='h76bfc212gcdd9g4c2ag899eg6bbeaf84f1e5', Converter={StaticResource TranslatedStringConverter}}"/>
+                                        </Style>
+                                    </Run.Style>
+                                </Run><Run Text="{Binding SpellsAvailable.Count, StringFormat=' ({0})'}"/>
+                                </TextBlock>
+
+                                <ItemsControl ls:AttachedProperties.InheritedTag="SpellsAvailable" ItemsSource="{Binding SpellsAvailable}" ItemTemplate="{StaticResource SelectedSpellCellTemplate}" HorizontalAlignment="Center" Margin="0,20,0,0">
+                                    <b:Interaction.Triggers>
+                                        <b:EventTrigger EventName="Loaded">
+                                            <ls:SetMoveFocusAction TargetName="SpellSelecting_c"/>
+                                        </b:EventTrigger>
+                                    </b:Interaction.Triggers>
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <WrapPanel MaxWidth="{StaticResource SpellGridWidth}"/>
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                </ItemsControl>
+
+                            </StackPanel>
+
+                        </Grid>
+
+                    </StackPanel>
+
+                    <ContentControl Template="{StaticResource BottomButtons}" VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="0,0,0,60"/>
+
+                </Grid>
+            </ControlTemplate>
+
+
+
+
+            <ControlTemplate x:Key="SpellReplacerTemplate">
+                <Grid>
+                    <Image Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared/dialog_fade.png" Stretch="Fill"/>
+                    <Image Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared/mainpane_vignette.png" Stretch="Fill"/>
+
+                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,200">
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                            <Image Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared/ico_spellbook.png" Width="100" Stretch="Uniform" Margin="0,10,10,0"/>
+                            <TextBlock Text="{Binding Source='h000011feg0be5g4f09g978eg030b3e2e62c6', Converter={StaticResource TranslatedStringConverter}}" Style="{StaticResource PanelHeaderText}"/>
+                        </StackPanel>
+                        <TextBlock Width="1420" ls:TextBlockFormatter.SourceText="{Binding Source='h7d40d764gac52g4ccbgb18eg136c928dd69e', Converter={StaticResource TranslatedStringConverter}}" Foreground="{DynamicResource LS_ActivePanelFontColor}" FontSize="{DynamicResource MediumFontSize}" LineHeight="60" TextWrapping="Wrap" TextAlignment="Center"/>
+                        <Image Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared_c/c_panel_headerElement.png" Stretch="None" Margin="0,50,0,0"/>
+
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                            <!-- Chosen old spell -->
+                            <Grid VerticalAlignment="Center" Width="1000">
+                                <StackPanel HorizontalAlignment="Right" Width="500" Margin="0,0,150,0" MinHeight="220">
+                                    <Image DataContext="{Binding ChosenSpellOut.Spell}" Style="{StaticResource RomanNumeralLevelImage}" Stretch="None" Margin="0,-40,0,0"/>
+                                    <TextBlock ls:TextBlockFormatter.SourceText="{Binding Source='hd19b7627gc9c3g4ff4ga827g5d68b0ce1409', Converter={StaticResource TranslatedStringConverter}}" Foreground="{DynamicResource LS_NegativeDeltaColor}" FontSize="{DynamicResource SmallFontSize}" HorizontalAlignment="Center"/>
+                                    <TextBlock FontSize="{DynamicResource MediumFontSize}" HorizontalAlignment="Center">
+                                        <TextBlock.Style>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="Text" Value="{Binding ChosenSpellOut.Spell.Name}"/>
+                                                <Setter Property="Foreground" Value="{DynamicResource LS_PrimaryColor}"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding ChosenSpellOut.Spell}" Value="{x:Null}">
+                                                        <Setter Property="Text" Value="{Binding Source='hd0a12ee8g9fc6g4a63g95begc5c2123365cf', Converter={StaticResource TranslatedStringConverter}}"/>
+                                                        <Setter Property="Foreground" Value="{DynamicResource LS_TertiaryColor}"/>
+                                                        <Setter Property="FontStyle" Value="Italic"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBlock.Style>
+                                    </TextBlock>
+                                </StackPanel>
+
+                                <Grid DataContext="{Binding ChosenSpellOut}" HorizontalAlignment="Right" Margin="0,0,20,0">
+                                    <Control Template="{StaticResource SpellIcon}"/>
+                                </Grid>
+                            </Grid>
+
+                            <!-- Chosen new spell -->
+                            <Grid VerticalAlignment="Center" Width="1000">
+                                <StackPanel HorizontalAlignment="Left" Width="500" Margin="150,0,0,0" MinHeight="220">
+                                    <Image DataContext="{Binding ChosenSpellIn.Spell}" Style="{StaticResource RomanNumeralLevelImage}" Stretch="None" Margin="0,0,0,0"/>
+                                    <TextBlock Text="{Binding Source='h19bc3d6bg4c93g413fga949g4db364084cf4', Converter={StaticResource TranslatedStringConverter}}" Foreground="{DynamicResource LS_PositiveDeltaColor}" FontSize="{DynamicResource SmallFontSize}" HorizontalAlignment="Center"/>
+                                    <TextBlock FontSize="{DynamicResource MediumFontSize}" HorizontalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center">
+                                        <TextBlock.Style>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="Text" Value="{Binding ChosenSpellIn.Spell.Name}"/>
+                                                <Setter Property="Foreground" Value="{DynamicResource LS_PrimaryColor}"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding ChosenSpellIn.Spell}" Value="{x:Null}">
+                                                        <Setter Property="Text" Value="{Binding Source='hb7ce45aeg3e2fg4603g991dg5cfc9e006e05', Converter={StaticResource TranslatedStringConverter}}"/>
+                                                        <Setter Property="Foreground" Value="{DynamicResource LS_TertiaryColor}"/>
+                                                        <Setter Property="FontStyle" Value="Italic"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBlock.Style>
+                                    </TextBlock>
+                                </StackPanel>
+
+                                <Grid DataContext="{Binding ChosenSpellIn}" HorizontalAlignment="Left" Margin="20,0,0,0">
+                                    <Control Template="{StaticResource SpellIcon}"/>
+                                </Grid>
+
+                            </Grid>
+                        </StackPanel>
+
+                        <Image Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared_c/c_panel_horizontalDivide.png" Stretch="None" Margin="0,-250,0,0"/>
+
+                        <Grid>
+                            <ls:LSNineSliceImage ImageSource="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared_c/c_container_divider.png" Slices="0 120 0 120" Width="52"/>
+
+                            <Grid Height="830">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="5*"/>
+                                    <ColumnDefinition Width="5*"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0"  Margin="0,0,50,0">
+
+                                    <TextBlock HorizontalAlignment="Center" Foreground="{DynamicResource LS_ActivePanelFontColor}" FontSize="{DynamicResource MediumFontSize}">
+                                        <Run Text="{Binding Source='h60d9fcd7g33e4g4606g8fe9g8f5f25e03847', Converter={StaticResource TranslatedStringConverter}}"></Run><Run Text="{Binding OutSpellsAvailableCount, StringFormat=' ({0})'}"/>
+                                    </TextBlock>
+
+                                    <ItemsControl ls:AttachedProperties.InheritedTag="ReplacerOutSpell" ItemsSource="{Binding OutSpellsAvailable}" HorizontalAlignment="Center">
+                                        <b:Interaction.Triggers>
+                                            <b:EventTrigger EventName="Loaded">
+                                                <ls:SetMoveFocusAction TargetName="SpellSelecting_c"/>
+                                            </b:EventTrigger>
+                                        </b:Interaction.Triggers>
+                                        <ItemsControl.ItemContainerStyle>
+                                            <Style TargetType="ContentPresenter">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding Spells.Count}" Value="0">
+                                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </ItemsControl.ItemContainerStyle>
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <StackPanel>
+                                                    <Image Style="{StaticResource RomanNumeralLevelImage}" Stretch="None" HorizontalAlignment="Center"/>
+                                                    <ItemsControl ItemsSource="{Binding Spells}" ItemTemplate="{StaticResource SelectedOutSpellCellTemplate}">
+                                                        <ItemsControl.ItemsPanel>
+                                                            <ItemsPanelTemplate>
+                                                                <WrapPanel MaxWidth="{StaticResource ReplaceSpellGridWidth}"/>
+                                                            </ItemsPanelTemplate>
+                                                        </ItemsControl.ItemsPanel>
+                                                    </ItemsControl>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+
+                                </StackPanel>
+
+                                <StackPanel Grid.Column="1" Margin="50,0,0,0">
+                                    <TextBlock HorizontalAlignment="Center" Margin="0,0,0,0" Foreground="{DynamicResource LS_ActivePanelFontColor}" FontSize="{DynamicResource MediumFontSize}">
+                                        <Run Text="{Binding Source='hf9d25f3agd90fg40d6gb3cbg301b7c858691', Converter={StaticResource TranslatedStringConverter}}"></Run><Run Text="{Binding InSpellsAvailableCount, StringFormat=' ({0})'}"/>
+                                    </TextBlock>
+
+                                    <ItemsControl ls:AttachedProperties.InheritedTag="ReplacerInSpell" ItemsSource="{Binding InSpellsAvailable}" HorizontalAlignment="Center">
+                                        <ItemsControl.ItemContainerStyle>
+                                            <Style TargetType="ContentPresenter">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding Spells.Count}" Value="0">
+                                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </ItemsControl.ItemContainerStyle>
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <StackPanel>
+                                                    <Image Style="{StaticResource RomanNumeralLevelImage}" Stretch="None" HorizontalAlignment="Center"/>
+                                                    <ItemsControl ItemsSource="{Binding Spells}" ItemTemplate="{StaticResource SelectedInSpellCellTemplate}">
+                                                        <ItemsControl.ItemsPanel>
+                                                            <ItemsPanelTemplate>
+                                                                <WrapPanel MaxWidth="{StaticResource ReplaceSpellGridWidth}"/>
+                                                            </ItemsPanelTemplate>
+                                                        </ItemsControl.ItemsPanel>
+                                                    </ItemsControl>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+
+                                </StackPanel>
+
+                            </Grid>
+
+                        </Grid>
+
+                    </StackPanel>
+
+                    <ContentControl Template="{StaticResource BottomButtons}" VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="0,0,0,60"/>
+
+                </Grid>
+
+            </ControlTemplate>
+
+
+            <ControlTemplate x:Key="SpellPreparerTemplate" TargetType="Control">
+                <Grid>
+                    <Image Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared/dialog_fade.png" Stretch="Fill"/>
+                    <Image Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared/mainpane_vignette.png" Stretch="Fill"/>
+
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,200,0,0">
+                            <Image Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared/ico_spellbook.png" Width="100" Stretch="Uniform" Margin="0,10,10,0"/>
+                            <TextBlock Text="{Binding Source='hdbaa56a0gc5e6g4968gb3eag9d5fbcef225e', Converter={StaticResource TranslatedStringConverter}}" Style="{StaticResource PanelHeaderText}"/>
+                        </StackPanel>
+                        <TextBlock Width="1420" Text="{Binding Source='he47d6cc7g50c3g4ab6g9027g2c54a173db29', Converter={StaticResource TranslatedStringConverter}}" Foreground="{DynamicResource LS_ActivePanelFontColor}" FontSize="{DynamicResource MediumFontSize}" LineHeight="60" TextWrapping="Wrap" TextAlignment="Center"/>
+                        <Image Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared_c/c_panel_headerElement.png" Stretch="None" Margin="0,50,0,0"/>
+
+                        <Grid HorizontalAlignment="Center" Margin="0,20,0,0">
+
+                            <StackPanel>
+
+                                <!-- Chosen for preparation -->
+                                <TextBlock Foreground="{DynamicResource LS_ActivePanelFontColor}" FontSize="{DynamicResource MediumFontSize}" HorizontalAlignment="Center" Margin="0,0,0,0">
+                                    <Run>
+                                        <Run.Style>
+                                            <Style TargetType="Run">
+                                                <Setter Property="Text" Value="{Binding Source='hcfab5df8g7913g4193gae43g805a927077a5', Converter={StaticResource TranslatedStringConverter}}"/>
+                                            </Style>
+                                        </Run.Style>
+                                    </Run><Run Text="{Binding NumberOfSpellsChosen, StringFormat=' ({0}'}"/><Run Text="{Binding SpellsChosen.Count, StringFormat='/{0})'}"/>
+                                </TextBlock>
+
+                                <ItemsControl ls:AttachedProperties.InheritedTag="SpellsChosen" ItemsSource="{Binding SpellsChosen}" ItemTemplate="{StaticResource SpellCellTemplate}" HorizontalAlignment="Center" Margin="0,20,0,0">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <WrapPanel MaxWidth="{StaticResource SpellGridWidth}"/>
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                </ItemsControl>
+
+                                <Image Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared_c/c_panel_horizontalDivide.png" Stretch="None" Margin="0,0,0,0"/>
+
+                                <!-- Available spells -->
+                                <TextBlock Foreground="{DynamicResource LS_ActivePanelFontColor}" FontSize="{DynamicResource MediumFontSize}" HorizontalAlignment="Center" Margin="0,0,0,0">
+                                    <Run>
+                                        <Run.Style>
+                                            <Style TargetType="Run">
+                                                <Setter Property="Text" Value="{Binding Source='h60d9fcd7g33e4g4606g8fe9g8f5f25e03847', Converter={StaticResource TranslatedStringConverter}}"/>
+                                            </Style>
+                                        </Run.Style>
+                                    </Run><Run Text="{Binding SpellsAvailable.Count, StringFormat=' ({0})'}"/>
+                                </TextBlock>
+
+                                <ItemsControl ls:AttachedProperties.InheritedTag="SpellsAvailable" ItemsSource="{Binding SpellsAvailable}" ItemTemplate="{StaticResource SelectedSpellCellTemplate}" HorizontalAlignment="Center" Margin="0,20,0,0">
+                                    <b:Interaction.Triggers>
+                                        <b:EventTrigger EventName="Loaded">
+                                            <ls:SetMoveFocusAction TargetName="SpellSelecting_c"/>
+                                        </b:EventTrigger>
+                                    </b:Interaction.Triggers>
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <WrapPanel MaxWidth="{StaticResource SpellGridWidth}"/>
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                </ItemsControl>
+
+                            </StackPanel>
+
+                        </Grid>
+
+                    </StackPanel>
+
+                    <ContentControl Template="{StaticResource BottomButtons}" VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="0,0,0,60"/>
+
+                </Grid>
+            </ControlTemplate>
+
+        </ResourceDictionary>
+    </ls:UIWidget.Resources>
+
+    <b:Interaction.Triggers>
+        <b:EventTrigger EventName="GotKeyboardFocus">
+            <b:InvokeCommandAction Command="{Binding ShowTooltipOnUIElement}" CommandParameter="{Binding Path=FocusedElement, ElementName=SpellSelecting_c}"/>
+        </b:EventTrigger>
+    </b:Interaction.Triggers>
+
+    <Grid Background="{DynamicResource LS_PopUpBackgroundColor}" ls:TooltipExtender.Owner="{Binding CurrentPlayer.UIData.CCCharacter}">
+
+        <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Control>
+                <Control.Style>
+                    <Style TargetType="Control"  BasedOn="{StaticResource {x:Type Control}}">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding ShowSpellSelector}" Value="True">
+                                <Setter Property="Template" Value="{StaticResource SpellSelectorTemplate}"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding ShowSpellReplacer}" Value="True">
+                                <Setter Property="Template" Value="{StaticResource SpellReplacerTemplate}"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding ShowSpellPreparer}" Value="True">
+                                <Setter Property="Template" Value="{StaticResource SpellPreparerTemplate}"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Control.Style>
+            </Control>
+        </Grid>
+
+    </Grid>
+
+</ls:UIWidget>

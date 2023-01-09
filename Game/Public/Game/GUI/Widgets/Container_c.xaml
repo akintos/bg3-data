@@ -1,0 +1,518 @@
+<ls:UIWidget x:Name="Container_c"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:b="http://schemas.microsoft.com/xaml/behaviors" 
+             
+             xmlns:ls="clr-namespace:ls;assembly=SharedGUI"
+             xmlns:noesis="clr-namespace:NoesisGUIExtensions;assembly=Noesis.GUI.Extensions"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:System="clr-namespace:System;assembly=mscorlib"
+             mc:Ignorable="d"
+             ls:UIWidget.SoundID="UI_HUD_Container"
+             d:DesignHeight="2160" d:DesignWidth="3840"
+             Height="2160"  Width="3840"
+             ls:UIWidget.ContextName="ContainerInventory">
+
+    <Grid Background="{StaticResource LS_PanelBackground}" ls:TooltipExtender.Owner="{Binding CurrentPlayer.SelectedCharacter}">
+        <Grid HorizontalAlignment="Center" VerticalAlignment="Bottom" x:Name="panelHolder" Margin="0,0,0,500">
+            <ls:LSNineSliceImage  x:Name="SortPanel"  Panel.ZIndex="200" VerticalAlignment="Bottom" Margin="0,0,0,200" HorizontalAlignment="Center">
+
+                    <StackPanel Margin="40,80,40,80">
+                        <TextBlock Text="{Binding Source='h809e08f9g0ae8g4057g8941g245023916247', Converter={StaticResource TranslatedStringConverter}}"  HorizontalAlignment="Center" />
+                        <ls:LSListBox ActionNextEvent="UIDown" ActionPrevEvent="UIUp" SelectedIndex="0">
+                            <ls:LSListBox.ItemContainerStyle>
+                                <Style TargetType="ls:LSListBoxItem">
+                                    <Setter Property="BorderThickness" Value="0" />
+                                    <Setter Property="BorderBrush" Value="Transparent" />
+                                    <Setter Property="Background" Value="Transparent" />
+                                    <Setter Property="Padding" Value="0" />
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                        <ControlTemplate TargetType="ls:LSListBoxItem">
+                                                <Grid x:Name="holder">
+                                                    <Image x:Name="TabBG" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared_c/c_listItem_narrow_centered.png" Stretch="None" />
+                                                    <ContentPresenter VerticalAlignment="Center"/>
+                                                </Grid>
+                                                <ControlTemplate.Triggers>
+                                                    <Trigger Property="IsSelected" Value="True">
+                                                        <Setter TargetName="TabBG" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared_c/c_listItemSelected_narrow_centered.png" />
+                                                        <Setter Property="Margin" Value="0 8 0 0"/>
+                                                    </Trigger>
+
+                                                    <Trigger Property="IsSelected" Value="False">
+                                                        <Setter TargetName="TabBG" Property="Margin" Value="0 8 0 0"/>
+                                                    </Trigger>
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                    <Style.Triggers>
+                                        <Trigger Property="IsSelected" Value="True">
+                                            <Setter Property="BorderBrush" Value="Transparent" />
+                                            <Setter Property="Background" Value="Transparent" />
+
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </ls:LSListBox.ItemContainerStyle>
+                            <ls:LSListBoxItem>
+                                <ls:LSComboBox x:Name="sortComboBox" Grid.Column="0" Grid.Row="1" VerticalAlignment="Top" ItemsSource="{Binding CurrentPlayer.UIData.InventorySortOptions}" SelectedItem="{Binding ContainerSortOption}" 
+                               ActionNextEvent="UIRight" ActionPrevEvent="UILeft"  HorizontalAlignment="Center"
+                               Width="500" >
+                                    <ls:LSComboBox.ItemTemplate>
+                                        <DataTemplate DataType="ls:VMEnumData">
+                                            <TextBlock Text="{Binding Name}"  />
+                                        </DataTemplate>
+                                    </ls:LSComboBox.ItemTemplate>
+                                    <ls:LSComboBox.Style>
+                                        <Style TargetType="ls:LSComboBox" BasedOn="{StaticResource ComboBoxStyle}">
+                                            <Setter Property="IsEnabled" Value="False" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding ElementName=ButtonHolder, Path=Tag}" Value="SortPopup">
+                                                    <Setter Property="IsEnabled" Value="True" />
+                                                </DataTrigger>
+
+                                            </Style.Triggers>
+                                        </Style>
+                                    </ls:LSComboBox.Style>
+
+                                    <b:Interaction.Triggers>
+                                        <b:EventTrigger EventName="SelectionChanged">
+                                            <b:Interaction.Behaviors>
+                                                <b:ConditionBehavior>
+                                                    <b:ConditionalExpression>
+                                                        <b:ComparisonCondition LeftOperand="{Binding ElementName=PlayerInvToggle , Path=IsChecked}" Operator="Equal" RightOperand="True" />
+                                                    </b:ConditionalExpression>
+                                                </b:ConditionBehavior>
+                                            </b:Interaction.Behaviors>
+                                            <b:InvokeCommandAction Command="{Binding SortCharacterInventoryCommand}" CommandParameter="{Binding ElementName=sortComboBox, Path=SelectedItem}"/>
+                                        </b:EventTrigger>
+                                    </b:Interaction.Triggers>
+
+                                </ls:LSComboBox>
+                            </ls:LSListBoxItem>
+                        </ls:LSListBox>
+
+                    </StackPanel>
+
+                    <ls:LSNineSliceImage.Style>
+                        <Style TargetType="ls:LSNineSliceImage" BasedOn="{StaticResource DefaultTooltip9Slice}">
+                            <Setter Property="Visibility" Value="Collapsed" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding ElementName=ButtonHolder, Path=Tag}" Value="SortPopup">
+                                    <Setter Property="Visibility" Value="Visible" />
+                                </DataTrigger>
+
+                            </Style.Triggers>
+                        </Style>
+                    </ls:LSNineSliceImage.Style>
+            </ls:LSNineSliceImage>
+
+                <Grid >
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <Image Grid.Row="1" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared_c/c_panel_top_carousel.png" Stretch="None" VerticalAlignment="Top" Margin="0,0,0,0" />
+                    <ls:LSListBox Grid.Row="0" Height="230" x:Name="ContainerList" SelectedItem="{Binding CurrentPlayer.UIData.CurrentContainer}" ItemsSource="{Binding CurrentPlayer.ContainerInventoryList}"  VerticalAlignment="Bottom" HorizontalAlignment="Center" 
+                              MaxWidth="1020" ScrollViewer.VerticalScrollBarVisibility="Disabled" AutoScrollSelectedIntoView="True"
+                       Margin="0,0,0,-40"  ActionPrevEvent="UITabPrev" ActionNextEvent="UITabNext" Panel.ZIndex="11">
+                        <ls:LSListBox.Resources>
+                            <Style TargetType="ScrollBar" BasedOn="{StaticResource SimpleScrollBar}"/>
+                        </ls:LSListBox.Resources>
+                        <ls:LSListBox.ItemTemplate>
+                            <DataTemplate>
+                                <ls:LSEntityObject x:Name="object" EntityRef="{Binding EntityHandle}"  Background="{Binding Icon}" Width="128" Height="128" >
+
+                                </ls:LSEntityObject>
+                                <DataTemplate.Triggers>
+                                    <DataTrigger Binding="{Binding Type}" Value="Character">
+                                        <Setter TargetName="object" Property="Height" Value="198"/>
+                                    </DataTrigger>
+
+                                    <MultiDataTrigger>
+                                        <MultiDataTrigger.Conditions>
+                                            <Condition Binding="{Binding Type}" Value="Item"/>
+                                            <Condition Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListBoxItem}},Path=IsSelected}" Value="True"/>
+                                        </MultiDataTrigger.Conditions>
+                                        <Setter TargetName="object" Property="Height" Value="140"/>
+                                        <Setter TargetName="object" Property="Width" Value="140"/>
+                                    </MultiDataTrigger>
+
+
+                                    <MultiDataTrigger>
+                                        <MultiDataTrigger.Conditions>
+                                            <Condition Binding="{Binding Type}" Value="Character"/>
+                                            <Condition Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListBoxItem}},Path=IsSelected}" Value="True"/>
+                                        </MultiDataTrigger.Conditions>
+                                        <Setter TargetName="object" Property="Height" Value="216"/>
+                                        <Setter TargetName="object" Property="Width" Value="140"/>
+                                    </MultiDataTrigger>
+                                </DataTemplate.Triggers>
+                            </DataTemplate>
+                        </ls:LSListBox.ItemTemplate>
+
+                        <ls:LSListBox.ItemContainerStyle>
+                            <Style TargetType="ListBoxItem" BasedOn="{StaticResource {x:Type ListBoxItem}}">
+                                <Setter Property="Padding" Value="0"/>
+                                <Setter Property="BorderThickness" Value="0"/>
+                                <Setter Property="Focusable" Value="True"/>
+                                <Setter Property="VerticalAlignment" Value="Top"/>
+                                <Setter Property="Margin" Value="20 0 20 8"/>
+                                <Setter Property="Opacity" Value="0.8"/>
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate>
+                                            <Grid x:Name="holder">
+                                                <ContentPresenter />
+                                            </Grid>
+
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                                <Style.Triggers>
+                                    <Trigger Property="IsSelected" Value="True">
+                                        <Setter Property="Margin" Value="20 8 20 0"/>
+                                        <Setter Property="Opacity" Value="1"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ls:LSListBox.ItemContainerStyle>
+
+                        <ls:LSListBox.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Horizontal" />
+                            </ItemsPanelTemplate>
+                        </ls:LSListBox.ItemsPanel>
+                    </ls:LSListBox>
+
+                    <Grid Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,20,0,40" Panel.ZIndex="0">
+                        <Grid.Background>
+                            <ImageBrush ImageSource="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared_c/c_panel_bg.png"/>
+                        </Grid.Background>
+                    </Grid>
+                    <Grid Grid.Row="1" HorizontalAlignment="Center" Height="1084" Width="1800" Panel.ZIndex="1" Name="Inventory" >
+                        <Grid Panel.ZIndex="1" Background="Transparent" Margin="0,78,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+
+                            <Grid Grid.ColumnSpan="2" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Center"  >
+                                <Grid.Resources>
+                                    <Style x:Key="InvObjName" TargetType="TextBlock">
+                                        <Setter Property="HorizontalAlignment" Value="Center" />
+                                        <Setter Property="Foreground" Value="{DynamicResource LS_PrimaryColor}" />
+                                        <Setter Property="FontSize" Value="{DynamicResource TitleFontSize}" />
+                                    </Style>
+                                    <Style x:Key="InvSelectionName" TargetType="TextBlock">
+                                        <Setter Property="HorizontalAlignment" Value="Center" />
+                                        <Setter Property="Foreground" Value="{DynamicResource LS_ActivePanelFontColor}" />
+                                        <Setter Property="FontSize" Value="{DynamicResource LargeFontSize}" />
+                                        <Setter Property="Margin" Value="0,6,0,28" />
+                                    </Style>
+                                </Grid.Resources>
+                                <ls:LSListBox x:Name="ListHolder" LocalFocusSelector="{Binding ElementName=Selector,Mode=OneWay}" Focusable="False" ActionNextEvent="UIRight" ActionPrevEvent="UILeft" 
+                                          ScrollViewer.VerticalScrollBarVisibility="Disabled"  SelectedIndex="0" >
+                                    <b:Interaction.Triggers>
+                                        <b:EventTrigger EventName="LocalFocusChanged">
+                                            <b:InvokeCommandAction Command="{Binding DataContext.ShowTooltipOnUIElement, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" CommandParameter="{Binding Path=LocalFocus, ElementName=ListHolder}"/>
+                                        </b:EventTrigger>
+                                    </b:Interaction.Triggers>
+                                    <ls:LSListBox.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <StackPanel Orientation="Horizontal" />
+                                        </ItemsPanelTemplate>
+                                    </ls:LSListBox.ItemsPanel>
+                                    <ls:LSListBoxItem>
+                                        <StackPanel >
+                                            <TextBlock x:Name="containerName" Text="{Binding CurrentPlayer.UIData.CurrentContainer.Name}" Style="{StaticResource InvObjName}"/>
+                                            <TextBlock Text="{Binding LocalFocus.DataContext.Item.Name, ElementName=ContainerListBox}" Style="{StaticResource InvSelectionName}" />
+
+                                        <ls:LSListBox SelectedIndex="0" x:Name="ContainerListBox" ItemsSource="{Binding CurrentPlayer.UIData.CurrentContainer.InventoryView.InventoryViewSlots}" Width="806" Height="608" Margin="0,0,68,0"
+                                            VerticalAlignment="Top" HorizontalAlignment="Center" ItemTemplate="{DynamicResource Template.ContainerCell}" ItemContainerStyle="{StaticResource InvContainerListBoxItemStyle}" >
+                                                <ls:LSListBox.Template>
+                                                    <ControlTemplate>
+                                                        <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="14,0,0,0" HorizontalAlignment="Right" Template="{DynamicResource FlippedScrollViewerTemplate}" HorizontalScrollBarVisibility="Disabled">
+                                                            <ScrollViewer.Resources>
+                                                                <Style TargetType="ScrollBar" BasedOn="{StaticResource GoldScrollBar}"/>
+                                                            </ScrollViewer.Resources>
+                                                            <ItemsPresenter  />
+                                                        </ScrollViewer>
+                                                    </ControlTemplate>
+                                                </ls:LSListBox.Template>
+                                                <ls:LSListBox.ItemsPanel>
+                                                    <ItemsPanelTemplate>
+                                                        <ls:LSGrid x:Name="ContainerGrid" Columns="6" Rows="5" ContainerData="{Binding CurrentPlayer.UIData.CurrentContainer.InventoryView}"
+                                                                   noesis:Element.PPAAMode="Disabled" SnapsToDevicePixels="True" CellWidth="{DynamicResource ContInvSlotSize}"
+                                                                   CellHeight="{DynamicResource ContInvSlotSize}" Background="{StaticResource ContInventoryCell2x2Brush}"
+                                                                   VerticalSpacing="{DynamicResource ContInvSpacing}" DisableScrolling="False" HorizontalSpacing="{DynamicResource ContInvSpacing}"
+                                                                   ActionUpEvent="UIUp" ActionDownEvent="UIDown" ActionRightEvent="UIRight" ActionLeftEvent="UILeft">
+                                                        </ls:LSGrid>
+                                                    </ItemsPanelTemplate>
+                                                </ls:LSListBox.ItemsPanel>
+                                            </ls:LSListBox>
+                                        </StackPanel>
+                                    </ls:LSListBoxItem>
+                                    <ls:LSListBoxItem x:Name="PlayerInv" Visibility="{Binding ElementName=PlayerInvToggle , Path=IsChecked, Converter={StaticResource BoolToVisibleConverter}}" >
+                                        <StackPanel Orientation="Horizontal" >
+                                            <ls:LSNineSliceImage Margin="-64,160,30,-40" ImageSource="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared_c/c_container_divider.png" Slices="0 120 0 120" Width="52" HorizontalAlignment="Stretch" />
+                                            <StackPanel>
+                                                <TextBlock x:Name="looterName" Text="{Binding CurrentPlayer.SelectedCharacter.Name}" Style="{StaticResource InvObjName}" />
+                                                <TextBlock Text="{Binding LocalFocus.DataContext.Item.Name, ElementName=CharacterListBox}" Style="{StaticResource InvSelectionName}"/>
+                                            <ls:LSListBox  x:Name="CharacterListBox" ItemsSource="{Binding CurrentPlayer.SelectedCharacterPartyInvView.InventoryViewSlots}" Margin="0,0,0,0" Width="806" Height="608" Visibility="{Binding ElementName=PlayerInvToggle , Path=IsChecked, Converter={StaticResource BoolToVisibleConverter}}"
+                                            VerticalAlignment="Top" HorizontalAlignment="Center" ItemContainerStyle="{StaticResource InvContainerListBoxItemStyle}" >
+                                                    <ls:LSListBox.ItemTemplate>
+                                                        <DataTemplate >
+                                                            <Grid Width="{DynamicResource ContItemIconSize}" Height="{DynamicResource ContItemIconSize}">
+                                                                <Image Style="{StaticResource RarityFrameBackgroundImageStyle}"/>
+                                                                <ls:LSEntityObject EntityRef="{Binding Item.EntityHandle}" Context="Inventory" Background="{Binding Item.Icon}">
+                                                                    <Image Style="{StaticResource InventoryWaresCellItemImageStyle}"/>
+                                                                    <Label Style="{StaticResource InventoryCellLabelStyle}" IsHitTestVisible="False"/>
+                                                                </ls:LSEntityObject>
+                                                                <Image Style="{StaticResource RarityFrameForegroundImageStyle}"/>
+                                                            </Grid>
+                                                        </DataTemplate>
+                                                    </ls:LSListBox.ItemTemplate>
+                                                    <ls:LSListBox.Template>
+                                                        <ControlTemplate>
+                                                            <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="36,0,0,0" HorizontalAlignment="Left" Template="{DynamicResource ScrollViewerTemplate}" HorizontalScrollBarVisibility="Disabled">
+                                                                <ScrollViewer.Resources>
+                                                                    <Style TargetType="ScrollBar" BasedOn="{StaticResource GoldScrollBar}"/>
+                                                                </ScrollViewer.Resources>
+                                                                <ItemsPresenter  />
+                                                            </ScrollViewer>
+                                                        </ControlTemplate>
+                                                    </ls:LSListBox.Template>
+                                                    <ls:LSListBox.ItemsPanel>
+                                                        <ItemsPanelTemplate>
+                                                            <ls:LSGrid x:Name="ContainerGrid" Columns="6" Rows="5"  ContainerData="{Binding CurrentPlayer.UIData.CurrentContainer.InventoryView}"
+                                                                       noesis:Element.PPAAMode="Disabled" SnapsToDevicePixels="True"  CellWidth="{DynamicResource ContInvSlotSize}"
+                                                                       CellHeight="{DynamicResource ContInvSlotSize}" Background="{StaticResource ContInventoryCell2x2Brush}"
+                                                                       VerticalSpacing="{DynamicResource ContInvSpacing}" DisableScrolling="False"  HorizontalSpacing="{DynamicResource ContInvSpacing}"
+                                                                       ActionUpEvent="UIUp" ActionDownEvent="UIDown" ActionRightEvent="UIRight" ActionLeftEvent="UILeft">
+                                                            </ls:LSGrid>
+                                                        </ItemsPanelTemplate>
+                                                    </ls:LSListBox.ItemsPanel>
+                                                </ls:LSListBox>
+                                                <Grid Margin="0,18,0,-120">
+                                                    <StackPanel Orientation="Horizontal" Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Center">
+                                                        <StackPanel.Resources>
+                                                            <Style TargetType="TextBlock" >
+                                                                <Setter Property="FontWeight" Value="Bold" />
+                                                                <Setter Property="VerticalAlignment" Value="Top" />
+                                                                <Setter Property="Foreground" Value="{StaticResource LS_ActivePanelFontColor}" />
+                                                                <Setter Property="FontSize" Value="{DynamicResource MediumFontSize}" />
+                                                            </Style>
+                                                        </StackPanel.Resources>
+                                                        <Image VerticalAlignment="Center" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared_c/c_ico_weight.png" Stretch="None" Margin="0,0,8,8"/>
+                                                        <TextBlock Text="{Binding CurrentPlayer.SelectedCharacter.Inventory.Weight, Converter={StaticResource UnitConverter}, ConverterParameter='Weight'}" FontSize="{DynamicResource DefaultFontSize}"  Foreground="{StaticResource LS_PrimaryColor}"/>
+                                                        <TextBlock Text="/" Margin="2,0,2,0"/>
+                                                        <TextBlock Text="{Binding CurrentPlayer.SelectedCharacter.EncumbranceStats.WeightMaximum, Converter={StaticResource UnitConverter}, ConverterParameter='Weight'}" Margin="0,2,0,0"/>
+                                                    </StackPanel>
+                                                </Grid>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </ls:LSListBoxItem>
+
+                                    <ls:LSListBox.Style>
+                                        <Style TargetType="ls:LSListBox" BasedOn="{StaticResource {x:Type ls:LSListBox}}">
+                                            <Setter Property="IsEnabled" Value="True" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding ElementName=ButtonHolder, Path=Tag}" Value="SortPopup">
+                                                    <Setter Property="IsEnabled" Value="False" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </ls:LSListBox.Style>
+                                </ls:LSListBox>
+                                <Control x:Name="Selector" IsHitTestVisible="False" VerticalAlignment="Top" HorizontalAlignment="Left" Template="{StaticResource SelectorTemplate}" Panel.ZIndex="1000" />
+                            </Grid>
+
+                            <ls:LSToggleButton Grid.Column="1" Grid.Row="1" Margin="550,0,0,74" ClipToBounds="False" VerticalAlignment="Bottom" HorizontalAlignment="Left" x:Name="PlayerInvToggle" SoundID="UI_HUD_Extract" IsChecked="{Binding CurrentPlayer.UIData.OpenExtractedInventoryOnContainer}" DataContext = "{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UISwitchMode'}" BoundEvent="UISwitchMode">
+                                <ls:LSToggleButton.Template>
+                                    <ControlTemplate TargetType="ls:LSToggleButton">
+                                        <Grid HorizontalAlignment="Left">
+                                            <Image x:Name="bg" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared_c/c_toggle_bg.png" Stretch="None" HorizontalAlignment="Left" Margin="46,10,0,0"/>
+                                            <Image x:Name="chest" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared_c/c_ico_header_inventory.png" Stretch="None" Opacity="{StaticResource DisabledOpacity}" Margin="152,6,0,0"/>
+                                            <ls:LSButton x:Name="btn" Style="{StaticResource ControllerButton}" DataContext="{TemplateBinding DataContext}" Content="" HorizontalAlignment="Left" Margin="12,0,0,0" />
+                                        </Grid>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsChecked" Value="True">
+                                                <Trigger.Setters>
+                                                    <Setter Property="Opacity" Value="1.0" TargetName="chest"/>
+                                                </Trigger.Setters>
+                                                <Trigger.EnterActions>
+                                                    <BeginStoryboard>
+                                                        <Storyboard>
+                                                            <ThicknessAnimation Duration="0:0:0.1" Storyboard.TargetName="btn" Storyboard.TargetProperty="Margin" To="60,0,0,0"/>
+                                                        </Storyboard>
+                                                    </BeginStoryboard>
+                                                </Trigger.EnterActions>
+                                                <Trigger.ExitActions>
+                                                    <BeginStoryboard>
+                                                        <Storyboard>
+                                                            <ThicknessAnimation Duration="0:0:0.1" Storyboard.TargetName="btn" Storyboard.TargetProperty="Margin" To="12,0,0,0"/>
+                                                        </Storyboard>
+                                                    </BeginStoryboard>
+                                                </Trigger.ExitActions>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </ls:LSToggleButton.Template>
+                            </ls:LSToggleButton>
+                        </Grid>
+                    </Grid>
+                </Grid>
+                <Image Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared_c/c_panel_bottom.png" Stretch="None" VerticalAlignment="Bottom" />
+            </Grid>
+
+            <Control VerticalAlignment="Bottom" Margin="0,0,0,328" HorizontalAlignment="Center">
+                <Control.Template>
+                    <ControlTemplate >
+                        <Grid>
+                            <StackPanel x:Name="HoldToTakeAll" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top">
+                                <TextBlock Text="{Binding Source='h1cc89290gfa2eg406cg9e5bg75a612b65633',Converter={StaticResource TranslatedStringConverter}}" Foreground="{StaticResource LS_ButtonHintFontColor}" VerticalAlignment="Center" />
+                                <TextBlock Text="{Binding Source='hba9c74bbg1f89g4f68gbafbg1bcf7442cfae',Converter={StaticResource TranslatedStringConverter} , StringFormat='{} ({0})'}" Foreground="{StaticResource LS_InputTypeColor}" VerticalAlignment="Center"  />
+                            </StackPanel>
+                            <Image Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared_c/c_callToAction_wide_bg.png" Stretch="None" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,-46,0,-220" >
+                                <Image.RenderTransform>
+                                    <ScaleTransform ScaleY="-1" />
+                                </Image.RenderTransform>
+                            </Image>
+                            <Grid  Margin="0,54,0,0" HorizontalAlignment="Center" VerticalAlignment="Bottom">
+                                <ls:LSButton x:Name="TakeAllBtn" Style="{StaticResource ControllerButton}" EatInput="False" EatEventInUI="True" DataContext="{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIAccept'}" Content="">
+                                    <b:Interaction.Triggers>
+                                        <b:EventTrigger EventName="LSButtonPressed" SourceName="TakeAllBtn">
+                                            <b:ControlStoryboardAction Storyboard="{StaticResource ControllerButtonHoldAnimation}"/>
+                                        </b:EventTrigger>
+                                        <b:EventTrigger EventName="LSButtonReleased" SourceName="TakeAllBtn">
+                                            <b:ControlStoryboardAction Storyboard="{StaticResource ControllerButtonHoldAnimation}" ControlStoryboardOption="Stop"/>
+                                        </b:EventTrigger>
+                                        <b:EventTrigger EventName="IsEnabledChanged" SourceName="TakeAllBtn">
+                                            <b:ControlStoryboardAction Storyboard="{StaticResource ControllerButtonHoldAnimation}" ControlStoryboardOption="Stop"/>
+                                        </b:EventTrigger>
+                                        <b:StoryboardCompletedTrigger Storyboard="{StaticResource ControllerButtonHoldAnimation}">
+                                            <b:InvokeCommandAction Command="{Binding DataContext.TakeAllAndCloseCommand.ActionCommand, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"/>
+                                        </b:StoryboardCompletedTrigger>
+                                    </b:Interaction.Triggers>
+                                </ls:LSButton>
+                                <ls:LSPie x:Name="ButtonHoldVisualizer" Value="0" SweepDirection="Counterclockwise" 
+                                              Visibility="{Binding ElementName=TakeAllBtn, Path=IsPressed, Converter={StaticResource BoolToVisibleConverter}}"
+                                              Width="100" Height="100" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,4,28,0">
+                                    <Image Source="/GustavNoesisGUI;component/Assets/Shared_c/c_tabSelector.png" Width="100" Height="100" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                                </ls:LSPie>
+                            </Grid>
+                        </Grid>
+                    </ControlTemplate >
+                </Control.Template>
+            </Control>
+
+
+            <Control x:Name="ButtonHolder" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="24,0,0,28" Panel.ZIndex="8" Tag="Main">
+                <Control.Resources>
+                    <Style TargetType="ls:LSButton" BasedOn="{StaticResource ControllerButton}"/>
+                </Control.Resources>
+                <Control.Template>
+                    <ControlTemplate>
+                        <Grid>
+                        <StackPanel Orientation="Horizontal" x:Name="MainButtons" Visibility="Visible" IsEnabled="True">
+
+                            <ls:LSButton DataContext = "{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIAccept'}"
+                                         Content="{Binding Source='h6e6da963gfbc2g4748g992bg703411291b7b', Converter={StaticResource TranslatedStringConverter}}" 
+                                         Command="{Binding DataContext.TakeItemCommand.ActionCommand, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"
+                                         CommandParameter="{Binding LocalFocus.DataContext.Item, ElementName=ContainerListBox}"
+                                         BoundEvent="UIAccept"
+                                         Visibility="{Binding LocalFocus, ElementName=ContainerListBox,Converter={StaticResource NullToCollapsedConverter}}"
+                                         IsEnabled="{Binding LocalFocus.DataContext.Item, ElementName=ContainerListBox,Converter={StaticResource NullToBoolFalseConverter}}"
+                                         TapTime="300" />
+
+                            <ls:LSButton DataContext = "{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIAccept'}"
+                                         Content="{Binding Source='ha79bea24gc6b1g456egbcffg85345181359d', Converter={StaticResource TranslatedStringConverter}}" TapTime="300"
+                                         Command="{Binding DataContext.ItemMoveToContainerCommand, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"
+                                         BoundEvent="UIAccept"
+                                         Visibility="{Binding LocalFocus, ElementName=CharacterListBox,Converter={StaticResource NullToCollapsedConverter}}"
+                                         IsEnabled="{Binding LocalFocus.DataContext.Item, ElementName=CharacterListBox,Converter={StaticResource NullToBoolFalseConverter}}"
+                                         CommandParameter="{Binding LocalFocus.DataContext.Item, ElementName=CharacterListBox}"/>
+
+                            <ls:LSButton DataContext = "{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='ContextMenu'}"
+                                         Content="{Binding Source='heb4b592bgc665g4e17ga685g07e2eb5e25db', Converter={StaticResource TranslatedStringConverter}}"
+                                         Command="{Binding DataContext.ShowContextMenu, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"
+                                         CommandParameter="{Binding LocalFocus, ElementName=ListHolder}"
+                                         BoundEvent="ContextMenu"
+                                         Visibility="{Binding LocalFocus, ElementName=ListHolder,Converter={StaticResource NullToCollapsedConverter}}"/>
+
+                            <ls:LSButton DataContext = "{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIShowInfo'}"
+                                         Command="{Binding DataContext.ToggleTooltipOnUIElement, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"
+                                         CommandParameter="{Binding LocalFocus, ElementName=ListHolder}" 
+                                         BoundEvent="UIShowInfo"
+                                         Visibility="Collapsed"/>
+
+                            <ls:LSButton DataContext = "{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UICancel'}"
+                                         Content="{Binding Source='hff1685e4g3845g4846g99bfg219ae73ce55d', Converter={StaticResource TranslatedStringConverter}}" 
+                                         Command="{Binding DataContext.CloseWidgetCommand.ActionCommand, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"
+                                         BoundEvent="UICancel"
+                                         SoundID="UI_Shared_Cancel" />
+
+                            <ls:LSButton DataContext = "{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIShowInfo'}"
+                                         Content="{Binding Source='h07aaca85g63dbg4e60g88a2g0590077ea7e2',Converter={StaticResource TranslatedStringConverter}}" 
+                                         Command="{Binding DataContext.ToggleTooltipOnUIElement, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" 
+                                         CommandParameter="{Binding Path=LocalFocus, ElementName=ListHolder}"
+                                         IsEnabled="{Binding ElementName=ListHolder, Path=LocalFocus, Converter={StaticResource NullToBoolFalseConverter}}"/>
+
+                            <ls:LSButton DataContext = "{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UISort'}"
+                                         Content="{Binding Source='hce314911gcae3g4345gbc5ag201bc976a594',Converter={StaticResource TranslatedStringConverter}}"
+                                         x:Name="SortButton">
+                                <b:Interaction.Triggers>
+                                    <b:EventTrigger EventName="LSButtonReleased" >
+                                        <b:ChangePropertyAction TargetName="ButtonHolder" PropertyName="Tag" Value="SortPopup" />
+                                    </b:EventTrigger>
+                                </b:Interaction.Triggers>
+                            </ls:LSButton>
+                        </StackPanel>
+
+                        <StackPanel Orientation="Horizontal" x:Name="SortButtons" Visibility="Collapsed" IsEnabled="False" >
+                            <ls:LSButton DataContext = "{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIAccept'}"
+                                         Content="{Binding Source='hce314911gcae3g4345gbc5ag201bc976a594', Converter={StaticResource TranslatedStringConverter}}"
+                                         Command="{Binding DataContext.SortCharacterInventoryCommand, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"
+                                         CommandParameter="{Binding ElementName=sortComboBox, Path=SelectedItem}"
+                                         BoundEvent="UIAccept">
+                                <b:Interaction.Triggers>
+                                    <b:EventTrigger EventName="LSButtonReleased" >
+                                        <b:ChangePropertyAction TargetName="ButtonHolder" PropertyName="Tag" Value="Main" />
+                                    </b:EventTrigger>
+                                </b:Interaction.Triggers>
+                            </ls:LSButton>
+
+                            <ls:LSButton DataContext = "{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UICancel'}"
+                                         Content="{Binding Source='hff1685e4g3845g4846g99bfg219ae73ce55d', Converter={StaticResource TranslatedStringConverter}}" 
+                                         BoundEvent="UICancel"
+                                         SoundID="UI_Shared_Cancel" >
+                                <b:Interaction.Triggers>
+                                    <b:EventTrigger EventName="LSButtonReleased" >
+                                        <b:ChangePropertyAction TargetName="ButtonHolder" PropertyName="Tag" Value="Main" />
+                                    </b:EventTrigger>
+                                </b:Interaction.Triggers>
+                            </ls:LSButton>
+                        </StackPanel>
+                    </Grid>
+
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="Tag" Value="SortPopup">
+                                <Setter Property="Visibility" TargetName="MainButtons" Value="Collapsed" />
+                                <Setter Property="IsEnabled" TargetName="MainButtons" Value="False" />
+                                <Setter Property="Visibility" TargetName="SortButtons" Value="Visible" />
+                                <Setter Property="IsEnabled" TargetName="SortButtons" Value="True" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Control.Template>
+            </Control>
+        </Grid>
+</ls:UIWidget>

@@ -1,0 +1,273 @@
+<ls:UIWidget
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:ls="clr-namespace:ls;assembly=SharedGUI"
+             xmlns:System="clr-namespace:System;assembly=mscorlib"
+             xmlns:noesis="clr-namespace:NoesisGUIExtensions;assembly=Noesis.GUI.Extensions"
+             xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d"
+             ls:UIWidget.UseCustomDC="True"
+             ls:UIWidget.ContextName="RewardPanel"
+             d:DesignWidth="3840" d:DesignHeight="2160"
+    		 ls:TooltipExtender.Owner="{Binding CurrentPlayer.SelectedCharacter}"
+             FocusDown="UISelectionDown" FocusLeft="UISelectionLeft" FocusRight="UISelectionRight" FocusUp="UISelectionUp">
+    <ls:UIWidget.Resources>
+
+        <ControlTemplate x:Key="Header">
+            <Grid Width="1000">
+                <Image Stretch="None" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Reward/rewardFloral.png" RenderTransformOrigin="0.5,0.5" HorizontalAlignment="Left">
+                    <Image.RenderTransform>
+                        <ScaleTransform ScaleX="-1"/>
+                    </Image.RenderTransform>
+                </Image>
+                <TextBlock Text="{Binding Content, RelativeSource={RelativeSource TemplatedParent}}" Foreground="{DynamicResource LS_PrimaryColor}" FontSize="{DynamicResource TitleFontSize}" HorizontalAlignment="Center"/>
+                <Image Stretch="None" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Reward/rewardFloral.png" HorizontalAlignment="Right"/>
+            </Grid>
+        </ControlTemplate>
+
+    </ls:UIWidget.Resources>
+
+    <Grid VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0 0 0 80">
+        <b:Interaction.Triggers>
+            <b:EventTrigger EventName="Loaded">
+                <ls:LSPlaySound Sound="UI_HUD_Reward_Notification"/>
+            </b:EventTrigger>
+        </b:Interaction.Triggers>
+
+        <Image x:Name="bg" Stretch="None">
+            <Image.Style>
+                <Style TargetType="{x:Type Image}">
+                    <Setter Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Reward_c/c_reward_twoRow_bg.png"/>
+                    <Style.Triggers>
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding MandatoryItems.Items.Count, Converter={StaticResource GreaterThanConverter}, ConverterParameter=6}" Value="True"/>
+                                <Condition Binding="{Binding OptionalItems.Items.Count, Converter={StaticResource GreaterThanConverter}, ConverterParameter=6}" Value="True"/>
+                            </MultiDataTrigger.Conditions>
+                            <MultiDataTrigger.Setters>
+                                <Setter Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Reward_c/c_reward_fourRow_bg.png"/>
+                            </MultiDataTrigger.Setters>
+                        </MultiDataTrigger>
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding MandatoryItems.Items.Count, Converter={StaticResource GreaterThanConverter}, ConverterParameter=6}" Value="False"/>
+                                <Condition Binding="{Binding OptionalItems.Items.Count, Converter={StaticResource GreaterThanConverter}, ConverterParameter=6}" Value="True"/>
+                            </MultiDataTrigger.Conditions>
+                            <MultiDataTrigger.Setters>
+                                <Setter Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Reward_c/c_reward_fourRow_bg.png"/>
+                            </MultiDataTrigger.Setters>
+                        </MultiDataTrigger>
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding MandatoryItems.Items.Count, Converter={StaticResource GreaterThanConverter}, ConverterParameter=6}" Value="True"/>
+                                <Condition Binding="{Binding OptionalItems.Items.Count, Converter={StaticResource GreaterThanConverter}, ConverterParameter=6}" Value="False"/>
+                            </MultiDataTrigger.Conditions>
+                            <MultiDataTrigger.Setters>
+                                <Setter Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Reward_c/c_reward_fourRow_bg.png"/>
+                            </MultiDataTrigger.Setters>
+                        </MultiDataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Image.Style>
+        </Image>
+
+        <Image Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Reward/ico_reward.png" Stretch="None" VerticalAlignment="Top" Margin="0 35 0 0"/>
+        <Rectangle x:Name="DragObj" Fill="Transparent" Width="1150" Height="120" VerticalAlignment="Top" Margin="0 10 0 0"/>
+
+        <StackPanel x:Name="QuestInfo" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0 140 0 10">
+            <ContentControl Template="{StaticResource Header}" Content="{Binding Source='h41bffdc7g230bg47a5g80c0g23ea99df1a98', Converter={StaticResource TranslatedStringConverter}}" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+
+            <TextBlock Text="{Binding QuestName}" Foreground="{DynamicResource LS_SecondaryColor}" HorizontalAlignment="Center" FontSize="{DynamicResource MediumFontSize}" Margin="0 0 10 0"/>
+            <TextBlock Text="{Binding QuestDescription}" HorizontalAlignment="Center" TextWrapping="Wrap" Foreground="{DynamicResource LS_PrimaryColor}" FontSize="{DynamicResource MediumFontSize}" TextAlignment="Center" Width="960"/>
+
+            <ContentControl Template="{StaticResource Header}" Content="{Binding Source='h24eeec24gae44g42edg81f2g6de76f80bd10', Converter={StaticResource TranslatedStringConverter}}"/>
+
+            <ItemsControl x:Name="MandatoryTreasure" Focusable="True" Tag="AllSelected" ItemsSource="{Binding MandatoryItems.Items}" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0 20 0 0" Background="Transparent" BorderThickness="0">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Grid ToolTip="{StaticResource ManagedTooltip}">
+                            <Grid Width="{DynamicResource ItemIconSize}" Height="{DynamicResource ItemIconSize}" >
+                                <Image Style="{StaticResource RarityFrameBackgroundImageStyle}"/>
+                                <Rectangle Fill="{Binding Icon}"/>
+                                <Image Style="{StaticResource RarityFrameForegroundImageStyle}"/>
+                            </Grid>
+                            <Image x:Name="bg" Stretch="None" Margin="-4" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Reward/reward_fancySurround_selected.png"/>
+                        </Grid>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <ls:LSWrapPanel HorizontalContentAlignment="Center" Width="1000"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            </ItemsControl>
+
+            <Grid Margin="0 10 0 0" VerticalAlignment="Bottom">
+                <Image x:Name="BonusBg" Stretch="None">
+                    <Image.Style>
+                        <Style TargetType="{x:Type Image}">
+                            <Setter Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Reward_c/c_reward_oneRow_selectionSurround.png"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding OptionalItems.Items.Count, Converter={StaticResource GreaterThanConverter}, ConverterParameter=6}" Value="True">
+                                    <Setter Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Reward_c/c_reward_twoRow_selectionSurround.png"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Image.Style>
+                </Image>
+
+                <StackPanel VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="0,0,0,-100">
+                    <Grid HorizontalAlignment="Center">
+                        <Grid.Resources>
+                            <Storyboard x:Key="AcceptRewardBtnAnim">
+                                <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(ls:LSPie.Value)" Storyboard.TargetName="AcceptRewardPie" BeginTime="0:0:0.3">
+                                    <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                                    <EasingDoubleKeyFrame KeyTime="0:0:1" Value="1"/>
+                                </DoubleAnimationUsingKeyFrames>
+                            </Storyboard>
+                        </Grid.Resources>
+                        <ContentControl>
+                            <ContentControl.Template>
+                                <ControlTemplate TargetType="ContentControl">
+                                    <ls:LSButton x:Name="AcceptRewardBtn" Style="{StaticResource ControllerButton}" Margin="20,0" DataContext="{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIAccept'}" Content=""
+                                                 IsEnabled="{Binding DataContext.IsAllSelected, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}">
+                                        <b:Interaction.Triggers>
+                                            <b:EventTrigger EventName="LSButtonPressed" SourceName="AcceptRewardBtn">
+                                                <b:ControlStoryboardAction Storyboard="{StaticResource AcceptRewardBtnAnim}"/>
+                                            </b:EventTrigger>
+                                            <b:EventTrigger EventName="LSButtonReleased" SourceName="AcceptRewardBtn">
+                                                <b:ControlStoryboardAction Storyboard="{StaticResource AcceptRewardBtnAnim}" ControlStoryboardOption="Stop"/>
+                                            </b:EventTrigger>
+                                            <b:StoryboardCompletedTrigger Storyboard="{StaticResource AcceptRewardBtnAnim}">
+                                                <b:InvokeCommandAction Command="{Binding DataContext.GetRewardsAndClose.ActionCommand, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"/>
+                                                <b:ControlStoryboardAction Storyboard="{StaticResource AcceptRewardBtnAnim}" ControlStoryboardOption="Stop"/>
+                                            </b:StoryboardCompletedTrigger>
+                                        </b:Interaction.Triggers>
+                                    </ls:LSButton>
+                                </ControlTemplate>
+                            </ContentControl.Template>
+                        </ContentControl>
+                        <ls:LSPie x:Name="AcceptRewardPie" Value="0" SweepDirection="Clockwise" Visibility="{Binding ElementName=AcceptRewardBtn, Path=IsPressed, Converter={StaticResource BoolToVisibleConverter}}">
+                            <Image Source="/GustavNoesisGUI;component/Assets/Shared_c/c_tabSelector.png" Width="100" Height="100"/>
+                        </ls:LSPie>
+                    </Grid>
+
+                    <TextBlock ls:TextBlockFormatter.SourceText="{Binding Source='hbea25d3bg076dg435dg9b99g33350b45445a', Converter={StaticResource TranslatedStringConverter}}" Foreground="{DynamicResource LS_PrimaryColor}" HorizontalAlignment="Center" Margin="0,-20,0,0">
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="Opacity" Value="0.6"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsAllSelected}" Value="True">
+                                        <Setter Property="Opacity" Value="1"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+                </StackPanel>
+
+                <TextBlock Text="{Binding Source='ha8eafa85gec0eg4c43g9c5cg75c4d31ffddf', Converter={StaticResource TranslatedStringConverter}}" Foreground="{DynamicResource LS_PrimaryColor}" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0 70 0 0"/>
+
+                <Grid HorizontalAlignment="Center" VerticalAlignment="Top" Margin="10 152 0 0">
+                    <ls:LSListBox x:Name="OptionalTreasure" ItemsSource="{Binding OptionalItems.Items}" Background="Transparent" BorderThickness="0" SelectionMode="Multiple" MaxSelectedElements="{Binding MaxSelectedItems}" LocalFocusSelector="{Binding ElementName=Selector,Mode=OneWay}" LocalFocusOverrideSize="False" InitialFocusIndex="0">
+                        <ls:LSListBox.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <ls:LSGrid ContainerData="{Binding}" CropToContent="True" AutoIndex="True" Columns="6" Rows="1" ExtendedRows="False" CellWidth="164" CellHeight="164" ActionUpEvent="UIUp" ActionDownEvent="UIDown" ActionRightEvent="UIRight" ActionLeftEvent="UILeft"/>
+                            </ItemsPanelTemplate>
+                        </ls:LSListBox.ItemsPanel>
+                        <ls:LSListBox.ItemContainerStyle>
+                            <Style TargetType="ListBoxItem" BasedOn="{StaticResource {x:Type ListBoxItem}}">
+                                <Setter Property="Background" Value="Transparent"/>
+                                <Setter Property="BorderThickness" Value="0"/>
+
+                                <Setter Property="ContentTemplate">
+                                    <Setter.Value>
+                                        <DataTemplate>
+                                            <ContentControl ToolTip="{StaticResource ManagedTooltip}">
+                                                <Grid>
+                                                    <Grid Width="{DynamicResource ItemIconSize}" Height="{DynamicResource ItemIconSize}" >
+                                                        <Image Style="{StaticResource RarityFrameBackgroundImageStyle}"/>
+                                                        <Rectangle Fill="{Binding Icon}"/>
+                                                        <Image Style="{StaticResource RarityFrameForegroundImageStyle}"/>
+                                                    </Grid>
+                                                    <Image x:Name="bg" Stretch="None" Margin="-4" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Reward/reward_fancySurround_d.png"/>
+                                                    <Image x:Name="ico" Stretch="None" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared_c/c_checkmark.png" VerticalAlignment="Top" HorizontalAlignment="Right" Visibility="Collapsed" Margin="0,18,20,0"/>
+                                                </Grid>
+                                            </ContentControl>
+                                            <DataTemplate.Triggers>
+                                                <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ItemsControl}}, Path=Tag}" Value="AllSelected">
+                                                    <Setter TargetName="bg" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Reward/reward_fancySurround_selected.png"/>
+                                                    <Setter TargetName="ico" Property="Visibility" Value="Visible"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListBoxItem}}, Path=IsSelected}" Value="True">
+                                                    <Setter TargetName="bg" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Reward/reward_fancySurround_selected.png"/>
+                                                    <Setter TargetName="ico" Property="Visibility" Value="Visible"/>
+                                                </DataTrigger>
+                                            </DataTemplate.Triggers>
+                                        </DataTemplate>
+                                    </Setter.Value>
+                                </Setter>
+
+                                <Style.Triggers>
+                                    <Trigger Property="IsSelected" Value="True">
+                                        <Setter Property="Background" Value="Transparent"/>
+                                        <Setter Property="BorderThickness" Value="0"/>
+                                    </Trigger>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="Transparent"/>
+                                        <Setter Property="BorderThickness" Value="0"/>
+                                    </Trigger>
+                                    <MultiDataTrigger>
+                                        <MultiDataTrigger.Conditions>
+                                            <Condition Binding="{Binding IsSelected, RelativeSource={RelativeSource Self}}" Value="False"/>
+                                            <Condition Binding="{Binding DataContext.IsAllSelected, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" Value="True"/>
+                                        </MultiDataTrigger.Conditions>
+                                        <MultiDataTrigger.Setters>
+                                            <Setter Property="Opacity" Value="0.7"/>
+                                        </MultiDataTrigger.Setters>
+                                    </MultiDataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ls:LSListBox.ItemContainerStyle>
+                        <b:Interaction.Triggers>
+                            <b:EventTrigger EventName="SelectionChanged">
+                                <b:InvokeCommandAction Command="{Binding SelectedRewardsChanged.ActionCommand}" CommandParameter="{Binding ElementName=OptionalTreasure, Path=SelectedItems}"/>
+                            </b:EventTrigger>
+                            <b:EventTrigger EventName="LocalFocusChanged">
+                                <b:InvokeCommandAction Command="{Binding DataContext.ShowTooltipOnUIElement, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" CommandParameter="{Binding Path=LocalFocus, ElementName=OptionalTreasure}"/>
+                            </b:EventTrigger>
+                        </b:Interaction.Triggers>
+                    </ls:LSListBox>
+
+                    <Border x:Name="Selector" BorderBrush="{StaticResource LS_tint100}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="26 26 0 0" BorderThickness="4" Width="110" Height="110" Visibility="{Binding LocalFocus, ElementName=OptionalTreasure, Converter={StaticResource NullToCollapsedConverter}}"/>
+                </Grid>
+
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0 0 0 45">
+                    <TextBlock Text="{Binding SelectedItemsCount}" Foreground="{DynamicResource LS_PrimaryColor}" FontSize="{DynamicResource DefaultFontSize}"/>
+                    <TextBlock Text="/" Foreground="{DynamicResource LS_PrimaryColor}" FontSize="{DynamicResource DefaultFontSize}"/>
+                    <TextBlock Text="{Binding MaxSelectedItems}" Foreground="{DynamicResource LS_PrimaryColor}" FontSize="{DynamicResource DefaultFontSize}"/>
+                </StackPanel>
+            </Grid>
+
+        </StackPanel>
+
+        <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom" Margin="0,0,0,50" HorizontalAlignment="Center">
+            <ls:LSButton Style="{StaticResource ControllerButton}" DataContext="{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIAccept'}" BoundEvent="UIAccept" TapTime="300"
+                     Content="{Binding Source='h57c4b009g2843g4098gbf30gebb4819560ca', Converter={StaticResource TranslatedStringConverter}}" Command="{Binding DataContext.ToggleListItemCommand,RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"
+                     SoundID="UI_Shared_Accept" OverwriteClickSound="UI_HUD_RewardSelect_Confirm_Click" IsEnabled="{Binding LocalFocus, ElementName=OptionalTreasure, Converter={StaticResource NullToBoolFalseConverter}}" EatInput="False">
+                <ls:LSButton.CommandParameter>
+                    <MultiBinding Converter="{StaticResource PassThroughConverter}">
+                        <Binding Path="SelectedItems" ElementName="OptionalTreasure"/>
+                        <Binding Path="LocalFocus.DataContext" ElementName="OptionalTreasure"/>
+                    </MultiBinding>
+                </ls:LSButton.CommandParameter>
+            </ls:LSButton>
+
+            <ls:LSButton Style="{StaticResource ControllerButton}" SoundID="" VerticalAlignment="Center" DataContext = "{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIShowInfo'}"
+                     Content="{Binding Source='h07aaca85g63dbg4e60g88a2g0590077ea7e2',Converter={StaticResource TranslatedStringConverter}}" Command="{Binding DataContext.ToggleTooltipOnUIElement, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" 
+                     CommandParameter="{Binding Path=LocalFocus, ElementName=OptionalTreasure}" IsEnabled="{Binding LocalFocus, ElementName=OptionalTreasure, Converter={StaticResource NullToBoolFalseConverter}}"/>
+        </StackPanel>
+    </Grid>
+</ls:UIWidget>

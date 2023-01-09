@@ -1,0 +1,74 @@
+<ls:UIWidget x:Name="SpeakerSelect_c"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:ls="clr-namespace:ls;assembly=SharedGUI"
+             xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
+             
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:noesis="clr-namespace:NoesisGUIExtensions;assembly=Noesis.GUI.Extensions"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             d:DesignHeight="2160" d:DesignWidth="3840"
+             Template="{DynamicResource CharacterListBgTemplate}">
+
+    <ls:UIWidget.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../Library/Radials_c.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </ls:UIWidget.Resources>
+
+    <Grid>
+        <b:Interaction.Triggers>
+            <b:EventTrigger EventName="WidgetClosing">
+                <b:InvokeCommandAction Command="{Binding DataContext.PlaySoundEvent, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" CommandParameter="UI_HUD_RadialMenu_Close"/>
+                <b:InvokeCommandAction Command="{Binding DataContext.SelectSpeaker, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" CommandParameter="{Binding LocalFocus.DataContext ,ElementName=characterList}" IsEnabled="{Binding LocalFocus ,ElementName=characterList, Converter={StaticResource NullToBoolFalseConverter}}"/>
+            </b:EventTrigger>
+        </b:Interaction.Triggers>
+
+        <ls:Radial x:Name="characterList" FixedAmount="4" ItemsSource="{Binding CurrentPlayer.SelectedCharacter.ActiveDialogue.AvailableSpeakers}" LeftEvent="UIRadialLeft" RightEvent="UIRadialRight" UpEvent="UIRadialUp" DownEvent="UIRadialDown"  HalfElementOffset="True" 
+                         PlayerId="{Binding DataContext.CurrentPlayer.PlayerId, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"
+                         Style="{DynamicResource ControllerRadialListStyle}" 
+                         InputOnChildren="{Binding Path=IsChecked, ElementName=toggleFocusBtn}">
+
+            <b:Interaction.Triggers>
+                <b:EventTrigger EventName="SelectionChanged">
+                    <b:InvokeCommandAction 
+                                            Command="{Binding DataContext.PlaySoundEvent, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" 
+                                            CommandParameter="UI_HUD_RadialMenu_Move"/>
+                </b:EventTrigger>
+                <b:EventTrigger EventName="Loaded">
+                    <b:ChangePropertyAction TargetName="characterList" PropertyName="SelectedItem" Value="{Binding CurrentPlayer.SelectedCharacter}"/>
+
+                    <b:InvokeCommandAction 
+                                            Command="{Binding DataContext.PlaySoundEvent, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" 
+                                            CommandParameter="UI_HUD_RadialMenu_Open"/>
+                </b:EventTrigger>
+            </b:Interaction.Triggers>
+        </ls:Radial>
+
+        <StackPanel VerticalAlignment="Bottom" HorizontalAlignment="Center" Orientation="Horizontal">
+            <ls:LSButton Style="{StaticResource ControllerButton}" VerticalAlignment="Center" DataContext = "{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIRadialUp'}" 
+                                 Content="{Binding Source='h5c405124g4622g4197g9239gb635f371bf0e',Converter={StaticResource TranslatedStringConverter}}"/>
+
+            <ls:LSButton Style="{StaticResource ControllerButtonWBG}" 
+                             DataContext = "{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UICancel'}"
+                             Margin="20,0" 
+                             Content="{Binding Source='h6fefa28bg2149g4cacga071gd95b236b2d0b',Converter={StaticResource TranslatedStringConverter}}" 
+                             Command="{Binding DataContext.CustomEvent, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"
+                             CommandParameter="CloseSpeakerSelect"/>
+        </StackPanel>
+
+        <ls:LSInputBinding BoundEvent="SpeakerSelect" Visibility="Collapsed" IsEnabled="True" 
+                               PlayerId="{Binding DataContext.CurrentPlayer.PlayerId, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}">
+            <b:Interaction.Triggers>
+                <b:EventTrigger EventName="LSInputBindingReleased">
+                    <b:InvokeCommandAction Command="{Binding DataContext.CustomEvent,RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" CommandParameter="CloseSpeakerSelect"/>
+                </b:EventTrigger>
+            </b:Interaction.Triggers>
+        </ls:LSInputBinding>
+
+    </Grid>
+
+</ls:UIWidget>

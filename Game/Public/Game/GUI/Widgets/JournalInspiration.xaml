@@ -1,0 +1,330 @@
+<ls:UIWidget x:Name="JournalInspiration"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:ls="clr-namespace:ls;assembly=SharedGUI"
+             xmlns:noesis="clr-namespace:NoesisGUIExtensions;assembly=Noesis.GUI.Extensions"
+			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:System="clr-namespace:System;assembly=mscorlib"
+			 mc:Ignorable="d"
+             ls:UIWidget.ContextName="JournalInspiration"
+             ls:UIWidget.SoundID="UI_HUD_Journal"
+             d:DesignHeight="2160" d:DesignWidth="3840"
+             ls:TooltipExtender.Owner="{Binding CurrentPlayer.SelectedCharacter}"
+             Template="{StaticResource StandardFraming}">
+
+    <ls:UIWidget.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../Library/JournalTemplates.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            
+            <DataTemplate x:Key="OwnerTemplate">
+                <Ellipse x:Name="icon" Width="64" Height="64" Fill="{Binding Icon}" Stroke="{StaticResource LS_accent00TxtColor}" StrokeThickness="4" Opacity="1">
+                    <Ellipse.Tag>
+                        <MultiBinding Converter="{StaticResource EqualConverter}">
+                            <Binding RelativeSource="{RelativeSource AncestorType={x:Type ls:UIWidget}}" Path="DataContext.CurrentPlayer.UserId"/>
+                            <Binding Path="UserID"/>
+                        </MultiBinding>
+                    </Ellipse.Tag>
+                </Ellipse>
+                <DataTemplate.Triggers>
+                    <DataTrigger Value="False">
+                        <DataTrigger.Binding>
+                            <MultiBinding Converter="{StaticResource EqualConverter}">
+                                <Binding RelativeSource="{RelativeSource AncestorType={x:Type ls:UIWidget}}" Path="DataContext.CurrentPlayer.UserId"/>
+                                <Binding Path="UserID"/>
+                            </MultiBinding>
+                        </DataTrigger.Binding>
+                        <Setter TargetName="icon" Property="Stroke" Value="{StaticResource LS_guestTxtColor}"/>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding IsAlive}" Value="False">
+                        <Setter TargetName="icon" Property="Stroke" Value="{StaticResource LS_accent00TxtColor}"/>
+                        <Setter TargetName="icon" Property="Opacity" Value="0.7"/>
+                    </DataTrigger>
+                </DataTemplate.Triggers>
+            </DataTemplate>
+
+            <HierarchicalDataTemplate DataType="{x:Type ls:VMBackground}" ItemsSource="{Binding GoalCategories}">
+                <ToggleButton x:Name="Toggle" Grid.Column="0" IsChecked="{Binding IsExpanded, RelativeSource={RelativeSource AncestorType={x:Type TreeViewItem}}}" ToolTipService.IsEnabled="True" ToolTipService.Placement="Right">
+                    <ToggleButton.ToolTip>
+                        <ls:LSTooltip Content="{Binding DataContext.Description,ElementName=Toggle}">
+                            <ToolTip.ContentTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding .}" Foreground="{StaticResource LS_accent100TxtColor}" FontSize="{StaticResource LargeFontSize}" MaxWidth="{StaticResource MaxTooltipContentWidth}" TextWrapping="Wrap" Margin="0,20,0,20"/>
+                                </DataTemplate>
+                            </ToolTip.ContentTemplate>
+                        </ls:LSTooltip>
+                    </ToggleButton.ToolTip>
+                    <ToggleButton.Template>
+                        <ControlTemplate TargetType="ToggleButton">
+                            <StackPanel Orientation="Horizontal" Background="Transparent">
+                                <Path Name="Arrow" Width="50" Data="M 7 0 L 21 14 L 7 28 Z" Fill="{DynamicResource LS_accent75TxtColor}" VerticalAlignment="Center"/>
+                                <TextBlock Text="{Binding Title}" Foreground="{StaticResource LS_accent75TxtColor}" VerticalAlignment="Center" FontSize="{StaticResource LargeFontSize}"/>
+                                <ItemsControl ItemsSource="{Binding BackgroundOwners}" Margin="10,0,0,0" ItemTemplate="{StaticResource OwnerTemplate}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <StackPanel Orientation="Horizontal"/>
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemContainerStyle>
+                                        <Style TargetType="ContentPresenter">
+                                            <Setter Property="Margin" Value="0,0,-10,0"/>
+                                        </Style>
+                                    </ItemsControl.ItemContainerStyle>
+                                </ItemsControl>
+                            </StackPanel>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsChecked" Value="True">
+                                    <Setter TargetName="Arrow" Property="Data" Value="M 0 0 L 14 14 L 28 0 Z"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </ToggleButton.Template>
+                </ToggleButton>
+                <HierarchicalDataTemplate.Triggers>
+                    <DataTrigger Binding="{Binding GoalCategories.Count}" Value="0">
+                        <Setter TargetName="Toggle" Property="Visibility" Value="Collapsed"/>
+                    </DataTrigger>
+                </HierarchicalDataTemplate.Triggers>
+            </HierarchicalDataTemplate>
+
+            <HierarchicalDataTemplate DataType="{x:Type ls:JournalItemContainer}">
+                <Grid MinHeight="65">
+                    <Image Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Journal/selector_journal.png" Stretch="None" Visibility="{Binding IsSelected, RelativeSource={RelativeSource AncestorType={x:Type TreeViewItem}}, Converter={StaticResource BoolToVisibleConverter}}"/>
+                    <Image HorizontalAlignment="Right" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Journal/ico_pointer.png" Stretch="None" Visibility="{Binding IsSelected, RelativeSource={RelativeSource AncestorType={x:Type TreeViewItem}}, Converter={StaticResource BoolToVisibleConverter}}"/>
+                    <StackPanel Orientation="Horizontal">
+                        <Image x:Name="img" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Journal/bullet.png" Stretch="None"/>
+                        <TextBlock x:Name="title" Text="{Binding Title}" Foreground="{DynamicResource LS_baseTxtColor}" FontSize="{StaticResource LargeFontSize}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Grid>
+                <HierarchicalDataTemplate.Triggers>
+                    <DataTrigger Binding="{Binding IsUpdated}" Value="True">
+                        <Setter TargetName="img" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Journal/bullet_updated.png"/>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType={x:Type TreeViewItem}}}" Value="True">
+                        <Setter TargetName="title" Property="Foreground" Value="{DynamicResource LS_accent100TxtColor}"/>
+                    </DataTrigger>
+                </HierarchicalDataTemplate.Triggers>
+            </HierarchicalDataTemplate>
+        </ResourceDictionary>
+    </ls:UIWidget.Resources>
+
+    <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" >
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="100,50,0,0">
+            <Image Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Journal/header_journal.png" Stretch="None" Margin="0,-20,0,0"/>
+            <TextBlock Text="{Binding Source='hb4bac393g5295g4e80g8dacge61e914d2313',Converter={StaticResource TranslatedStringConverter}}" Foreground="{DynamicResource LS_baseTxtColor}" FontSize="{DynamicResource TitleFontSize}"/>
+        </StackPanel>
+
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Top">
+            <Control HorizontalAlignment="Center" Template="{DynamicResource PanelNavButtons}" Tag="Journal"/>
+            <Control HorizontalAlignment="Center" Template="{DynamicResource JournalHeader}"/>
+            <TextBlock Text="{Binding Source='hf915ab82gc327g4b89g9380g9befc60565d6',Converter={StaticResource TranslatedStringConverter}}" Foreground="{DynamicResource LS_accent100TxtColor}" FontSize="{DynamicResource TitleFontSize}" HorizontalAlignment="Center" Margin="0,26,0,0"/>
+        </StackPanel>
+
+        <Viewbox>
+            <StackPanel Orientation="Horizontal" Margin="50,300">
+                <ContentControl Template="{DynamicResource LeftPanelFrame}" Width="1740" Height="1500" Background="Transparent">
+                    <ScrollViewer Template="{StaticResource FlippedScrollViewerTemplate}" VerticalScrollBarVisibility="Visible" Margin="0,70">
+                        <ScrollViewer.Resources>
+                            <GridLength x:Key="Top">130</GridLength>
+                            <GridLength x:Key="Bottom">130</GridLength>
+                        </ScrollViewer.Resources>
+                        <StackPanel Margin="0,80,0,0" Background="Transparent" HorizontalAlignment="Left" VerticalAlignment="Top">
+                            <TextBlock ls:TextBlockFormatter.SourceText="{Binding Source='hf263d6cdg4a2eg4769gaf58g39fa06df6c56',Converter={StaticResource TranslatedStringConverter}}" Foreground="{StaticResource LS_baseTxtColor}" FontSize="{StaticResource LargeFontSize}" TextWrapping="Wrap" HorizontalAlignment="Center" MaxWidth="1400" Margin="0,0,0,80"/>
+                            <ls:LSTreeView x:Name="BackgroundGoalsTreeView" Width="1640" ItemsSource="{Binding Data.BackgroundGoals}" Background="Transparent" BorderBrush="Transparent" InitialSelection="{Binding DataContext.CurrentPlayer.UIData.SelectedBackgroundGoal, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}">
+                                <ls:LSTreeView.Template>
+                                    <ControlTemplate>
+                                        <Grid Background="Transparent" Width="1740">
+                                            <ItemsPresenter Margin="100,0,0,0"/>
+                                        </Grid>
+                                    </ControlTemplate>
+                                </ls:LSTreeView.Template>
+                                <ls:LSTreeView.ItemContainerStyle>
+                                    <Style TargetType="TreeViewItem">
+                                        <Setter Property="IsExpanded" Value="True"/>
+                                        <Setter Property="BorderBrush" Value="Transparent" />
+                                        <Setter Property="Background" Value="Transparent" />
+                                        <Setter Property="Padding" Value="0" />
+                                        <Setter Property="BorderThickness" Value="0" />
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="TreeViewItem">
+                                                    <Grid Margin="20,0,0,20">
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="Auto"/>
+                                                            <ColumnDefinition Width="*"/>
+                                                        </Grid.ColumnDefinitions>
+                                                        <Grid.RowDefinitions>
+                                                            <RowDefinition Height="Auto"/>
+                                                            <RowDefinition Height="Auto"/>
+                                                        </Grid.RowDefinitions>
+                                                        <Border Name="Bd" Grid.Column="0" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Padding="{TemplateBinding Padding}">
+                                                            <ContentPresenter x:Name="PART_Header" ContentSource="Header" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"/>
+                                                        </Border>
+                                                        <ItemsPresenter x:Name="ItemsHost" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"/>
+                                                    </Grid>
+
+                                                    <ControlTemplate.Triggers>
+                                                        <Trigger Property="IsExpanded" Value="False">
+                                                            <Setter Property="Visibility" Value="Collapsed" TargetName="ItemsHost"/>
+                                                        </Trigger>
+                                                        <MultiTrigger>
+                                                            <MultiTrigger.Conditions>
+                                                                <Condition Property="HasHeader" Value="false"/>
+                                                                <Condition Property="Width" Value="Auto"/>
+                                                            </MultiTrigger.Conditions>
+                                                            <Setter TargetName="PART_Header" Property="MinWidth" Value="150"/>
+                                                        </MultiTrigger>
+                                                        <MultiTrigger>
+                                                            <MultiTrigger.Conditions>
+                                                                <Condition Property="HasHeader" Value="false"/>
+                                                                <Condition Property="Height" Value="Auto"/>
+                                                            </MultiTrigger.Conditions>
+                                                            <Setter TargetName="PART_Header" Property="MinHeight" Value="40"/>
+                                                        </MultiTrigger>
+                                                    </ControlTemplate.Triggers>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Style>
+                                </ls:LSTreeView.ItemContainerStyle>
+                                <b:Interaction.Triggers>
+                                    <b:EventTrigger EventName="SelectedItemChanged">
+                                        <b:Interaction.Behaviors>
+                                            <b:ConditionBehavior>
+                                                <b:ConditionalExpression>
+                                                    <b:ComparisonCondition LeftOperand="{Binding SelectedItem, ElementName=BackgroundGoalsTreeView}" Operator="NotEqual" RightOperand="{x:Null}" />
+                                                    <b:ComparisonCondition LeftOperand="{Binding SelectedItem.IsUpdated, ElementName=BackgroundGoalsTreeView}" Operator="NotEqual" RightOperand="{x:Null}" />
+                                                </b:ConditionalExpression>
+                                            </b:ConditionBehavior>
+                                        </b:Interaction.Behaviors>
+                                        <b:ChangePropertyAction PropertyName="IsUpdated" Value="False" TargetObject="{Binding SelectedItem, ElementName=BackgroundGoalsTreeView}"/>
+                                    </b:EventTrigger>
+                                    <b:EventTrigger EventName="SelectedItemChanged">
+                                        <b:Interaction.Behaviors>
+                                            <b:ConditionBehavior>
+                                                <b:ConditionalExpression>
+                                                    <b:ComparisonCondition LeftOperand="{Binding ElementName=BackgroundGoalsTreeView, Path=SelectedItem}" Operator="NotEqual" RightOperand="{x:Null}" />
+                                                </b:ConditionalExpression>
+                                            </b:ConditionBehavior>
+                                        </b:Interaction.Behaviors>
+                                        <ls:LSPlaySound Sound="UI_HUD_Journal_Select"/>
+                                        <b:InvokeCommandAction Command="{Binding DataContext.UpdateSelectedCommand.ActionCommand, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" CommandParameter="{Binding ElementName=BackgroundGoalsTreeView, Path=SelectedItem}"/>
+                                    </b:EventTrigger>
+                                </b:Interaction.Triggers>
+                            </ls:LSTreeView>
+                        </StackPanel>
+                    </ScrollViewer>
+                </ContentControl>
+
+                <!-- Details Pane -->
+                <ContentControl Template="{DynamicResource RightPanelFrame}" Width="1740" Height="1500">
+                    <ContentPresenter Content="{Binding SelectedItem, ElementName=BackgroundGoalsTreeView}">
+                        <ContentPresenter.Resources>
+                            <DataTemplate DataType="{x:Type ls:VMBackground}"/>
+
+                            <DataTemplate DataType="{x:Type ls:JournalItemContainer}">
+                                <ScrollViewer Margin="16,60,-16,70" VerticalScrollBarVisibility="Auto" Template="{StaticResource ScrollViewerTemplate}">
+                                    <ScrollViewer.Resources>
+                                        <GridLength x:Key="Top">150</GridLength>
+                                        <GridLength x:Key="Bottom">150</GridLength>
+                                    </ScrollViewer.Resources>
+                                    <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Top" Margin="100,0,100,0">
+                                        <TextBlock Foreground="{StaticResource LS_accent100TxtColor}" HorizontalAlignment="Center" FontSize="{StaticResource TitleFontSize}" Margin="-45,0,45,50" Visibility="{Binding . ,Converter={StaticResource NullToHiddenConverter}}">
+                                            <Run Text="{Binding ParentCategoryTitle}"/><Run Text=" - "/><Run Text="{Binding Title}"/>
+                                        </TextBlock>
+                                        <ItemsControl ItemsSource="{Binding ContainerChildren}">
+                                            <ItemsControl.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <StackPanel/>
+                                                </ItemsPanelTemplate>
+                                            </ItemsControl.ItemsPanel>
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Grid>
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="Auto"/>
+                                                            <ColumnDefinition Width="*"/>
+                                                        </Grid.ColumnDefinitions>
+                                                        <Grid.RowDefinitions>
+                                                            <RowDefinition Height="Auto"/>
+                                                            <RowDefinition Height="Auto"/>
+                                                        </Grid.RowDefinitions>
+
+                                                        <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Left">
+                                                            <Image x:Name="bullet" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Journal/bullet.png" Stretch="None" Margin="0,0,10,0"/>
+                                                            <TextBlock Text="{Binding Title}" Foreground="{StaticResource LS_accent75TxtColor}" TextWrapping="Wrap" FontSize="{StaticResource LargeFontSize}"/>
+                                                            <Grid>
+                                                                <ItemsControl ItemsSource="{Binding GoalOwners}" Margin="10,0,0,0" ItemTemplate="{StaticResource OwnerTemplate}">
+                                                                    <ItemsControl.ItemsPanel>
+                                                                        <ItemsPanelTemplate>
+                                                                            <StackPanel Orientation="Horizontal"/>
+                                                                        </ItemsPanelTemplate>
+                                                                    </ItemsControl.ItemsPanel>
+                                                                    <ItemsControl.ItemContainerStyle>
+                                                                        <Style TargetType="ContentPresenter">
+                                                                            <Setter Property="Margin" Value="0,0,-10,0"/>
+                                                                        </Style>
+                                                                    </ItemsControl.ItemContainerStyle>
+                                                                </ItemsControl>
+                                                                <Grid.Style>
+                                                                    <Style TargetType="Grid">
+                                                                        <Style.Triggers>
+                                                                            <DataTrigger Binding="{Binding NumSharingBackground}" Value="1">
+                                                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                                            </DataTrigger>
+                                                                        </Style.Triggers>
+                                                                    </Style>
+                                                                </Grid.Style>
+                                                            </Grid>
+                                                            
+                                                        </StackPanel>
+
+                                                        <StackPanel x:Name="rewardSection" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Right" Orientation="Horizontal" Visibility="Collapsed">
+                                                            <TextBlock Foreground="{StaticResource LS_specialTxtColor}">
+                                                                <TextBlock.Text>
+                                                                    <MultiBinding Converter="{StaticResource ParameterizedTranslatedStringConverter}">
+                                                                        <Binding Source="ha38be42dg57c9g4347g880bg4776bb1fcdad"/>
+                                                                        <Binding Path="DataContext.InspirationReward" RelativeSource="{RelativeSource Mode=Self}"/>
+                                                                    </MultiBinding>
+                                                                </TextBlock.Text>
+                                                            </TextBlock>
+                                                            <Image Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared/ico_inspiration_h1.png" Stretch="None" Margin="0,-6,0,6"/>
+                                                        </StackPanel>
+                                                        <TextBlock Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Left" Margin="56,0,0,0" Text="{Binding Description}" Foreground="{StaticResource LS_baseTxtColor}" FontSize="{StaticResource LargeFontSize}" TextWrapping="Wrap"/>
+                                                    </Grid>
+                                                    <DataTemplate.Triggers>
+                                                        <DataTrigger Binding="{Binding InspirationReward}" Value="0">
+                                                            <Setter TargetName="rewardSection" Property="Visibility" Value="Collapsed"/>
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding IsNew}" Value="True">
+                                                            <Setter TargetName="bullet" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Journal/bullet_updated.png"/>
+                                                        </DataTrigger>
+                                                    </DataTemplate.Triggers>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                            <ItemsControl.ItemContainerStyle>
+                                                <Style TargetType="ContentPresenter">
+                                                    <Setter Property="Margin" Value="0,0,0,80"/>
+                                                </Style>
+                                            </ItemsControl.ItemContainerStyle>
+                                        </ItemsControl>
+                                    </StackPanel>
+                                </ScrollViewer>
+                            </DataTemplate>
+                        </ContentPresenter.Resources>
+                    </ContentPresenter>
+                </ContentControl>
+                
+            </StackPanel>
+        </Viewbox>
+
+        <b:Interaction.Triggers>
+            <b:EventTrigger EventName="Loaded">
+                <b:InvokeCommandAction Command="{Binding Path=DataContext.DismissNotification, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" CommandParameter="BackgroundGoal"/>
+            </b:EventTrigger>
+        </b:Interaction.Triggers>
+    </Grid>
+</ls:UIWidget>

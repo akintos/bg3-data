@@ -1,0 +1,279 @@
+<ls:UIWidget x:Name="PanelSelect_c"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:ls="clr-namespace:ls;assembly=SharedGUI"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:noesis="clr-namespace:NoesisGUIExtensions;assembly=Noesis.GUI.Extensions"
+             xmlns:System="clr-namespace:System;assembly=mscorlib"
+             mc:Ignorable="d"
+             Template="{StaticResource StandardFraming}"
+             d:DesignHeight="2160" d:DesignWidth="3840">
+
+    <ls:UIWidget.Resources>
+        <ls:LSPanelData x:Key="InventoryInfo" Label="h283ce3cbg6733g4d4fgb15ag88eaac9d99fa" IconId="1" EventString="ToggleInventory"/>
+        <ls:LSPanelData x:Key="EquipmentInfo" Label="h091222a8ga54fg4ac6g862dg4b260b2c37f0" IconId="2" EventString="ToggleEquipment"/>
+        <ls:LSPanelData x:Key="QuestInfo" Label="h70f42b48g6d94g4fadga21egd28627f404d6" IconId="3" EventString="ToggleJournalQuests"/>
+        <ls:LSPanelData x:Key="MapInfo" Label="h7c93a57bga2c1g42f2gaf44g494414ff2f56" IconId="4" EventString="ShowJournalMap"/>
+        <ls:LSPanelData x:Key="SpellbookInfo" Label="h15329947gc691g4323gac0fge3fbcecb92d9" IconId="5" EventString="ToggleSpellBook"/>
+        <ls:LSPanelData x:Key="PartyCharacterSheetInfo" Label="hf76cbcb4g83ddg49d3gb01cgd00359f84713" IconId="6" EventString="TogglePartyCharacterSheet"/>
+        <ls:LSPanelData x:Key="CombatLogInfo" Label="hf8bb283fg341bg41d6g8b83gd5e3f7a0a2a1" IconId="7" EventString="ToggleCombatLog"/>
+        <ls:LSPanelData x:Key="CraftingInfo" Label="ha37c8141g4d63g4d35g830eg6177717ffc1a"  IconId="8" EventString="ToggleCraft"/>
+        <ls:LSPanelData x:Key="CharacterOverview" Label="ha4177187gddecg4e4dg8870g01827a52f589" IconId="9" EventString="ToggleCharacterOverview"/>
+        
+        <Style x:Key="DefaultIcon" TargetType="Image">
+            <Setter Property="Stretch" Value="None"/>
+            <Setter Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/PanelSelect_c/ico_inventory_d.png"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IconId}" Value="1">
+                    <Setter Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/PanelSelect_c/ico_inventory_d.png"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding IconId}" Value="2">
+                    <Setter Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/PanelSelect_c/ico_equipment_d.png"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding IconId}" Value="3">
+                    <Setter Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/PanelSelect_c/ico_journal_d.png"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding IconId}" Value="4">
+                    <Setter Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/PanelSelect_c/ico_map_d.png"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding IconId}" Value="5">
+                    <Setter Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/PanelSelect_c/ico_spells_d.png"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding IconId}" Value="6">
+                    <Setter Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/PanelSelect_c/ico_identity_d.png"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding IconId}" Value="8">
+                    <Setter Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/PanelSelect_c/ico_crafting_d.png"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding IconId}" Value="9">
+                    <Setter Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/PanelSelect_c/ico_overview_d.png"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="DisabledIcon" TargetType="Image">
+            <Setter Property="Stretch" Value="None"/>
+            <Setter Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/PanelSelect_c/ico_inventory_disabled.png"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IconId}" Value="1">
+                    <Setter Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/PanelSelect_c/ico_inventory_disabled.png"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding IconId}" Value="2">
+                    <Setter Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/PanelSelect_c/ico_equipment_disabled.png"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding IconId}" Value="3">
+                    <Setter Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/PanelSelect_c/ico_journal_disabled.png"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding IconId}" Value="4">
+                    <Setter Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/PanelSelect_c/ico_map_disabled.png"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding IconId}" Value="5">
+                    <Setter Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/PanelSelect_c/ico_spells_disabled.png"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding IconId}" Value="6">
+                    <Setter Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/PanelSelect_c/ico_identity_disabled.png"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding IconId}" Value="8">
+                    <Setter Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/PanelSelect_c/ico_crafting_disabled.png"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding IconId}" Value="9">
+                    <Setter Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/PanelSelect_c/ico_overview_disabled.png"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="HiglightedIcon" TargetType="Image">
+            <Setter Property="Stretch" Value="None"/>
+            <Setter Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/PanelSelect_c/ico_inventory_h.png"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IconId}" Value="1">
+                    <Setter Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/PanelSelect_c/ico_inventory_h.png"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding IconId}" Value="2">
+                    <Setter Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/PanelSelect_c/ico_equipment_h.png"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding IconId}" Value="3">
+                    <Setter Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/PanelSelect_c/ico_journal_h.png"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding IconId}" Value="4">
+                    <Setter Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/PanelSelect_c/ico_map_h.png"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding IconId}" Value="5">
+                    <Setter Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/PanelSelect_c/ico_spells_h.png"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding IconId}" Value="6">
+                    <Setter Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/PanelSelect_c/ico_identity_h.png"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding IconId}" Value="8">
+                    <Setter Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/PanelSelect_c/ico_crafting_h.png"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding IconId}" Value="9">
+                    <Setter Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/PanelSelect_c/ico_overview_h.png"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="PanelBtnStyle" TargetType="{x:Type ls:LSListBoxItem}" BasedOn="{StaticResource {x:Type ListBoxItem}}">
+            <Setter Property="Width" Value="420"/>
+            <Setter Property="Height" Value="432"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ls:LSListBoxItem">
+                        <Grid>
+                            <Image x:Name="frameImg" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared_c/c_navMenu_frame.png" Stretch="None"/>
+                            <Image x:Name="frameIconImg" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared_c/c_navMenu_frame_part.png" Stretch="None" VerticalAlignment="Top" Margin="0 75 0 0"/>
+                            <Image x:Name="icon" Style="{StaticResource DefaultIcon}"/>
+                            <TextBlock x:Name="title" Text="{Binding Label, Converter={StaticResource TranslatedStringConverter}}" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0 316 0 0" TextWrapping="Wrap"
+                                       ClipToBounds="False" FontSize="{DynamicResource LargeFontSize}" Foreground="{DynamicResource LS_InactivePanelFontColor}"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared_c/c_navMenu_selector.png" TargetName="frameImg"/>
+                                <Setter Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared_c/c_navMenu_selector_part.png" TargetName="frameIconImg"/>
+                                <Setter Property="Foreground" Value="{DynamicResource LS_PrimaryColor}" TargetName="title"/>
+                                <Setter Property="Style" Value="{StaticResource HiglightedIcon}" TargetName="icon"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Opacity" Value="{StaticResource DisabledOpacity}" TargetName="frameImg"/>
+                                <Setter Property="Opacity" Value="{StaticResource DisabledOpacity}" TargetName="frameIconImg"/>
+                                <Setter Property="Opacity" Value="{StaticResource DisabledOpacity}" TargetName="title"/>
+                                <Setter Property="Style" Value="{StaticResource DisabledIcon}" TargetName="icon"/>
+                            </Trigger>
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding DataContext.CurrentPlayer.UIData.InventoryHasNewContent, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" Value="True"/>
+                                    <Condition Binding="{Binding EventString}" Value="ToggleInventory"/>
+                                </MultiDataTrigger.Conditions>
+                                <MultiDataTrigger.Setters>
+                                    <Setter Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared/ico_newItem.png" TargetName="frameIconImg"/>
+                                    <Setter Property="Stretch" Value="Fill" TargetName="frameIconImg"/>
+                                    <Setter Property="Width" Value="35" TargetName="frameIconImg"/>
+                                    <Setter Property="Height" Value="35" TargetName="frameIconImg"/>
+                                </MultiDataTrigger.Setters>
+                            </MultiDataTrigger>
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding DataContext.CurrentPlayer.JournalHasNewContent, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" Value="True"/>
+                                    <Condition Binding="{Binding EventString}" Value="ToggleJournalQuests"/>
+                                </MultiDataTrigger.Conditions>
+                                <MultiDataTrigger.Setters>
+                                    <Setter Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared/ico_newItem.png" TargetName="frameIconImg"/>
+                                    <Setter Property="Stretch" Value="Fill" TargetName="frameIconImg"/>
+                                    <Setter Property="Width" Value="35" TargetName="frameIconImg"/>
+                                    <Setter Property="Height" Value="35" TargetName="frameIconImg"/>
+                                </MultiDataTrigger.Setters>
+                            </MultiDataTrigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <ControlTemplate x:Key="GoToCampSection">
+            <Grid>
+                <StackPanel x:Name="Background">
+                    <Image Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared_c/c_panel_bottom.png" Stretch="None" HorizontalAlignment="Center"/>
+                    <Image Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared_c/c_callToAction_bg.png" Stretch="None" HorizontalAlignment="Center" Margin="0 -45 0 0"/>
+                </StackPanel>
+                <StackPanel VerticalAlignment="Bottom" Margin="0 0 0 140">
+                    <Image x:Name="icon" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared_c/c_ico_gotoCamp_active.png" Stretch="None"/>
+                    <TextBlock x:Name="text" Text="{Binding Source='h6469d179g46cfg4605gaf1fg2b007517a841', Converter={StaticResource TranslatedStringConverter}}" HorizontalAlignment="Center" FontSize="{DynamicResource BigFontSize}" Foreground="{StaticResource LS_InactivePanelFontColor}" Margin="0 -5 0 -15"/>
+                    <Grid Height="120">
+                        <!-- Grid added to prevent elements from moving when the button is disabled (button's size changed) -->
+                        <ls:LSButton x:Name="button" Style="{StaticResource ControllerButton}" Content=""
+                                     DataContext="{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='ShortRest'}"
+                                     Command="{Binding DataContext.CampTravel, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}">
+                            <b:Interaction.Triggers>
+                                <b:EventTrigger EventName="LSButtonReleased">
+                                    <b:InvokeCommandAction Command="{Binding DataContext.CustomEvent,RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" CommandParameter="ClosePanelSelect"/>
+                                </b:EventTrigger>
+                            </b:Interaction.Triggers>
+                        </ls:LSButton>
+                    </Grid>
+                </StackPanel>
+            </Grid>
+            <ControlTemplate.Triggers>
+                <DataTrigger Binding="{Binding DataContext.CurrentPlayer.EndTheDayState, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" Value="Disabled">
+                    <Setter Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared_c/c_ico_gotoCamp_disabled.png" TargetName="icon"/>
+                    <Setter Property="Opacity" Value="{DynamicResource DisabledOpacity}" TargetName="text"/>
+                    <Setter Property="IsEnabled" Value="False" TargetName="button"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding DataContext.CurrentPlayer.EndTheDayState, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" Value="Unavailable">
+                    <Setter Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared_c/c_ico_gotoCamp_disabled.png" TargetName="icon"/>
+                    <Setter Property="Opacity" Value="{DynamicResource DisabledOpacity}" TargetName="text"/>
+                    <Setter Property="IsEnabled" Value="False" TargetName="button"/>
+                </DataTrigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+
+    </ls:UIWidget.Resources>
+
+    <Grid>
+        <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0 0 0 -240" Height="1350">
+            <Control VerticalAlignment="Bottom" Template="{StaticResource GoToCampSection}"/>
+            <Control x:Name="SelectorHidden" HorizontalAlignment="Left" VerticalAlignment="Top" Template="{StaticResource SelectorTemplate}" Visibility="Hidden"/>
+            <ls:LSListBox x:Name="buttonList" HorizontalAlignment="Center" VerticalAlignment="Top" LocalFocusSelector="{Binding ElementName=SelectorHidden,Mode=OneWay}" ActionPrevEvent="UIUp" ActionNextEvent="UIDown">
+                <ls:LSListBox.ItemContainerStyle>
+                    <Style TargetType="{x:Type ls:LSListBoxItem}" BasedOn="{StaticResource {x:Type ListBoxItem}}">
+                        <Setter Property="Background" Value="Transparent"/>
+                        <Setter Property="BorderThickness" Value="0"/>
+                        <Setter Property="BorderBrush" Value="Transparent"/>
+                        <Setter Property="Padding" Value="0 0 0 20"/>
+                    </Style>
+                </ls:LSListBox.ItemContainerStyle>
+
+                <ls:LSListBox HorizontalAlignment="Center" VerticalAlignment="Center" ActionPrevEvent="UILeft" ActionNextEvent="UIRight"
+                                ItemContainerStyle="{StaticResource PanelBtnStyle}" Focusable="False" SelectedIndex="0">
+                    <ls:LSListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal"/>
+                        </ItemsPanelTemplate>
+                    </ls:LSListBox.ItemsPanel>
+
+                    <ls:LSListBoxItem DataContext="{Binding Source={StaticResource CharacterOverview}}"/>
+                    <ls:LSListBoxItem DataContext="{Binding Source={StaticResource QuestInfo}}"/>
+                    <ls:LSListBoxItem DataContext="{Binding Source={StaticResource MapInfo}}"/>
+                    <ls:LSListBoxItem DataContext="{Binding Source={StaticResource CraftingInfo}}" IsEnabled="False"/>
+
+                </ls:LSListBox>
+
+                <ls:LSListBox HorizontalAlignment="Center" VerticalAlignment="Center" ActionPrevEvent="UILeft" ActionNextEvent="UIRight"
+                                ItemContainerStyle="{StaticResource PanelBtnStyle}" Focusable="False">
+                    <ls:LSListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal"/>
+                        </ItemsPanelTemplate>
+                    </ls:LSListBox.ItemsPanel>
+
+                    <ls:LSListBoxItem DataContext="{Binding Source={StaticResource EquipmentInfo}}"/>
+                    <ls:LSListBoxItem DataContext="{Binding Source={StaticResource InventoryInfo}}"/>
+                    <ls:LSListBoxItem DataContext="{Binding Source={StaticResource PartyCharacterSheetInfo}}"/>
+                    <ls:LSListBoxItem DataContext="{Binding Source={StaticResource SpellbookInfo}}"/>
+
+                </ls:LSListBox>
+            </ls:LSListBox>
+        </Grid>
+        <StackPanel x:Name="ControllerHints" VerticalAlignment="Bottom" HorizontalAlignment="Center" Orientation="Horizontal" Margin="0 0 0 30">
+
+            <ls:LSButton Style="{StaticResource ControllerButton}" DataContext = "{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIAccept'}" Content="{Binding Source='h04f38549g65b8g4b72g834eg87ee8863fdc5',Converter={StaticResource TranslatedStringConverter}}"
+                                Command="{Binding DataContext.CustomEvent, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" CommandParameter="{Binding LocalFocus.DataContext.EventString, ElementName=buttonList}">
+                <b:Interaction.Triggers>
+                    <b:EventTrigger EventName="LSButtonReleased">
+                        <b:InvokeCommandAction Command="{Binding DataContext.CustomEvent,RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" CommandParameter="ClosePanelSelect"/>
+                    </b:EventTrigger>
+                </b:Interaction.Triggers>
+            </ls:LSButton>
+
+            <ls:LSButton Style="{StaticResource ControllerButton}" DataContext="{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIMove'}" Content="{Binding Source='h5c405124g4622g4197g9239gb635f371bf0e',Converter={StaticResource TranslatedStringConverter}}" Margin="40 0 0 0"/>
+
+            <ls:LSButton Style="{StaticResource ControllerButton}" DataContext = "{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UICancel'}" Content="{Binding Source='h6fefa28bg2149g4cacga071gd95b236b2d0b',Converter={StaticResource TranslatedStringConverter}}" 
+                         Command="{Binding DataContext.CustomEvent, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" CommandParameter="ClosePanelSelect" Margin="40 0 0 0"/>
+        </StackPanel>
+    </Grid>
+</ls:UIWidget>

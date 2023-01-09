@@ -1,0 +1,562 @@
+<ls:UIWidget x:Name="CharacterLevelUp_c"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ls="clr-namespace:ls;assembly=SharedGUI"
+    xmlns:System="clr-namespace:System;assembly=mscorlib"
+    xmlns:noesis="clr-namespace:NoesisGUIExtensions;assembly=Noesis.GUI.Extensions"
+    xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
+    
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+    mc:Ignorable="d"
+    d:DesignHeight="2160" d:DesignWidth="3840"
+    ls:UIWidget.ContextName="CharacterLevelUp"
+    FocusDown="UIDown" FocusLeft="UILeft" FocusRight="UIRight" FocusUp="UIUp">
+
+    <ls:UIWidget.Resources>
+        <ResourceDictionary>
+
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../Library/CharacterCreationLib_c.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+            <ControlTemplate x:Key="LevelChangeInfoTemplate">
+                <Grid Width="1000">
+                    <TextBlock Foreground="{DynamicResource LS_PrimaryColor}" TextAlignment="Right" Margin="0,0,530,0">
+                        <Run Text="{Binding Source='h8e782babg516fg4d7cgbd57g335de64c94a3', Converter={StaticResource TranslatedStringConverter}, Mode=OneWay}"/><Run Text="{Binding CurrentCharacterLevel, StringFormat=' {0}'}"/>
+                    </TextBlock>
+                    <Image Source="pack://application:,,,/GustavNoesisGUI;component/Assets/CharacterLevelup/levelUp_arrow.png" Stretch="None" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <TextBlock Foreground="{DynamicResource LS_ActivePanelFontColor}" HorizontalAlignment="Left" Margin="530,0,0,0">
+                        <Run Text="{Binding Source='h8e782babg516fg4d7cgbd57g335de64c94a3', Converter={StaticResource TranslatedStringConverter}, Mode=OneWay}"/><Run Text="{Binding AvailableCharacterLevel, StringFormat=' {0}'}"/>
+                    </TextBlock>
+                </Grid>
+            </ControlTemplate>
+
+            <Style x:Key="ActionTypeTextStyle" TargetType="TextBlock">
+                <Setter Property="Text" Value="{Binding Source='h1912b50dgcd8ag4f74g9d0bg1666165c3451', Converter={StaticResource TranslatedStringConverter}, Mode=OneWay}"/>
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding ActionType}" Value="Actions">
+                        <Setter Property="Text" Value="{Binding Source='h420f4742g1f0dg4d44gb326g4a8f7547b7a3', Converter={StaticResource TranslatedStringConverter}, Mode=OneWay}"/>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding ActionType}" Value="Racial">
+                        <Setter Property="Text" Value="{Binding Source='h420f4742g1f0dg4d44gb326g4a8f7547b7a3', Converter={StaticResource TranslatedStringConverter}, Mode=OneWay}"/>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding ActionType}" Value="Cantrip">
+                        <Setter Property="Text" Value="{Binding Source='h5d603bcfg4028g4476g92b3gbca357af6bee', Converter={StaticResource TranslatedStringConverter}, Mode=OneWay}"/>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+
+            <ControlTemplate x:Key="ShowNewSpellsTemplate" TargetType="Control">
+                <ItemsControl Visibility="{Binding Count, Converter={StaticResource CountToVisibilityConverter}}" ItemsSource="{Binding}" HorizontalAlignment="Center" Margin="0,20,0,0" >
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel MaxWidth="688"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border x:Name="focusedBorder" BorderThickness="4" BorderBrush="Transparent">
+                                <ContentControl x:Name="selector" ls:MoveFocus.Focusable="True" ToolTip="{StaticResource ManagedTooltip}"  ToolTipService.IsEnabled="{Binding Spell,Converter={StaticResource NullToBoolFalseConverter}}" ToolTipService.Placement="Left">
+                                    <Border x:Name="border" Style="{StaticResource SpellOverrideBorder}" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,0,0,0">
+                                        <Grid>
+                                            <Image Source="pack://application:,,,/GustavNoesisGUI;component/Assets/CharacterCreation/spellslot.png" Stretch="None"  Margin="0,0,-10,-10"/>
+                                            <Rectangle Fill="{Binding Icon}" Width="80" Height="80"/>
+                                            <TextBlock Text="{Binding Level, Converter={StaticResource DecimalToRomanConverter}}" Margin="0,0,0,0" Foreground="{StaticResource LS_specialTxtColor}" VerticalAlignment="Bottom" HorizontalAlignment="Right" Height="35" FontSize="32" FontWeight="Bold" noesis:Text.Stroke="#FF000000" noesis:Text.StrokeThickness="5"/>
+                                        </Grid>
+                                    </Border>
+                                </ContentControl>
+                            </Border>
+                            <DataTemplate.Triggers>
+                                <DataTrigger Binding="{Binding Path=IsFocused, ElementName=selector}" Value="True">
+                                    <Setter TargetName="focusedBorder" Property="BorderBrush" Value="{DynamicResource LS_PrimaryColor}"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Override}" Value="Worse">
+                                    <Setter TargetName="border" Property="BorderBrush" Value="{DynamicResource LS_SpellOverrideWorse}"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Override}" Value="Equal">
+                                    <Setter TargetName="border" Property="BorderBrush" Value="{DynamicResource LS_SpellOverrideEqual}"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Override}" Value="Better">
+                                    <Setter TargetName="border" Property="BorderBrush" Value="{DynamicResource LS_SpellOverrideBetter}"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Override}" Value="Different">
+                                    <Setter TargetName="border" Property="BorderBrush" Value="{DynamicResource LS_SpellOverrideDifferent}"/>
+                                </DataTrigger>
+                            </DataTemplate.Triggers>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ControlTemplate>
+
+
+            <ControlTemplate x:Key="LevelUpProgressionFeatures">
+                <StackPanel>
+                    <StackPanel HorizontalAlignment="Center" x:Name="frame" MaxWidth="980">
+                        <TextBlock x:Name="title" Visibility="Collapsed" Foreground="{DynamicResource LS_PrimaryColor}" TextWrapping="Wrap" ToolTip="{StaticResource ManagedTooltip}" ToolTipService.Placement="Left" Margin="0,20,0,0">
+                            <b:Interaction.Behaviors>
+                                <ls:CtxTransStringRunGeneratorBehavior Source="{Binding NameCTS}" ParamRunStyle="{StaticResource TooltipUnitParamRun}"/>
+                            </b:Interaction.Behaviors>
+                        </TextBlock>
+                        <ItemsControl ItemsSource="{Binding Features.Boosts}" >
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <ContentControl x:Name="item" ls:MoveFocus.Focusable="True" ToolTip="{StaticResource ManagedTooltip}" ToolTipService.Placement="Left">
+                                        <Border x:Name="border" BorderThickness="4" BorderBrush="Transparent">
+                                            <TextBlock Foreground="{DynamicResource LS_PrimaryColor}" TextWrapping="Wrap" ToolTip="{StaticResource ManagedTooltip}" ToolTipService.Placement="Left" Margin="0,20,0,0">
+                                        <b:Interaction.Behaviors>
+                                            <ls:CtxTransStringRunGeneratorBehavior Source="{Binding NameCTS}" ParamRunStyle="{StaticResource TooltipUnitParamRun}"/>
+                                        </b:Interaction.Behaviors>
+                                            </TextBlock>
+                                        </Border>
+                                    </ContentControl>
+                                    <DataTemplate.Triggers>
+                                        <DataTrigger Binding="{Binding Path=IsFocused, ElementName=item}" Value="True">
+                                            <Setter TargetName="border" Property="BorderBrush" Value="{DynamicResource LS_PrimaryColor}"/>
+                                        </DataTrigger>
+                                    </DataTemplate.Triggers>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                        <ItemsControl ItemsSource="{Binding Features.Abilities}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <ContentControl x:Name="item" ls:MoveFocus.Focusable="True" ToolTip="{StaticResource ManagedTooltip}" ToolTipService.Placement="Left">
+                                        <Border x:Name="border" BorderThickness="4" BorderBrush="Transparent">
+                                            <ContentControl Template="{StaticResource AbilityText}" Margin="0,20,0,0"/>
+                                        </Border>
+                                    </ContentControl>
+                                    <DataTemplate.Triggers>
+                                        <DataTrigger Binding="{Binding Path=IsFocused, ElementName=item}" Value="True">
+                                            <Setter TargetName="border" Property="BorderBrush" Value="{DynamicResource LS_PrimaryColor}"/>
+                                        </DataTrigger>
+                                    </DataTemplate.Triggers>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+
+                    <TextBlock x:Name="spellsTitle" Text="{Binding Source='h6acd4e01g00b5g433fga75bg2d40abdb96bf', Converter={StaticResource TranslatedStringConverter}}" Foreground="{DynamicResource LS_InactivePanelFontColor}" HorizontalAlignment="Center" Margin="0,20,0,0"/>
+                    <ContentControl x:Name="spells" Template="{StaticResource CharacterCreationDecoratedBoxPanel}">
+                        <StackPanel Margin="0,10,0,30">
+                            <Control Template="{DynamicResource ShowNewSpellsTemplate}" DataContext="{Binding Features.Actions}"/>
+                            <Control Template="{DynamicResource ShowNewSpellsTemplate}" DataContext="{Binding Features.Cantrips}"/>
+                            <Control Template="{DynamicResource ShowNewSpellsTemplate}" DataContext="{Binding Features.Spells}"/>
+                        </StackPanel>
+                    </ContentControl>
+                </StackPanel>
+                <ControlTemplate.Triggers>
+                    <MultiDataTrigger>
+                        <MultiDataTrigger.Conditions>
+                            <Condition Binding="{Binding Features.Boosts.Count}" Value="0"/>
+                            <Condition Binding="{Binding Features.Abilities.Count}" Value="0"/>
+                        </MultiDataTrigger.Conditions>
+                        <MultiDataTrigger.Setters>
+                            <Setter TargetName="frame" Property="Visibility" Value="Collapsed"/>
+                        </MultiDataTrigger.Setters>
+                    </MultiDataTrigger>
+                    <MultiDataTrigger>
+                        <MultiDataTrigger.Conditions>
+                            <Condition Binding="{Binding Features.Actions.Count}" Value="0"/>
+                            <Condition Binding="{Binding Features.Cantrips.Count}" Value="0"/>
+                            <Condition Binding="{Binding Features.Spells.Count}" Value="0"/>
+                        </MultiDataTrigger.Conditions>
+                        <MultiDataTrigger.Setters>
+                            <Setter TargetName="spellsTitle" Property="Visibility" Value="Collapsed"/>
+                            <Setter TargetName="spells" Property="Visibility" Value="Collapsed"/>
+                        </MultiDataTrigger.Setters>
+                    </MultiDataTrigger>
+                    <MultiDataTrigger>
+                        <MultiDataTrigger.Conditions>
+                            <Condition Binding="{Binding Features.Boosts.Count}" Value="0"/>
+                            <Condition Binding="{Binding Features.Abilities.Count}" Value="0"/>
+                            <Condition Binding="{Binding Features.Actions.Count}" Value="0"/>
+                            <Condition Binding="{Binding Features.Cantrips.Count}" Value="0"/>
+                            <Condition Binding="{Binding Features.Spells.Count}" Value="0"/>
+                        </MultiDataTrigger.Conditions>
+                        <MultiDataTrigger.Setters>
+                            <Setter TargetName="title" Property="Visibility" Value="Visible"/>
+                            <Setter TargetName="frame" Property="Visibility" Value="Visible"/>
+                        </MultiDataTrigger.Setters>
+                    </MultiDataTrigger>
+                </ControlTemplate.Triggers>
+            </ControlTemplate>
+
+            <!-- Spell Replacement -->
+            <ControlTemplate x:Key="ReplaceSpellTemplate">
+                <Border x:Name="border" BorderThickness="4" BorderBrush="Transparent">
+                    <Grid>
+                        <ContentControl Template="{StaticResource SpellBox}"/>
+                        <ContentControl x:Name="selector" ls:MoveFocus.Focusable="True" Template="{DynamicResource SpellsReplacedTemplate}">
+                            <ContentControl.Resources>
+                                <ControlTemplate x:Key="Title">
+                                    <TextBlock Style="{StaticResource PanelHeaderText}">
+                        <Run Text="{Binding Source='h883d6c23g0e9cg4775g8d77gdaf9c48abcd6', Converter={StaticResource TranslatedStringConverter}, Mode=OneWay}"/>
+                                    </TextBlock>
+                                </ControlTemplate>
+                            </ContentControl.Resources>
+                        </ContentControl>
+
+                        <ls:LSInputBinding x:Name="input" IsEnabled="False"
+                                        BoundEvent="UIAccept" TriggerOnRelease="True" Visibility="Collapsed" 
+                                        Command="{Binding DataContext.OpenSpellReplacer,RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" 
+                                        CommandParameter="{Binding}"/>
+
+                    </Grid>
+                </Border>
+                <ControlTemplate.Triggers>
+                    <DataTrigger Binding="{Binding Path=IsFocused, ElementName=selector}" Value="True">
+                        <Setter TargetName="border" Property="BorderBrush" Value="{DynamicResource LS_PrimaryColor}"/>
+                        <Setter TargetName="input" Property="IsEnabled" Value="True"/>
+                    </DataTrigger>
+                </ControlTemplate.Triggers>
+            </ControlTemplate>
+
+            <ControlTemplate x:Key="SwapFeatButton">
+
+                <Border x:Name="border" BorderThickness="4" BorderBrush="Transparent">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+
+                        <ls:LSInputBinding x:Name="input" IsEnabled="False"
+                                    BoundEvent="UIAccept" TriggerOnRelease="True" Visibility="Collapsed" 
+                                    Command="{Binding DataContext.OpenFeatSelector,RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" 
+                                    CommandParameter="{Binding}"/>
+
+                        <Grid>
+                            <Image x:Name="bg" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Buttons/btn_hudNav_d.png" Stretch="None"/>
+                            <Image Source="pack://application:,,,/GustavNoesisGUI;component/Assets/CharacterLevelup/ico_swap.png" Stretch="None"/>
+                        </Grid>
+                        <TextBlock x:Name="label" Text="{Binding Source='h367435b9gcc89g4ce9ga48ag25c8ffa94da9', Converter={StaticResource TranslatedStringConverter}, Mode=OneWay}" Foreground="{DynamicResource LS_SecondaryColor}" VerticalAlignment="Center" Margin="8,0,0,0"/>
+                    </StackPanel>
+                </Border>
+                <ControlTemplate.Triggers>
+                    <DataTrigger Binding="{Binding Path=IsFocused, RelativeSource={RelativeSource Self}}" Value="True">
+                        <Setter TargetName="border" Property="BorderBrush" Value="{DynamicResource LS_PrimaryColor}"/>
+                        <Setter TargetName="input" Property="IsEnabled" Value="True"/>
+                    </DataTrigger>
+                </ControlTemplate.Triggers>
+
+            </ControlTemplate>
+
+            <ControlTemplate x:Key="FinishButton">
+                <StackPanel Orientation="Horizontal">
+                    <Grid>
+                        <ls:LSButton x:Name="FinishBtn" Margin="20,0" IsEnabled="{Binding IsLevelUpComplete}"
+                                         Style="{StaticResource ControllerButton}" EatInput="False"
+                                         DataContext="{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIAccept'}"
+                                         Content="{Binding Source='ha7867654g6f71g41ccgbd0bgba956a682293',Converter={StaticResource TranslatedStringConverter}, Mode=OneWay}">
+                            <b:Interaction.Triggers>
+                                <b:EventTrigger EventName="LSButtonPressed" SourceName="FinishBtn">
+                                    <b:ControlStoryboardAction Storyboard="{StaticResource ControllerButtonHoldAnimation}"/>
+                                </b:EventTrigger>
+                                <b:EventTrigger EventName="LSButtonReleased" SourceName="FinishBtn">
+                                    <b:ControlStoryboardAction Storyboard="{StaticResource ControllerButtonHoldAnimation}" ControlStoryboardOption="Stop"/>
+                                </b:EventTrigger>
+                                <b:EventTrigger EventName="IsEnabledChanged" SourceName="FinishBtn">
+                                    <b:ControlStoryboardAction Storyboard="{StaticResource ControllerButtonHoldAnimation}" ControlStoryboardOption="Stop"/>
+                                </b:EventTrigger>
+                                <b:StoryboardCompletedTrigger Storyboard="{StaticResource ControllerButtonHoldAnimation}">
+                                    <b:InvokeCommandAction Command="{Binding DataContext.FinishLevelUp, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"/>
+                                </b:StoryboardCompletedTrigger>
+                            </b:Interaction.Triggers>
+                        </ls:LSButton>
+                        <ls:LSPie x:Name="ButtonHoldVisualizer" Value="0" SweepDirection="Counterclockwise" 
+                                          Visibility="{Binding ElementName=FinishBtn, Path=IsPressed, Converter={StaticResource BoolToVisibleConverter}}"
+                                          Width="100" Height="100" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,4,28,0">
+                            <Image Source="/GustavNoesisGUI;component/Assets/Shared_c/c_tabSelector.png" Width="100" Height="100" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                        </ls:LSPie>
+                    </Grid>
+                    <TextBlock Text="{Binding Source='hba9c74bbg1f89g4f68gbafbg1bcf7442cfae',Converter={StaticResource TranslatedStringConverter}, Mode=OneWay}" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="-20,0,0,0"/>
+                </StackPanel>
+            </ControlTemplate>
+
+            <ControlTemplate x:Key="BottomButtons">
+                <StackPanel Orientation="Horizontal">
+
+                    <ls:LSButton Style="{StaticResource ControllerButtonWBG}" EatInput="False" Margin="20,0" 
+                        DataContext = "{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIAccept'}"
+                        Content="{Binding Source='hd0c08193ga7f2g4a7eg8225g63748c7b3096',Converter={StaticResource TranslatedStringConverter}, Mode=OneWay}"/>
+
+                    <ls:LSButton Style="{StaticResource ControllerButtonWBG}" EatInput="False" Margin="20,0" 
+                        DataContext="{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIUp'}" 
+                        Content="{Binding Source='h6209ea30gd0cbg4a8bg9867g404a74082149',Converter={StaticResource TranslatedStringConverter}, Mode=OneWay}"/>
+
+                    <ls:LSButton Style="{StaticResource ControllerButtonWBG}" 
+                        DataContext = "{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIShowInfo'}"
+                        Margin="20,0" 
+                        Content="{Binding Source='h07aaca85g63dbg4e60g88a2g0590077ea7e2',Converter={StaticResource TranslatedStringConverter}}" 
+                        Command="{Binding DataContext.ToggleTooltipOnUIElement, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"
+                        CommandParameter="{Binding Path=FocusedElement, ElementName=CharacterLevelUp_c}"/>
+
+                    <ls:LSButton Style="{StaticResource ControllerButton}" Margin="20,0" 
+                             DataContext = "{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UICancel'}"
+                             Content="{Binding Source='h6fefa28bg2149g4cacga071gd95b236b2d0b',Converter={StaticResource TranslatedStringConverter}, Mode=OneWay}" 
+                             SoundID="UI_Shared_Cancel"
+                             Command="{Binding DataContext.CustomEvent, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"
+                             CommandParameter="CloseWidget"/>
+
+                </StackPanel>
+            </ControlTemplate>
+
+        </ResourceDictionary>
+    </ls:UIWidget.Resources>
+
+    <b:Interaction.Triggers>
+        <b:EventTrigger EventName="GotKeyboardFocus">
+            <b:InvokeCommandAction Command="{Binding ShowTooltipOnUIElement}" CommandParameter="{Binding Path=FocusedElement, ElementName=CharacterLevelUp_c}"/>
+        </b:EventTrigger>
+    </b:Interaction.Triggers>
+
+
+    <Grid x:Name="levelUp" ls:TooltipExtender.Owner="{Binding DummyCharacter}">
+
+        <Grid HorizontalAlignment="Left" VerticalAlignment="Top" Margin="1350,40,0,0">
+            <Image Source="pack://application:,,,/GustavNoesisGUI;component/Assets/CharacterLevelup/title_levelUp.png" Stretch="None"/>
+            <TextBlock Text="{Binding Source='h8d972d53g459fg46f2g92afg277cdaf63da5', Converter={StaticResource TranslatedStringConverter}, Mode=OneWay}" FontSize="{DynamicResource HugeFontSize}" Foreground="{DynamicResource LS_PrimaryColor}" noesis:Text.Stroke="Black" noesis:Text.StrokeThickness="6" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,40,0,0"/>
+        </Grid>
+
+        <StackPanel HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="30,0,0,48">
+            <Image Source="pack://application:,,,/GustavNoesisGUI;component/Assets/CharacterLevelup/ico_levelUp.png" Stretch="None"/>
+            <TextBlock Text="{Binding Source='h8d972d53g459fg46f2g92afg277cdaf63da5', Converter={StaticResource TranslatedStringConverter}, Mode=OneWay}" FontSize="{DynamicResource BigFontSize}" Foreground="{DynamicResource LS_PrimaryColor}" HorizontalAlignment="Center" Margin="0,8,0,0"/>
+            <ContentControl Template="{StaticResource CharacterCardTemplate}"/>
+        </StackPanel>
+
+
+        <Grid HorizontalAlignment="Right" VerticalAlignment="Bottom">
+            <Grid.Resources>
+                <Style TargetType="TextBlock">
+                    <Setter Property="Foreground" Value="{DynamicResource LS_ActivePanelFontColor}"/>
+                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                </Style>
+            </Grid.Resources>
+
+            <Image Source="pack://application:,,,/GustavNoesisGUI;component/Assets/CharacterCreation/contentPane.png" Stretch="None"/>
+
+            <ScrollViewer Template="{DynamicResource ScrollViewerTemplate}" VerticalScrollBarVisibility="Auto" Height="1920" MaxHeight="1920" HorizontalAlignment="Center" VerticalAlignment="Bottom">
+                <ScrollViewer.Resources>
+                    <GridLength x:Key="Top">300</GridLength>
+                    <GridLength x:Key="Bottom">300</GridLength>
+                </ScrollViewer.Resources>
+
+                <StackPanel KeyboardNavigation.DirectionalNavigation="Cycle">
+                    <b:Interaction.Triggers>
+                        <b:EventTrigger EventName="Loaded">
+                            <ls:SetMoveFocusAction TargetName="CharacterLevelUp_c"/>
+                        </b:EventTrigger>
+                    </b:Interaction.Triggers>
+
+                    <Image DataContext="{Binding DummyCharacter.stats.ClassList[0]}" Style="{DynamicResource ClassIconStyle}"/>
+                    <TextBlock Text="{Binding DummyCharacter.Stats.ClassList[0].ClassDisplayName}" FontSize="{StaticResource TitleFontSize}" Foreground="{DynamicResource LS_ActivePanelFontColor}" HorizontalAlignment="Center"/>
+
+                    <ContentControl Template="{StaticResource LevelChangeInfoTemplate}" HorizontalAlignment="Center" Margin="0,10,0,0"/>
+
+                    <TextBlock Text="{Binding Source='h62e4a81dgd558g4584gbe5bgf58ea9b23c09', Converter={StaticResource TranslatedStringConverter}, Mode=OneWay}" Margin="0,20,0,0"/>
+                    <TextBlock Text="{Binding Source='h39ce421cg43dcg4be6gb006g0ab43d8ec03b', Converter={StaticResource TranslatedStringConverter}, Mode=OneWay}" Margin="0,8,0,20"/>
+
+                    <TextBlock Text="{Binding Source='ha8e068ccg5974g4e83g9070gefe58efc012f', Converter={StaticResource TranslatedStringConverter}, Mode=OneWay}" Style="{StaticResource PanelHeaderText}"/>
+                    <Control x:Name="hpinfo" ls:MoveFocus.Focusable="True" HorizontalAlignment="Center" Margin="0,16,0,0" DataContext="{Binding DummyCharacter.Stats.ClassList[0].MaxHpIncrease}" ToolTipService.Placement="Left">
+                        <Control.Template>
+                            <ControlTemplate>
+                                <Border x:Name="border" BorderThickness="4" BorderBrush="Transparent">
+                                    <TextBlock Text="{Binding Name}" Foreground="{DynamicResource LS_PrimaryColor}" TextWrapping="Wrap" Margin="0,20,0,0"/>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <DataTrigger Binding="{Binding Path=IsFocused, RelativeSource={RelativeSource Self}}" Value="True">
+                                        <Setter TargetName="border" Property="BorderBrush" Value="{DynamicResource LS_PrimaryColor}"/>
+                                    </DataTrigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Control.Template>
+                        <Control.ToolTip>
+                            <ls:LSTooltip Content="{Binding Path=DataContext, ElementName=hpinfo}" Template="{StaticResource BaseTooltipTemplate}" ls:TooltipExtender.Owner="{Binding Path=DataContext.DummyCharacter,ElementName=CharacterLevelUp}" PlayerId="{Binding Path=PlayerId,ElementName=CharacterLevelUp_c}" >
+                                <ls:LSTooltip.ContentTemplate>
+                                    <DataTemplate>
+                                        <StackPanel  >
+                                            <TextBlock Style="{StaticResource TooltipTitleStyle}" Text="{Binding Name}"/>
+                                            <TextBlock Style="{StaticResource TooltipCtxTransStringDescriptionStyle}">
+                                            <b:Interaction.Behaviors>
+                                                <ls:CtxTransStringRunGeneratorBehavior Source="{Binding Description}" ParamRunStyle="{StaticResource TooltipUnitParamRun}"/>
+                                            </b:Interaction.Behaviors>
+                                            </TextBlock>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ls:LSTooltip.ContentTemplate>
+
+                            </ls:LSTooltip>
+                        </Control.ToolTip>
+                    </Control>
+
+                    <StackPanel x:Name="classFeatures">
+
+                        <b:Interaction.Behaviors>
+                            <noesis:CollectionFilterBehavior ItemsSource="{Binding PassiveFeatures}" Predicate="{Binding IsNotSubProgressionPredicate}"/>
+                            <noesis:CollectionFilterBehavior ItemsSource="{Binding PassiveFeatures}" Predicate="{Binding IsSubProgressionPredicate}"/>
+                        </b:Interaction.Behaviors>
+
+                        <StackPanel.Style>
+                            <Style TargetType="StackPanel">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Progressions.Count, Converter={StaticResource GreaterThanConverter}, ConverterParameter=0 }" Value="True">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding ClassSkills.Skills.Count, Converter={StaticResource GreaterThanConverter}, ConverterParameter=0 }" Value="True">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding ExpertiseSkills.Skills.Count, Converter={StaticResource GreaterThanConverter}, ConverterParameter=0 }" Value="True">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding ClassPassives.Count, Converter={StaticResource GreaterThanConverter}, ConverterParameter=0 }" Value="True">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding ClassEquipments.Count, Converter={StaticResource GreaterThanConverter}, ConverterParameter=0 }" Value="True">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding (b:Interaction.Behaviors)[0].FilteredItems.Count, ElementName=classFeatures, Converter={StaticResource GreaterThanConverter}, ConverterParameter=0 }" Value="True">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding ClassProgressionDetails.IsNonSubEmpty}" Value="False">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </StackPanel.Style>
+
+                        <TextBlock Text="{Binding Source='hc1d70a06g88a4g4ce6g8dc0ge2c17c5f0eb2', Converter={StaticResource TranslatedStringConverter}, Mode=OneWay}" Style="{StaticResource PanelHeaderText}"/>
+                        
+                        <ItemsControl DataContext="{Binding ClassProgressionDetails}" ItemsSource="{Binding Progressions}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <ContentControl x:Name="features" Template="{StaticResource LevelUpProgressionFeatures}"/>
+                                    <DataTemplate.Triggers>
+                                        <DataTrigger Binding="{Binding IsSubProgression}" Value="True">
+                                            <Setter TargetName="features" Property="Visibility" Value="Collapsed"/>
+                                        </DataTrigger>
+                                    </DataTemplate.Triggers>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    
+                        <Control Template="{StaticResource ClassPassivesTemplate}" DataContext="{Binding ClassPassives}" Margin="0,20,0,0"/>
+
+                        <Control Template="{StaticResource ClassEquipmentsTemplate}" DataContext="{Binding ClassEquipments}" Margin="0,20,0,0"/>
+
+                        <ItemsControl ItemTemplate="{DynamicResource ProgressionFeaturesTemplate}" ItemsSource="{Binding (b:Interaction.Behaviors)[0].FilteredItems, ElementName=classFeatures}" HorizontalAlignment="Center" Visibility="{Binding (b:Interaction.Behaviors)[0].FilteredItems.Count, ElementName=classFeatures, Converter={StaticResource CountToVisibilityConverter}}"/>
+
+                    </StackPanel>
+
+                    <!-- Subclass -->
+                    <StackPanel HorizontalAlignment="Center" Visibility="{Binding Subclasses.ComboItems.Count, Converter={StaticResource CountToVisibilityConverter}}">
+                        <TextBlock Text="{Binding Source='h1e67bc9cg0f53g4218g8ce8geb6a6636f141', Converter={StaticResource TranslatedStringConverter}, Mode=OneWay}" Style="{StaticResource PanelHeaderText}"/>
+                        <Control Template="{DynamicResource Carousel}" Margin="0,20,0,0" DataContext="{Binding Subclasses}"/>
+                        <TextBlock Text="{Binding DummyCharacter.Stats.ClassList[0].SubclassDescription}" Style="{StaticResource PanelInfoText}" Margin="0,20,0,0"/>
+                    </StackPanel>
+
+                    <TextBlock x:Name="subclassName" Text="{Binding DummyCharacter.Stats.ClassList[0].SubclassDisplayName}" FontSize="{DynamicResource TitleFontSize}" Foreground="{DynamicResource LS_ActivePanelFontColor}" HorizontalAlignment="Center">
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock">
+                                <Style.Triggers>
+                                    <MultiDataTrigger>
+                                        <MultiDataTrigger.Conditions>
+                                            <Condition Binding="{Binding Subclasses.ComboItems.Count}" Value="0"/>
+                                            <Condition Binding="{Binding HasSubClassProgressions}" Value="False"/>
+                                        </MultiDataTrigger.Conditions>
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </MultiDataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+                    <ContentControl Template="{StaticResource LevelChangeInfoTemplate}" Visibility="{Binding Visibility, ElementName=subclassName}" HorizontalAlignment="Center" Margin="0,20,0,0"/>
+
+                    <!-- SubClass Progressions -->
+                    <StackPanel Visibility="{Binding Visibility, ElementName=subclassName}">
+                        <TextBlock Text="{Binding Source='ha3fe9fd2gcd03g4e0bgbb45gf60144f6aba6', Converter={StaticResource TranslatedStringConverter}, Mode=OneWay}" Style="{StaticResource PanelHeaderText}" Visibility="{Binding HasSubClassProgressions, Converter={StaticResource BoolToVisibleConverter}, ConverterParameter=False}" />
+                        <ItemsControl ItemsSource="{Binding ClassProgressionDetails.Progressions}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <ContentControl x:Name="features" Template="{StaticResource LevelUpProgressionFeatures}"/>
+                                    <DataTemplate.Triggers>
+                                        <DataTrigger Binding="{Binding IsSubProgression}" Value="False">
+                                            <Setter TargetName="features" Property="Visibility" Value="Collapsed"/>
+                                        </DataTrigger>
+                                    </DataTemplate.Triggers>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+
+                        <!-- Select Passives -->
+                        <Control Template="{StaticResource ClassPassivesTemplate}" DataContext="{Binding SubClassPassives}" Margin="0,20,0,0"/>
+
+                        <Control Template="{StaticResource ClassEquipmentsTemplate}" DataContext="{Binding SubClassEquipments}" Margin="0,20,0,0"/>
+
+                        <StackPanel HorizontalAlignment="Center" Visibility="{Binding AppearanceAccessories.ComboItems.Count, Converter={StaticResource CountToVisibilityConverter}}">
+                            <TextBlock Text="{Binding Source='h261cce55g1d1eg4c09g9675ge5c1be13e820', Converter={StaticResource TranslatedStringConverter}}" Style="{StaticResource PanelHeaderText}"/>
+                            <Control Template="{DynamicResource Carousel}" Margin="0,20,0,0" DataContext="{Binding AppearanceAccessories}" HorizontalAlignment="Center"/>
+                        </StackPanel>
+
+                        <ItemsControl ItemTemplate="{DynamicResource ProgressionFeaturesTemplate}" ItemsSource="{Binding (b:Interaction.Behaviors)[1].FilteredItems, ElementName=classFeatures}" HorizontalAlignment="Center" Visibility="{Binding (b:Interaction.Behaviors)[1].FilteredItems.Count, ElementName=classFeatures, Converter={StaticResource CountToVisibilityConverter}}"/>
+
+                    </StackPanel>
+
+                    <!-- Select Class Spells -->
+                    <Control Template="{StaticResource SpellBoxesTemplate}" DataContext="{Binding ClassProgressionDetails}" Visibility="{Binding SpellSelectors.Count, Converter={StaticResource CountToVisibilityConverter}}" Margin="0,20,0,0"/>
+                    <Control Template="{StaticResource ReplaceSpellTemplate}" DataContext="{Binding ClassProgressionDetails}" Visibility="{Binding InSpellReplacement, Converter={StaticResource NullToCollapsedConverter}}" Margin="0,20,0,0"/>
+                    <Control Template="{StaticResource SpellPreparationTemplate}" Visibility="{Binding SpellPrepare.MustPrepareSpells, Converter={StaticResource BoolToVisibleConverter}}" Margin="0,30,0,0"/>
+
+                    <StackPanel Visibility="{Binding CanSelectFeat, Converter={StaticResource BoolToVisibleConverter} }">
+
+                        <Grid>
+                            <Image Source="pack://application:,,,/GustavNoesisGUI;component/Assets/CharacterLevelup/divider_levelUp.png" Stretch="None"/>
+                            <Image Source="pack://application:,,,/GustavNoesisGUI;component/Assets/CharacterLevelup/upArrow_h1.png" Stretch="None" VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="0,0,0,20"/>
+                        </Grid>
+                        <Control ls:MoveFocus.Focusable="True" Template="{StaticResource SwapFeatButton}" HorizontalAlignment="Center" Margin="0,-70,0,40"/>
+                        <Image Source="pack://application:,,,/GustavNoesisGUI;component/Assets/CharacterLevelup/levelUp_newAddition.png" Stretch="None" HorizontalAlignment="Center" Margin="0,-40,0,0"/>
+                        <TextBlock Text="{Binding Source='h6ed252e1g8818g4a2agb5d8ga29e5c62107c', Converter={StaticResource TranslatedStringConverter}, Mode=OneWay}" FontSize="{DynamicResource LargeFontSize}" Foreground="{DynamicResource LS_ActivePanelFontColor}" HorizontalAlignment="Center" Margin="0,0,0,0"/>
+
+                        <TextBlock Text="{Binding SelectedFeat.Name}" Style="{StaticResource PanelHeaderText}" TextWrapping="Wrap" Margin="0,50,0,0"/>
+
+                        <ContentControl Template="{StaticResource ValidationFailedHighlighter}">
+                            <Control Template="{DynamicResource FeatDetails}" DataContext="{Binding SelectedFeat}" Width="980" Margin="0,20,0,0"/>
+                            <ContentControl.Style>
+                                <Style TargetType="ContentControl">
+                                    <Style.Triggers>
+                                        <MultiDataTrigger>
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding ClassAbilityInvalid}" Value="True"/>
+                                                <Condition Binding="{Binding SelectedFeat.FeatDetails.AbilitySelection.Count, Converter={StaticResource GreaterThanConverter}, ConverterParameter=0}" Value="True"/>
+                                            </MultiDataTrigger.Conditions>
+                                            <Setter Property="Tag" Value="True"/>
+                                        </MultiDataTrigger>
+                                        <MultiDataTrigger>
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding ClassSkillInvalid}" Value="True"/>
+                                                <Condition Binding="{Binding SelectedFeat.FeatSkills.MaxSelectedSkillCount, Converter={StaticResource GreaterThanConverter}, ConverterParameter=0}" Value="True"/>
+                                            </MultiDataTrigger.Conditions>
+                                            <Setter Property="Tag" Value="True"/>
+                                        </MultiDataTrigger>
+                                        <MultiDataTrigger>
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding ClassPassiveInvalid}" Value="True"/>
+                                                <Condition Binding="{Binding SelectedFeat.FeatPassives.Count, Converter={StaticResource GreaterThanConverter}, ConverterParameter=0}" Value="True"/>
+                                            </MultiDataTrigger.Conditions>
+                                            <Setter Property="Tag" Value="True"/>
+                                        </MultiDataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </ContentControl.Style>
+                        </ContentControl>
+                    </StackPanel>
+
+
+                </StackPanel>
+
+            </ScrollViewer>
+        </Grid>
+
+        <ContentControl Template="{StaticResource FinishButton}" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="120,0,0,100"/>
+
+        <ContentControl Template="{StaticResource BottomButtons}" VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="0,0,0,30"/>
+    </Grid>
+
+</ls:UIWidget>

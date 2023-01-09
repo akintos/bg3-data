@@ -1,0 +1,477 @@
+<ls:UIWidget x:Name="JournalQuest"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:ls="clr-namespace:ls;assembly=SharedGUI"
+             xmlns:noesis="clr-namespace:NoesisGUIExtensions;assembly=Noesis.GUI.Extensions"
+			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:System="clr-namespace:System;assembly=mscorlib"
+			 mc:Ignorable="d"
+             ls:UIWidget.SoundID="UI_HUD_Journal"
+             d:DesignHeight="2160" d:DesignWidth="3840">
+
+    <ls:UIWidget.Resources>
+        <ResourceDictionary Source="../Library/JournalTemplates.xaml"/>
+    </ls:UIWidget.Resources>
+
+    <!-- Outer full screen grid adding black borders left and right if in non 16:9 ratio -->
+    <Grid>
+        <Grid.Resources>
+
+            <Style x:Key="TopTreeviewNodesTextBlockStyle" TargetType="TextBlock">
+                <Setter Property="Foreground" Value="{StaticResource LS_accent75TxtColor}"/>
+                <Setter Property="FontSize"  Value="{StaticResource LargeFontSize}"/>
+            </Style>
+
+            <!-- Marker for Quests that have map markers -->
+            <DataTemplate x:Key="MarkerHasMapMarkers">
+                <Image Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared/ico_map_active.png" Stretch="None">
+                    <Image.Style>
+                        <Style TargetType="Image">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Quest.HasMapMarkers}" Value="true">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Image.Style>
+                </Image>
+            </DataTemplate>
+
+            <!-- Textbox for Quests and Mysteries Title -->
+            <ControlTemplate x:Key="ItemTitleTextblock">
+                <TextBlock x:Name="txt" Text="{Binding Title}" Foreground="{StaticResource LS_baseTxtColor}" FontSize="{StaticResource LargeFontSize}"/>
+                <ControlTemplate.Triggers>
+                    <DataTrigger Binding="{Binding IsFocused, RelativeSource={RelativeSource AncestorType={x:Type TreeViewItem}}}" Value="True">
+                        <Setter TargetName="txt" Property="Foreground" Value="{StaticResource LS_tint100}"/>
+                    </DataTrigger>
+                </ControlTemplate.Triggers>
+            </ControlTemplate>
+
+            <!-- Textbox for disabled Quests and Mysteries Title -->
+            <ControlTemplate x:Key="ItemDisabledTitleTextblock">
+                <TextBlock x:Name="text" Foreground="{DynamicResource LS_accent00TxtColor}" Opacity="0.85">
+                    <Run Text="{Binding Title}"/>
+                    <Run Text=" ("/>
+                    <Run Text="{Binding Source='h4e934f08g52c2g4645g9b8dg61882aecfce9',Converter={StaticResource TranslatedStringConverter}}"/>
+                    <Run Text=")"/>
+                </TextBlock>
+            </ControlTemplate>
+
+            <!-- Main Quest treeview node -->
+            <ControlTemplate x:Key="MainQuestTreeViewItemTemplate">
+                <Grid MinHeight="65">
+                    <ContentControl ContentTemplate="{DynamicResource MarkerIsSelected}" Content="{Binding }"/>
+                    <StackPanel Orientation="Horizontal" Margin="0,10,0,0" HorizontalAlignment="Left" VerticalAlignment="Top">
+                        <Image x:Name="img" HorizontalAlignment="Left" VerticalAlignment="Center" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared_c/c_bullet_d.png" Stretch="None"/>
+                        <ContentControl x:Name="content" DataContext="{Binding Quest}" Margin="10,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Template="{StaticResource ItemTitleTextblock}"/>
+                        <ContentControl ContentTemplate="{StaticResource MarkerHasMapMarkers}" Content="{Binding}" Margin="0,0,0,0" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Grid>
+                <ControlTemplate.Triggers>
+                    <DataTrigger Binding="{Binding HasPlayerSeenLastUpdate}" Value="False">
+                        <Setter TargetName="img" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared_c/c_bullet_updated_d.png"/>
+                    </DataTrigger>
+                    <MultiDataTrigger>
+                        <MultiDataTrigger.Conditions>
+                            <Condition Binding="{Binding IsSelected}" Value="True"/>
+                            <Condition Binding="{Binding Quest.IsDisabled}" Value="False"/>
+                        </MultiDataTrigger.Conditions>
+                        <Setter TargetName="img" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared_c/c_bullet_h.png"/>
+                    </MultiDataTrigger>
+                    <MultiDataTrigger>
+                        <MultiDataTrigger.Conditions>
+                            <Condition Binding="{Binding IsSelected}" Value="False"/>
+                            <Condition Binding="{Binding Quest.IsDisabled}" Value="True"/>
+                        </MultiDataTrigger.Conditions>
+                        <MultiDataTrigger.Setters>
+                            <Setter TargetName="content" Property="Template" Value="{StaticResource ItemDisabledTitleTextblock}"/>
+                            <Setter TargetName="img" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared_c/c_tick_d.png"/>
+                        </MultiDataTrigger.Setters>
+                    </MultiDataTrigger>
+                    <MultiDataTrigger>
+                        <MultiDataTrigger.Conditions>
+                            <Condition Binding="{Binding IsSelected}" Value="True"/>
+                            <Condition Binding="{Binding Quest.IsDisabled}" Value="True"/>
+                        </MultiDataTrigger.Conditions>
+                        <MultiDataTrigger.Setters>
+                            <Setter TargetName="content" Property="Template" Value="{StaticResource ItemDisabledTitleTextblock}"/>
+                            <Setter TargetName="img" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared_c/c_tick_h.png"/>
+                        </MultiDataTrigger.Setters>
+                    </MultiDataTrigger>
+                </ControlTemplate.Triggers>
+            </ControlTemplate>
+
+            <!-- Sub Quest treeview node -->
+            <ControlTemplate x:Key="SubQuestTreeViewItemTemplate">
+                <Grid MinHeight="65">
+                    <ContentControl ContentTemplate="{DynamicResource MarkerIsSelected}" Content="{Binding }" Margin="-10,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <StackPanel Orientation="Horizontal" Margin="20,0,0,0">
+                        <Image x:Name="img" HorizontalAlignment="Left" VerticalAlignment="Center" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared_c/c_bullet_d.png" Stretch="None"/>
+                        <ContentControl x:Name="content" DataContext="{Binding Quest}" Margin="20,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" Template="{StaticResource ItemTitleTextblock}"/>
+                        <ContentControl ContentTemplate="{StaticResource MarkerHasMapMarkers}" Content="{Binding}" Margin="0,0,0,0" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Grid>
+                <ControlTemplate.Triggers>
+                    <DataTrigger Binding="{Binding HasPlayerSeenLastUpdate}" Value="False">
+                        <Setter TargetName="img" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared_c/c_bullet_updated_d.png"/>
+                    </DataTrigger>
+                    <MultiDataTrigger>
+                        <MultiDataTrigger.Conditions>
+                            <Condition Binding="{Binding IsSelected}" Value="True"/>
+                            <Condition Binding="{Binding Quest.IsDisabled}" Value="False"/>
+                        </MultiDataTrigger.Conditions>
+                        <Setter TargetName="img" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared_c/c_bullet_h.png"/>
+                    </MultiDataTrigger>
+                    <MultiDataTrigger>
+                        <MultiDataTrigger.Conditions>
+                            <Condition Binding="{Binding IsSelected}" Value="False"/>
+                            <Condition Binding="{Binding Quest.IsDisabled}" Value="True"/>
+                        </MultiDataTrigger.Conditions>
+                        <MultiDataTrigger.Setters>
+                            <Setter TargetName="content" Property="Template" Value="{StaticResource ItemDisabledTitleTextblock}"/>
+                            <Setter TargetName="img" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared_c/c_tick_d.png"/>
+                        </MultiDataTrigger.Setters>
+                    </MultiDataTrigger>
+                    <MultiDataTrigger>
+                        <MultiDataTrigger.Conditions>
+                            <Condition Binding="{Binding IsSelected}" Value="True"/>
+                            <Condition Binding="{Binding Quest.IsDisabled}" Value="True"/>
+                        </MultiDataTrigger.Conditions>
+                        <MultiDataTrigger.Setters>
+                            <Setter TargetName="content" Property="Template" Value="{StaticResource ItemDisabledTitleTextblock}"/>
+                            <Setter TargetName="img" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared_c/c_tick_h.png"/>
+                        </MultiDataTrigger.Setters>
+                    </MultiDataTrigger>
+                </ControlTemplate.Triggers>
+            </ControlTemplate>
+
+            <!-- Treeview node for the top red "LORE" entry, mysteries are child nodes of this -->
+            <HierarchicalDataTemplate DataType="{x:Type ls:MysteryContainer}" ItemsSource="{Binding MysteryViews}">
+                <TextBlock Margin="20,20,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Text="{Binding Source='hba465cc6g2dfag489dga0deg8e6f044b81d2',Converter={StaticResource TranslatedStringConverter}, ConverterParameter='ToUpper'}" Style="{StaticResource TopTreeviewNodesTextBlockStyle}"/>
+            </HierarchicalDataTemplate>
+
+            <!-- Treeview node for a Mystery -->
+            <HierarchicalDataTemplate DataType="{x:Type ls:MysteryView}">
+                <Grid Margin="-40,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top">
+                    <ContentControl ContentTemplate="{DynamicResource MarkerIsSelected}" Content="{Binding }" Margin="28,2,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                    <ContentControl ContentTemplate="{StaticResource MarkerHasMapMarkers}" Content="{Binding }" Margin="0,1,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                    <Image x:Name="img" HorizontalAlignment="Left" VerticalAlignment="Center" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared_c/c_bullet_d.png" Stretch="None"/>
+                    <ContentControl x:Name="mystery" DataContext="{Binding Mystery}" Template="{StaticResource ItemTitleTextblock}" Margin="50,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                </Grid>
+                <HierarchicalDataTemplate.Triggers>
+                    <DataTrigger Binding="{Binding HasPlayerSeenLastUpdate}" Value="False">
+                        <Setter Property="Source" TargetName="img" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared_c/c_bullet_updated_d.png"/>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding IsSelected}" Value="True">
+                        <Setter Property="Source" TargetName="img" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared_c/c_bullet_h.png"/>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding IsDisabled}" Value="True">
+                        <Setter Property="Template" TargetName="mystery" Value="{StaticResource ItemDisabledTitleTextblock}"/>
+                    </DataTrigger>
+                </HierarchicalDataTemplate.Triggers>
+            </HierarchicalDataTemplate>
+
+            <!-- Treeview node for a Quest Category, Quests are child nodes of this -->
+            <HierarchicalDataTemplate DataType="{x:Type ls:QuestCategoryContainer}" ItemsSource="{Binding QuestViews}">
+                <StackPanel Orientation="Horizontal" Margin="0,40,0,0">
+                    <Path Name="Arrow" Width="50" Data="M 0 0 L 14 14 L 28 0 Z" Fill="{DynamicResource LS_accent75TxtColor}" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                    <TextBlock Text="{Binding QuestCategory.Description}" Style="{StaticResource TopTreeviewNodesTextBlockStyle}" HorizontalAlignment="Left" />
+                </StackPanel>
+            </HierarchicalDataTemplate>
+
+            <!-- Treeview node for a Quest -->
+            <HierarchicalDataTemplate DataType="{x:Type ls:QuestView}" ItemsSource="{Binding SubQuestViews}">
+                <ContentControl Content="{Binding }" HorizontalAlignment="Left" VerticalAlignment="Top">
+                    <ContentControl.Style>
+                        <Style TargetType="ContentControl">
+                            <Setter Property="Template" Value="{x:Null}"/>
+                            <Setter Property="Visibility" Value="Visible"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Quest.IsMainQuest}" Value="True">
+                                    <Setter Property="Template" Value="{StaticResource MainQuestTreeViewItemTemplate}"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Quest.IsMainQuest}" Value="False">
+                                    <Setter Property="Template" Value="{StaticResource SubQuestTreeViewItemTemplate}"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ContentControl.Style>
+                </ContentControl>
+            </HierarchicalDataTemplate>
+
+            <!-- Style for all Treeview nodes, without expander (+/-), filtering quests for the 2 tabs (enabled and disabled quests) -->
+            <Style x:Key="QuestTreeViewItemStyle" TargetType="TreeViewItem">
+                <Setter Property="IsExpanded" Value="True"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="TreeViewItem">
+                            <Grid Margin="20,0,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <Border Name="Bd" Grid.Column="0">
+                                    <ContentPresenter x:Name="PART_Header" ContentSource="Header" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"/>
+                                </Border>
+                                <ItemsPresenter x:Name="ItemsHost" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"/>
+                            </Grid>
+
+                            <ControlTemplate.Triggers>
+                                <MultiTrigger>
+                                    <MultiTrigger.Conditions>
+                                        <Condition Property="HasHeader" Value="false"/>
+                                        <Condition Property="Width" Value="Auto"/>
+                                    </MultiTrigger.Conditions>
+                                    <Setter TargetName="PART_Header" Property="MinWidth" Value="150"/>
+                                </MultiTrigger>
+                                <MultiTrigger>
+                                    <MultiTrigger.Conditions>
+                                        <Condition Property="HasHeader" Value="false"/>
+                                        <Condition Property="Height" Value="Auto"/>
+                                    </MultiTrigger.Conditions>
+                                    <Setter TargetName="PART_Header" Property="MinHeight" Value="40"/>
+                                </MultiTrigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding DataContext, Converter={StaticResource TypeConverter}, RelativeSource={RelativeSource Mode=Self}}" Value="ls.QuestCategoryContainer">
+                        <Setter Property="Focusable" Value="False"/>
+                    </DataTrigger>
+                    <MultiDataTrigger>
+                        <MultiDataTrigger.Conditions>
+                            <Condition Binding="{Binding DataContext.CurrentPlayer.QuestsFilter, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" Value="Archived" />
+                            <Condition Binding="{Binding MainItem.IsDisabled}" Value="False"/>
+                        </MultiDataTrigger.Conditions>
+                        <Setter Property="Visibility" Value="Collapsed"/>
+                    </MultiDataTrigger>
+                    <MultiDataTrigger>
+                        <MultiDataTrigger.Conditions>
+                            <Condition Binding="{Binding DataContext.CurrentPlayer.QuestsFilter, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" Value="Current" />
+                            <Condition Binding="{Binding Item.IsDisabled}" Value="True"/>
+                            <Condition Binding="{Binding DataContext.CurrentPlayer.HideCompletedQuestsInCurrentList, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" Value="True"/>
+                        </MultiDataTrigger.Conditions>
+                        <Setter Property="Visibility" Value="Collapsed"/>
+                    </MultiDataTrigger>
+                </Style.Triggers>
+            </Style>
+        </Grid.Resources>
+
+        <ContentControl Template="{StaticResource StandardFraming}">
+            <b:Interaction.Triggers>
+                <b:EventTrigger EventName="Loaded">
+                    <b:InvokeCommandAction  Command="{Binding DataContext.CurrentPlayer.QuestJournalLoaded.ActionCommand, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"/>
+                </b:EventTrigger>
+                <b:EventTrigger EventName="Unloaded">
+                    <b:InvokeCommandAction  Command="{Binding DataContext.CurrentPlayer.QuestJournalUnloaded.ActionCommand, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"/>
+                </b:EventTrigger>
+            </b:Interaction.Triggers>
+
+            <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="70,30,0,0">
+                    <Image Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Journal/header_journal.png" Stretch="None" Margin="0,-20,0,0"/>
+                    <TextBlock Text="{Binding Source='hb4bac393g5295g4e80g8dacge61e914d2313',Converter={StaticResource TranslatedStringConverter}}" Foreground="{DynamicResource LS_baseTxtColor}" FontSize="{DynamicResource HugeFontSize}"/>
+                </StackPanel>
+
+                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Top">
+                    <Control HorizontalAlignment="Center" Template="{DynamicResource JournalHeaderController}" Margin="0,40,0,20"/>
+                    <TextBlock Text="{Binding Source='h70f42b48g6d94g4fadga21egd28627f404d6',Converter={StaticResource TranslatedStringConverter}}" Foreground="{DynamicResource LS_accent100TxtColor}" FontSize="{DynamicResource TitleFontSize}" HorizontalAlignment="Center"/>
+                </StackPanel>
+
+                <Viewbox>
+                    <StackPanel Orientation="Horizontal" Margin="50,240">
+
+                        <!-- Left Panel -->
+                        <ContentControl Template="{DynamicResource LeftPanelFrame}" Width="1740" Height="1500">
+
+                            <Grid>
+                                <ls:LSTreeView x:Name="QuestsTreeView" ItemsSource="{Binding CurrentPlayer.JournalItemContainers}"
+                                               ItemContainerStyle="{StaticResource QuestTreeViewItemStyle}"
+                                               Margin="50,0,0,0" BorderBrush="Transparent"
+                                               ActionPrevEvent="UIUp" ActionNextEvent="UIDown">
+                                    <ls:LSTreeView.Template>
+                                        <ControlTemplate>
+                                            <ScrollViewer Template="{StaticResource FlippedScrollViewerTemplate}" VerticalScrollBarVisibility="Visible" Height="1300">
+                                                <ScrollViewer.Resources>
+                                                    <GridLength x:Key="Top">50</GridLength>
+                                                    <GridLength x:Key="Bottom">50</GridLength>
+                                                </ScrollViewer.Resources>
+                                                <Grid Background="Transparent" Width="1740">
+                                                    <ItemsPresenter />
+                                                </Grid>
+                                            </ScrollViewer>
+                                        </ControlTemplate>
+                                    </ls:LSTreeView.Template>
+                                    <b:Interaction.Triggers>
+                                        <b:EventTrigger EventName="LocalFocusChanged">
+                                            <b:InvokeCommandAction Command="{Binding CurrentPlayer.QuestsTreeViewSelectionChanged.ActionCommand}" CommandParameter="{Binding ElementName=QuestsTreeView, Path=LocalFocus.DataContext}"/>
+                                        </b:EventTrigger>
+                                    </b:Interaction.Triggers>
+                                </ls:LSTreeView>
+
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Center">
+                                    <Grid Margin="28,0">
+                                        <Image x:Name="bg" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared_c/c_toggle_bg.png" Stretch="None"/>
+                                        <ls:LSToggleButton x:Name="btn"
+                                                           IsChecked="{Binding DataContext.CurrentPlayer.HideCompletedQuestsInCurrentList, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}, Mode=TwoWay}"
+                                                           DataContext = "{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIMapToggleWaypoints'}"
+                                                           Content="" HorizontalAlignment="Left">
+                                            <ls:LSToggleButton.RenderTransform>
+                                                <TranslateTransform X="-30"/>
+                                            </ls:LSToggleButton.RenderTransform>
+                                            <ls:LSToggleButton.Style>
+                                                <Style TargetType="ls:LSToggleButton" BasedOn="{StaticResource ToggleControllerButton}">
+                                                    <Style.Triggers>
+                                                        <Trigger Property="IsChecked" Value="True">
+                                                            <Trigger.EnterActions>
+                                                                <BeginStoryboard>
+                                                                    <Storyboard>
+                                                                        <DoubleAnimation Duration="0:0:0.1" Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)" To="30"/>
+                                                                    </Storyboard>
+                                                                </BeginStoryboard>
+                                                            </Trigger.EnterActions>
+                                                            <Trigger.ExitActions>
+                                                                <BeginStoryboard>
+                                                                    <Storyboard>
+                                                                        <DoubleAnimation Duration="0:0:0.1" Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)" To="-30"/>
+                                                                    </Storyboard>
+                                                                </BeginStoryboard>
+                                                            </Trigger.ExitActions>
+                                                        </Trigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </ls:LSToggleButton.Style>
+                                        </ls:LSToggleButton>
+                                    </Grid>
+                                    <TextBlock Text="{Binding Source='hf05f9babg150cg4276gbb9eg80c1e1639989', Converter={StaticResource TranslatedStringConverter}}" VerticalAlignment="Center">
+                                        <TextBlock.Style>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="Foreground" Value="{DynamicResource LS_baseTxtColor}"/>
+                                            </Style>
+                                        </TextBlock.Style>
+                                    </TextBlock>
+                                </StackPanel>
+                            </Grid>
+                        </ContentControl>
+
+                        <!-- Right Panel -->
+                        <ContentControl Template="{DynamicResource RightPanelFrame}" Width="1740" Height="1500">
+
+                            <StackPanel HorizontalAlignment="Center" Margin="0,100,0,0">
+                                <TextBlock Text="{Binding CurrentPlayer.SelectedJournalItemView.Item.Title}" HorizontalAlignment="Center"
+                                           Foreground="{StaticResource LS_accent100TxtColor}" FontSize="{StaticResource TitleFontSize}"/>
+                                <ls:LSScrollViewer Template="{StaticResource ScrollViewerTemplate}"
+                                                   VerticalScrollBarVisibility="Visible" Height="1320" 
+                                                   BoundScrollUpEvent="UIScrollUp" BoundScrollDownEvent="UIScrollDown">
+                                    <ls:LSScrollViewer.Resources>
+                                        <GridLength x:Key="Top">0</GridLength>
+                                        <GridLength x:Key="Bottom">160</GridLength>
+                                    </ls:LSScrollViewer.Resources>
+                                    <ItemsControl Width="1500">
+                                        <ItemsControl.Resources>
+                                            <DataTemplate DataType="{x:Type ls:MysteryStep}">
+                                                <TextBlock Margin="0,5,0,0" Text="{Binding Description}" TextWrapping="Wrap" Padding="0,0,0,30" MaxWidth="960"/>
+                                            </DataTemplate>
+
+                                            <DataTemplate DataType="{x:Type ls:QuestObjective}">
+                                                <StackPanel Orientation="Vertical" Width="1500">
+                                                    <StackPanel Orientation="Horizontal" Visibility="{Binding Description, Converter={StaticResource StringToVisibilityConverter}}">
+                                                        <Image Stretch="None" x:Name="Bullet" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared_c/c_bullet_d.png"/>
+                                                        <TextBlock x:Name="Title" Margin="4,0,0,0" VerticalAlignment="Center" Text="{Binding Description}" Foreground="{StaticResource LS_accent100TxtColor}" FontSize="{StaticResource LargeFontSize}" TextWrapping="Wrap" MaxWidth="960"/>
+                                                    </StackPanel>
+                                                    <ItemsControl ItemsSource="{Binding Steps}" Margin="132,-30,0,0">
+
+                                                        <ItemsControl.Style>
+                                                            <Style TargetType="ItemsControl">
+                                                                <Setter Property="ItemTemplate">
+                                                                    <Setter.Value>
+                                                                        <DataTemplate>
+                                                                            <TextBlock x:Name="Description" Text="{Binding Description}" Foreground="{StaticResource LS_accent75TxtColor}" FontSize="{StaticResource LargeFontSize}" TextWrapping="Wrap" Margin="0,30,134,0"/>
+                                                                        </DataTemplate>
+                                                                    </Setter.Value>
+                                                                </Setter>
+                                                                <Style.Triggers>
+                                                                    <DataTrigger Binding="{Binding IsCompleted}" Value="True">
+                                                                        <Setter Property="ItemTemplate">
+                                                                            <Setter.Value>
+                                                                                <DataTemplate>
+                                                                                    <TextBlock x:Name="Description" Text="{Binding Description}" Foreground="{StaticResource LS_baseTxtColor}" FontSize="{StaticResource LargeFontSize}" TextWrapping="Wrap" Margin="0,30,134,0"/>
+                                                                                </DataTemplate>
+                                                                            </Setter.Value>
+                                                                        </Setter>
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </ItemsControl.Style>
+
+                                                        <ItemsControl.ItemsPanel>
+                                                            <ItemsPanelTemplate>
+                                                                <StackPanel Orientation="Vertical" MinWidth="1500"/>
+                                                            </ItemsPanelTemplate>
+                                                        </ItemsControl.ItemsPanel>
+                                                    </ItemsControl>
+                                                </StackPanel>
+
+                                                <DataTemplate.Triggers>
+                                                    <DataTrigger Binding="{Binding IsCompleted}" Value="true">
+                                                        <Setter TargetName="Bullet" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared_c/c_tick_d.png"/>
+                                                        <Setter TargetName="Title" Property="Foreground" Value="{StaticResource LS_baseTxtColor}"/>
+                                                    </DataTrigger>
+                                                </DataTemplate.Triggers>
+                                            </DataTemplate>
+
+                                        </ItemsControl.Resources>
+
+                                        <ItemsControl.ItemContainerStyle>
+                                            <Style TargetType="ContentPresenter">
+                                                <Setter Property="Margin" Value="0,0,0,60"/>
+                                            </Style>
+                                        </ItemsControl.ItemContainerStyle>
+
+                                        <ItemsControl.Style>
+                                            <Style TargetType="ItemsControl">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding CurrentPlayer.SelectedJournalItemView.Item, Converter={StaticResource TypeConverter}}" Value="ls.Quest">
+                                                        <Setter Property="ItemsSource" Value="{Binding CurrentPlayer.SelectedJournalItemView.Item.Objectives}" />
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding CurrentPlayer.SelectedJournalItemView.Item, Converter={StaticResource TypeConverter}}" Value="ls.JournalItem">
+                                                        <Setter Property="ItemsSource" Value="{Binding CurrentPlayer.SelectedJournalItemView.Item.Steps}" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </ItemsControl.Style>
+                                    </ItemsControl>
+                                </ls:LSScrollViewer>
+                            </StackPanel>
+
+                        </ContentControl>
+                    </StackPanel>
+                </Viewbox>
+
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Center">
+                    <ls:LSButton Style="{StaticResource ControllerButton}" 
+                             DataContext = "{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIAccept'}"
+                             Margin="20,0" 
+                             Content="{Binding Source='ha14c2ef4gbeffg4617g8b3cg77e7a637f94b',Converter={StaticResource TranslatedStringConverter}}" 
+                             Command="{Binding DataContext.ShowQuestOnMap, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"/>
+                    <ls:LSButton Style="{StaticResource ControllerButton}" Margin="20,0" 
+                             DataContext = "{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UICancel'}"
+                             Content="{Binding Source='h6fefa28bg2149g4cacga071gd95b236b2d0b',Converter={StaticResource TranslatedStringConverter}}" 
+                             SoundID="UI_Shared_Cancel"
+                             Command="{Binding DataContext.CustomEvent, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"
+                             CommandParameter="CloseWidget"/>
+                </StackPanel>
+            </Grid>
+        </ContentControl>
+    </Grid>
+</ls:UIWidget>

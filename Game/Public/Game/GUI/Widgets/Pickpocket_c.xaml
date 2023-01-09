@@ -1,0 +1,435 @@
+<ls:UIWidget x:Name="Pickpocket_c"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:b="http://schemas.microsoft.com/xaml/behaviors" 
+             
+             xmlns:ls="clr-namespace:ls;assembly=SharedGUI"
+             xmlns:noesis="clr-namespace:NoesisGUIExtensions;assembly=Noesis.GUI.Extensions"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:System="clr-namespace:System;assembly=mscorlib"
+             mc:Ignorable="d"
+             d:DesignWidth="3840" d:DesignHeight="2160"
+             ls:UIWidget.UseCustomDC="True"
+             ls:UIWidget.ContextName="Pickpocket"
+             ls:UIWidget.SoundID="UI_HUD_Pickpocket">
+
+    <ls:UIWidget.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../Library/ContainersBackground.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+            <System:Double x:Key="ContInvSlotSize">58</System:Double>
+            <ImageBrush x:Key="ContainerScrollBarBackground" ImageSource="/GustavNoesisGUI;component/Assets/Container/container_scroll_bg.png" Stretch="None" />
+
+            <Storyboard x:Key="AnimatePie">
+                <DoubleAnimation Storyboard.TargetName="chancePie" Storyboard.TargetProperty="Value" To="{Binding ElementName=chancePie , Path=Tag}" Duration="0:0:0.3" >
+                    <DoubleAnimation.EasingFunction>
+                        <CubicEase EasingMode="EaseOut"/>
+                    </DoubleAnimation.EasingFunction>
+                </DoubleAnimation>
+            </Storyboard>
+        </ResourceDictionary>
+    </ls:UIWidget.Resources>
+
+    <Canvas x:Name="rootCanvas" HorizontalAlignment="Center" VerticalAlignment="Center" ls:TooltipExtender.Owner="{Binding CurrentPlayer.SelectedCharacter}">
+        <Canvas.Style>
+            <Style TargetType="Canvas">
+                <Setter Property="Width" Value="{StaticResource HUMANOIDCORPSE_Width}"/>
+                <Setter Property="Height" Value="{StaticResource HUMANOIDCORPSE_Height}"/>
+            </Style>
+        </Canvas.Style>
+
+        <Path x:Name="DragHit" HorizontalAlignment="Center" VerticalAlignment="Center" IsHitTestVisible="True" Fill="#017000FF" Canvas.Left="4" Canvas.Top="70">
+            <Path.Style>
+                <Style TargetType="Path">
+                    <Setter Property="Data" Value="M 0,290 180,0 660,0 840,220 700,680 520,780 280,780 90,600Z"/>
+                    <Setter Property="Width" Value="{StaticResource HUMANOIDCORPSE_Width}"/>
+                    <Setter Property="Height" Value="{StaticResource HUMANOIDCORPSE_Height}"/>
+                </Style>
+            </Path.Style>
+        </Path>
+        <Image x:Name="ContainerBG" IsHitTestVisible="False" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,80,0,0">
+            <Image.RenderTransform>
+                <ScaleTransform ScaleX="1.08" ScaleY="1.08"/>
+            </Image.RenderTransform>
+            <Image.Style>
+                <Style TargetType="Image">
+                    <Setter Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Container/Backgrounds/Corpse_BG_B.png"/>
+                    <Setter Property="Width" Value="{StaticResource HUMANOIDCORPSE_BG_Width}"/>
+                    <Setter Property="Height" Value="{StaticResource HUMANOIDCORPSE_BG_Height}"/>
+                    <Setter Property="Canvas.Left" Value="{StaticResource HUMANOIDCORPSE_BG_Left}"/>
+                    <Setter Property="Canvas.Top" Value="{StaticResource HUMANOIDCORPSE_BG_Top}"/>
+                </Style>
+            </Image.Style>
+        </Image>
+
+        <Grid Name="Inventory" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,80,0,0" >
+            <Grid.Style>
+                <Style TargetType="Grid">
+                    <Setter Property="Canvas.Left" Value="{StaticResource HUMANOIDCORPSE_Inv_Left}"/>
+                    <Setter Property="Canvas.Top" Value="{StaticResource HUMANOIDCORPSE_Inv_Top}"/>
+                </Style>
+            </Grid.Style>
+            <Image Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Container/c_container_bg.png" Stretch="None" IsHitTestVisible="False" VerticalAlignment="Top"/>
+
+            <Grid VerticalAlignment="Top" HorizontalAlignment="Center" Margin="16,40,0,0">
+                <ls:LSListBox SelectedIndex="0" Grid.Row="1" x:Name="inventoryListBox"
+                          DataContext="{Binding Container.InventoryView}"
+                          ItemsSource="{Binding InventoryViewSlots}"
+                          LocalFocusSelector="{Binding ElementName=selector, Mode=OneWay}"
+                          VerticalAlignment="Top" HorizontalAlignment="Left"
+                          Height="496" Width="666"
+                          Background="Transparent" BorderThickness="0"
+                          ScrollViewer.VerticalScrollBarVisibility="Visible"
+                          ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                    <ls:LSListBox.Resources>
+                        <Style TargetType="ScrollBar" BasedOn="{StaticResource DecorativeScrollBar}"/>
+                    </ls:LSListBox.Resources>
+                    <ls:LSListBox.ItemTemplate>
+                        <DataTemplate>
+                            <ContentControl ToolTipService.Placement="Left" ToolTipService.PlacementTarget="{Binding ElementName=inventoryListBox}">
+                                <ContentControl.ToolTip>
+                                    <ls:LSTooltip Content="{Binding DataContext.Item,RelativeSource={RelativeSource Mode=TemplatedParent}}"/>
+                                </ContentControl.ToolTip>
+                                <b:Interaction.Behaviors>
+                                    <ls:DragGameObjectBehavior GameObject="{Binding Item}"/>
+                                    <ls:DropOnItemBehavior TargetSlot="{Binding}"/>
+                                </b:Interaction.Behaviors>
+                                <b:Interaction.Triggers>
+                                    <b:EventTrigger EventName="MouseDoubleClick">
+                                        <b:InvokeCommandAction Command="{Binding DataContext.TakeItemCommand.ActionCommand, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" CommandParameter="{Binding Item}"/>
+                                    </b:EventTrigger>
+                                </b:Interaction.Triggers>
+                                <Grid Width="{StaticResource ItemIconSize}" Height="{StaticResource ItemIconSize}">
+                                    <Image Style="{StaticResource RarityFrameBackgroundImageStyle}"/>
+                                    <ls:LSEntityObject EntityRef="{Binding Item.EntityHandle}"
+                                                Context="{Binding DataContext.ContainerContext,RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"
+                                                Background="{Binding Item.Icon}">
+                                        <Image Style="{StaticResource InventoryWaresCellItemImageStyle}"/>
+                                        <Label Style="{StaticResource InventoryCellLabelStyle}"/>
+                                    </ls:LSEntityObject>
+                                    <Image Style="{StaticResource RarityFrameForegroundImageStyle}"/>
+                                </Grid>
+                            </ContentControl>
+                        </DataTemplate>
+                    </ls:LSListBox.ItemTemplate>
+                    <ls:LSListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <ls:LSGrid x:Name="ContainerGrid" Columns="5" Rows="4" 
+                                   ContainerData="{Binding }"
+                                   CellWidth="{StaticResource InvSlotSize}" CellHeight="{StaticResource InvSlotSize}"
+                                   VerticalSpacing="{DynamicResource InvSpacing}" HorizontalSpacing="{DynamicResource InvSpacing}" 
+                                   EmptyCellTemplate="{StaticResource EmptyCellTemplate}"
+                                   ActionUpEvent="UIUp" ActionDownEvent="UIDown" ActionRightEvent="UIRight" ActionLeftEvent="UILeft"/>
+                        </ItemsPanelTemplate>
+                    </ls:LSListBox.ItemsPanel>
+                    <ls:LSListBox.ItemContainerStyle>
+                        <Style TargetType="ls:LSListBoxItem">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="ls:LSListBoxItem">
+                                        <Border Name="Border" SnapsToDevicePixels="True" Background="{TemplateBinding Background}">
+                                            <ContentPresenter />
+                                        </Border>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </ls:LSListBox.ItemContainerStyle>
+                    <b:Interaction.Triggers>
+                        <b:EventTrigger EventName="LocalFocusChanged">
+                            <b:InvokeCommandAction Command="{Binding DataContext.SelectItemCommand.ActionCommand, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" CommandParameter="{Binding Path=LocalFocus.DataContext.Item, ElementName=inventoryListBox}"/>
+                            <b:ControlStoryboardAction Storyboard="{StaticResource AnimatePie}" />
+                            <b:InvokeCommandAction Command="{Binding DataContext.ShowTooltipOnUIElement, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" 
+                                             CommandParameter="{Binding Path=LocalFocus, ElementName=inventoryListBox}"/>
+                        </b:EventTrigger>
+                    </b:Interaction.Triggers>
+                </ls:LSListBox>
+
+                <ContentControl x:Name="selector" IsHitTestVisible="False"  
+                                    VerticalAlignment="Top" HorizontalAlignment="Left"
+                                    Template="{StaticResource SelectorTemplate}"/>
+            </Grid>
+
+            <!-- Buttons -->
+            <Grid HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,20">
+                <Grid.Resources>
+                    <Style TargetType="ls:LSButton" BasedOn="{StaticResource ControllerButton}"/>
+                </Grid.Resources>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <ls:LSButton Grid.Row="0" Grid.Column="0" HorizontalAlignment="Right"
+                             DataContext = "{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIAccept'}"
+                             Content="{Binding Source='h921e0841g7727g48b4g980eg3d45267ee8e0', Converter={StaticResource TranslatedStringConverter}, ConverterParameter='ToUpper'}"
+                             Command="{Binding DataContext.TakeItemCommand.ActionCommand, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"
+                             CommandParameter="{Binding LocalFocus.DataContext.Item, ElementName=inventoryListBox}"
+                             IsEnabled="{Binding DataContext.CanSteal, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"
+                             SoundID="UI_Shared_Accept"/>
+                <ls:LSButton Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left"
+                             DataContext = "{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='ContextMenu'}"
+                             Content="{Binding Source='heb4b592bgc665g4e17ga685g07e2eb5e25db', Converter={StaticResource TranslatedStringConverter}, ConverterParameter='ToUpper'}"
+                             Command="{Binding DataContext.ShowContextMenu, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"
+                             CommandParameter="{Binding LocalFocus, ElementName=inventoryListBox}" Arrangement="Right"/>
+                <ls:LSButton Grid.Row="1" Grid.Column="0" HorizontalAlignment="Right"
+                             DataContext = "{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIShowInfo'}"
+                             Content="{Binding Source='h557ee2acgaaf4g4b85g9a67g29f53570c4f0',Converter={StaticResource TranslatedStringConverter}}"
+                             Command="{Binding DataContext.ToggleTooltipOnUIElement, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"
+                             CommandParameter="{Binding LocalFocus, ElementName=inventoryListBox}"/>
+                <ls:LSButton Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left"
+                             DataContext = "{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UICancel'}"
+                             Content="{Binding Source='hff1685e4g3845g4846g99bfg219ae73ce55d', Converter={StaticResource TranslatedStringConverter}, ConverterParameter='ToUpper'}"
+                             Command="{Binding DataContext.CloseWidgetCommand.ActionCommand, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"
+                             SoundID="UI_Shared_Cancel" Arrangement="Right"/>
+            </Grid>
+        </Grid>
+
+
+        <Control Template="{DynamicResource RollTooltipTemplate}" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="800,160,0,0"/>
+
+        <Grid x:Name="topBar" DataContext="{Binding Roll}"
+              VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,-30,0,0">
+            <Grid.Style>
+                <Style TargetType="Grid">
+                    <Setter Property="Canvas.Left" Value="{StaticResource HUMANOIDCORPSE_Inv_Left}"/>
+                    <Setter Property="Canvas.Top" Value="{StaticResource HUMANOIDCORPSE_Inv_Top}"/>
+                </Style>
+            </Grid.Style>
+            <Grid.Resources>
+                <Style TargetType="TextBlock">
+                    <Setter Property="Foreground" Value="{DynamicResource LS_PrimaryColor}" />
+                </Style>
+                <KeyTime x:Key="AnimStealTime">0:0:0.5</KeyTime>
+            </Grid.Resources>
+
+            <Image Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Pickpocket/c_pickpocket_bg.png" Stretch="None"/>
+
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Top" >
+
+                <Grid Margin="20,0,-10,0">
+                    <Image Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Pickpocket/pickpocket_target_ring.png" Stretch="None"/>
+                    <TextBlock Margin="0,0,0,8" noesis:Text.Stroke="Black" noesis:Text.StrokeThickness="2" FontWeight="Bold" Text="{Binding Source='hea70fbd3g7598g424egb3bfg7cbe03bbdc09', Converter={StaticResource TranslatedStringConverter}}" VerticalAlignment="Bottom" HorizontalAlignment="Center" FontSize="{DynamicResource SmallFontSize}"/>
+                    <TextBlock Text="{Binding DifficultyCheck}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                </Grid>
+                <Grid>
+                    <Image Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Pickpocket/pickpocket_result_ring.png" Stretch="None"/>
+                    <Image x:Name="d20Img" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Pickpocket/ico_pickpocket_d20.png" Stretch="None">
+                        <Image.Style>
+                            <Style TargetType="Image">
+                                <Setter Property="Opacity" Value="1.0" />
+                                <Setter Property="RenderTransform">
+                                    <Setter.Value>
+                                        <TransformGroup>
+                                            <ScaleTransform/>
+                                            <SkewTransform/>
+                                            <RotateTransform CenterX="30" CenterY="30"/>
+                                            <TranslateTransform/>
+                                        </TransformGroup>
+                                    </Setter.Value>
+                                </Setter>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Finished}" Value="True">
+                                        <DataTrigger.EnterActions>
+                                            <BeginStoryboard >
+                                                <Storyboard >
+                                                    <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="Opacity">
+                                                        <EasingDoubleKeyFrame KeyTime="0:0:0.0" Value="1.0"/>
+                                                        <EasingDoubleKeyFrame KeyTime="{StaticResource AnimStealTime}" Value="0.3">
+                                                            <EasingDoubleKeyFrame.EasingFunction>
+                                                                <CubicEase EasingMode="EaseOut"/>
+                                                            </EasingDoubleKeyFrame.EasingFunction>
+                                                        </EasingDoubleKeyFrame>
+                                                        <EasingDoubleKeyFrame KeyTime="{StaticResource AnimStealTime}" Value="0.0"/>
+                                                    </DoubleAnimationUsingKeyFrames>
+                                                    <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)">
+                                                        <EasingDoubleKeyFrame KeyTime="0:0:0.0" Value="1.0"/>
+                                                        <EasingDoubleKeyFrame KeyTime="{StaticResource AnimStealTime}" Value="0.2">
+                                                        </EasingDoubleKeyFrame>
+                                                    </DoubleAnimationUsingKeyFrames>
+                                                    <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleY)">
+                                                        <EasingDoubleKeyFrame KeyTime="0:0:0.0" Value="1.0"/>
+                                                        <EasingDoubleKeyFrame KeyTime="{StaticResource AnimStealTime}" Value="0.2">
+                                                        </EasingDoubleKeyFrame>
+                                                    </DoubleAnimationUsingKeyFrames>
+                                                    <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[2].(RotateTransform.Angle)">
+                                                        <EasingDoubleKeyFrame KeyTime="0:0:0.0" Value="0"/>
+                                                        <EasingDoubleKeyFrame KeyTime="{StaticResource AnimStealTime}" Value="-180">
+                                                            <EasingDoubleKeyFrame.EasingFunction>
+                                                                <CubicEase EasingMode="EaseOut"/>
+                                                            </EasingDoubleKeyFrame.EasingFunction>
+                                                        </EasingDoubleKeyFrame>
+                                                    </DoubleAnimationUsingKeyFrames>
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </DataTrigger.EnterActions>
+                                    </DataTrigger>
+
+                                    <DataTrigger Binding="{Binding Finished}" Value="False">
+                                        <DataTrigger.EnterActions>
+                                            <!--Reset-->
+                                            <BeginStoryboard >
+                                                <Storyboard >
+                                                    <DoubleAnimation Storyboard.TargetProperty="Opacity" To="1.0" Duration="0:0:0.0" >
+                                                    </DoubleAnimation>
+                                                    <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)">
+                                                        <EasingDoubleKeyFrame KeyTime="0:0:0.0" Value="0"/>
+                                                    </DoubleAnimationUsingKeyFrames>
+                                                    <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[2].(RotateTransform.Angle)">
+                                                        <EasingDoubleKeyFrame KeyTime="0:0:0.0" Value="0"/>
+                                                    </DoubleAnimationUsingKeyFrames>
+                                                    <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)">
+                                                        <EasingDoubleKeyFrame KeyTime="0:0:0.0" Value="1.0"/>
+                                                    </DoubleAnimationUsingKeyFrames>
+                                                    <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleY)">
+                                                        <EasingDoubleKeyFrame KeyTime="0:0:0.0" Value="1.0"/>
+                                                    </DoubleAnimationUsingKeyFrames>
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </DataTrigger.EnterActions>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Image.Style>
+                    </Image>
+                    <TextBlock x:Name="resultTxt" Text="{Binding RolledNumber}" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="{DynamicResource LS_PrimaryColor}">
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="Visibility" Value="Visible" />
+                                <Setter Property="RenderTransform">
+                                    <Setter.Value>
+                                        <TransformGroup>
+                                            <ScaleTransform/>
+                                            <SkewTransform/>
+                                            <RotateTransform/>
+                                            <TranslateTransform/>
+                                        </TransformGroup>
+                                    </Setter.Value>
+                                </Setter>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding RolledNumber}" Value="0">
+                                        <Setter Property="Visibility" Value="Hidden" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Finished}" Value="True">
+                                        <DataTrigger.EnterActions>
+                                            <!--Steal-->
+                                            <BeginStoryboard >
+                                                <Storyboard >
+                                                    <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="Opacity">
+                                                        <EasingDoubleKeyFrame KeyTime="0:0:0.0" Value="0.3"/>
+                                                        <EasingDoubleKeyFrame KeyTime="{StaticResource AnimStealTime}" Value="1.0">
+                                                            <EasingDoubleKeyFrame.EasingFunction>
+                                                                <CubicEase EasingMode="EaseOut"/>
+                                                            </EasingDoubleKeyFrame.EasingFunction>
+                                                        </EasingDoubleKeyFrame>
+                                                    </DoubleAnimationUsingKeyFrames>
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </DataTrigger.EnterActions>
+                                    </DataTrigger>
+
+                                    <DataTrigger Binding="{Binding Finished}" Value="False">
+                                        <DataTrigger.EnterActions>
+                                            <!--Reset-->
+                                            <BeginStoryboard >
+                                                <Storyboard >
+                                                    <DoubleAnimation Storyboard.TargetProperty="Opacity" To="0.0" Duration="0:0:0.0" >
+                                                    </DoubleAnimation>
+                                                    <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)">
+                                                        <EasingDoubleKeyFrame KeyTime="0:0:0.0" Value="0"/>
+                                                    </DoubleAnimationUsingKeyFrames>
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </DataTrigger.EnterActions>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+                    <ls:LSPie x:Name="chancePie" Tag="{Binding Chance}" SweepDirection="Counterclockwise" Width="120" Height="120" VerticalAlignment="Center" HorizontalAlignment="Center">
+                        <ls:LSPie.Style>
+                            <Style TargetType="ls:LSPie">
+                                <Setter Property="Visibility" Value="Visible"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Chance}" Value="-1">
+                                        <Setter Property="Visibility" Value="Hidden"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ls:LSPie.Style>
+                        <Ellipse Width="92" Height="92" StrokeThickness="4" Fill="Transparent">
+                            <Ellipse.Style>
+                                <Style TargetType="Ellipse">
+                                    <Setter Property="Stroke" Value="White"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Chance, Converter={StaticResource GreaterThanConverter}, ConverterParameter=0.7}" Value="True">
+                                            <Setter Property="Stroke" Value="{DynamicResource LS_bonusTxtColor}"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Chance, Converter={StaticResource LessThanConverter}, ConverterParameter=0.3}" Value="True">
+                                            <Setter Property="Stroke" Value="{DynamicResource LS_alertTxtColor}"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Ellipse.Style>
+                        </Ellipse>
+
+                    </ls:LSPie>
+                </Grid>
+                <Grid Margin="70,0,0,0">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Margin="0,0,0,8" Stretch="None">
+                            <Image.Style>
+                                <Style TargetType="Image">
+                                    <Setter Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared/check_green.png"/>
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Success}" Value="False">
+                                            <Setter Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared/removeFromSlot_overlay.png"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Finished}" Value="True">
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Image.Style>
+                        </Image>
+                        <TextBlock  VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="{StaticResource LS_SecondaryColor}">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Visibility" Value="Visible" />
+                                    <Setter Property="Text" Value="{Binding Source='h6c38d243gd613g45e7g899fgb3943d3212b3', Converter={StaticResource TranslatedStringConverter}}" />
+                                    <Style.Triggers>
+                                        <MultiDataTrigger>
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding Finished}" Value="True" />
+                                                <Condition Binding="{Binding Success}" Value="False" />
+                                            </MultiDataTrigger.Conditions>
+                                            <Setter Property="Text" Value="{Binding Source='h2b186f92gd814g4802g8ef1g906b47bfc6bb', Converter={StaticResource TranslatedStringConverter}}" />
+                                            <Setter Property="Foreground" Value="{DynamicResource LS_alertTxtColor}" />
+                                        </MultiDataTrigger>
+
+                                        <MultiDataTrigger>
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding Finished}" Value="True" />
+                                                <Condition Binding="{Binding Success}" Value="True" />
+                                            </MultiDataTrigger.Conditions>
+                                            <Setter Property="Text" Value="{Binding Source='hd736d0ccgf370g4232gba8bg2caa09a18a1f', Converter={StaticResource TranslatedStringConverter}}" />
+                                            <Setter Property="Foreground" Value="{DynamicResource LS_bonusTxtColor}" />
+                                        </MultiDataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                    </StackPanel>
+                </Grid>
+            </StackPanel>
+        </Grid>
+    </Canvas>
+
+</ls:UIWidget>

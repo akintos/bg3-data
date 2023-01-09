@@ -1,0 +1,314 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+			        xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
+					xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                    xmlns:System="clr-namespace:System;assembly=mscorlib"
+                    xmlns:ls="clr-namespace:ls;assembly=SharedGUI"
+                    xmlns:noesis="clr-namespace:NoesisGUIExtensions;assembly=Noesis.GUI.Extensions"
+					mc:Ignorable="d">
+ 
+    <ControlTemplate x:Key="OptionPreview">
+        <StackPanel x:Name="content" Margin="0,28,0,0" Visibility="Collapsed">
+            <TextBlock Text="{Binding Source='h5c2bca90g60ddg49fega1c2ga2894424c059', Converter={StaticResource TranslatedStringConverter}}" HorizontalAlignment="Center" Margin="0,28,0,0"/>
+            <Grid VerticalAlignment="Top" HorizontalAlignment="Center">
+                <Image x:Name="img" Stretch="None" Width="1272" Height="716" Margin="4,0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <Control x:Name="extraContent"/>
+                <Image Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Options/frame_preview_halfscreen.png" Stretch="None"/>
+            </Grid>
+            <Grid Margin="0,24,0,0" Style="{DynamicResource OptionPreviewGridMarginStyle}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition x:Name="thirdColumn"/>
+                    <ColumnDefinition x:Name="forthColumn" Width="0"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" x:Name="text1" Text="" Style="{DynamicResource PreviewTextStyle}"/>
+                <TextBlock Grid.Column="1" x:Name="text2" Text="" Style="{DynamicResource PreviewTextStyle}"/>
+                <TextBlock Grid.Column="2" x:Name="text3" Text="" Style="{DynamicResource PreviewTextStyle}"/>
+                <TextBlock Grid.Column="3" x:Name="text4" Text="" Style="{DynamicResource PreviewTextStyle}"/>
+            </Grid>
+        </StackPanel>
+        <ControlTemplate.Triggers>
+            <!-- VSYNC -->
+            <DataTrigger Binding="{Binding OptionType}" Value="VSYNC">
+                <Setter TargetName="content" Property="Visibility" Value="Visible"/>
+                <Setter TargetName="img" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Options/SettingsPreview/VSync.png"/>
+                <Setter TargetName="text1" Property="Text" Value="{Binding Source='h468f21a6g00c2g41c3g81d3gbe5291d6ab4d', Converter ={StaticResource TranslatedStringConverter}}"/>
+                <Setter TargetName="text2" Property="Text" Value="{Binding Source='h054025c0gd806g418agb58dg6b325823b7cd', Converter ={StaticResource TranslatedStringConverter}}"/>
+                <Setter TargetName="thirdColumn" Property="Width" Value="0"/>
+            </DataTrigger>
+
+            <!-- MODEL QUALITY -->
+            <DataTrigger Binding="{Binding OptionType}" Value="MODEL_QUALITY">
+                <Setter TargetName="content" Property="Visibility" Value="Visible"/>
+                <Setter TargetName="img" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Options/SettingsPreview/ModelQ.png"/>
+                <Setter TargetName="text1" Property="Text" Value="{Binding Source='h6c2626ddg01c1g42e2g807cgeee804af1695', Converter ={StaticResource TranslatedStringConverter}}"/>
+                <Setter TargetName="text2" Property="Text" Value="{Binding Source='h31ae3639g2e75g4043g9ed6g9425ac022c28', Converter ={StaticResource TranslatedStringConverter}}"/>
+                <Setter TargetName="text3" Property="Text" Value="{Binding Source='h9cb7d61cg981ag40b8ga791gee4b98559781', Converter ={StaticResource TranslatedStringConverter}}"/>
+            </DataTrigger>
+
+            <!-- INSTANCE DISTANCE -->
+            <DataTrigger Binding="{Binding OptionType}" Value="INSTANCE_DISTANCE">
+                <Setter TargetName="content" Property="Visibility" Value="Visible"/>
+                <Setter TargetName="img" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Options/SettingsPreview/InstanceDistance.png"/>
+                <Setter TargetName="text1" Property="Text" Value="{Binding Source='h6c2626ddg01c1g42e2g807cgeee804af1695', Converter ={StaticResource TranslatedStringConverter}}"/>
+                <Setter TargetName="text2" Property="Text" Value="{Binding Source='h31ae3639g2e75g4043g9ed6g9425ac022c28', Converter ={StaticResource TranslatedStringConverter}}"/>
+                <Setter TargetName="text3" Property="Text" Value="{Binding Source='h9cb7d61cg981ag40b8ga791gee4b98559781', Converter ={StaticResource TranslatedStringConverter}}"/>
+            </DataTrigger>
+
+            <!-- TEXTURE QUALITY -->
+            <DataTrigger Binding="{Binding OptionType}" Value="TEXTURE_QUALITY">
+                <Setter TargetName="content" Property="Visibility" Value="Visible"/>
+                <Setter TargetName="img" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Options/SettingsPreview/TextureQ.png"/>
+                <Setter TargetName="text1" Property="Text" Value="{Binding Source='h6c2626ddg01c1g42e2g807cgeee804af1695', Converter ={StaticResource TranslatedStringConverter}}"/>
+                <Setter TargetName="text2" Property="Text" Value="{Binding Source='h31ae3639g2e75g4043g9ed6g9425ac022c28', Converter ={StaticResource TranslatedStringConverter}}"/>
+                <Setter TargetName="text3" Property="Text" Value="{Binding Source='h9cb7d61cg981ag40b8ga791gee4b98559781', Converter ={StaticResource TranslatedStringConverter}}"/>
+            </DataTrigger>
+
+            <!-- TEXTURE FILTERING -->
+            <DataTrigger Binding="{Binding OptionType}" Value="TEXTURE_FILTER">
+                <Setter TargetName="content" Property="Visibility" Value="Visible"/>
+                <Setter TargetName="img" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Options/SettingsPreview/TextureFiltering.png"/>
+                <Setter TargetName="text1" Property="Text" Value="{Binding Source='h6d739cc8gfd7ag426fgb66dg07de7e55662f', Converter ={StaticResource TranslatedStringConverter}}"/>
+                <Setter TargetName="text2" Property="Text" Value="{Binding Source='hae6ca030g8bd0g48bfg9e6eg35bf61f3ca4f', Converter ={StaticResource TranslatedStringConverter}}"/>
+                <Setter TargetName="text3" Property="Text" Value="{Binding Source='h42631bbfg5575g4fe3g844fga06fd6b3fa0e', Converter ={StaticResource TranslatedStringConverter}}"/>
+            </DataTrigger>
+
+            <!-- LIGHTING QUALITY -->
+            <DataTrigger Binding="{Binding OptionType}" Value="LIGHTING_QUALITY">
+                <Setter TargetName="content" Property="Visibility" Value="Visible"/>
+                <Setter TargetName="img" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Options/SettingsPreview/LightQ.png"/>
+                <Setter TargetName="text1" Property="Text" Value="{Binding Source='h6c2626ddg01c1g42e2g807cgeee804af1695', Converter ={StaticResource TranslatedStringConverter}}"/>
+                <Setter TargetName="text2" Property="Text" Value="{Binding Source='h31ae3639g2e75g4043g9ed6g9425ac022c28', Converter ={StaticResource TranslatedStringConverter}}"/>
+                <Setter TargetName="text3" Property="Text" Value="{Binding Source='h9cb7d61cg981ag40b8ga791gee4b98559781', Converter ={StaticResource TranslatedStringConverter}}"/>
+            </DataTrigger>
+
+            <!-- SHADOW QUALITY -->
+            <DataTrigger Binding="{Binding OptionType}" Value="SHADOW_QUALITY">
+                <Setter TargetName="content" Property="Visibility" Value="Visible"/>
+                <Setter TargetName="img" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Options/SettingsPreview/ShadowQ.png"/>
+                <Setter TargetName="text1" Property="Text" Value="{Binding Source='h6c2626ddg01c1g42e2g807cgeee804af1695', Converter ={StaticResource TranslatedStringConverter}}"/>
+                <Setter TargetName="text2" Property="Text" Value="{Binding Source='h31ae3639g2e75g4043g9ed6g9425ac022c28', Converter ={StaticResource TranslatedStringConverter}}"/>
+                <Setter TargetName="text3" Property="Text" Value="{Binding Source='h9cb7d61cg981ag40b8ga791gee4b98559781', Converter ={StaticResource TranslatedStringConverter}}"/>
+            </DataTrigger>
+
+            <!-- ANTI ALIASING QUALITY -->
+            <DataTrigger Binding="{Binding OptionType}" Value="ANTI_ALIASING">
+                <Setter TargetName="content" Property="Visibility" Value="Visible"/>
+                <Setter TargetName="img" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Options/SettingsPreview/AA.png"/>
+                <Setter TargetName="text1" Property="Text" Value="{Binding Source='hcba7a789gdcebg465egb397g1cd8411c3c81', Converter ={StaticResource TranslatedStringConverter}}"/>
+                <Setter TargetName="text2" Property="Text" Value="{Binding Source='hc373afd3g21bfg42c0g91f1g197966717d24', Converter ={StaticResource TranslatedStringConverter}}"/>
+                <Setter TargetName="text3" Property="Text" Value="{Binding Source='hc2a0855cg345fg4f25g891fgc944feea6fcd', Converter ={StaticResource TranslatedStringConverter}}"/>
+                <Setter TargetName="text4" Property="Text" Value="{Binding Source='h54ab0dc2g7c47g42e9gb562g2dbc62f0f22d', Converter ={StaticResource TranslatedStringConverter}}"/>
+                <Setter TargetName="forthColumn" Property="Width" Value="*"/>
+            </DataTrigger>
+
+            <!-- SHADOWS -->
+            <DataTrigger Binding="{Binding OptionType}" Value="SHADOWS">
+                <Setter TargetName="content" Property="Visibility" Value="Visible"/>
+                <Setter TargetName="img" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Options/SettingsPreview/Shadows.png"/>
+                <Setter TargetName="text1" Property="Text" Value="{Binding Source='h17adc2cag3b1ag4711ga651g7d123440625c', Converter ={StaticResource TranslatedStringConverter}}"/>
+                <Setter TargetName="text2" Property="Text" Value="{Binding Source='hc358d80cga01ag4497gafd6gf7e066081f3e', Converter ={StaticResource TranslatedStringConverter}}"/>
+                <Setter TargetName="thirdColumn" Property="Width" Value="0"/>
+            </DataTrigger>
+
+            <!-- LIGHT SHADOWS -->
+            <DataTrigger Binding="{Binding OptionType}" Value="LIGHT_SHADOWS">
+                <Setter TargetName="content" Property="Visibility" Value="Visible"/>
+                <Setter TargetName="img" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Options/SettingsPreview/LightShadows.png"/>
+                <Setter TargetName="text1" Property="Text" Value="{Binding Source='h17adc2cag3b1ag4711ga651g7d123440625c', Converter ={StaticResource TranslatedStringConverter}}"/>
+                <Setter TargetName="text2" Property="Text" Value="{Binding Source='hc358d80cga01ag4497gafd6gf7e066081f3e', Converter ={StaticResource TranslatedStringConverter}}"/>
+                <Setter TargetName="thirdColumn" Property="Width" Value="0"/>
+            </DataTrigger>
+
+            <!-- CLOUDS QUALITY -->
+            <DataTrigger Binding="{Binding OptionType}" Value="CLOUDS_QUALITY">
+                <Setter TargetName="content" Property="Visibility" Value="Visible"/>
+                <Setter TargetName="img" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Options/SettingsPreview/CloudsQuality.png"/>
+                <Setter TargetName="text1" Property="Text" Value="{Binding Source='h6c2626ddg01c1g42e2g807cgeee804af1695', Converter ={StaticResource TranslatedStringConverter}}"/>
+                <Setter TargetName="text2" Property="Text" Value="{Binding Source='h31ae3639g2e75g4043g9ed6g9425ac022c28', Converter ={StaticResource TranslatedStringConverter}}"/>
+                <Setter TargetName="text3" Property="Text" Value="{Binding Source='h9cb7d61cg981ag40b8ga791gee4b98559781', Converter ={StaticResource TranslatedStringConverter}}"/>
+            </DataTrigger>
+
+            <!-- AMBIENT OCCLUSION -->
+            <DataTrigger Binding="{Binding OptionType}" Value="AMBIENT_OCCLUSION">
+                <Setter TargetName="content" Property="Visibility" Value="Visible"/>
+                <Setter TargetName="img" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Options/SettingsPreview/AO.png"/>
+                <Setter TargetName="text1" Property="Text" Value="{Binding Source='h17adc2cag3b1ag4711ga651g7d123440625c', Converter ={StaticResource TranslatedStringConverter}}"/>
+                <Setter TargetName="text2" Property="Text" Value="{Binding Source='hc358d80cga01ag4497gafd6gf7e066081f3e', Converter ={StaticResource TranslatedStringConverter}}"/>
+                <Setter TargetName="thirdColumn" Property="Width" Value="0"/>
+            </DataTrigger>
+
+            <!-- DEPTH OF FIELD -->
+            <DataTrigger Binding="{Binding OptionType}" Value="DEPTH_OF_FIELD">
+                <Setter TargetName="content" Property="Visibility" Value="Visible"/>
+                <Setter TargetName="img" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Options/SettingsPreview/DOF.png"/>
+                <Setter TargetName="text1" Property="Text" Value="{Binding Source='h512c64e5g0216g48f7g92e2g20dc9854bc39', Converter ={StaticResource TranslatedStringConverter}}"/>
+                <Setter TargetName="text2" Property="Text" Value="{Binding Source='heab913a5g6e85g4fccg8f2bg8a7391de6cab', Converter ={StaticResource TranslatedStringConverter}}"/>
+                <Setter TargetName="text3" Property="Text" Value="{Binding Source='h71778ed5g1961g4c9ag9e53g81de7394fea1', Converter ={StaticResource TranslatedStringConverter}}"/>
+            </DataTrigger>
+
+            <!-- SUBSURFACE SCATTERING -->
+            <DataTrigger Binding="{Binding OptionType}" Value="SUBSURFACE_SCATTERING">
+                <Setter TargetName="content" Property="Visibility" Value="Visible"/>
+                <Setter TargetName="img" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Options/SettingsPreview/SSS.png"/>
+                <Setter TargetName="text1" Property="Text" Value="{Binding Source='h17adc2cag3b1ag4711ga651g7d123440625c', Converter ={StaticResource TranslatedStringConverter}}"/>
+                <Setter TargetName="text2" Property="Text" Value="{Binding Source='hc358d80cga01ag4497gafd6gf7e066081f3e', Converter ={StaticResource TranslatedStringConverter}}"/>
+                <Setter TargetName="thirdColumn" Property="Width" Value="0"/>
+            </DataTrigger>
+
+            <!-- GOD RAYS -->
+            <DataTrigger Binding="{Binding OptionType}" Value="GOD_RAYS">
+                <Setter TargetName="content" Property="Visibility" Value="Visible"/>
+                <Setter TargetName="img" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Options/SettingsPreview/GodRays.png"/>
+                <Setter TargetName="text1" Property="Text" Value="{Binding Source='h17adc2cag3b1ag4711ga651g7d123440625c', Converter ={StaticResource TranslatedStringConverter}}"/>
+                <Setter TargetName="text2" Property="Text" Value="{Binding Source='hc358d80cga01ag4497gafd6gf7e066081f3e', Converter ={StaticResource TranslatedStringConverter}}"/>
+                <Setter TargetName="thirdColumn" Property="Width" Value="0"/>
+            </DataTrigger>
+
+            <!-- BLOOM -->
+            <DataTrigger Binding="{Binding OptionType}" Value="BLOOM">
+                <Setter TargetName="content" Property="Visibility" Value="Visible"/>
+                <Setter TargetName="img" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Options/SettingsPreview/Bloom.png"/>
+                <Setter TargetName="text1" Property="Text" Value="{Binding Source='h17adc2cag3b1ag4711ga651g7d123440625c', Converter ={StaticResource TranslatedStringConverter}}"/>
+                <Setter TargetName="text2" Property="Text" Value="{Binding Source='hc358d80cga01ag4497gafd6gf7e066081f3e', Converter ={StaticResource TranslatedStringConverter}}"/>
+                <Setter TargetName="thirdColumn" Property="Width" Value="0"/>
+            </DataTrigger>
+
+            <!-- SSR -->
+            <DataTrigger Binding="{Binding OptionType}" Value="SSR">
+                <Setter TargetName="content" Property="Visibility" Value="Visible"/>
+                <Setter TargetName="img" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Options/SettingsPreview/ScreenSpaceReflections.png"/>
+                <Setter TargetName="text1" Property="Text" Value="{Binding Source='h17adc2cag3b1ag4711ga651g7d123440625c', Converter ={StaticResource TranslatedStringConverter}}"/>
+                <Setter TargetName="text2" Property="Text" Value="{Binding Source='hc358d80cga01ag4497gafd6gf7e066081f3e', Converter ={StaticResource TranslatedStringConverter}}"/>
+                <Setter TargetName="thirdColumn" Property="Width" Value="0"/>
+            </DataTrigger>
+
+            <!-- DIALOGUE ACCESSIBILITY -->
+            <DataTrigger Binding="{Binding OptionType}" Value="SHOW_SPEAKER">
+                <Setter TargetName="content" Property="Visibility" Value="Visible"/>
+                <Setter TargetName="img" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Options/SettingsPreview/Dialogue.png"/>
+                <Setter TargetName="extraContent" Property="Template" Value="{DynamicResource DialogueTemplate}"/>
+            </DataTrigger>
+
+            <DataTrigger Binding="{Binding OptionType}" Value="SHOW_SUBTITLES">
+                <Setter TargetName="content" Property="Visibility" Value="Visible"/>
+                <Setter TargetName="img" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Options/SettingsPreview/Dialogue.png"/>
+                <Setter TargetName="extraContent" Property="Template" Value="{DynamicResource DialogueTemplate}"/>
+            </DataTrigger>
+
+            <DataTrigger Binding="{Binding OptionType}" Value="SHOW_DIALOG_BACKGROUND">
+                <Setter TargetName="content" Property="Visibility" Value="Visible"/>
+                <Setter TargetName="img" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Options/SettingsPreview/Dialogue.png"/>
+                <Setter TargetName="extraContent" Property="Template" Value="{DynamicResource DialogueTemplate}"/>
+            </DataTrigger>
+
+            <DataTrigger Binding="{Binding OptionType}" Value="DIALOG_BACKGROUND_OPACITY">
+                <Setter TargetName="content" Property="Visibility" Value="Visible"/>
+                <Setter TargetName="img" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Options/SettingsPreview/Dialogue.png"/>
+                <Setter TargetName="extraContent" Property="Template" Value="{DynamicResource DialogueTemplate}"/>
+            </DataTrigger>
+
+            <DataTrigger Binding="{Binding OptionType}" Value="DIALOG_FONT_SIZE">
+                <Setter TargetName="content" Property="Visibility" Value="Visible"/>
+                <Setter TargetName="img" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Options/SettingsPreview/Dialogue.png"/>
+                <Setter TargetName="extraContent" Property="Template" Value="{DynamicResource DialogueTemplate}"/>
+            </DataTrigger>
+            
+            <!-- OVERHEAD OPTIONS-->
+            <DataTrigger Binding="{Binding OptionType}" Value="SHOW_OVERHEAD_BACKGROUND">
+                <Setter TargetName="content" Property="Visibility" Value="Visible"/>
+                <Setter TargetName="img" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Options/SettingsPreview/Overhead.png"/>
+                <Setter TargetName="extraContent" Property="Template" Value="{DynamicResource OverheadTemplate}"/>
+            </DataTrigger>
+
+            <DataTrigger Binding="{Binding OptionType}" Value="OVERHEAD_BACKGROUND_OPACITY">
+                <Setter TargetName="content" Property="Visibility" Value="Visible"/>
+                <Setter TargetName="img" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Options/SettingsPreview/Overhead.png"/>
+                <Setter TargetName="extraContent" Property="Template" Value="{DynamicResource OverheadTemplate}"/>
+            </DataTrigger>
+
+            <DataTrigger Binding="{Binding OptionType}" Value="OVERHEAD_FONT_SIZE">
+                <Setter TargetName="content" Property="Visibility" Value="Visible"/>
+                <Setter TargetName="img" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Options/SettingsPreview/Overhead.png"/>
+                <Setter TargetName="extraContent" Property="Template" Value="{DynamicResource OverheadTemplate}"/>
+            </DataTrigger>
+
+            <!-- ROTATING MINIMAP-->
+            <DataTrigger Binding="{Binding OptionType}" Value="ROTATING_MINIMAP">
+                <Setter TargetName="content" Property="Visibility" Value="Visible"/>
+                <Setter TargetName="img" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Options/SettingsPreview/RotatingMinimap.png"/>
+                <Setter TargetName="text1" Property="Text" Value="{Binding Source='h468f21a6g00c2g41c3g81d3gbe5291d6ab4d', Converter ={StaticResource TranslatedStringConverter}}"/>
+                <Setter TargetName="text2" Property="Text" Value="{Binding Source='h054025c0gd806g418agb58dg6b325823b7cd', Converter ={StaticResource TranslatedStringConverter}}"/>
+                <Setter TargetName="thirdColumn" Property="Width" Value="0"/>
+            </DataTrigger>
+            
+            <!-- SHOW TUTORIALS-->
+            <DataTrigger Binding="{Binding OptionType}" Value="SHOW_TUTORIALS">
+                <Setter TargetName="content" Property="Visibility" Value="Visible"/>
+                <Setter TargetName="img" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Options/SettingsPreview/ShowTutorials.png"/>
+                <Setter TargetName="text1" Property="Text" Value="{Binding Source='h468f21a6g00c2g41c3g81d3gbe5291d6ab4d', Converter ={StaticResource TranslatedStringConverter}}"/>
+                <Setter TargetName="text2" Property="Text" Value="{Binding Source='h054025c0gd806g418agb58dg6b325823b7cd', Converter ={StaticResource TranslatedStringConverter}}"/>
+                <Setter TargetName="thirdColumn" Property="Width" Value="0"/>
+            </DataTrigger>
+			
+			<!-- DLSS -->
+            <DataTrigger Binding="{Binding OptionType}" Value="DLSS_UPSCALE_MODE">
+                <Setter TargetName="content" Property="Visibility" Value="Visible"/>
+                <Setter TargetName="img" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Options/SettingsPreview/DLSS.png"/>
+                <Setter TargetName="text1" Property="Text" Value="{Binding Source='h70e91ca7g7e02g46afga8b1g25d8e73228dc', Converter ={StaticResource TranslatedStringConverter}}"/>
+                <Setter TargetName="text2" Property="Text" Value="{Binding Source='h41005cd1g3852g4579g939bg186b209b4df1', Converter ={StaticResource TranslatedStringConverter}}"/>
+                <Setter TargetName="text3" Property="Text" Value="{Binding Source='h57d67e56g6a80g4101ga0b0g5cd7d8e45866', Converter ={StaticResource TranslatedStringConverter}}"/>
+                <Setter TargetName="text4" Property="Text" Value="{Binding Source='h57b57678g7336g443bgbaa5g6b63d0bd2cec', Converter ={StaticResource TranslatedStringConverter}}"/>
+                <Setter TargetName="forthColumn" Property="Width" Value="*"/>
+            </DataTrigger>
+
+            <!-- FSR -->
+            <DataTrigger Binding="{Binding OptionType}" Value="FSR_UPSCALE_MODE">
+                <Setter TargetName="content" Property="Visibility" Value="Visible"/>
+                <Setter TargetName="img" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Options/SettingsPreview/FSR.png"/>
+                <Setter TargetName="text1" Property="Text" Value="{Binding Source='h70e91ca7g7e02g46afga8b1g25d8e73228dc', Converter ={StaticResource TranslatedStringConverter}}"/>
+                <Setter TargetName="text2" Property="Text" Value="{Binding Source='hd8820703gace0g40d1g9209gd53af8cfcf1a', Converter ={StaticResource TranslatedStringConverter}}"/>
+                <Setter TargetName="text3" Property="Text" Value="{Binding Source='he3222c4eg72feg4c73g9e51g0b032e5edff2', Converter ={StaticResource TranslatedStringConverter}}"/>
+                <Setter TargetName="text4" Property="Text" Value="{Binding Source='h69f49da0g6ecag47f5g8266g967e1448addc', Converter ={StaticResource TranslatedStringConverter}}"/>
+                <Setter TargetName="forthColumn" Property="Width" Value="*"/>
+            </DataTrigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+
+    <Style x:Key="PointNClickSliderValueSharedStyle" TargetType="TextBlock">
+        <Setter Property="Visibility" Value="Visible"/>
+        <!-- Default, 'Occasional' case, less than 100, greater than 50 -->
+        <Setter Property="Text" Value="{Binding Source='hf273ba79g745ag4dafga74bge7355c79d09f', Converter={StaticResource TranslatedStringConverter}}"/>
+
+        <Style.Triggers>
+            <!-- 'Rare' case: less than 50 -->
+            <DataTrigger Binding="{Binding Value, Converter={StaticResource LessThanConverter}, ConverterParameter=50}" Value="True">
+                <Setter Property="Text" Value="{Binding Source='heb7ba0d5g7f4cg49e9g9ce2g86cf5e5bd277', Converter={StaticResource TranslatedStringConverter}}"/>
+            </DataTrigger>
+            <!-- 100: 'Always' case -->
+            <DataTrigger Binding="{Binding Value}" Value="100">
+                <Setter Property="Text" Value="{Binding Source='hf55f2b8bgffa6g4589ga3c2g3e960d208aec', Converter={StaticResource TranslatedStringConverter}}"/>
+            </DataTrigger>
+            <!-- 0: 'Never' case -->
+            <DataTrigger Binding="{Binding Value}" Value="0">
+                <Setter Property="Text" Value="{Binding Source='h2b284f2cgeb79g4839g94fage7ca74f5c038', Converter={StaticResource TranslatedStringConverter}}"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="FontSizeSliderValueSharedStyle" TargetType="TextBlock">
+        <Setter Property="Visibility" Value="Visible"/>
+        <Setter Property="Text">
+            <Setter.Value>
+                <MultiBinding Converter="{StaticResource ParameterizedTranslatedStringConverter}">
+                    <Binding Source="h1169e44bg06ddg4592g8016gfaa0943514c6"/>
+                    <Binding Path="Tag" RelativeSource="{RelativeSource Mode=Self}" Converter="{StaticResource AddConverter}" ConverterParameter="{StaticResource TitleFontSize}"/>
+                </MultiBinding>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+</ResourceDictionary>
+    

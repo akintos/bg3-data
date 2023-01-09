@@ -1,0 +1,155 @@
+﻿<ls:UIWidget ls:UIWidget.ContextName="ControllerOptions"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:ls="clr-namespace:ls;assembly=SharedGUI"
+             xmlns:noesis="clr-namespace:NoesisGUIExtensions;assembly=Noesis.GUI.Extensions"
+             xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
+    		 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+			 mc:Ignorable="d"
+             d:DesignHeight="2160" d:DesignWidth="3840"
+             ls:UIWidget.Focusable="False">
+
+    <ls:UIWidget.Resources>
+        <ResourceDictionary Source="../Library/OptionTemplates.xaml"/>
+    </ls:UIWidget.Resources>
+
+    <Viewbox>
+        <Grid HorizontalAlignment="Center" VerticalAlignment="Center"  Height="{StaticResource DesignedWindowHeight}" Width="{StaticResource DesignedWindowWidth}">
+            <Grid.Resources>
+                <Style x:Key="ListBoxStyle" TargetType="ls:LSListBox" BasedOn="{StaticResource {x:Type ls:LSListBox}}">
+                    <Setter Property="Width" Value="600"/>
+                    <Setter Property="Height" Value="1300"/>
+                    <Setter Property="Margin" Value="0,0,800,0"/>
+                    <Setter Property="Background" Value="Transparent"/>
+                    <Setter Property="BorderBrush" Value="Transparent"/>
+                    <Setter Property="IsEnabled" Value="{Binding}"/>
+                    <Setter Property="ActionPrevEvent" Value="UIUp"/>
+                    <Setter Property="ActionNextEvent" Value="UIDown"/>
+                    <Setter Property="ItemContainerStyle">
+                        <Setter.Value>
+                            <Style TargetType="ls:LSListBoxItem" >
+                                <Setter Property="HorizontalAlignment" Value="{Binding HorizontalAlignment, RelativeSource={RelativeSource AncestorType={x:Type ls:LSListBox}}}"/>
+                                <Setter Property="Margin" Value="0,32"/>
+                                <Setter Property="Background" Value="Transparent"/>
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="ls:LSListBoxItem">
+
+                                            <TextBlock x:Name="text" Text="{Binding Functionality}" 
+                                                       FontSize="{DynamicResource DefaultFontSize}" Foreground="{DynamicResource LS_PrimaryColor}"
+                                                       VerticalAlignment="Center" Margin="16"
+                                                       HorizontalAlignment="{Binding HorizontalAlignment, RelativeSource={RelativeSource AncestorType={x:Type ls:LSListBox}}}"
+                                                       TextAlignment="{Binding HorizontalAlignment, RelativeSource={RelativeSource AncestorType={x:Type ls:LSListBox}}}"/>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </Setter.Value>
+                    </Setter>
+                    <Style.Triggers>
+                        <Trigger Property="HorizontalAlignment" Value="Left">
+                            <Setter Property="Margin" Value="800,0,0,0"/>
+                        </Trigger>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter Property="Background" Value="Transparent"/>
+                            <Setter Property="BorderBrush" Value="Transparent"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Background" Value="Transparent"/>
+                            <Setter Property="BorderBrush" Value="Transparent"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Grid.Resources>
+            <Control DataContext="{Binding DataContext, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" Template="{StaticResource OptionTopButtons}" IsEnabled="{Binding InputBindingVisible, Converter={StaticResource InvertBoolConverter}}"/>
+
+            <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,40">
+                <Image VerticalAlignment="Center" HorizontalAlignment="Center" Stretch="None">
+                    <Image.Style>
+                        <Style TargetType="Image">
+                            <Setter Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Options_c/controller_xboxOne.png"/>
+                            <Setter Property="Margin" Value="0"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Path=DataContext.Data.ControllerType, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ls:UIWidget}}}" Value="PS4">
+                                    <Setter Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Options_c/controller_ps4.png" />
+                                    <Setter Property="Margin" Value="0,80,0,0"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Path=DataContext.Data.ControllerType, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ls:UIWidget}}}" Value="Nintendo">
+                                    <Setter Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Options_c/controller_switch.png" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Path=DataContext.Data.ControllerType, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ls:UIWidget}}}" Value="Stadia">
+                                    <Setter Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Options_c/controller_stadia.png" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Image.Style>
+                </Image>
+
+                <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,170,0,0">
+                    <ls:LSListBox x:Name="ControllerBindingList"
+                                  IsEnabled="{Binding InputBindingVisible}"
+                                  Background="Transparent" BorderBrush="Transparent" 
+                                  HorizontalAlignment="Left" VerticalAlignment="Top"
+                                  ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                  LocalFocusSelector="{Binding ElementName=Selector,Mode=OneWay}"
+                                  ActionPrevEvent="UILeft" ActionNextEvent="UIRight">
+                        <ls:LSListBox.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Horizontal"/>
+                            </ItemsPanelTemplate>
+                        </ls:LSListBox.ItemsPanel>
+
+                        <ls:LSListBox Style="{StaticResource ListBoxStyle}" HorizontalAlignment="Right" SelectedIndex="0"
+                                                          ActionPrevEvent="UIUp" ActionNextEvent="UIDown">
+                            <ls:LSListBoxItem DataContext="{Binding ButtonBack}"  />
+                            <ls:LSListBoxItem DataContext="{Binding LeftTrigger}" />
+                            <ls:LSListBoxItem DataContext="{Binding LeftBumper}"  />
+                            <ls:LSListBoxItem DataContext="{Binding DPadUp}"      />
+                            <ls:LSListBoxItem DataContext="{Binding DPadLeft}"    />
+                            <ls:LSListBoxItem DataContext="{Binding DPadDown}"    />
+                            <ls:LSListBoxItem DataContext="{Binding DPadRight}"   />
+                            <ls:LSListBoxItem DataContext="{Binding LeftStick}"   />
+                        </ls:LSListBox>
+
+                        <ls:LSListBox Style="{StaticResource ListBoxStyle}" HorizontalAlignment="Left"
+                                                          ActionPrevEvent="UIUp" ActionNextEvent="UIDown">
+                            <ls:LSListBoxItem DataContext="{Binding ButtonStart}"  />
+                            <ls:LSListBoxItem DataContext="{Binding RightTrigger}" />
+                            <ls:LSListBoxItem DataContext="{Binding RightBumper}"  />
+                            <ls:LSListBoxItem DataContext="{Binding ButtonY}"      />
+                            <ls:LSListBoxItem DataContext="{Binding ButtonB}"      />
+                            <ls:LSListBoxItem DataContext="{Binding ButtonA}"      />
+                            <ls:LSListBoxItem DataContext="{Binding ButtonX}"      />
+                            <ls:LSListBoxItem DataContext="{Binding RightStick}"   />
+                        </ls:LSListBox>
+                    </ls:LSListBox>
+
+                    <Control x:Name="Selector" IsHitTestVisible="False" VerticalAlignment="Top" HorizontalAlignment="Left"
+                                    Template="{StaticResource SelectorTemplate}" Visibility="{Binding InputBindingVisible, Converter={StaticResource BoolToVisibleConverter}}"/>
+                </Grid>
+
+                <TextBlock Text="{Binding Source='ha1203813gdec7g4fe8gb6b4gf2f34b8e226a', Converter={StaticResource TranslatedStringConverter}}"
+                       FontSize="{StaticResource MediumFontSize}" Foreground="{StaticResource LS_PrimaryColorDisabled}"
+                       Width="2000" TextWrapping="Wrap" TextAlignment="Center"
+                       VerticalAlignment="Bottom" Margin="0,0,0,70">
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding DataContext.CommunityType, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" Value="GGP">
+                                    <Setter Property="Visibility" Value="Visible" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Path=DataContext.Data.ControllerType, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ls:UIWidget}}}" Value="Stadia">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+            </Grid>
+
+            <Control Template="{StaticResource OptionBottomButtons}"/>
+        </Grid>
+    </Viewbox>
+</ls:UIWidget>
