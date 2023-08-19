@@ -1,0 +1,152 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<save>
+	<version major="4" minor="0" revision="9" build="305" />
+	<region id="Templates">
+		<node id="Templates">
+			<children>
+				<node id="GameObjects">
+					<attribute id="MapKey" type="22" value="21b5e566-d306-42b7-a09c-884e93275fec" />
+					<attribute id="Name" type="23" value="NAT_Underdark_Mushroom_Platform_Small_B_Dynamic" />
+					<attribute id="LevelName" type="22" value="" />
+					<attribute id="Type" type="22" value="item" />
+					<attribute id="ParentTemplateId" type="22" value="ac5fdc03-184b-48f9-8cd5-ac0d61b74ca1" />
+					<attribute id="ReadinessFlags" type="5" value="128" />
+					<attribute id="Flag" type="4" value="0" />
+					<attribute id="VisualTemplate" type="22" value="82c8cef5-2b58-3c81-96af-48a52c5ae169" />
+					<attribute id="PhysicsTemplate" type="22" value="1a667658-9c6e-8cc5-bd9c-fd38e7f72f55" />
+					<attribute id="DisplayName" type="28" handle="hdd8be49dg6768g4979gae1dg38919b725d41" version="2" />
+					<attribute id="Icon" type="22" value="Item_Quest_CMB_ThrowingRock" />
+					<attribute id="TreasureOnDestroy" type="19" value="True" />
+					<children>
+						<node id="Bounds">
+							<children>
+								<node id="Bound">
+									<attribute id="Type" type="1" value="1" />
+									<attribute id="Shape" type="1" value="1" />
+									<attribute id="Min" type="12" value="-3.530827 -1.110792 -3.390515" />
+									<attribute id="Max" type="12" value="1.977281 0.8660654 3.111614" />
+									<attribute id="Radius" type="6" value="2.186963" />
+									<attribute id="Height" type="6" value="1.976857" />
+								</node>
+								<node id="Bound">
+									<attribute id="Type" type="1" value="2" />
+									<attribute id="Shape" type="1" value="1" />
+									<attribute id="Min" type="12" value="-3.530827 -1.110792 -3.390515" />
+									<attribute id="Max" type="12" value="1.977281 0.8660654 3.111614" />
+									<attribute id="Radius" type="6" value="2.186963" />
+									<attribute id="Height" type="6" value="1.976857" />
+								</node>
+								<node id="Bound">
+									<attribute id="Type" type="1" value="0" />
+									<attribute id="Shape" type="1" value="1" />
+									<attribute id="Min" type="12" value="-1.765413 -1.110792 -1.695257" />
+									<attribute id="Max" type="12" value="0.9886403 0.8660654 1.555807" />
+									<attribute id="Radius" type="6" value="1.093481" />
+									<attribute id="Height" type="6" value="1.976857" />
+								</node>
+							</children>
+						</node>
+						<node id="OnDestroyActions" />
+						<node id="Scripts">
+							<children>
+								<node id="Script">
+									<attribute id="UUID" type="22" value="c8255af5-98a7-4514-ad68-7dfba1164d97" />
+									<children>
+										<node id="Parameters">
+											<children>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="AppearEffect" />
+													<attribute id="Type" type="4" value="3" />
+													<attribute id="Value" type="23" value="VFX_Script_Perception_Hag" />
+												</node>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="AppearEffectTrap" />
+													<attribute id="Type" type="4" value="3" />
+													<attribute id="Value" type="23" value="VFX_Script_Perception_Hag" />
+												</node>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="DC" />
+													<attribute id="Type" type="4" value="1" />
+													<attribute id="Value" type="23" value="10" />
+												</node>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="HardcoreOnly" />
+													<attribute id="Type" type="4" value="1" />
+													<attribute id="Value" type="23" value="0" />
+												</node>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="InteractFromStart" />
+													<attribute id="Type" type="4" value="1" />
+													<attribute id="Value" type="23" value="0" />
+												</node>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="IsInvestigation" />
+													<attribute id="Type" type="4" value="1" />
+													<attribute id="Value" type="23" value="1" />
+												</node>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="MinDistance" />
+													<attribute id="Type" type="4" value="2" />
+													<attribute id="Value" type="23" value="7" />
+												</node>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="RevealOnlyInTrigger" />
+													<attribute id="Type" type="4" value="7" />
+													<attribute id="Value" type="23" value="0xbaadf00d" />
+												</node>
+											</children>
+										</node>
+									</children>
+								</node>
+								<node id="Script">
+									<attribute id="UUID" type="22" value="82c15297-0306-483a-a172-4907a397dc0e" />
+									<children>
+										<node id="Parameters">
+											<children>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="Bool_DisplayClickText" />
+													<attribute id="Type" type="4" value="1" />
+													<attribute id="Value" type="23" value="0" />
+												</node>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="Bool_PlaySound" />
+													<attribute id="Type" type="4" value="1" />
+													<attribute id="Value" type="23" value="0" />
+												</node>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="EventOff" />
+													<attribute id="Type" type="4" value="3" />
+													<attribute id="Value" type="23" value="UND_IllusoryMushroomPlatform_Off" />
+												</node>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="EventOn" />
+													<attribute id="Type" type="4" value="3" />
+													<attribute id="Value" type="23" value="UND_IllusoryMushroomPlatform_On" />
+												</node>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="HardcoreOnly" />
+													<attribute id="Type" type="4" value="1" />
+													<attribute id="Value" type="23" value="0" />
+												</node>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="MaxWeight" />
+													<attribute id="Type" type="4" value="2" />
+													<attribute id="Value" type="23" value="20000" />
+												</node>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="String_ClickText" />
+													<attribute id="Type" type="4" value="4" />
+													<attribute id="Value" type="23" value="GLO_AD_MechanicalClick_fc8d3dc5-b947-6354-3aa9-d1f02fd51af4" />
+												</node>
+											</children>
+										</node>
+									</children>
+								</node>
+							</children>
+						</node>
+					</children>
+				</node>
+			</children>
+		</node>
+	</region>
+</save>

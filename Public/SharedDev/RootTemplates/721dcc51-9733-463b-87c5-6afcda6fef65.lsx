@@ -1,0 +1,109 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<save>
+	<version major="4" minor="0" revision="9" build="320" />
+	<region id="Templates">
+		<node id="Templates">
+			<children>
+				<node id="GameObjects">
+					<attribute id="MapKey" type="22" value="721dcc51-9733-463b-87c5-6afcda6fef65" />
+					<attribute id="Name" type="23" value="PUZ_ArcaneGate" />
+					<attribute id="LevelName" type="22" value="" />
+					<attribute id="Type" type="22" value="item" />
+					<attribute id="ParentTemplateId" type="22" value="115d2399-a009-4a63-82d0-f6c9ef6afdb0" />
+					<attribute id="VisualTemplate" type="22" value="5ea9dc03-c327-9311-0762-4c9fbe5aedd9" />
+					<attribute id="PhysicsTemplate" type="22" value="0de1ba1c-f510-1a08-4826-59a84b53f1fc" />
+					<attribute id="DisplayName" type="28" handle="h55a58843g198fg42beg8885g5d1fa3d64808" version="2" />
+					<attribute id="LoopSound" type="22" value="8b88ffc6-6753-4dea-b5ad-40fc1db2150f" />
+					<attribute id="SoundInitEvent" type="22" value="64f19e18-b09d-4df4-ad92-4026f5ab7cb9" />
+					<attribute id="Icon" type="22" value="Item_LOOT_Spell_TransmutersStone_Resistance_Thunder" />
+					<attribute id="UseSound" type="22" value="0ff784c6-642d-4680-9c28-72062d89204b" />
+					<attribute id="Description" type="28" handle="h276ab033g0890g4653g9cadg0b61a1ec93a7" version="1" />
+					<children>
+						<node id="Bounds">
+							<children>
+								<node id="Bound">
+									<attribute id="Type" type="1" value="0" />
+									<attribute id="Shape" type="1" value="1" />
+									<attribute id="Min" type="12" value="-0.5 0 -0.5" />
+									<attribute id="Max" type="12" value="0.5 2 0.5" />
+									<attribute id="Radius" type="6" value="0.2165065" />
+									<attribute id="Height" type="6" value="1" />
+								</node>
+								<node id="Bound">
+									<attribute id="Type" type="1" value="1" />
+									<attribute id="Shape" type="1" value="1" />
+									<attribute id="Min" type="12" value="-0.5 0 -0.5" />
+									<attribute id="Max" type="12" value="0.5 2 0.5" />
+									<attribute id="Radius" type="6" value="0.433013" />
+									<attribute id="Height" type="6" value="1" />
+								</node>
+								<node id="Bound">
+									<attribute id="Type" type="1" value="2" />
+									<attribute id="Shape" type="1" value="1" />
+									<attribute id="Min" type="12" value="-0.5 0 -0.5" />
+									<attribute id="Max" type="12" value="0.5 2 0.5" />
+									<attribute id="Radius" type="6" value="0.433013" />
+									<attribute id="Height" type="6" value="1" />
+								</node>
+							</children>
+						</node>
+						<node id="OnUsePeaceActions">
+							<children>
+								<node id="Action">
+									<attribute id="ActionType" type="4" value="3" />
+									<children>
+										<node id="Attributes">
+											<attribute id="Animation" type="22" value="" />
+											<attribute id="Conditions" type="23" value="" />
+											<attribute id="Source" type="22" value="" />
+											<attribute id="SourceType" type="4" value="2" />
+											<attribute id="Target" type="22" value="" />
+											<attribute id="Type" type="4" value="2" />
+											<attribute id="EventID" type="22" value="" />
+											<attribute id="AiUseInCombat" type="19" value="True" />
+											<attribute id="BlockMapMarkerNavigation" type="19" value="False" />
+											<attribute id="SnapToGround" type="19" value="True" />
+											<attribute id="Visibility" type="4" value="2" />
+										</node>
+									</children>
+								</node>
+							</children>
+						</node>
+						<node id="OnDestroyActions">
+							<children>
+								<node id="Action">
+									<attribute id="ActionType" type="4" value="26" />
+									<children>
+										<node id="Attributes">
+											<attribute id="Animation" type="22" value="" />
+											<attribute id="Conditions" type="23" value="" />
+											<attribute id="ActivateSoundEvent" type="22" value="3ea82655-5140-4287-9ab8-794559f182d3" />
+											<attribute id="PlayOnHUD" type="19" value="False" />
+										</node>
+									</children>
+								</node>
+								<node id="Action">
+									<attribute id="ActionType" type="4" value="5" />
+									<children>
+										<node id="Attributes">
+											<attribute id="Animation" type="22" value="" />
+											<attribute id="Conditions" type="23" value="" />
+											<attribute id="TargetItemState" type="1" value="0" />
+											<attribute id="SnapToGround" type="19" value="True" />
+											<attribute id="ExplodeFX" type="22" value="cde28800-1d22-76f0-fa45-06a56f7c367b" />
+											<attribute id="visualDestruction" type="22" value="" />
+											<attribute id="VisualWithDynamicPhysics" type="22" value="" />
+											<attribute id="FadeOutDelay" type="6" value="0" />
+											<attribute id="FadeOutFX" type="22" value="" />
+											<attribute id="templateAfterDestruction" type="22" value="" />
+										</node>
+									</children>
+								</node>
+							</children>
+						</node>
+					</children>
+				</node>
+			</children>
+		</node>
+	</region>
+</save>

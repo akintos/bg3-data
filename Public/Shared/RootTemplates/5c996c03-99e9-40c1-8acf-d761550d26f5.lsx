@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<save>
+	<version major="4" minor="0" revision="9" build="320" />
+	<region id="Templates">
+		<node id="Templates">
+			<children>
+				<node id="GameObjects">
+					<attribute id="MapKey" type="22" value="5c996c03-99e9-40c1-8acf-d761550d26f5" />
+					<attribute id="Name" type="23" value="WPN_GOB_PainPriest_Handaxe" />
+					<attribute id="LevelName" type="22" value="" />
+					<attribute id="Type" type="22" value="item" />
+					<attribute id="ParentTemplateId" type="22" value="7a05135d-b285-4186-8a32-a870f1684b60" />
+					<attribute id="ReadinessFlags" type="5" value="144" />
+					<attribute id="Flag" type="4" value="0" />
+					<attribute id="VisualTemplate" type="22" value="8cde1e95-069e-56b9-a0ab-895e3b1f0564" />
+					<attribute id="DisplayName" type="28" handle="hddf2f065ga2d3g468aga744gc1534a6d81ef" version="1" />
+					<attribute id="Stats" type="22" value="GOB_PainPriest_Handaxe" />
+					<attribute id="Description" type="28" handle="h67c6b863gc98bg4eb9gbcd0g441d0b4e5089" version="1" />
+					<children>
+						<node id="Tags">
+							<children>
+								<node id="Tag">
+									<attribute id="Object" type="31" value="7b96246c-54ba-43ea-1db0-0b4ead20f135" />
+								</node>
+							</children>
+						</node>
+						<node id="OnUsePeaceActions">
+							<children>
+								<node id="Action">
+									<attribute id="ActionType" type="4" value="7" />
+									<children>
+										<node id="Attributes">
+											<attribute id="Animation" type="22" value="06346da5-2ed5-4af1-b803-4066a505e662" />
+											<attribute id="Conditions" type="23" value="Tagged('REALLY_GALE', context.Source) and not Tagged('ORI_GALE_DONEWITHITEMS', context.Source)" />
+											<attribute id="StatsId" type="22" value="ORI_GALE_AVATAR_CONSUMEITEM" />
+											<attribute id="StatusDuration" type="4" value="0" />
+											<attribute id="Consume" type="19" value="True" />
+											<attribute id="IsHiddenStatus" type="19" value="False" />
+										</node>
+									</children>
+								</node>
+							</children>
+						</node>
+					</children>
+				</node>
+			</children>
+		</node>
+	</region>
+</save>

@@ -1,0 +1,111 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<save>
+	<version major="4" minor="0" revision="9" build="320" />
+	<region id="Templates">
+		<node id="Templates">
+			<children>
+				<node id="GameObjects">
+					<attribute id="MapKey" type="22" value="d3a1522c-5103-4ebd-b923-f2c9520ad8f1" />
+					<attribute id="Name" type="23" value="Undead_DarkJusticiar_Rogue_DELETEME" />
+					<attribute id="LevelName" type="22" value="" />
+					<attribute id="Type" type="22" value="character" />
+					<attribute id="ParentTemplateId" type="22" value="44762dc3-7e35-44b9-8f90-34981c291ffc" />
+					<attribute id="DisplayName" type="28" handle="he3c7dc23g3dabg4ccagb4f6g9d93b56101dc" version="3" />
+					<attribute id="Icon" type="22" value="fb13258e-ac0a-a9dd-694b-36ca9a3ad4cd-EQP_Dagger_DW_(Icon_DarkJusticiar)" />
+					<attribute id="Stats" type="22" value="SHA_DarkJusticiar_Rogue" />
+					<attribute id="SpellSet" type="22" value="CommonNPCActions" />
+					<attribute id="Equipment" type="22" value="EQP_Dagger_DW" />
+					<attribute id="BloodSurfaceType" type="22" value="SurfaceNone" />
+					<attribute id="CharacterVisualResourceID" type="22" value="fb13258e-ac0a-a9dd-694b-36ca9a3ad4cd" />
+					<attribute id="GeneratePortrait" type="23" value="Icon_DarkJusticiar" />
+					<attribute id="SoftBodyCollisionTemplate" type="22" value="4350b66a-f56a-4f2a-9c60-b5a56609afa4" />
+					<attribute id="Archetype" type="22" value="melee" />
+					<attribute id="AiHint" type="31" value="f5614548-32cc-4e2e-08b1-e53232d51e47" />
+					<children>
+						<node id="Bounds">
+							<children>
+								<node id="Bound">
+									<attribute id="Type" type="1" value="0" />
+									<attribute id="Shape" type="1" value="2" />
+									<attribute id="Min" type="12" value="-0.40751 -0.00135875 -0.1058585" />
+									<attribute id="Max" type="12" value="0.40751 1.93354 0.0630085" />
+									<attribute id="Radius" type="6" value="0.249" />
+									<attribute id="Height" type="6" value="2" />
+								</node>
+								<node id="Bound">
+									<attribute id="Type" type="1" value="1" />
+									<attribute id="Shape" type="1" value="2" />
+									<attribute id="Min" type="12" value="-0.81502 -0.00135875 -0.211717" />
+									<attribute id="Max" type="12" value="0.81502 1.93354 0.126017" />
+									<attribute id="Radius" type="6" value="0.2" />
+									<attribute id="Height" type="6" value="2" />
+								</node>
+								<node id="Bound">
+									<attribute id="Type" type="1" value="2" />
+									<attribute id="Shape" type="1" value="2" />
+									<attribute id="Min" type="12" value="-0.81502 -0.00135875 -0.211717" />
+									<attribute id="Max" type="12" value="0.81502 1.93354 0.126017" />
+									<attribute id="Radius" type="6" value="0.499" />
+									<attribute id="Height" type="6" value="2" />
+								</node>
+							</children>
+						</node>
+						<node id="OnDeathActions">
+							<children>
+								<node id="Action">
+									<attribute id="ActionType" type="4" value="10" />
+									<children>
+										<node id="Attributes">
+											<attribute id="Animation" type="22" value="" />
+											<attribute id="Conditions" type="23" value="" />
+											<attribute id="SurfaceType" type="22" value="SurfaceDarknessCloud" />
+											<attribute id="LifeTime" type="6" value="-1" />
+											<attribute id="Timeout" type="6" value="0" />
+											<attribute id="TotalCells" type="4" value="10" />
+											<attribute id="CellAtGrow" type="4" value="2" />
+											<attribute id="GrowTimer" type="6" value="0.4" />
+											<attribute id="ExternalCauseAsSurfaceOwner" type="19" value="True" />
+											<attribute id="ApplyDeathTypeBloodCheck" type="19" value="True" />
+										</node>
+									</children>
+								</node>
+							</children>
+						</node>
+						<node id="SkillList">
+							<children>
+								<node id="Skill">
+									<attribute id="Skill" type="22" value="Target_SHA_Justiciar_Mislead" />
+									<attribute id="SpellCastingAbility" type="1" value="0" />
+									<attribute id="LearningStrategy" type="1" value="0" />
+									<attribute id="ScoreModifier" type="6" value="1" />
+									<attribute id="StartRound" type="4" value="0" />
+									<attribute id="FallbackStartRound" type="4" value="-1" />
+									<attribute id="MinimumImpact" type="4" value="0" />
+									<attribute id="OnlyCastOnSelf" type="19" value="False" />
+									<attribute id="AIFlags" type="3" value="0" />
+									<children>
+										<node id="SourceConditions">
+											<attribute id="MinimumHealthPercentage" type="4" value="0" />
+											<attribute id="MaximumHealthPercentage" type="4" value="100" />
+											<children>
+												<node id="Tags" />
+											</children>
+										</node>
+										<node id="TargetConditions">
+											<attribute id="MinimumHealthPercentage" type="4" value="0" />
+											<attribute id="MaximumHealthPercentage" type="4" value="100" />
+											<children>
+												<node id="Tags" />
+											</children>
+										</node>
+									</children>
+								</node>
+							</children>
+						</node>
+						<node id="LocomotionParams" />
+					</children>
+				</node>
+			</children>
+		</node>
+	</region>
+</save>

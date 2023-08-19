@@ -1,0 +1,153 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<save>
+	<version major="4" minor="0" revision="9" build="323" />
+	<region id="Templates">
+		<node id="Templates">
+			<children>
+				<node id="GameObjects">
+					<attribute id="MapKey" type="22" value="2a3f3dca-16a0-4500-bf9c-310806574783" />
+					<attribute id="Name" type="23" value="DEC_GEN_Fireworks_Rocket_C_Trap" />
+					<attribute id="LevelName" type="22" value="" />
+					<attribute id="Type" type="22" value="item" />
+					<attribute id="ParentTemplateId" type="22" value="e1ba7d3b-7649-4ad7-bec2-370397e0dbeb" />
+					<attribute id="VisualTemplate" type="22" value="80be7564-8a2e-3808-dfaf-10e248f65215" />
+					<attribute id="PhysicsTemplate" type="22" value="83d64f96-6eb6-5f22-d8e4-4c72b0b92c6a" />
+					<attribute id="DisplayName" type="28" handle="hb37c10afg7161g4e87gb7f5g7be46cf929dc" version="2" />
+					<attribute id="Icon" type="22" value="Item_DEC_GEN_Fireworks_Rocket_C" />
+					<attribute id="Stats" type="22" value="OBJ_Fireworks_Rocket_C" />
+					<attribute id="DisarmDifficultyClassID" type="31" value="5028066b-6ea0-4a6a-3e9e-be5325e6a759" />
+					<attribute id="ConstellationConfigName" type="22" value="ExplosiveWithReward" />
+					<attribute id="Description" type="28" handle="h51f8db35g8eb3g427ag82f4g9b719f9dfd65" version="3" />
+					<children>
+						<node id="Bounds">
+							<children>
+								<node id="Bound">
+									<attribute id="Type" type="1" value="0" />
+									<attribute id="Shape" type="1" value="1" />
+									<attribute id="Min" type="12" value="-0.1070292 -0.1028176 -0.3058064" />
+									<attribute id="Max" type="12" value="0.1099086 0.07483305 0.6688129" />
+									<attribute id="Radius" type="6" value="0.03934672" />
+									<attribute id="Height" type="6" value="0.05857804" />
+								</node>
+								<node id="Bound">
+									<attribute id="Type" type="1" value="1" />
+									<attribute id="Shape" type="1" value="1" />
+									<attribute id="Min" type="12" value="-0.1070292 -0.1028176 -0.3058064" />
+									<attribute id="Max" type="12" value="0.1099086 0.07483307 0.6688129" />
+									<attribute id="Radius" type="6" value="0.07869343" />
+									<attribute id="Height" type="6" value="0.05857804" />
+								</node>
+								<node id="Bound">
+									<attribute id="Type" type="1" value="2" />
+									<attribute id="Shape" type="1" value="1" />
+									<attribute id="Min" type="12" value="-0.1070292 -0.1028176 -0.3058064" />
+									<attribute id="Max" type="12" value="0.1099086 0.07483307 0.6688129" />
+									<attribute id="Radius" type="6" value="0.07869343" />
+									<attribute id="Height" type="6" value="0.05857804" />
+								</node>
+							</children>
+						</node>
+						<node id="OnUsePeaceActions" />
+						<node id="OnDestroyActions">
+							<children>
+								<node id="Action">
+									<attribute id="ActionType" type="4" value="26" />
+									<children>
+										<node id="Attributes">
+											<attribute id="Animation" type="22" value="" />
+											<attribute id="Conditions" type="23" value="" />
+											<attribute id="ActivateSoundEvent" type="22" value="3ea82655-5140-4287-9ab8-794559f182d3" />
+											<attribute id="PlayOnHUD" type="19" value="False" />
+										</node>
+									</children>
+								</node>
+								<node id="Action">
+									<attribute id="ActionType" type="4" value="5" />
+									<children>
+										<node id="Attributes">
+											<attribute id="Animation" type="22" value="" />
+											<attribute id="Conditions" type="23" value="" />
+											<attribute id="TargetItemState" type="1" value="0" />
+											<attribute id="SnapToGround" type="19" value="True" />
+											<attribute id="ExplodeFX" type="22" value="" />
+											<attribute id="visualDestruction" type="22" value="" />
+											<attribute id="VisualWithDynamicPhysics" type="22" value="" />
+											<attribute id="FadeOutDelay" type="6" value="0" />
+											<attribute id="FadeOutFX" type="22" value="" />
+											<attribute id="templateAfterDestruction" type="22" value="48a10a59-e318-4c67-bb8f-b12d329aebf4" />
+										</node>
+									</children>
+								</node>
+							</children>
+						</node>
+						<node id="Scripts" />
+						<node id="ConstellationConfigGlobalParameters">
+							<children>
+								<node id="ConstellationConfigParameter">
+									<attribute id="Name" type="23" value="Reward" />
+									<children>
+										<node id="Value">
+											<children>
+												<node id="Scalar">
+													<children>
+														<node id="Scalar">
+															<children>
+																<node id="String">
+																	<attribute id="String" type="23" value="DEC_GEN_Fireworks_Rocket_C_2f900203-cbe9-4b6c-8d63-1a9a873a13ff" />
+																</node>
+															</children>
+														</node>
+													</children>
+												</node>
+											</children>
+										</node>
+									</children>
+								</node>
+								<node id="ConstellationConfigParameter">
+									<attribute id="Name" type="23" value="Projectile" />
+									<children>
+										<node id="Value">
+											<children>
+												<node id="Scalar">
+													<children>
+														<node id="Scalar">
+															<children>
+																<node id="String">
+																	<attribute id="String" type="23" value="Projectile_Fireworks_Rocket_B_Trap" />
+																</node>
+															</children>
+														</node>
+													</children>
+												</node>
+											</children>
+										</node>
+									</children>
+								</node>
+								<node id="ConstellationConfigParameter">
+									<attribute id="Name" type="23" value="VFXOn" />
+									<children>
+										<node id="Value">
+											<children>
+												<node id="Scalar">
+													<children>
+														<node id="Scalar">
+															<children>
+																<node id="String">
+																	<attribute id="String" type="23" value="VFX_Script_Trap_Overlay_Red_01_a7361f25-e942-e071-7ce3-7a8182f4e0ef" />
+																</node>
+															</children>
+														</node>
+													</children>
+												</node>
+											</children>
+										</node>
+									</children>
+								</node>
+							</children>
+						</node>
+					</children>
+				</node>
+			</children>
+		</node>
+	</region>
+</save>

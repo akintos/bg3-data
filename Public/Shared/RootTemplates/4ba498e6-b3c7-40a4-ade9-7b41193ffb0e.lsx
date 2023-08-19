@@ -1,0 +1,197 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<save>
+	<version major="4" minor="0" revision="9" build="317" />
+	<region id="Templates">
+		<node id="Templates">
+			<children>
+				<node id="GameObjects">
+					<attribute id="DisplayName" type="28" handle="h4bd0d6e4g6915g4a77g8ae6gb202e8c0cabb" version="1" />
+					<attribute id="Icon" type="22" value="Item_LTS_GEN_City_Lantern_A" />
+					<attribute id="LevelName" type="22" value="" />
+					<attribute id="MapKey" type="22" value="4ba498e6-b3c7-40a4-ade9-7b41193ffb0e" />
+					<attribute id="Name" type="23" value="LTS_GEN_City_Lantern_Wall_C" />
+					<attribute id="ParentTemplateId" type="22" value="cbfd6212-b37c-4c3c-89ef-0ac197b42e8f" />
+					<attribute id="PhysicsTemplate" type="22" value="ea990d15-633d-9593-51e5-71cd9b3acd0f" />
+					<attribute id="Type" type="22" value="item" />
+					<attribute id="VisualTemplate" type="22" value="a0f1fc89-3b21-ee88-3b31-772b365cfb90" />
+					<children>
+						<node id="Bounds">
+							<children>
+								<node id="Bound">
+									<attribute id="Height" type="6" value="2.249353" />
+									<attribute id="Max" type="12" value="-0.01228333 1.046409 0.1689428" />
+									<attribute id="Min" type="12" value="-1.425388 -0.2467443 -0.1689432" />
+									<attribute id="Radius" type="6" value="0.5695793" />
+									<attribute id="Shape" type="1" value="1" />
+									<attribute id="Type" type="1" value="1" />
+								</node>
+								<node id="Bound">
+									<attribute id="Height" type="6" value="2.249353" />
+									<attribute id="Max" type="12" value="-0.01228333 1.046409 0.1689428" />
+									<attribute id="Min" type="12" value="-1.425388 -0.2467443 -0.1689432" />
+									<attribute id="Radius" type="6" value="0.5695793" />
+									<attribute id="Shape" type="1" value="1" />
+									<attribute id="Type" type="1" value="2" />
+								</node>
+								<node id="Bound">
+									<attribute id="Height" type="6" value="2.249353" />
+									<attribute id="Max" type="12" value="-0.01228333 1.046409 0.1689428" />
+									<attribute id="Min" type="12" value="-1.425388 -0.2467443 -0.1689432" />
+									<attribute id="Radius" type="6" value="0.2847897" />
+									<attribute id="Shape" type="1" value="1" />
+									<attribute id="Type" type="1" value="0" />
+								</node>
+							</children>
+						</node>
+						<node id="OnDestroyActions">
+							<children>
+								<node id="Action">
+									<attribute id="ActionType" type="4" value="26" />
+									<children>
+										<node id="Attributes">
+											<attribute id="ActivateSoundEvent" type="22" value="3ea82655-5140-4287-9ab8-794559f182d3" />
+											<attribute id="Animation" type="22" value="" />
+											<attribute id="Conditions" type="23" value="" />
+											<attribute id="PlayOnHUD" type="19" value="False" />
+										</node>
+									</children>
+								</node>
+								<node id="Action">
+									<attribute id="ActionType" type="4" value="5" />
+									<children>
+										<node id="Attributes">
+											<attribute id="Animation" type="22" value="" />
+											<attribute id="Conditions" type="23" value="" />
+											<attribute id="ExplodeFX" type="22" value="" />
+											<attribute id="FadeOutDelay" type="6" value="0" />
+											<attribute id="FadeOutFX" type="22" value="" />
+											<attribute id="TargetItemState" type="1" value="0" />
+											<attribute id="VisualWithDynamicPhysics" type="22" value="dfcb424c-0786-a88e-cae8-a7f5733fd225" />
+											<attribute id="templateAfterDestruction" type="22" value="d48386fc-4ac9-418b-97a4-638d41e41f52" />
+											<attribute id="visualDestruction" type="22" value="00000000-0000-0000-0000-000000000000" />
+										</node>
+									</children>
+								</node>
+							</children>
+						</node>
+						<node id="ScriptOverrides">
+							<children>
+								<node id="ScriptOverrides">
+									<children>
+										<node id="Object">
+											<attribute id="MapKey" type="22" value="d289389c-882d-4695-a8d5-dda2a1351711" />
+											<children>
+												<node id="ScriptOverrides">
+													<children>
+														<node id="ScriptVariables">
+															<children>
+																<node id="Object">
+																	<attribute id="MapKey" type="22" value="BurnEffect" />
+																	<children>
+																		<node id="ScriptVariables">
+																			<attribute id="Value" type="23" value="VFX_Lightsources_GEN_City_Lantern_Wall_C_01" />
+																		</node>
+																	</children>
+																</node>
+																<node id="Object">
+																	<attribute id="MapKey" type="22" value="BurnEffectBone" />
+																	<children>
+																		<node id="ScriptVariables">
+																			<attribute id="Value" type="23" value="Dummy_LTS_GEN_City_Lantern_Wall_C" />
+																		</node>
+																	</children>
+																</node>
+															</children>
+														</node>
+													</children>
+												</node>
+											</children>
+										</node>
+									</children>
+								</node>
+							</children>
+						</node>
+						<node id="Scripts">
+							<children>
+								<node id="Script">
+									<attribute id="UUID" type="22" value="d289389c-882d-4695-a8d5-dda2a1351711" />
+									<children>
+										<node id="Parameters">
+											<children>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="AllowUserInteraction" />
+													<attribute id="Type" type="4" value="1" />
+													<attribute id="Value" type="23" value="1" />
+												</node>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="BurnEffect" />
+													<attribute id="Type" type="4" value="3" />
+													<attribute id="Value" type="23" value="VFX_LightSources_GEN_Torch_A_NOTAPPROVED_01" />
+												</node>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="BurnEffectBone" />
+													<attribute id="Type" type="4" value="4" />
+													<attribute id="Value" type="23" value="Dummy_LTS_GEN_City_Lantern_Wall_C" />
+												</node>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="EnableGameplayLight" />
+													<attribute id="Type" type="4" value="1" />
+													<attribute id="Value" type="23" value="1" />
+												</node>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="GameplayLightOffsetX" />
+													<attribute id="Type" type="4" value="2" />
+													<attribute id="Value" type="23" value="0" />
+												</node>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="GameplayLightOffsetY" />
+													<attribute id="Type" type="4" value="2" />
+													<attribute id="Value" type="23" value="1" />
+												</node>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="GameplayLightOffsetZ" />
+													<attribute id="Type" type="4" value="2" />
+													<attribute id="Value" type="23" value="0" />
+												</node>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="GameplayLightRadius" />
+													<attribute id="Type" type="4" value="2" />
+													<attribute id="Value" type="23" value="4" />
+												</node>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="HardcoreOnly" />
+													<attribute id="Type" type="4" value="1" />
+													<attribute id="Value" type="23" value="0" />
+												</node>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="LightSharpnessOverride" />
+													<attribute id="Type" type="4" value="2" />
+													<attribute id="Value" type="23" value="0.95" />
+												</node>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="LightSourceOffSound" />
+													<attribute id="Type" type="4" value="3" />
+													<attribute id="Value" type="23" value="DEC_Interactive_Lightsources_Torch_Small_Off" />
+												</node>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="LightSourceOnSound" />
+													<attribute id="Type" type="4" value="3" />
+													<attribute id="Value" type="23" value="DEC_Interactive_Lightsources_Torch_Small_On" />
+												</node>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="StartLit" />
+													<attribute id="Type" type="4" value="1" />
+													<attribute id="Value" type="23" value="1" />
+												</node>
+											</children>
+										</node>
+									</children>
+								</node>
+							</children>
+						</node>
+					</children>
+				</node>
+			</children>
+		</node>
+	</region>
+</save>

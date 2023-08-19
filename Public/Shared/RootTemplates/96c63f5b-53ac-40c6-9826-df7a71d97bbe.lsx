@@ -1,0 +1,160 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<save>
+	<version major="4" minor="0" revision="9" build="316" />
+	<region id="Templates">
+		<node id="Templates">
+			<children>
+				<node id="GameObjects">
+					<attribute id="MapKey" type="22" value="96c63f5b-53ac-40c6-9826-df7a71d97bbe" />
+					<attribute id="Name" type="23" value="BASE_PUZ_TeleporterHole" />
+					<attribute id="LevelName" type="22" value="" />
+					<attribute id="Type" type="22" value="item" />
+					<attribute id="ParentTemplateId" type="22" value="90ec2f64-e124-474c-8b27-a56bba6f6c88" />
+					<attribute id="RecieveDecal" type="19" value="True" />
+					<attribute id="DisplayName" type="28" handle="h59506573g58d7g4e11gb636gaf3dad861208" version="1" />
+					<attribute id="Tooltip" type="1" value="2" />
+					<attribute id="AllowSummonTeleport" type="19" value="True" />
+					<children>
+						<node id="OnUsePeaceActions">
+							<children>
+								<node id="Action">
+									<attribute id="ActionType" type="4" value="3" />
+									<children>
+										<node id="Attributes">
+											<attribute id="Animation" type="22" value="" />
+											<attribute id="Conditions" type="23" value="" />
+											<attribute id="Source" type="22" value="" />
+											<attribute id="SourceType" type="4" value="2" />
+											<attribute id="Target" type="22" value="" />
+											<attribute id="Type" type="4" value="2" />
+											<attribute id="EventID" type="22" value="" />
+											<attribute id="AiUseInCombat" type="19" value="False" />
+											<attribute id="BlockMapMarkerNavigation" type="19" value="False" />
+											<attribute id="SnapToGround" type="19" value="True" />
+											<attribute id="Visibility" type="4" value="2" />
+										</node>
+									</children>
+								</node>
+								<node id="Action">
+									<attribute id="ActionType" type="4" value="35" />
+									<children>
+										<node id="Attributes">
+											<attribute id="Animation" type="22" value="" />
+											<attribute id="Conditions" type="23" value="" />
+										</node>
+									</children>
+								</node>
+							</children>
+						</node>
+						<node id="Scripts">
+							<children>
+								<node id="Script">
+									<attribute id="UUID" type="22" value="c8255af5-98a7-4514-ad68-7dfba1164d97" />
+									<children>
+										<node id="Parameters">
+											<children>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="AppearEffect" />
+													<attribute id="Type" type="4" value="3" />
+													<attribute id="Value" type="23" value="VFX_Script_Perception_Default_01" />
+												</node>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="AppearEffectTrap" />
+													<attribute id="Type" type="4" value="3" />
+													<attribute id="Value" type="23" value="VFX_Script_Perception_Danger_01" />
+												</node>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="DC" />
+													<attribute id="Type" type="4" value="1" />
+													<attribute id="Value" type="23" value="5" />
+												</node>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="HardcoreOnly" />
+													<attribute id="Type" type="4" value="1" />
+													<attribute id="Value" type="23" value="0" />
+												</node>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="HighlightTimer" />
+													<attribute id="Type" type="4" value="2" />
+													<attribute id="Value" type="23" value="18" />
+												</node>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="InteractFromStart" />
+													<attribute id="Type" type="4" value="1" />
+													<attribute id="Value" type="23" value="0" />
+												</node>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="IsInvestigation" />
+													<attribute id="Type" type="4" value="1" />
+													<attribute id="Value" type="23" value="0" />
+												</node>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="MinDistance" />
+													<attribute id="Type" type="4" value="2" />
+													<attribute id="Value" type="23" value="6" />
+												</node>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="RevealOnlyInTrigger" />
+													<attribute id="Type" type="4" value="7" />
+													<attribute id="Value" type="23" value="0xbaadf00d" />
+												</node>
+											</children>
+										</node>
+									</children>
+								</node>
+								<node id="Script">
+									<attribute id="UUID" type="22" value="52dc6c09-d58a-cef0-8525-f4b951512f97" />
+									<children>
+										<node id="Parameters">
+											<children>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="ConnectedTeleporter" />
+													<attribute id="Type" type="4" value="6" />
+													<attribute id="Value" type="23" value="0xbaadf00d" />
+												</node>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="HardcoreOnly" />
+													<attribute id="Type" type="4" value="1" />
+													<attribute id="Value" type="23" value="0" />
+												</node>
+											</children>
+										</node>
+									</children>
+								</node>
+							</children>
+						</node>
+						<node id="ScriptOverrides">
+							<children>
+								<node id="ScriptOverrides">
+									<children>
+										<node id="Object">
+											<attribute id="MapKey" type="22" value="52dc6c09-d58a-cef0-8525-f4b951512f97" />
+											<children>
+												<node id="ScriptOverrides">
+													<children>
+														<node id="ScriptVariables">
+															<children>
+																<node id="Object">
+																	<attribute id="MapKey" type="22" value="ConnectedTeleporter" />
+																	<children>
+																		<node id="ScriptVariables">
+																			<attribute id="Value" type="23" value="0xbaadf00d" />
+																		</node>
+																	</children>
+																</node>
+															</children>
+														</node>
+													</children>
+												</node>
+											</children>
+										</node>
+									</children>
+								</node>
+							</children>
+						</node>
+					</children>
+				</node>
+			</children>
+		</node>
+	</region>
+</save>

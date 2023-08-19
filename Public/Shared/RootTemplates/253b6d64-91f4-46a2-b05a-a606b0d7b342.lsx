@@ -1,0 +1,163 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<save>
+	<version major="4" minor="0" revision="9" build="327" />
+	<region id="Templates">
+		<node id="Templates">
+			<children>
+				<node id="GameObjects">
+					<attribute id="MapKey" type="22" value="253b6d64-91f4-46a2-b05a-a606b0d7b342" />
+					<attribute id="Name" type="23" value="CONT_Barrel_Water_A" />
+					<attribute id="LevelName" type="22" value="" />
+					<attribute id="Type" type="22" value="item" />
+					<attribute id="ParentTemplateId" type="22" value="1849ce97-45ac-43ea-9518-9f80aaa0c005" />
+					<attribute id="ReadinessFlags" type="5" value="144" />
+					<attribute id="VisualTemplate" type="22" value="e07d4301-a392-d6a2-21dc-eb600d36e03b" />
+					<attribute id="PhysicsTemplate" type="22" value="9c8f2431-6d0a-e061-b431-b66e9d722811" />
+					<attribute id="RecieveDecal" type="19" value="False" />
+					<attribute id="DisplayName" type="28" handle="h25095bafg2000g4f40g8ac9g8ae4f35fcd56" version="1" />
+					<attribute id="CanShootThrough" type="19" value="False" />
+					<attribute id="Icon" type="22" value="Item_CONT_Barrel_Water_A" />
+					<attribute id="Stats" type="22" value="OBJ_Barrel_Filled" />
+					<attribute id="Hostile" type="19" value="True" />
+					<attribute id="InventoryType" type="1" value="0" />
+					<attribute id="Description" type="28" handle="h1f9aa815ge90fg4bc2ga12eg37cbe92edd89" version="1" />
+					<children>
+						<node id="Tags">
+							<children>
+								<node id="Tag">
+									<attribute id="Object" type="31" value="b148cfca-53d8-4b73-52b0-08de4a395e23" />
+								</node>
+							</children>
+						</node>
+						<node id="Bounds">
+							<children>
+								<node id="Bound">
+									<attribute id="Type" type="1" value="1" />
+									<attribute id="Shape" type="1" value="1" />
+									<attribute id="Min" type="12" value="-0.4 0.00834632 -0.4" />
+									<attribute id="Max" type="12" value="0.4 1.33442 0.4" />
+									<attribute id="Radius" type="6" value="0.507822" />
+									<attribute id="Height" type="6" value="1.32607" />
+								</node>
+								<node id="Bound">
+									<attribute id="Type" type="1" value="2" />
+									<attribute id="Shape" type="1" value="1" />
+									<attribute id="Min" type="12" value="-0.4 0.00834632 -0.4" />
+									<attribute id="Max" type="12" value="0.4 1.33442 0.4" />
+									<attribute id="Radius" type="6" value="0.507822" />
+									<attribute id="Height" type="6" value="1.32607" />
+								</node>
+								<node id="Bound">
+									<attribute id="Type" type="1" value="0" />
+									<attribute id="Shape" type="1" value="1" />
+									<attribute id="Min" type="12" value="-0.2 0.00834632 -0.2" />
+									<attribute id="Max" type="12" value="0.2 1.33442 0.2" />
+									<attribute id="Radius" type="6" value="0.253911" />
+									<attribute id="Height" type="6" value="1.32607" />
+								</node>
+							</children>
+						</node>
+						<node id="OnUsePeaceActions">
+							<children>
+								<node id="Action">
+									<attribute id="ActionType" type="4" value="32" />
+									<children>
+										<node id="Attributes">
+											<attribute id="Animation" type="22" value="" />
+											<attribute id="Conditions" type="23" value="" />
+											<attribute id="FallbackPreviewRadius" type="6" value="3" />
+										</node>
+									</children>
+								</node>
+							</children>
+						</node>
+						<node id="OnDestroyActions">
+							<children>
+								<node id="Action">
+									<attribute id="ActionType" type="4" value="5" />
+									<children>
+										<node id="Attributes">
+											<attribute id="Animation" type="22" value="" />
+											<attribute id="Conditions" type="23" value="" />
+											<attribute id="TargetItemState" type="1" value="0" />
+											<attribute id="SnapToGround" type="19" value="True" />
+											<attribute id="ExplodeFX" type="22" value="342b33ff-10e6-6e8b-11ab-d425d0b17696" />
+											<attribute id="visualDestruction" type="22" value="" />
+											<attribute id="VisualWithDynamicPhysics" type="22" value="d715dbff-daa4-b07a-2666-949db9d3c79c" />
+											<attribute id="FadeOutDelay" type="6" value="0" />
+											<attribute id="FadeOutFX" type="22" value="" />
+											<attribute id="templateAfterDestruction" type="22" value="70408b3e-f479-4e39-bb85-ab6ca862c6fb" />
+										</node>
+									</children>
+								</node>
+								<node id="Action">
+									<attribute id="ActionType" type="4" value="26" />
+									<children>
+										<node id="Attributes">
+											<attribute id="Animation" type="22" value="" />
+											<attribute id="Conditions" type="23" value="" />
+											<attribute id="ActivateSoundEvent" type="22" value="b4d7455f-4970-9269-8cb0-387f5073784a" />
+											<attribute id="PlayOnHUD" type="19" value="False" />
+										</node>
+									</children>
+								</node>
+								<node id="Action">
+									<attribute id="ActionType" type="4" value="10" />
+									<children>
+										<node id="Attributes">
+											<attribute id="Animation" type="22" value="" />
+											<attribute id="Conditions" type="23" value="" />
+											<attribute id="SurfaceType" type="22" value="SurfaceWater" />
+											<attribute id="LifeTime" type="6" value="-1" />
+											<attribute id="Timeout" type="6" value="0" />
+											<attribute id="TotalCells" type="4" value="120" />
+											<attribute id="CellAtGrow" type="4" value="10" />
+											<attribute id="GrowTimer" type="6" value="0.02" />
+											<attribute id="ExternalCauseAsSurfaceOwner" type="19" value="True" />
+											<attribute id="ApplyDeathTypeBloodCheck" type="19" value="True" />
+										</node>
+									</children>
+								</node>
+							</children>
+						</node>
+						<node id="InventoryList">
+							<children>
+								<node id="InventoryItem">
+									<attribute id="Object" type="22" value="Empty" />
+								</node>
+							</children>
+						</node>
+						<node id="Scripts">
+							<children>
+								<node id="Script">
+									<attribute id="UUID" type="22" value="a557ab71-77f3-4b0c-8174-f605e51c90c7" />
+									<children>
+										<node id="Parameters">
+											<children>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="HardcoreOnly" />
+													<attribute id="Type" type="4" value="1" />
+													<attribute id="Value" type="23" value="0" />
+												</node>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="LifeTime" />
+													<attribute id="Type" type="4" value="2" />
+													<attribute id="Value" type="23" value="0" />
+												</node>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="ProjectileSpell" />
+													<attribute id="Type" type="4" value="9" />
+													<attribute id="Value" type="23" value="Projectile_WaterSplash_Large" />
+												</node>
+											</children>
+										</node>
+									</children>
+								</node>
+							</children>
+						</node>
+					</children>
+				</node>
+			</children>
+		</node>
+	</region>
+</save>

@@ -1,0 +1,794 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+					xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			        xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
+                    xmlns:noesis="clr-namespace:NoesisGUIExtensions;assembly=Noesis.GUI.Extensions"
+                    xmlns:ls="clr-namespace:ls;assembly=SharedGUI"
+                    xmlns:System="clr-namespace:System;assembly=mscorlib"
+					mc:Ignorable="d">
+    <ControlTemplate x:Key="PortraitTemplate">
+        <Grid VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,49,0,0">
+            <Path Stretch="None" VerticalAlignment="Center" HorizontalAlignment="Center" Width="154" Height="225" Fill="{Binding Icon}" RenderTransformOrigin="0.5,0.534" Margin="0,0,0,20">
+                <Path.Data>
+                    <Geometry>M0,27 A90,90 0 0 1 27,0 H125 A90,90 0 0 1 154,27 V196 A90,90 0 0 1 125,225 H27 A90,90 0 0 1 0,196 V42 Z</Geometry>
+                </Path.Data>
+            </Path>
+            <!-- For the moment, we fill the portrait of dead characters as the shaders effect are not available in Noesis yet.
+                     TODO : See GUS-153582-->
+            <Path Stretch="None" VerticalAlignment="Center" HorizontalAlignment="Center" Width="154" Height="225" Visibility="{Binding Stats.IsAlive, Converter={StaticResource BoolToCollapsedConverter}}"
+                      Fill="{DynamicResource LS_PortraitDeadColor}" RenderTransformOrigin="0.5,0.534">
+                <Path.Data>
+                    <Geometry>M0,27 A90,90 0 0 1 27,0 H125 A90,90 0 0 1 154,27 V196 A90,90 0 0 1 125,225 H27 A90,90 0 0 1 0,196 V42 Z</Geometry>
+                </Path.Data>
+            </Path>
+            <Image x:Name="iconFrame" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/PartyInventory_c/c_character_image_frame.png" Stretch="None" VerticalAlignment="Top" Margin="0,-16,0,0" ClipToBounds="False">
+                <Image.Tag>
+                    <MultiBinding Converter="{StaticResource EqualConverter}">
+                        <Binding RelativeSource="{RelativeSource AncestorType={x:Type ls:UIWidget}}" Path="DataContext.CurrentPlayer.UserId"/>
+                        <Binding Path="OwnerUserID"/>
+                    </MultiBinding>
+                </Image.Tag>
+            </Image>
+        </Grid>
+        <ControlTemplate.Triggers>
+            <DataTrigger Binding="{Binding ElementName=iconFrame, Path=Tag}" Value="False">
+                <Setter TargetName="iconFrame" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/PartyInventory_c/c_character_image_frame_mp.png" />
+            </DataTrigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+
+    <ControlTemplate x:Key="GoldPanel">
+        <StackPanel Orientation="Horizontal">
+            <TextBlock VerticalAlignment="Center" Text="{Binding ., StringFormat={}{0:N0}}" Foreground="{StaticResource LS_warning100TxtColor}" FontSize="{StaticResource DefaultFontSize}"
+                       FontWeight="DemiBold" Width="150" TextAlignment="Right"/>
+            <Image VerticalAlignment="Center" Margin="0,0,0,-5"
+                   Stretch="None" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/PartyInventory_c/c_gold.png" />
+        </StackPanel>
+    </ControlTemplate>
+    
+    <ControlTemplate x:Key="SingleCharacterPanel">
+        <Grid Height="500">
+            <Image Source="pack://application:,,,/GustavNoesisGUI;component/Assets/PartyInventory_c/c_mainPaneHeaderFrame.png" Stretch="None" VerticalAlignment="Top" Margin="0,115" ClipToBounds="False"/>
+            <Control Template="{StaticResource PortraitTemplate}" VerticalAlignment="Top" HorizontalAlignment="Center" DataContext="{Binding}" Margin="0,-40"/>
+
+            <Image x:Name="InventoryLockImage" HorizontalAlignment="Left" VerticalAlignment="Top" Stretch="None" Margin="60,75" Visibility="Collapsed"
+                   Source="pack://application:,,,/GustavNoesisGUI;component/Assets/PartyInventory_c/c_ico_inventoryLocked.png">
+                <Image.Tag>
+                    <MultiBinding Converter="{StaticResource EqualConverter}">
+                        <Binding RelativeSource="{RelativeSource AncestorType={x:Type ls:UIWidget}}" Path="DataContext.CurrentPlayer.UserId"/>
+                        <Binding Path="OwnerUserID"/>
+                    </MultiBinding>
+                </Image.Tag>
+            </Image>
+
+            <Control x:Name="GoldLabel" Template="{StaticResource GoldPanel}" Margin="610,90,0,0" VerticalAlignment="Top" DataContext="{Binding Inventory.Gold, Mode=OneWay}"/>
+
+            <Image x:Name="ShadowBg" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/PartyInventory_c/c_smallShadow.png" Stretch="Fill"
+                   VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,195" Height="120" ClipToBounds="False" Width="{Binding ElementName=NameLabel, Path=ActualWidth, Converter={StaticResource AddConverter}, ConverterParameter=60}"/>
+
+            <TextBlock x:Name="NameLabel" Text="{Binding Name}" Foreground="{DynamicResource LS_ActivePanelFontColor}" VerticalAlignment="Center" TextWrapping="Wrap"
+                       MaxWidth="330" MaxHeight="120" TextAlignment="Center"/>
+
+            <Grid.Triggers>
+                <EventTrigger RoutedEvent="FrameworkElement.Loaded">
+                    <BeginStoryboard >
+                        <Storyboard TargetName="GoldLabel">
+                            <Storyboard.Children>
+                                <Storyboard Children="{StaticResource FadeInSecElements}"/>
+                            </Storyboard.Children>
+                        </Storyboard>
+                    </BeginStoryboard>
+                    <BeginStoryboard >
+                        <Storyboard TargetName="NameLabel" >
+                            <Storyboard.Children>
+                                <Storyboard Children="{StaticResource FadeInTertElements}"/>
+                            </Storyboard.Children>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </Grid.Triggers>
+        </Grid>
+        <ControlTemplate.Triggers>
+            <MultiDataTrigger>
+                <MultiDataTrigger.Conditions>
+                    <Condition Binding="{Binding IsInventoryLocked}" Value="True"/>
+                    <Condition Binding="{Binding Tag, ElementName=InventoryLockImage}" Value="False"/>
+                </MultiDataTrigger.Conditions>
+                <MultiDataTrigger.Setters>
+                    <Setter TargetName="InventoryLockImage" Property="Visibility" Value="Visible"/>
+                </MultiDataTrigger.Setters>
+            </MultiDataTrigger>
+
+            <DataTrigger Binding="{Binding Tag, ElementName=InventoryLockImage}" Value="True">
+                <Setter TargetName="InventoryLockImage" Property="Visibility" Value="Collapsed"/>
+            </DataTrigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+
+    <ControlTemplate x:Key="WeightBarControllerTemplate" TargetType="Control">
+        <Grid>
+            <Grid.Resources>
+                <Style TargetType="TextBlock">
+                    <Setter Property="Foreground" Value="{StaticResource LS_extraspecialTxtColor}"/>
+                    <Setter Property="VerticalAlignment" Value="Center"/>
+                    <Setter Property="FontSize" Value="{DynamicResource LargeFontSize}"/>
+
+                    <Setter Property="FontFamily" Value="{StaticResource SpecialFont}"/>
+                    <Setter Property="noesis:Text.Stroke" Value="{StaticResource LS_textStrokeColor}"/>
+                    <Setter Property="noesis:Text.StrokeThickness" Value="4"/>
+                </Style>
+
+                <System:Double x:Key="weightBarWidth">466</System:Double>
+
+                <ImageSource x:Key="IconNormal">pack://application:,,,/GustavNoesisGUI;component/Assets/Shared_c/Weight_Encumbrance/c_ico_weight_normal.png</ImageSource>
+                <ImageSource x:Key="IconEncumbered">pack://application:,,,/GustavNoesisGUI;component/Assets/Shared_c/Weight_Encumbrance/c_ico_weight_encumbered.png</ImageSource>
+                <ImageSource x:Key="IconHeavilyEncumbered">pack://application:,,,/GustavNoesisGUI;component/Assets/Shared_c/Weight_Encumbrance/c_ico_weight_heavilyEncumbered.png</ImageSource>
+
+                <ImageSource x:Key="PointerNormal">pack://application:,,,/GustavNoesisGUI;component/Assets/Shared_c/Weight_Encumbrance/c_pointer_weight.png</ImageSource>
+                <ImageSource x:Key="PointerEncumbered">pack://application:,,,/GustavNoesisGUI;component/Assets/Shared_c/Weight_Encumbrance/c_pointer_encumbrance.png</ImageSource>
+                <ImageSource x:Key="PointerHeavilyEncumbered">pack://application:,,,/GustavNoesisGUI;component/Assets/Shared_c/Weight_Encumbrance/c_pointer_heavyEncumbrance.png</ImageSource>
+            </Grid.Resources>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Weight icon -->
+            <Image x:Name="currentWeightIcon" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Source="{StaticResource IconNormal}" Stretch="None" Margin="-20,-4,-2,0"/>
+
+            <!-- Weight bar -->
+            <Grid Grid.Column="1" Margin="0,16,0,0">
+                <!-- Bar background -->
+                <Image VerticalAlignment="Top" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared_c/Weight_Encumbrance/c_weightBar_mainFooter.png" Stretch="None" Margin="0,-8,0,0"/>
+                <Image x:Name="barBackgroundCarryLimit" VerticalAlignment="Top" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared_c/Weight_Encumbrance/c_bar_mainFooter_carryLimit.png" Stretch="None"/>
+
+                <!-- Bar -->
+                <Grid HorizontalAlignment="Left" VerticalAlignment="Top" Margin="26,14,0,0">
+                    <Grid HorizontalAlignment="Left" VerticalAlignment="Top" Width="{StaticResource weightBarWidth}" Height="16">
+                        <!-- Encumbrance limits -->
+                        <Image HorizontalAlignment="Left" Width="{StaticResource weightBarWidth}" Source="{StaticResource BarWeightHeavilyEncumberedDisabled}" Stretch="Fill"/>
+                        <Image HorizontalAlignment="Left" Width="{Binding EncumbranceStats.WeightHeavyPercentage, Converter={StaticResource MultiplierConverter}, ConverterParameter={StaticResource weightBarWidth}}" Source="{StaticResource BarWeightEncumberedDisabled}"
+                               Stretch="Fill"/>
+                        <Image HorizontalAlignment="Left" Width="{Binding EncumbranceStats.WeightLightPercentage, Converter={StaticResource MultiplierConverter}, ConverterParameter={StaticResource weightBarWidth}}" Source="{StaticResource BarWeightNormalDisabled}"
+                               Stretch="Fill"/>
+
+                        <!-- Current weight bar -->
+                        <ProgressBar x:Name="currentWeightBar" Value="{Binding EncumbranceStats.CurrentWeight, Mode=OneWay}" Minimum="0" Maximum="{Binding EncumbranceStats.WeightMaximum}" Background="Transparent" BorderBrush="Transparent">
+                            <ProgressBar.Foreground>
+                                <ImageBrush ImageSource="{StaticResource BarWeightNormal}"/>
+                            </ProgressBar.Foreground>
+                        </ProgressBar>
+                    </Grid>
+
+                    <!-- Current weight pointer -->
+                    <Grid HorizontalAlignment="Left" MaxWidth="{StaticResource weightBarWidth}" Width="{Binding EncumbranceStats.WeightCurrentPercentage, Converter={StaticResource MultiplierConverter}, ConverterParameter={StaticResource weightBarWidth}}">
+                        <Canvas HorizontalAlignment="Right" Margin="0,22,0,0">
+                            <Image x:Name="currentWeightPointer" Margin="-20,0,0,0" ClipToBounds="False" Source="{StaticResource PointerNormal}" Stretch="None"/>
+                            <TextBlock x:Name="currentWeightText" Text="{Binding EncumbranceStats.CurrentWeight, Converter={StaticResource UnitConverter}, ConverterParameter='Weight N2'}" Margin="0,8"
+                                       Canvas.Left="{Binding ActualWidth, RelativeSource={RelativeSource Self}, Converter={StaticResource DivideConverter}, ConverterParameter=-2}"/>
+                        </Canvas>
+                    </Grid>
+
+                    <!-- Dividers -->
+                    <Image HorizontalAlignment="Left" Margin="-2,-4,0,0" Source="{StaticResource BarDivider}" Stretch="None">
+                        <Image.RenderTransform>
+                            <TranslateTransform X="{Binding EncumbranceStats.WeightLightPercentage, Converter={StaticResource MultiplierConverter}, ConverterParameter={StaticResource weightBarWidth}}"/>
+                        </Image.RenderTransform>
+                    </Image>
+
+                    <Image HorizontalAlignment="Left" Margin="-2,-4,0,0" Source="{StaticResource BarDivider}" Stretch="None">
+                        <Image.RenderTransform>
+                            <TranslateTransform X="{Binding EncumbranceStats.WeightHeavyPercentage, Converter={StaticResource MultiplierConverter}, ConverterParameter={StaticResource weightBarWidth}}"/>
+                        </Image.RenderTransform>
+                    </Image>
+                </Grid>
+
+                <!-- Bar overlay -->
+                <Image VerticalAlignment="Top" Margin="0,10,0,0" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared_c/Weight_Encumbrance/c_bar_mainFooterOverlay.png" Stretch="None"/>
+
+                <!-- Warning text -->
+                <TextBlock x:Name="WarningText" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="25,105,0,-100" TextAlignment="Center" FontSize="{StaticResource MediumFontSize}"
+                           Foreground="{StaticResource LS_bar100TxtColor}" Text="{Binding Source='h5f15514bgc4fcg4386ga1c3g65fbf8bc2ef5', Converter={StaticResource TranslatedStringConverter}}"/>
+            </Grid>
+
+            <!-- Max weight -->
+            <TextBlock x:Name="maxWeightText" Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="18,-12,0,0" Text="{Binding EncumbranceStats.WeightMaximum, Converter={StaticResource UnitConverter}, ConverterParameter='Weight N2'}"/>
+
+            <!-- Triggers -->
+            <b:Interaction.Triggers>
+                <!-- No encumbrance -->
+                <b:PropertyChangedTrigger Binding="{Binding EncumbranceStats.CurrentWeight}">
+                    <b:Interaction.Behaviors>
+                        <b:ConditionBehavior>
+                            <b:ConditionalExpression>
+                                <b:ComparisonCondition LeftOperand="{Binding EncumbranceStats.CurrentWeight}" Operator="LessThanOrEqual" RightOperand="{Binding EncumbranceStats.WeightLight}"/>
+                            </b:ConditionalExpression>
+                        </b:ConditionBehavior>
+                    </b:Interaction.Behaviors>
+                    <b:ChangePropertyAction TargetName="currentWeightIcon" PropertyName="Source" Value="{StaticResource IconNormal}"/>
+                    <b:ChangePropertyAction TargetName="barBackgroundCarryLimit" PropertyName="Visibility" Value="Collapsed"/>
+                    <b:ChangePropertyAction TargetName="currentWeightBar" PropertyName="Foreground">
+                        <b:ChangePropertyAction.Value>
+                            <ImageBrush ImageSource="{StaticResource BarWeightNormal}"/>
+                        </b:ChangePropertyAction.Value>
+                    </b:ChangePropertyAction>
+                    <b:ChangePropertyAction TargetName="currentWeightPointer" PropertyName="Source" Value="{StaticResource PointerNormal}"/>
+                    <b:ChangePropertyAction TargetName="currentWeightText" PropertyName="Foreground" Value="{StaticResource LS_extraspecialTxtColor}"/>
+                    <b:ChangePropertyAction TargetName="WarningText" PropertyName="Visibility" Value="Collapsed"/>
+                </b:PropertyChangedTrigger>
+
+                <!-- Light encumbrance -->
+                <b:PropertyChangedTrigger Binding="{Binding EncumbranceStats.CurrentWeight}">
+                    <b:Interaction.Behaviors>
+                        <b:ConditionBehavior>
+                            <b:ConditionalExpression>
+                                <b:ComparisonCondition LeftOperand="{Binding EncumbranceStats.CurrentWeight}" Operator="GreaterThan" RightOperand="{Binding EncumbranceStats.WeightLight}"/>
+                                <b:ComparisonCondition LeftOperand="{Binding EncumbranceStats.CurrentWeight}" Operator="LessThanOrEqual" RightOperand="{Binding EncumbranceStats.WeightHeavy}"/>
+                            </b:ConditionalExpression>
+                        </b:ConditionBehavior>
+                    </b:Interaction.Behaviors>
+                    <b:ChangePropertyAction TargetName="currentWeightIcon" PropertyName="Source" Value="{StaticResource IconEncumbered}"/>
+                    <b:ChangePropertyAction TargetName="currentWeightBar" PropertyName="Foreground">
+                        <b:ChangePropertyAction.Value>
+                            <ImageBrush ImageSource="{StaticResource BarWeightEncumbered}"/>
+                        </b:ChangePropertyAction.Value>
+                    </b:ChangePropertyAction>
+                    <b:ChangePropertyAction TargetName="currentWeightPointer" PropertyName="Source" Value="{StaticResource PointerEncumbered}"/>
+                    <b:ChangePropertyAction TargetName="barBackgroundCarryLimit" PropertyName="Visibility" Value="Collapsed"/>
+                    <b:ChangePropertyAction TargetName="currentWeightText" PropertyName="Foreground" Value="{StaticResource LS_bar50TxtColor}"/>
+                    <b:ChangePropertyAction TargetName="WarningText" PropertyName="Visibility" Value="Visible"/>
+                    <b:ChangePropertyAction TargetName="WarningText" PropertyName="Foreground" Value="{StaticResource LS_bar50TxtColor}"/>
+                    <b:ChangePropertyAction TargetName="WarningText" PropertyName="Text" Value="{Binding Source='h4bffc7fbgfeaag44d9gb179gfd55c807b440', Converter={StaticResource TranslatedStringConverter}}"/>
+                </b:PropertyChangedTrigger>
+
+                <!-- Heavy encumbrance -->
+                <b:PropertyChangedTrigger Binding="{Binding EncumbranceStats.CurrentWeight}">
+                    <b:Interaction.Behaviors>
+                        <b:ConditionBehavior>
+                            <b:ConditionalExpression>
+                                <b:ComparisonCondition LeftOperand="{Binding EncumbranceStats.CurrentWeight}" Operator="GreaterThan" RightOperand="{Binding EncumbranceStats.WeightHeavy}"/>
+                            </b:ConditionalExpression>
+                        </b:ConditionBehavior>
+                    </b:Interaction.Behaviors>
+                    <b:ChangePropertyAction TargetName="currentWeightIcon" PropertyName="Source" Value="{StaticResource IconHeavilyEncumbered}"/>
+                    <b:ChangePropertyAction TargetName="currentWeightBar" PropertyName="Foreground">
+                        <b:ChangePropertyAction.Value>
+                            <ImageBrush ImageSource="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared/Weight_Encumbrance/bar_weight_heavilyEncumbered_d.png"/>
+                        </b:ChangePropertyAction.Value>
+                    </b:ChangePropertyAction>
+                    <b:ChangePropertyAction TargetName="currentWeightPointer" PropertyName="Source" Value="{StaticResource PointerHeavilyEncumbered}"/>
+                    <b:ChangePropertyAction TargetName="barBackgroundCarryLimit" PropertyName="Visibility" Value="Collapsed"/>
+                    <b:ChangePropertyAction TargetName="currentWeightText" PropertyName="Foreground" Value="{StaticResource LS_bar100TxtColor}"/>
+                    <b:ChangePropertyAction TargetName="WarningText" PropertyName="Visibility" Value="Visible"/>
+                    <b:ChangePropertyAction TargetName="WarningText" PropertyName="Foreground" Value="{StaticResource LS_bar100TxtColor}"/>
+                    <b:ChangePropertyAction TargetName="WarningText" PropertyName="Text" Value="{Binding Source='h18065f0dg0169g4560gaff3g46fea09fd366', Converter={StaticResource TranslatedStringConverter}}"/>
+                </b:PropertyChangedTrigger>
+
+                <!-- Over carry limit -->
+                <b:PropertyChangedTrigger Binding="{Binding EncumbranceStats.CurrentWeight}">
+                    <b:Interaction.Behaviors>
+                        <b:ConditionBehavior>
+                            <b:ConditionalExpression>
+                                <b:ComparisonCondition LeftOperand="{Binding EncumbranceStats.CurrentWeight}" Operator="GreaterThan" RightOperand="{Binding EncumbranceStats.WeightMaximum}"/>
+                            </b:ConditionalExpression>
+                        </b:ConditionBehavior>
+                    </b:Interaction.Behaviors>
+                    <b:ChangePropertyAction TargetName="currentWeightIcon" PropertyName="Source" Value="{StaticResource IconHeavilyEncumbered}"/>
+                    <b:ChangePropertyAction TargetName="barBackgroundCarryLimit" PropertyName="Visibility" Value="Visible"/>
+                    <b:ChangePropertyAction TargetName="WarningText" PropertyName="Visibility" Value="Visible"/>
+                    <b:ChangePropertyAction TargetName="WarningText" PropertyName="Foreground" Value="{StaticResource LS_bar100TxtColor}"/>
+                    <b:ChangePropertyAction TargetName="WarningText" PropertyName="Text" Value="{Binding Source='h5f15514bgc4fcg4386ga1c3g65fbf8bc2ef5', Converter={StaticResource TranslatedStringConverter}}"/>
+                </b:PropertyChangedTrigger>
+            </b:Interaction.Triggers>
+        </Grid>
+    </ControlTemplate>
+
+    <ControlTemplate x:Key="SingleInventoryTemplate">
+        <ControlTemplate.Resources>
+            <ImageSource x:Key="IconNormal">pack://application:,,,/GustavNoesisGUI;component/Assets/Shared_c/Weight_Encumbrance/c_ico_weight_normal.png</ImageSource>
+            <ImageSource x:Key="IconEncumbered">pack://application:,,,/GustavNoesisGUI;component/Assets/Shared_c/Weight_Encumbrance/c_ico_weight_encumbered.png</ImageSource>
+            <ImageSource x:Key="IconHeavilyEncumbered">pack://application:,,,/GustavNoesisGUI;component/Assets/Shared_c/Weight_Encumbrance/c_ico_weight_heavilyEncumbered.png</ImageSource>
+
+            <ImageSource x:Key="PointerNormal">pack://application:,,,/GustavNoesisGUI;component/Assets/Shared_c/Weight_Encumbrance/c_pointer_weight.png</ImageSource>
+            <ImageSource x:Key="PointerEncumbered">pack://application:,,,/GustavNoesisGUI;component/Assets/Shared_c/Weight_Encumbrance/c_pointer_encumbrance.png</ImageSource>
+            <ImageSource x:Key="PointerHeavilyEncumbered">pack://application:,,,/GustavNoesisGUI;component/Assets/Shared_c/Weight_Encumbrance/c_pointer_heavyEncumbrance.png</ImageSource>
+            <System:Double x:Key="EquipmentSlotSize">168</System:Double>
+            <System:Double x:Key="RaritySlotSize">156</System:Double>
+            <System:Double x:Key="EquipmentSlotContentSize">144</System:Double>
+            <System:Double x:Key="WideAspectRatioCoef">0.4286</System:Double>
+        </ControlTemplate.Resources>
+
+
+        <Grid x:Name="InventoryContent" ls:MoveFocus.FocusMovementMode="MainAxis">
+            <ItemsControl x:Name="PlayerInventory" ScrollViewer.VerticalScrollBarVisibility="Auto" VerticalAlignment="Top" ScrollViewer.HorizontalScrollBarVisibility="Hidden"
+                          VirtualizingPanel.VirtualizationMode="Recycling" VirtualizingPanel.ScrollUnit="Pixel" ItemsSource="{Binding Inventory.Slots}">
+                <ItemsControl.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform x:Name="InventoryScaleTransform" ScaleX="{DynamicResource CurrentScaleFactor}" ScaleY="{DynamicResource CurrentScaleFactor}">
+                            <b:Interaction.Triggers>
+                                <b:DataTrigger Binding="{Binding DataContext.CurrentPlayer.UIOptions.UIScaling, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" Value="Small">
+                                    <b:ChangePropertyAction PropertyName="ScaleX" Value="1"/>
+                                    <b:ChangePropertyAction PropertyName="ScaleY" Value="1"/>
+                                </b:DataTrigger>
+                                <b:DataTrigger Binding="{Binding DataContext.CurrentPlayer.UIOptions.UIScaling, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" Value="Large">
+                                    <b:ChangePropertyAction PropertyName="ScaleX" Value="1"/>
+                                    <b:ChangePropertyAction PropertyName="ScaleY" Value="1"/>
+                                </b:DataTrigger>
+                            </b:Interaction.Triggers>
+                        </ScaleTransform>
+                        <SkewTransform/>
+                        <RotateTransform/>
+                        <TranslateTransform/>
+                    </TransformGroup>
+                </ItemsControl.RenderTransform>
+                <ItemsControl.Template>
+                    <ControlTemplate>
+                        <ScrollViewer x:Name="ScrollViewer" Height="1212" HorizontalAlignment="Left">
+                            <Border BorderThickness="2" BorderBrush="{StaticResource LS_InventoryGridSurround}" Margin="32" HorizontalAlignment="Left">
+                                <ItemsPresenter x:Name="InventoryPresenter" MinHeight="1212" Width="840"/>
+                            </Border>
+                        </ScrollViewer>
+                        
+                        <ControlTemplate.Triggers>
+                            <DataTrigger Binding="{Binding DataContext.CurrentPlayer.UIOptions.UIScaling, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" Value="Minimal">
+                                <Setter TargetName="ScrollViewer" Property="Height" Value="1548"/>
+                                <Setter TargetName="ScrollViewer" Property="Width" Value="1076"/>
+                                <Setter TargetName="ScrollViewer" Property="HorizontalAlignment" Value="Center"/>
+                                <Setter TargetName="ScrollViewer" Property="Margin" Value="0,0,-220,0"/>
+                                <Setter TargetName="InventoryPresenter" Property="MinHeight" Value="1548"/>
+                                <Setter TargetName="InventoryPresenter" Property="Width" Value="1008"/>
+                            </DataTrigger>
+                            
+                            <DataTrigger Binding="{Binding DataContext.CurrentPlayer.UIOptions.UIScaling, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" Value="ExtraLarge">
+                                <Setter TargetName="ScrollViewer" Property="Height" Value="1044"/>
+                                <Setter TargetName="ScrollViewer" Property="Width" Value="740"/>
+                                <Setter TargetName="ScrollViewer" Property="HorizontalAlignment" Value="Left"/>
+                                <Setter TargetName="ScrollViewer" Property="Margin" Value="0,0,0,0"/>
+                                <Setter TargetName="InventoryPresenter" Property="MinHeight" Value="1044"/>
+                                <Setter TargetName="InventoryPresenter" Property="Width" Value="672"/>
+                            </DataTrigger>
+
+                            <!--Conditions for 21:9 and above aspect ratios-->
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding DataContext.CurrentPlayer.UIOptions.UIScaling, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" Value="Medium"/>
+                                    <Condition Binding="{Binding DataContext.Data.AspectRatio, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}, Converter={StaticResource LessThanConverter}, 
+                                                         ConverterParameter={StaticResource WideAspectRatioCoef}}" Value="True"/>
+                                </MultiDataTrigger.Conditions>
+                                <Setter TargetName="InventoryPresenter" Property="Width" Value="1008"/>
+                            </MultiDataTrigger>
+
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding DataContext.CurrentPlayer.UIOptions.UIScaling, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" Value="Small"/>
+                                    <Condition Binding="{Binding DataContext.Data.AspectRatio, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}, Converter={StaticResource LessThanConverter}, 
+                                                         ConverterParameter={StaticResource WideAspectRatioCoef}}" Value="True"/>
+                                </MultiDataTrigger.Conditions>
+                                <Setter TargetName="InventoryPresenter" Property="Width" Value="1008"/>
+                            </MultiDataTrigger>
+
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding DataContext.CurrentPlayer.UIOptions.UIScaling, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" Value="Large"/>
+                                    <Condition Binding="{Binding DataContext.Data.AspectRatio, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}, Converter={StaticResource LessThanConverter}, 
+                                                         ConverterParameter={StaticResource WideAspectRatioCoef}}" Value="True"/>
+                                </MultiDataTrigger.Conditions>
+                                <Setter TargetName="InventoryPresenter" Property="Width" Value="1008"/>
+                            </MultiDataTrigger>
+
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding DataContext.CurrentPlayer.UIOptions.UIScaling, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" Value="Minimal"/>
+                                    <Condition Binding="{Binding DataContext.Data.AspectRatio, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}, Converter={StaticResource LessThanConverter}, 
+                                                         ConverterParameter={StaticResource WideAspectRatioCoef}}" Value="True"/>
+                                </MultiDataTrigger.Conditions>
+                                <Setter TargetName="ScrollViewer" Property="Width" Value="1248"/>
+                                <Setter TargetName="InventoryPresenter" Property="Width" Value="1176"/>
+                            </MultiDataTrigger>
+
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding DataContext.CurrentPlayer.UIOptions.UIScaling, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" Value="ExtraLarge"/>
+                                    <Condition Binding="{Binding DataContext.Data.AspectRatio, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}, Converter={StaticResource LessThanConverter}, 
+                                                         ConverterParameter={StaticResource WideAspectRatioCoef}}" Value="True"/>
+                                </MultiDataTrigger.Conditions>
+                                <Setter TargetName="ScrollViewer" Property="Width" Value="908"/>
+                                <Setter TargetName="ScrollViewer" Property="Margin" Value="0,0,160,0"/>
+                                <Setter TargetName="InventoryPresenter" Property="Width" Value="840"/>
+                            </MultiDataTrigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </ItemsControl.Template>
+
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel ClipToBounds="False">
+                            <WrapPanel.Background>
+                                <ImageBrush ImageSource="{StaticResource InventoryGridBackground}" TileMode="Tile" Stretch="Uniform" ViewportUnits="Absolute">
+                                    <ImageBrush.Viewport>
+                                        <MultiBinding Converter="{StaticResource CreateRectConverter}">
+                                            <Binding Source="0"/>
+                                            <Binding Source="0"/>
+                                            <Binding Source="{StaticResource EquipmentSlotSize}"/>
+                                            <Binding Source="{StaticResource EquipmentSlotSize}"/>
+                                        </MultiBinding>
+                                    </ImageBrush.Viewport>
+                                </ImageBrush>
+                            </WrapPanel.Background>
+                        </WrapPanel>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Grid x:Name="SlotRoot" DataContext="{Binding Object}" Focusable="True" ls:MoveFocus.Focusable="True" ToolTipService.IsEnabled="{Binding Item, Converter={StaticResource NullToBoolFalseConverter}}"
+                              Width="236" Height="236" Margin="-34" ToolTipService.Placement="Right" ToolTipService.HorizontalOffset="40" ToolTipService.InitialShowDelay="0"
+                              Tag="{Binding (ItemsControl.AlternationIndex), RelativeSource={RelativeSource AncestorType={x:Type ListBoxItem}}}" ls:AttachedProperties.InheritedTag="InventorySlot">
+                            <b:Interaction.Triggers>
+                                <b:PropertyChangedTrigger Binding="{Binding Path=(ls:MoveFocus.IsFocused), ElementName=SlotRoot}">
+                                    <b:Interaction.Behaviors>
+                                        <b:ConditionBehavior>
+                                            <b:ConditionalExpression>
+                                                <b:ComparisonCondition LeftOperand="{Binding Path=(ls:MoveFocus.IsFocused), ElementName=SlotRoot}" Operator="Equal" RightOperand="True"/>
+                                            </b:ConditionalExpression>
+                                        </b:ConditionBehavior>
+                                    </b:Interaction.Behaviors>
+                                    <b:InvokeCommandAction IsEnabled="{Binding Item.IsNew}" Command="{Binding DataContext.ClearItemNewFlag, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" CommandParameter="{Binding Item}"/>
+                                </b:PropertyChangedTrigger>
+                            </b:Interaction.Triggers>
+
+                            <Grid.ToolTip>
+                                <ls:LSTooltip x:Name="ItemTooltip" Content="{Binding Path=DataContext, ElementName=SlotRoot}">
+                                    <ls:LSTooltip.Style>
+                                        <Style TargetType="ls:LSTooltip" BasedOn="{StaticResource {x:Type ls:LSTooltip}}">
+                                            <Setter Property="Opacity" Value="0"/>
+                                            <Style.Triggers>
+                                                <EventTrigger RoutedEvent="FrameworkElement.Loaded">
+                                                    <BeginStoryboard>
+                                                        <Storyboard>
+                                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)">
+                                                                <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                                                                <EasingDoubleKeyFrame KeyTime="0:0:1" Value="0"/>
+                                                                <EasingDoubleKeyFrame KeyTime="0:0:1.3" Value="1">
+                                                                    <EasingDoubleKeyFrame.EasingFunction>
+                                                                        <CubicEase EasingMode="EaseOut"/>
+                                                                    </EasingDoubleKeyFrame.EasingFunction>
+                                                                </EasingDoubleKeyFrame>
+                                                            </DoubleAnimationUsingKeyFrames>
+                                                        </Storyboard>
+                                                    </BeginStoryboard>
+                                                </EventTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </ls:LSTooltip.Style>
+                                </ls:LSTooltip>
+                            </Grid.ToolTip>
+
+                            <Grid x:Name="InventorySlotContent" Width="{StaticResource EquipmentSlotSize}" Height="{StaticResource EquipmentSlotSize}">
+
+                                <ls:LSEntityObject x:Name="ItemIcon" EntityRef="{Binding EntityHandle}" Context="Inventory" Background="Transparent" Width="{StaticResource EquipmentSlotContentSize}" Height="{StaticResource EquipmentSlotContentSize}">
+                                    <ContentPresenter Content="{Binding}" ContentTemplate="{StaticResource Template.GameObject}" IsHitTestVisible="False"/>
+                                </ls:LSEntityObject>
+
+                                <TextBlock x:Name="EquipmentLetter"  HorizontalAlignment="Left" VerticalAlignment="Top" Margin="8,0,0,0" FontSize="{StaticResource LargeFontSize}" Foreground="{StaticResource LS_tint100}" FontWeight="Bold" Text="{Binding Source='h9079b9dcgb3b5g4f5cg9ca0gccadfa842d28',Converter={StaticResource TranslatedStringConverter}}"/>
+
+                                <Control Style="{StaticResource NewInventoryCellItemStyle}" Margin="0,16,16,0"/>
+
+                                <Image x:Name="WaresIcon" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared/ico_tab_wares.png" Stretch="None" Visibility="{Binding IsWare, Converter={StaticResource BoolToVisibleConverter}}" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                            </Grid>
+
+                            <Image x:Name="Selector" Stretch="None" Source="{StaticResource SelectorImage}" Visibility="Collapsed"/>
+                        </Grid>
+
+                        <DataTemplate.Triggers>
+                            <DataTrigger Binding="{Binding Path=(ls:MoveFocus.IsFocused), ElementName=SlotRoot}" Value="True">
+                                <Setter Property="Panel.ZIndex" Value="1"/>
+                                <Setter TargetName="Selector" Property="Visibility" Value="Visible"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding Object.Equipped}" Value="NotEquipped">
+                                <Setter TargetName="EquipmentLetter" Property="Visibility" Value="Collapsed"/>
+                            </DataTrigger>
+                        </DataTemplate.Triggers>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+            <Control Template="{StaticResource InventoryViewBlocker}" HorizontalAlignment="Left" VerticalAlignment="Top" Height="1460" Width="900"/>
+
+            <ls:LSNineSliceImage x:Name="WeightBar" HorizontalAlignment="Center" Width="872" Height="136" Margin="0,50" VerticalAlignment="Bottom"
+                                 ImageSource="pack://application:,,,/GustavNoesisGUI;component/Assets/PartyInventory_c/c_encuberanceBarSurround.png">
+                <Control VerticalAlignment="Top" Template="{StaticResource WeightBarControllerTemplate}" Margin="0,-15" HorizontalAlignment="Center"/>
+            </ls:LSNineSliceImage>
+        </Grid>
+        <ControlTemplate.Triggers>
+            <DataTrigger Binding="{Binding DataContext.CurrentPlayer.UIOptions.UIScaling, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" Value="Minimal">
+                <Setter TargetName="WeightBar" Property="Margin" Value="0,140"/>
+            </DataTrigger>
+
+            <DataTrigger Binding="{Binding DataContext.CurrentPlayer.UIOptions.UIScaling, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" Value="ExtraLarge">
+                <Setter TargetName="WeightBar" Property="Margin" Value="0,45"/>
+            </DataTrigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+
+    <Style x:Key="BlockedInteractionButtonStyle" TargetType="ls:LSButton" BasedOn="{StaticResource ControllerButton}">
+        <Setter Property="IsEnabled" Value="True"/>
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding FocusedElement, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}, Converter={StaticResource NullToBoolFalseConverter}}" Value="False">
+                <Setter Property="IsEnabled" Value="False"/>
+            </DataTrigger>
+
+            <DataTrigger Binding="{Binding FocusedElement.DataContext.IsContentEditable, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" Value="False">
+                <Setter Property="IsEnabled" Value="False"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <DataTemplate x:Key="PartyInventoryTemplate">
+        <DataTemplate.Resources>
+            <System:Double x:Key="WideAspectRatioCoef">0.4286</System:Double>
+        </DataTemplate.Resources>
+        <Grid x:Name="PartyInventoryRoot">
+            <b:Interaction.Triggers>
+                <b:EventTrigger EventName="Loaded">
+                    <ls:SetMoveFocusAction TargetName="PartyInventory_c"/>
+                    <b:InvokeCommandAction Command="{Binding DataContext.EnableTooltipOnUIElement, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" 
+                                           CommandParameter="{Binding Path=FocusedElement, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"/>
+                </b:EventTrigger>
+                <b:EventTrigger EventName="Unloaded">
+                    <b:InvokeCommandAction Command="{Binding DataContext.HideTooltipOnUIElement, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"/>
+                </b:EventTrigger>
+            </b:Interaction.Triggers>
+
+            <ListBox x:Name="PanelsContainer" Height="1750" Margin="50,220" ItemsSource="{Binding CurrentPlayer.AssignedCharacters}" VerticalAlignment="Top"
+                     AlternationCount="{Binding CurrentPlayer.AssignedCharacters.Count}" SelectionMode="Single" SelectedIndex="0"
+                     ScrollViewer.VerticalScrollBarVisibility="Hidden" ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                     ls:ScrollViewerHelper.ScrollIntoView="{Binding Path=Tag, ElementName=RightSlotButton}" ls:ScrollViewerHelper.ScrollTo="Center">
+                <b:Interaction.Triggers>
+                    <b:PropertyChangedTrigger Binding="{Binding FocusedElement, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}">
+                        <b:Interaction.Behaviors>
+                            <b:ConditionBehavior>
+                                <b:ConditionalExpression>
+                                    <b:ComparisonCondition LeftOperand="{Binding FocusedElement.(ls:AttachedProperties.InheritedTag), RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" Operator="Equal" RightOperand="InventorySlot"/>
+                                </b:ConditionalExpression>
+                            </b:ConditionBehavior>
+                        </b:Interaction.Behaviors>
+                        <b:ChangePropertyAction PropertyName="SelectedIndex" Value="{Binding FocusedElement.Tag, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"/>
+                    </b:PropertyChangedTrigger>
+                </b:Interaction.Triggers>
+                <ListBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Horizontal"/>
+                    </ItemsPanelTemplate>
+                </ListBox.ItemsPanel>
+
+                <ListBox.Template>
+                    <ControlTemplate>
+                        <ScrollViewer x:Name="CharactersScrollViewer" Width="3765">
+                            <Border BorderThickness="2" HorizontalAlignment="Center">
+                                <ItemsPresenter Height="1750"/>
+                            </Border>
+                        </ScrollViewer>
+                        <ControlTemplate.Triggers>
+                            <!--Condition for 21:9 and above aspect ratios-->
+                            <DataTrigger Binding="{Binding DataContext.Data.AspectRatio, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}, Converter={StaticResource LessThanConverter}, 
+                                                   ConverterParameter={StaticResource WideAspectRatioCoef}}" Value="True">
+                                <Setter TargetName="CharactersScrollViewer" Property="Width" Value="4385"/>
+                            </DataTrigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </ListBox.Template>
+
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel x:Name="SingleInventoryRoot" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="16,0,16,0" Orientation="Vertical" ls:MoveFocus.FocusMovementMode="MainAxis" Tag="False">
+                            <b:Interaction.Triggers>
+                                <b:DataTrigger Binding="{Binding ElementName=SingleInventoryRoot, Path=Tag}" Value="True">
+                                    <ls:SetMoveFocusAction TargetName="PartyInventory_c" FocusElement="{Binding ElementName=InventoryControl}"/>
+                                    <ls:SetMoveFocusAction TargetName="PartyInventory_c"/>
+                                </b:DataTrigger>
+                            </b:Interaction.Triggers>
+
+                            <Control Template="{StaticResource SingleCharacterPanel}" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+                            <Control x:Name="InventoryControl" Template="{StaticResource SingleInventoryTemplate}" HorizontalAlignment="Center" Margin="0,-220"/>
+                        </StackPanel>
+                        <DataTemplate.Triggers>
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Value="True">
+                                        <Condition.Binding>
+                                            <MultiBinding Converter="{StaticResource EqualConverter}">
+                                                <Binding Path="Tag" ElementName="LeftInventoryButton"/>
+                                                <Binding Path="(ListBox.AlternationIndex)" RelativeSource="{RelativeSource FindAncestor, AncestorType={x:Type ListBoxItem}}"/>
+                                            </MultiBinding>
+                                        </Condition.Binding>
+                                    </Condition>
+                                </MultiDataTrigger.Conditions>
+                                <Setter TargetName="SingleInventoryRoot" Property="Tag" Value="True"/>
+                            </MultiDataTrigger>
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Value="True">
+                                        <Condition.Binding>
+                                            <MultiBinding Converter="{StaticResource EqualConverter}">
+                                                <Binding Path="Tag" ElementName="RightInventoryButton"/>
+                                                <Binding Path="(ListBox.AlternationIndex)" RelativeSource="{RelativeSource FindAncestor, AncestorType={x:Type ListBoxItem}}"/>
+                                            </MultiBinding>
+                                        </Condition.Binding>
+                                    </Condition>
+                                </MultiDataTrigger.Conditions>
+                                <Setter TargetName="SingleInventoryRoot" Property="Tag" Value="True"/>
+                            </MultiDataTrigger>
+                        </DataTemplate.Triggers>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+            <Grid Height="230" VerticalAlignment="Bottom">
+                <StackPanel x:Name="LeftHints" Height="130" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="126,0,0,56">
+                    <ls:LSButton x:Name="LockInventoryButton" DataContext = "{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIShowInfo'}"
+                                 Command="{Binding DataContext.ToggleInventoryLockCommand, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"
+                                 CommandParameter="{Binding FocusedElement.DataContext.Inventory, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"
+                                 Visibility="{Binding DataContext.Data.Players.Count, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}, Converter={StaticResource CountToVisibilityConverter}, ConverterParameter=1}">
+                        <ls:LSButton.Tag>
+                            <MultiBinding Converter="{StaticResource EqualConverter}">
+                                <Binding RelativeSource="{RelativeSource AncestorType={x:Type ls:UIWidget}}" Path="DataContext.CurrentPlayer.UserId"/>
+                                <Binding RelativeSource="{RelativeSource AncestorType={x:Type ls:UIWidget}}" Path="FocusedElement.DataContext.OwnerUserID"/>
+                            </MultiBinding>
+                        </ls:LSButton.Tag>
+                        <ls:LSButton.Style>
+                            <Style BasedOn="{StaticResource ControllerButton}" TargetType="ls:LSButton">
+                                <Setter Property="IsEnabled" Value="True"/>
+                                <Setter Property="Content" Value="{Binding Source='hc400c96fg06a0g4465ga952gef57bbcc7dff',Converter={StaticResource TranslatedStringConverter}}"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Tag, ElementName=LockInventoryButton}" Value="False">
+                                        <Setter Property="IsEnabled" Value="False"/>
+                                    </DataTrigger>
+
+                                    <DataTrigger Binding="{Binding FocusedElement.DataContext.IsInventoryLocked, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" Value="True">
+                                        <Setter Property="Content" Value="{Binding Source='h81ca7f7dgeaddg491egb156g2eb669e2b03d',Converter={StaticResource TranslatedStringConverter}}"/>
+                                    </DataTrigger>
+
+                                    <DataTrigger Binding="{Binding DataContext.Data.Players.Count, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}, Converter={StaticResource LessThanConverter}, ConverterParameter=2}" Value="True">
+                                        <Setter Property="IsEnabled" Value="False"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ls:LSButton.Style>
+                    </ls:LSButton>
+
+                    <ls:LSButton x:Name="LeftInventoryButton" ls:LSButton.BoundEvent="CharacterCreationRotateLeft" Tag="0">
+                        <b:Interaction.Triggers>
+                            <b:EventTrigger EventName="LSButtonPressed">
+                                <b:Interaction.Behaviors>
+                                    <b:ConditionBehavior>
+                                        <b:ConditionalExpression>
+                                            <b:ComparisonCondition LeftOperand="{Binding ElementName=PanelsContainer, Path=SelectedIndex}" Operator="GreaterThan" RightOperand="0"/>
+                                        </b:ConditionalExpression>
+                                    </b:ConditionBehavior>
+                                </b:Interaction.Behaviors>
+                                <b:ChangePropertyAction PropertyName="Tag" Value="{Binding ElementName=PanelsContainer, Path=SelectedIndex, Converter={StaticResource AddConverter}, ConverterParameter=-1}"/>
+                                <b:ChangePropertyAction TargetName="RightInventoryButton" PropertyName="Tag" Value="-1"/>
+                            </b:EventTrigger>
+                            <b:EventTrigger EventName="LSButtonPressed">
+                                <b:Interaction.Behaviors>
+                                    <b:ConditionBehavior>
+                                        <b:ConditionalExpression>
+                                            <b:ComparisonCondition LeftOperand="{Binding ElementName=PanelsContainer, Path=SelectedIndex}" Operator="Equal" RightOperand="0"/>
+                                        </b:ConditionalExpression>
+                                    </b:ConditionBehavior>
+                                </b:Interaction.Behaviors>
+                                <b:ChangePropertyAction PropertyName="Tag" Value="0"/>
+                            </b:EventTrigger>
+                        </b:Interaction.Triggers>
+                    </ls:LSButton>
+
+                    <ls:LSButton x:Name="RightInventoryButton" ls:LSButton.BoundEvent="CharacterCreationRotateRight" Tag="0">
+                        <b:Interaction.Triggers>
+                            <b:EventTrigger EventName="LSButtonPressed">
+                                <b:Interaction.Behaviors>
+                                    <b:ConditionBehavior>
+                                        <b:ConditionalExpression>
+                                            <b:ComparisonCondition LeftOperand="{Binding ElementName=PanelsContainer, Path=SelectedIndex}" Operator="LessThan" 
+                                                           RightOperand="{Binding ElementName=PanelsContainer, Path=AlternationCount, Converter={StaticResource AddConverter}, ConverterParameter=-1}"/>
+                                        </b:ConditionalExpression>
+                                    </b:ConditionBehavior>
+                                </b:Interaction.Behaviors>
+                                <b:ChangePropertyAction PropertyName="Tag" Value="{Binding ElementName=PanelsContainer, Path=SelectedIndex, Converter={StaticResource AddConverter}, ConverterParameter=1}"/>
+                                <b:ChangePropertyAction TargetName="LeftInventoryButton" PropertyName="Tag" Value="-1"/>
+                            </b:EventTrigger>
+                        </b:Interaction.Triggers>
+                    </ls:LSButton>
+
+                    <ls:LSButton x:Name="LeftSlotButton" ls:LSButton.BoundEvent="UILeft" EatInput="False" OverwriteClickSound="UI_Shared_Hover">
+                        <b:Interaction.Triggers>
+                            <b:PropertyChangedTrigger Binding="{Binding FocusedElement, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}">
+                                <b:Interaction.Behaviors>
+                                    <b:ConditionBehavior>
+                                        <b:ConditionalExpression>
+                                            <b:ComparisonCondition LeftOperand="{Binding ElementName=LeftSlotButton, Path=IsPressed}" Operator="Equal" RightOperand="True"/>
+                                        </b:ConditionalExpression>
+                                    </b:ConditionBehavior>
+                                </b:Interaction.Behaviors>
+                                <b:ChangePropertyAction TargetName="RightSlotButton" PropertyName="Tag" Value="{Binding FocusedElement, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"/>
+                                <b:ChangePropertyAction TargetName="LeftInventoryButton" PropertyName="Tag" Value="-1"/>
+                                <b:ChangePropertyAction TargetName="RightInventoryButton" PropertyName="Tag" Value="-1"/>
+                            </b:PropertyChangedTrigger>
+                        </b:Interaction.Triggers>
+                    </ls:LSButton>
+
+                    <ls:LSButton x:Name="RightSlotButton" ls:LSButton.BoundEvent="UIRight" EatInput="False" OverwriteClickSound="UI_Shared_Hover">
+                        <b:Interaction.Triggers>
+                            <b:PropertyChangedTrigger Binding="{Binding FocusedElement, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}">
+                                <b:Interaction.Behaviors>
+                                    <b:ConditionBehavior>
+                                        <b:ConditionalExpression>
+                                            <b:ComparisonCondition LeftOperand="{Binding ElementName=RightSlotButton, Path=IsPressed}" Operator="Equal" RightOperand="True"/>
+                                        </b:ConditionalExpression>
+                                    </b:ConditionBehavior>
+                                </b:Interaction.Behaviors>
+                                <b:ChangePropertyAction PropertyName="Tag" Value="{Binding FocusedElement, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"/>
+                                <b:ChangePropertyAction TargetName="LeftInventoryButton" PropertyName="Tag" Value="-1"/>
+                                <b:ChangePropertyAction TargetName="RightInventoryButton" PropertyName="Tag" Value="-1"/>
+                            </b:PropertyChangedTrigger>
+                        </b:Interaction.Triggers>
+                    </ls:LSButton>
+
+                    <ls:LSButton x:Name="UpSlotButton" ls:LSButton.BoundEvent="UIUp" EatInput="False" OverwriteClickSound="UI_Shared_Hover">
+                        <b:Interaction.Triggers>
+                            <b:PropertyChangedTrigger Binding="{Binding FocusedElement, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}">
+                                <b:Interaction.Behaviors>
+                                    <b:ConditionBehavior>
+                                        <b:ConditionalExpression>
+                                            <b:ComparisonCondition LeftOperand="{Binding ElementName=UpSlotButton, Path=IsPressed}" Operator="Equal" RightOperand="True"/>
+                                        </b:ConditionalExpression>
+                                    </b:ConditionBehavior>
+                                </b:Interaction.Behaviors>
+                                <b:ChangePropertyAction TargetName="LeftInventoryButton" PropertyName="Tag" Value="-1"/>
+                                <b:ChangePropertyAction TargetName="RightInventoryButton" PropertyName="Tag" Value="-1"/>
+                            </b:PropertyChangedTrigger>
+                        </b:Interaction.Triggers>
+                    </ls:LSButton>
+
+                    <ls:LSButton x:Name="DownSlotButton" ls:LSButton.BoundEvent="UIDown" EatInput="False" OverwriteClickSound="UI_Shared_Hover">
+                        <b:Interaction.Triggers>
+                            <b:PropertyChangedTrigger Binding="{Binding FocusedElement, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}">
+                                <b:Interaction.Behaviors>
+                                    <b:ConditionBehavior>
+                                        <b:ConditionalExpression>
+                                            <b:ComparisonCondition LeftOperand="{Binding ElementName=DownSlotButton, Path=IsPressed}" Operator="Equal" RightOperand="True"/>
+                                        </b:ConditionalExpression>
+                                    </b:ConditionBehavior>
+                                </b:Interaction.Behaviors>
+                                <b:ChangePropertyAction TargetName="LeftInventoryButton" PropertyName="Tag" Value="-1"/>
+                                <b:ChangePropertyAction TargetName="RightInventoryButton" PropertyName="Tag" Value="-1"/>
+                            </b:PropertyChangedTrigger>
+                        </b:Interaction.Triggers>
+                    </ls:LSButton>
+                </StackPanel>
+
+                <StackPanel x:Name="RightHints" Height="130" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,126,26">
+                    <!-- Select equipment slot to open the equipment selector -->
+                    <ls:LSButton x:Name="ActionButton" DataContext="{Binding DataContext.CurrentPlayer.UIData.InputEvents, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}},
+                                 Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIAccept'}" Style="{StaticResource BlockedInteractionButtonStyle}"
+                                 Content="{Binding Source='h04f38549g65b8g4b72g834eg87ee8863fdc5',Converter={StaticResource TranslatedStringConverter}}" Arrangement="Right"
+                                 Command="{Binding DataContext.UseGameObject, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" CommandParameter="{Binding FocusedElement.DataContext, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" 
+                                 SoundID="UI_Shared_Accept"/>
+                    <!-- Show Context Menu -->
+                    <ls:LSButton x:Name="ShowContextMenu" Command="{Binding DataContext.ShowContextMenu, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"
+                                 CommandParameter="{Binding FocusedElement, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" Arrangement="Right"
+                                 DataContext = "{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='ContextMenu'}"
+                                 Style="{StaticResource BlockedInteractionButtonStyle}" Content="{Binding Source='heb4b592bgc665g4e17ga685g07e2eb5e25db',Converter={StaticResource TranslatedStringConverter}}"/>
+                    <!-- Close the widget -->
+                    <ls:LSButton x:Name="CloseWidgetButton" Command="{Binding DataContext.CustomEvent, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" 
+                                 CommandParameter="ClosePanelSelect" Arrangement="Right" Style="{StaticResource ControllerButtonWBG}"
+                                 DataContext="{Binding DataContext.CurrentPlayer.UIData.InputEvents, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}, 
+                                 ConverterParameter=UICancel, Converter={StaticResource FindInputEventConverter}}"
+                                 Content="{Binding Source='h411fb88eg5261g437aga291g2fb260e633c6', Converter={StaticResource TranslatedStringConverter}}"/>
+                </StackPanel>
+            </Grid>
+        </Grid>
+    </DataTemplate>
+</ResourceDictionary>

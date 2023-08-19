@@ -1,0 +1,156 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<save>
+	<version major="4" minor="0" revision="9" build="309" />
+	<region id="Templates">
+		<node id="Templates">
+			<children>
+				<node id="GameObjects">
+					<attribute id="MapKey" type="22" value="a4d98266-948b-4467-96cd-6a316f37ceda" />
+					<attribute id="Name" type="23" value="ALCH_Solution_Grenade_Web" />
+					<attribute id="LevelName" type="22" value="" />
+					<attribute id="Type" type="22" value="item" />
+					<attribute id="ParentTemplateId" type="22" value="6badbd6e-7118-4d5c-9187-9e47c347fd74" />
+					<attribute id="VisualTemplate" type="22" value="29cb236d-3598-0ad8-41b7-9b2e45179730" />
+					<attribute id="PhysicsTemplate" type="22" value="53d34aac-6131-ceac-94eb-669766a5c8e3" />
+					<attribute id="Scale" type="6" value="0.5" />
+					<attribute id="DisplayName" type="28" handle="h0a7e4605g4403g47a7g840eg29e0cbfd501a" version="1" />
+					<attribute id="CanShootThrough" type="19" value="False" />
+					<attribute id="WalkThrough" type="19" value="True" />
+					<attribute id="Icon" type="22" value="Item_CONT_Egg_Spider_A_CombatThrowable" />
+					<attribute id="Stats" type="22" value="ALCH_Solution_Grenade_Web" />
+					<attribute id="CanBeImprovisedWeapon" type="19" value="True" />
+					<attribute id="ImpactSound" type="22" value="7b228d89-caf8-a73b-ca8c-f0f8c50f7c15" />
+					<attribute id="InventoryMoveSound" type="22" value="2953d61b-cc69-557e-5c5e-2d626fab3d4c" />
+					<attribute id="DropSound" type="22" value="2953d61b-cc69-557e-5c5e-2d626fab3d4c" />
+					<attribute id="PickupSound" type="22" value="893cc357-d704-ab86-1776-d0c80b4ba4fb" />
+					<attribute id="Description" type="28" handle="h54c22e5eg3336g429bg9567g1c0d1896a58a" version="1" />
+					<attribute id="TechnicalDescription" type="28" handle="" version="0" />
+					<children>
+						<node id="Tags">
+							<children>
+								<node id="Tag">
+									<attribute id="Object" type="31" value="110287af-83cf-42c1-de9c-f8b231cc7f6d" />
+								</node>
+							</children>
+						</node>
+						<node id="Bounds">
+							<children>
+								<node id="Bound">
+									<attribute id="Type" type="1" value="0" />
+									<attribute id="Shape" type="1" value="1" />
+									<attribute id="Min" type="12" value="-0.06768367 0.0001028776 -0.07815436" />
+									<attribute id="Max" type="12" value="0.06768367 0.414354 0.07815436" />
+									<attribute id="Radius" type="6" value="0.1157478" />
+									<attribute id="Height" type="6" value="0.4142511" />
+								</node>
+								<node id="Bound">
+									<attribute id="Type" type="1" value="1" />
+									<attribute id="Shape" type="1" value="1" />
+									<attribute id="Min" type="12" value="-0.06768367 0.0001028776 -0.07815436" />
+									<attribute id="Max" type="12" value="0.06768367 0.414354 0.07815436" />
+									<attribute id="Radius" type="6" value="0.1838912" />
+									<attribute id="Height" type="6" value="0.5428302" />
+								</node>
+								<node id="Bound">
+									<attribute id="Type" type="1" value="2" />
+									<attribute id="Shape" type="1" value="1" />
+									<attribute id="Min" type="12" value="-0.06768367 0.0001028776 -0.07815436" />
+									<attribute id="Max" type="12" value="0.06768367 0.414354 0.07815436" />
+									<attribute id="Radius" type="6" value="0.1838912" />
+									<attribute id="Height" type="6" value="0.5428302" />
+								</node>
+							</children>
+						</node>
+						<node id="OnUsePeaceActions">
+							<children>
+								<node id="Action">
+									<attribute id="ActionType" type="4" value="32" />
+									<children>
+										<node id="Attributes">
+											<attribute id="Animation" type="22" value="" />
+											<attribute id="Conditions" type="23" value="" />
+											<attribute id="FallbackPreviewRadius" type="6" value="3" />
+										</node>
+									</children>
+								</node>
+							</children>
+						</node>
+						<node id="OnDestroyActions">
+							<children>
+								<node id="Action">
+									<attribute id="ActionType" type="4" value="26" />
+									<children>
+										<node id="Attributes">
+											<attribute id="Animation" type="22" value="" />
+											<attribute id="Conditions" type="23" value="" />
+											<attribute id="ActivateSoundEvent" type="22" value="3ea82655-5140-4287-9ab8-794559f182d3" />
+											<attribute id="PlayOnHUD" type="19" value="False" />
+										</node>
+									</children>
+								</node>
+								<node id="Action">
+									<attribute id="ActionType" type="4" value="5" />
+									<children>
+										<node id="Attributes">
+											<attribute id="Animation" type="22" value="" />
+											<attribute id="Conditions" type="23" value="" />
+											<attribute id="TargetItemState" type="1" value="0" />
+											<attribute id="SnapToGround" type="19" value="True" />
+											<attribute id="ExplodeFX" type="22" value="08dcc215-2712-8db5-9936-478763b340d8" />
+											<attribute id="visualDestruction" type="22" value="" />
+											<attribute id="VisualWithDynamicPhysics" type="22" value="" />
+											<attribute id="FadeOutDelay" type="6" value="0" />
+											<attribute id="FadeOutFX" type="22" value="" />
+											<attribute id="templateAfterDestruction" type="22" value="" />
+										</node>
+									</children>
+								</node>
+								<node id="Action">
+									<attribute id="ActionType" type="4" value="4" />
+									<children>
+										<node id="Attributes">
+											<attribute id="Animation" type="22" value="" />
+											<attribute id="Conditions" type="23" value="" />
+											<attribute id="SurfaceType" type="22" value="SurfaceWeb" />
+											<attribute id="LifeTime" type="6" value="10" />
+											<attribute id="Radius" type="6" value="3" />
+											<attribute id="ExternalCauseAsSurfaceOwner" type="19" value="True" />
+										</node>
+									</children>
+								</node>
+							</children>
+						</node>
+						<node id="Scripts">
+							<children>
+								<node id="Script">
+									<attribute id="UUID" type="22" value="a557ab71-77f3-4b0c-8174-f605e51c90c7" />
+									<children>
+										<node id="Parameters">
+											<children>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="HardcoreOnly" />
+													<attribute id="Type" type="4" value="1" />
+													<attribute id="Value" type="23" value="0" />
+												</node>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="LifeTime" />
+													<attribute id="Type" type="4" value="2" />
+													<attribute id="Value" type="23" value="0" />
+												</node>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="ProjectileSpell" />
+													<attribute id="Type" type="4" value="9" />
+													<attribute id="Value" type="23" value="Projectile_ALCH_Solution_Grenade_Web" />
+												</node>
+											</children>
+										</node>
+									</children>
+								</node>
+							</children>
+						</node>
+					</children>
+				</node>
+			</children>
+		</node>
+	</region>
+</save>

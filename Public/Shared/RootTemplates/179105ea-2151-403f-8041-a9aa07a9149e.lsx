@@ -1,0 +1,131 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<save>
+	<version major="4" minor="0" revision="7" build="2" />
+	<region id="Templates">
+		<node id="Templates">
+			<children>
+				<node id="GameObjects">
+					<attribute id="MapKey" type="22" value="179105ea-2151-403f-8041-a9aa07a9149e" />
+					<attribute id="Name" type="23" value="Spider_InfestationSpawn" />
+					<attribute id="LevelName" type="22" value="" />
+					<attribute id="Type" type="22" value="character" />
+					<attribute id="ParentTemplateId" type="22" value="d7d8d19e-67e9-4c79-b8e6-548f0b0b5877" />
+					<attribute id="VisualTemplate" type="22" value="" />
+					<attribute id="DisplayName" type="28" handle="h19da6dfbg31acg44b8gb95egf807142b5196" version="1" />
+					<attribute id="Icon" type="22" value="8ecebc96-3069-1109-805e-b6b314114b4e-_(Icon_Spider_Critter)" />
+					<attribute id="BloodType" type="22" value="Red" />
+					<attribute id="CharacterVisualResourceID" type="22" value="8ecebc96-3069-1109-805e-b6b314114b4e" />
+					<attribute id="AnubisConfigName" type="22" value="DefaultCombat" />
+					<attribute id="Archetype" type="22" value="melee" />
+					<attribute id="CanFight" type="19" value="True" />
+					<children>
+						<node id="Tags">
+							<children>
+								<node id="Tag">
+									<attribute id="Object" type="31" value="10a24282-b306-40f8-449e-0741dc99cd21" />
+								</node>
+							</children>
+						</node>
+						<node id="Bounds">
+							<children>
+								<node id="Bound">
+									<attribute id="Type" type="1" value="1" />
+									<attribute id="Shape" type="1" value="2" />
+									<attribute id="Min" type="12" value="-0.4356735 -0.02879691 -0.3920231" />
+									<attribute id="Max" type="12" value="0.4356737 0.5290233 0.4551426" />
+									<attribute id="Radius" type="6" value="0.2" />
+									<attribute id="Height" type="6" value="0.4" />
+								</node>
+								<node id="Bound">
+									<attribute id="Type" type="1" value="0" />
+									<attribute id="Shape" type="1" value="2" />
+									<attribute id="Min" type="12" value="-0.4356735 -0.02879691 -0.3920231" />
+									<attribute id="Max" type="12" value="0.4356737 0.5290233 0.4551426" />
+									<attribute id="Radius" type="6" value="0.35" />
+									<attribute id="Height" type="6" value="0.4" />
+								</node>
+								<node id="Bound">
+									<attribute id="Type" type="1" value="2" />
+									<attribute id="Shape" type="1" value="2" />
+									<attribute id="Min" type="12" value="-0.4356735 -0.02879691 -0.3920231" />
+									<attribute id="Max" type="12" value="0.4356737 0.5290233 0.4551426" />
+									<attribute id="Radius" type="6" value="0.35" />
+									<attribute id="Height" type="6" value="0.4" />
+								</node>
+							</children>
+						</node>
+						<node id="OnDeathActions">
+							<children>
+								<node id="Action">
+									<attribute id="ActionType" type="4" value="10" />
+									<children>
+										<node id="Attributes">
+											<attribute id="Animation" type="22" value="" />
+											<attribute id="SurfaceType" type="22" value="SurfaceBlood" />
+											<attribute id="LifeTime" type="6" value="60" />
+											<attribute id="Timeout" type="6" value="0" />
+											<attribute id="TotalCells" type="4" value="2" />
+											<attribute id="CellAtGrow" type="4" value="2" />
+											<attribute id="GrowTimer" type="6" value="0.4" />
+											<attribute id="ExternalCauseAsSurfaceOwner" type="19" value="True" />
+										</node>
+									</children>
+								</node>
+							</children>
+						</node>
+						<node id="SkillList">
+							<children>
+								<node id="Skill">
+									<attribute id="Skill" type="22" value="Target_Bite_TinySpider" />
+									<attribute id="SpellCastingAbility" type="1" value="0" />
+									<attribute id="LearningStrategy" type="1" value="0" />
+									<attribute id="ScoreModifier" type="6" value="1" />
+									<attribute id="StartRound" type="4" value="0" />
+									<attribute id="FallbackStartRound" type="4" value="-1" />
+									<attribute id="MinimumImpact" type="4" value="0" />
+									<attribute id="CasualExplorer" type="19" value="True" />
+									<attribute id="Classic" type="19" value="True" />
+									<attribute id="TacticianHardcore" type="19" value="True" />
+									<attribute id="HonorHardcore" type="19" value="True" />
+									<attribute id="OnlyCastOnSelf" type="19" value="False" />
+									<attribute id="AIFlags" type="3" value="0" />
+									<children>
+										<node id="SourceConditions">
+											<attribute id="MinimumHealthPercentage" type="4" value="0" />
+											<attribute id="MaximumHealthPercentage" type="4" value="100" />
+											<children>
+												<node id="Tags" />
+											</children>
+										</node>
+										<node id="TargetConditions">
+											<attribute id="MinimumHealthPercentage" type="4" value="0" />
+											<attribute id="MaximumHealthPercentage" type="4" value="100" />
+											<children>
+												<node id="Tags" />
+											</children>
+										</node>
+									</children>
+								</node>
+							</children>
+						</node>
+						<node id="Treasures">
+							<children>
+								<node id="TreasureItem">
+									<attribute id="Object" type="22" value="Empty" />
+								</node>
+							</children>
+						</node>
+						<node id="TradeTreasures">
+							<children>
+								<node id="TreasureItem">
+									<attribute id="Object" type="22" value="Empty" />
+								</node>
+							</children>
+						</node>
+						<node id="LocomotionParams" />
+					</children>
+				</node>
+			</children>
+		</node>
+	</region>
+</save>

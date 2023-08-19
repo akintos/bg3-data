@@ -1,0 +1,146 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<save>
+	<version major="4" minor="0" revision="9" build="204" />
+	<region id="Templates">
+		<node id="Templates">
+			<children>
+				<node id="GameObjects">
+					<attribute id="MapKey" type="22" value="e5dad8d6-6e77-4596-b200-bf345174777c" />
+					<attribute id="Name" type="23" value="Quest_CMB_BoulderThrowable" />
+					<attribute id="LevelName" type="22" value="" />
+					<attribute id="Type" type="22" value="item" />
+					<attribute id="ParentTemplateId" type="22" value="8e5f1e8b-102a-4105-9d81-2220648814e9" />
+					<attribute id="ReadinessFlags" type="5" value="128" />
+					<attribute id="Flag" type="4" value="0" />
+					<attribute id="VisualTemplate" type="22" value="ec875aa9-a864-49ca-ba74-50b686470181" />
+					<attribute id="PhysicsTemplate" type="22" value="103c2ed6-fb46-2c47-15f8-057986220815" />
+					<attribute id="Scale" type="6" value="0.4" />
+					<attribute id="DisplayName" type="28" handle="hd352101fgd1d7g434agad77g0eab5057782c" version="2" />
+					<attribute id="CoverAmount" type="1" value="1" />
+					<attribute id="CanClimbOn" type="19" value="True" />
+					<attribute id="CanShootThrough" type="19" value="False" />
+					<attribute id="WalkThrough" type="19" value="False" />
+					<attribute id="WalkOn" type="19" value="True" />
+					<attribute id="Icon" type="22" value="Item_Quest_CMB_BoulderThrowable" />
+					<attribute id="Stats" type="22" value="OBJ_BoulderThrowable" />
+					<attribute id="LevelOverride" type="4" value="0" />
+					<attribute id="CanBePickedUp" type="19" value="False" />
+					<attribute id="Tooltip" type="1" value="0" />
+					<attribute id="Unimportant" type="19" value="True" />
+					<attribute id="maxStackAmount" type="4" value="1" />
+					<attribute id="IsPublicDomain" type="19" value="True" />
+					<attribute id="IsInspector" type="19" value="False" />
+					<attribute id="CanJoinCombat" type="19" value="False" />
+					<children>
+						<node id="Tags">
+							<children>
+								<node id="Tag">
+									<attribute id="Object" type="31" value="ef5d1184-dd1c-4988-f9be-19ad1a47baad" />
+								</node>
+								<node id="Tag">
+									<attribute id="Object" type="31" value="4ab4f2f5-792e-4c7d-4891-7fe31543349a" />
+								</node>
+							</children>
+						</node>
+						<node id="Bounds">
+							<children>
+								<node id="Bound">
+									<attribute id="Type" type="1" value="0" />
+									<attribute id="Shape" type="1" value="1" />
+									<attribute id="Min" type="12" value="-1.665794 -0.2515492 -1.464278" />
+									<attribute id="Max" type="12" value="1.539848 2.257218 1.520478" />
+									<attribute id="Radius" type="6" value="0.433013" />
+									<attribute id="Height" type="6" value="1" />
+								</node>
+								<node id="Bound">
+									<attribute id="Type" type="1" value="1" />
+									<attribute id="Shape" type="1" value="1" />
+									<attribute id="Min" type="12" value="-1.665794 -0.2515492 -1.464278" />
+									<attribute id="Max" type="12" value="1.539848 2.257218 1.520478" />
+									<attribute id="Radius" type="6" value="0.433013" />
+									<attribute id="Height" type="6" value="1" />
+								</node>
+								<node id="Bound">
+									<attribute id="Type" type="1" value="2" />
+									<attribute id="Shape" type="1" value="1" />
+									<attribute id="Min" type="12" value="-1.665794 -0.2515492 -1.464278" />
+									<attribute id="Max" type="12" value="1.539848 2.257218 1.520478" />
+									<attribute id="Radius" type="6" value="0.433013" />
+									<attribute id="Height" type="6" value="1" />
+								</node>
+							</children>
+						</node>
+						<node id="OnDestroyActions">
+							<children>
+								<node id="Action">
+									<attribute id="ActionType" type="4" value="26" />
+									<children>
+										<node id="Attributes">
+											<attribute id="Animation" type="22" value="" />
+											<attribute id="Conditions" type="23" value="" />
+											<attribute id="ActivateSoundEvent" type="22" value="3ea82655-5140-4287-9ab8-794559f182d3" />
+											<attribute id="PlayOnHUD" type="19" value="False" />
+										</node>
+									</children>
+								</node>
+								<node id="Action">
+									<attribute id="ActionType" type="4" value="5" />
+									<children>
+										<node id="Attributes">
+											<attribute id="Animation" type="22" value="" />
+											<attribute id="Conditions" type="23" value="" />
+											<attribute id="TargetItemState" type="1" value="0" />
+											<attribute id="ExplodeFX" type="22" value="aa7da053-febf-d025-e98b-098c021b99ca" />
+											<attribute id="visualDestruction" type="22" value="00000000-0000-0000-0000-000000000000" />
+											<attribute id="VisualWithDynamicPhysics" type="22" value="" />
+											<attribute id="FadeOutDelay" type="6" value="0" />
+											<attribute id="FadeOutFX" type="22" value="" />
+											<attribute id="templateAfterDestruction" type="22" value="" />
+										</node>
+									</children>
+								</node>
+							</children>
+						</node>
+						<node id="Scripts">
+							<children>
+								<node id="Script">
+									<attribute id="UUID" type="22" value="403d19b4-b8dc-4481-b853-c010384a6411" />
+									<children>
+										<node id="Parameters">
+											<children>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="HardcoreOnly" />
+													<attribute id="Type" type="4" value="1" />
+													<attribute id="Value" type="23" value="0" />
+												</node>
+											</children>
+										</node>
+									</children>
+								</node>
+								<node id="Script">
+									<attribute id="UUID" type="22" value="c036d373-84d4-47f0-8114-0bccec64c433" />
+									<children>
+										<node id="Parameters">
+											<children>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="HardcoreOnly" />
+													<attribute id="Type" type="4" value="1" />
+													<attribute id="Value" type="23" value="0" />
+												</node>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="ItemProjectileSpell" />
+													<attribute id="Type" type="4" value="9" />
+													<attribute id="Value" type="23" value="Projectile_Force_Trap" />
+												</node>
+											</children>
+										</node>
+									</children>
+								</node>
+							</children>
+						</node>
+					</children>
+				</node>
+			</children>
+		</node>
+	</region>
+</save>

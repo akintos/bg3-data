@@ -1,0 +1,55 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<save>
+	<version major="4" minor="0" revision="9" build="320" />
+	<region id="Templates">
+		<node id="Templates">
+			<children>
+				<node id="GameObjects">
+					<attribute id="MapKey" type="22" value="7fdf8022-629a-4b34-b0c0-3295bfb2903d" />
+					<attribute id="Name" type="23" value="CHA_CompassSpear" />
+					<attribute id="LevelName" type="22" value="" />
+					<attribute id="Type" type="22" value="item" />
+					<attribute id="ParentTemplateId" type="22" value="158e6f29-89e9-4279-8f8f-85078f047225" />
+					<attribute id="ReadinessFlags" type="5" value="128" />
+					<attribute id="VisualTemplate" type="22" value="bf4aff78-7049-2667-0ce9-63fb19cca6ef" />
+					<attribute id="DisplayName" type="28" handle="h7c27ef06g98d5g42aag8946g2f4c0684bfe2" version="1" />
+					<attribute id="Icon" type="22" value="Item_S_CHA_Weapon_Spear_CompassSpear" />
+					<attribute id="Stats" type="22" value="CHA_CompassSpear" />
+					<attribute id="Description" type="28" handle="h72218e29gd804g43f2gb089g939c7bfb0573" version="4" />
+					<children>
+						<node id="Tags">
+							<children>
+								<node id="Tag">
+									<attribute id="Object" type="31" value="85acccfa-596c-4a9e-76b4-c3476da10421" />
+								</node>
+								<node id="Tag">
+									<attribute id="Object" type="31" value="7b96246c-54ba-43ea-1db0-0b4ead20f135" />
+								</node>
+								<node id="Tag">
+									<attribute id="Object" type="31" value="983087c8-c9d3-4a87-69bc-f9659632c866" />
+								</node>
+							</children>
+						</node>
+						<node id="OnUsePeaceActions">
+							<children>
+								<node id="Action">
+									<attribute id="ActionType" type="4" value="7" />
+									<children>
+										<node id="Attributes">
+											<attribute id="Animation" type="22" value="06346da5-2ed5-4af1-b803-4066a505e662" />
+											<attribute id="Conditions" type="23" value="Tagged('REALLY_GALE', context.Source) and not Tagged('ORI_GALE_DONEWITHITEMS', context.Source)" />
+											<attribute id="StatsId" type="22" value="ORI_GALE_AVATAR_CONSUMEITEM" />
+											<attribute id="StatusDuration" type="4" value="0" />
+											<attribute id="Consume" type="19" value="True" />
+											<attribute id="IsHiddenStatus" type="19" value="False" />
+										</node>
+									</children>
+								</node>
+							</children>
+						</node>
+					</children>
+				</node>
+			</children>
+		</node>
+	</region>
+</save>

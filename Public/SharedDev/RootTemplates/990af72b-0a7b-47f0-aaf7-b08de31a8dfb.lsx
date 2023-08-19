@@ -1,0 +1,111 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<save>
+	<version major="4" minor="0" revision="9" build="329" />
+	<region id="Templates">
+		<node id="Templates">
+			<children>
+				<node id="GameObjects">
+					<attribute id="MapKey" type="22" value="990af72b-0a7b-47f0-aaf7-b08de31a8dfb" />
+					<attribute id="Name" type="23" value="VFX_Static_Wall_Spell_Ice_A_HighMiddle_A" />
+					<attribute id="LevelName" type="22" value="" />
+					<attribute id="Type" type="22" value="item" />
+					<attribute id="ParentTemplateId" type="22" value="09283999-492f-45b4-a987-9c50d0eb8b9c" />
+					<attribute id="VisualTemplate" type="22" value="eee4a14b-38d5-9a0b-45d3-0ada681a22b2" />
+					<attribute id="PhysicsTemplate" type="22" value="45da3e75-47e8-721d-2747-bc481fd05478" />
+					<attribute id="Fadeable" type="19" value="True" />
+					<attribute id="HierarchyOnlyFade" type="19" value="True" />
+					<attribute id="SeeThrough" type="19" value="False" />
+					<attribute id="DisplayName" type="28" handle="h03ec3315g79d0g4f14gb33fg2cb92cf31c9d" version="1" />
+					<children>
+						<node id="Bounds">
+							<children>
+								<node id="Bound">
+									<attribute id="Type" type="1" value="0" />
+									<attribute id="Shape" type="1" value="1" />
+									<attribute id="Min" type="12" value="-0.9094819 -0.7469783 -0.7101169" />
+									<attribute id="Max" type="12" value="0.90878 3.788121 0.7329166" />
+									<attribute id="Radius" type="6" value="0.64697" />
+									<attribute id="Height" type="6" value="2.98232" />
+								</node>
+								<node id="Bound">
+									<attribute id="Type" type="1" value="1" />
+									<attribute id="Shape" type="1" value="1" />
+									<attribute id="Min" type="12" value="-0.9094819 -0.7469783 -0.7101169" />
+									<attribute id="Max" type="12" value="0.90878 3.788121 0.7329166" />
+									<attribute id="Radius" type="6" value="1.29394" />
+									<attribute id="Height" type="6" value="2.98232" />
+								</node>
+								<node id="Bound">
+									<attribute id="Type" type="1" value="2" />
+									<attribute id="Shape" type="1" value="1" />
+									<attribute id="Min" type="12" value="-0.9094819 -0.7469783 -0.7101169" />
+									<attribute id="Max" type="12" value="0.90878 3.788121 0.7329166" />
+									<attribute id="Radius" type="6" value="1.29394" />
+									<attribute id="Height" type="6" value="2.98232" />
+								</node>
+							</children>
+						</node>
+						<node id="OnDestroyActions">
+							<children>
+								<node id="Action">
+									<attribute id="ActionType" type="4" value="4" />
+									<children>
+										<node id="Attributes">
+											<attribute id="Animation" type="22" value="" />
+											<attribute id="Conditions" type="23" value="" />
+											<attribute id="SurfaceType" type="22" value="SurfaceWaterFrozen" />
+											<attribute id="LifeTime" type="6" value="1" />
+											<attribute id="Radius" type="6" value="1" />
+											<attribute id="ExternalCauseAsSurfaceOwner" type="19" value="True" />
+										</node>
+									</children>
+								</node>
+								<node id="Action">
+									<attribute id="ActionType" type="4" value="4" />
+									<children>
+										<node id="Attributes">
+											<attribute id="Animation" type="22" value="" />
+											<attribute id="Conditions" type="23" value="" />
+											<attribute id="SurfaceType" type="22" value="SurfaceIceCloud" />
+											<attribute id="LifeTime" type="6" value="3" />
+											<attribute id="Radius" type="6" value="1" />
+											<attribute id="ExternalCauseAsSurfaceOwner" type="19" value="True" />
+										</node>
+									</children>
+								</node>
+								<node id="Action">
+									<attribute id="ActionType" type="4" value="5" />
+									<children>
+										<node id="Attributes">
+											<attribute id="Animation" type="22" value="" />
+											<attribute id="Conditions" type="23" value="" />
+											<attribute id="TargetItemState" type="1" value="0" />
+											<attribute id="SnapToGround" type="19" value="True" />
+											<attribute id="ExplodeFX" type="22" value="528dd691-4161-e599-ece5-483702431ac7" />
+											<attribute id="visualDestruction" type="22" value="" />
+											<attribute id="VisualWithDynamicPhysics" type="22" value="ce694092-4558-d029-eed5-c5d3f61288d4" />
+											<attribute id="FadeOutDelay" type="6" value="0" />
+											<attribute id="FadeOutFX" type="22" value="c8d81866-5220-a008-31b8-48a497e4e835" />
+											<attribute id="templateAfterDestruction" type="22" value="" />
+										</node>
+									</children>
+								</node>
+								<node id="Action">
+									<attribute id="ActionType" type="4" value="26" />
+									<children>
+										<node id="Attributes">
+											<attribute id="Animation" type="22" value="" />
+											<attribute id="Conditions" type="23" value="" />
+											<attribute id="ActivateSoundEvent" type="22" value="01761a55-531d-47ea-8e23-a11ca770a38a" />
+											<attribute id="PlayOnHUD" type="19" value="False" />
+										</node>
+									</children>
+								</node>
+							</children>
+						</node>
+					</children>
+				</node>
+			</children>
+		</node>
+	</region>
+</save>

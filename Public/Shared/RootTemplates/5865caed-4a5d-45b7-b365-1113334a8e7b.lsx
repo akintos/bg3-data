@@ -1,0 +1,146 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<save>
+	<version major="4" minor="0" revision="9" build="316" />
+	<region id="Templates">
+		<node id="Templates">
+			<children>
+				<node id="GameObjects">
+					<attribute id="MapKey" type="22" value="5865caed-4a5d-45b7-b365-1113334a8e7b" />
+					<attribute id="Name" type="23" value="CONS_Poison_Crawler_Mucus" />
+					<attribute id="LevelName" type="22" value="" />
+					<attribute id="Type" type="22" value="item" />
+					<attribute id="ParentTemplateId" type="22" value="19a6fbb0-7123-460b-a4a8-643bb6cab5b5" />
+					<attribute id="Flag" type="4" value="0" />
+					<attribute id="VisualTemplate" type="22" value="eeb06c1b-c7dc-c360-74cb-1e8c69963c88" />
+					<attribute id="PhysicsTemplate" type="22" value="7abec161-6915-2dc6-8c4f-99bc38b0f51e" />
+					<attribute id="DevComment" type="23" value="Reusing visuals of Essence of Ether on purpose." />
+					<attribute id="DisplayName" type="28" handle="hd93025eeg0599g479dgbb7egd6695a88d46d" version="1" />
+					<attribute id="Icon" type="22" value="Item_CONS_Poison_Essence_Of_Ether" />
+					<attribute id="Stats" type="22" value="OBJ_CrawlerMucus" />
+					<attribute id="Description" type="28" handle="h602d521age370g4455ga5bbg4c0aa0c11d0b" version="3" />
+					<attribute id="TechnicalDescription" type="28" handle="" version="0" />
+					<attribute id="ShowAttachedSpellDescriptions" type="19" value="True" />
+					<children>
+						<node id="Bounds">
+							<children>
+								<node id="Bound">
+									<attribute id="Type" type="1" value="0" />
+									<attribute id="Shape" type="1" value="1" />
+									<attribute id="Min" type="12" value="-0.06971779 0 -0.1062432" />
+									<attribute id="Max" type="12" value="0.1184767 0.3239878 0.0694262" />
+									<attribute id="Radius" type="6" value="0.114147" />
+									<attribute id="Height" type="6" value="0.418184" />
+								</node>
+								<node id="Bound">
+									<attribute id="Type" type="1" value="1" />
+									<attribute id="Shape" type="1" value="1" />
+									<attribute id="Min" type="12" value="-0.06971779 0 -0.1062432" />
+									<attribute id="Max" type="12" value="0.1184767 0.3239878 0.0694262" />
+									<attribute id="Radius" type="6" value="0.114147" />
+									<attribute id="Height" type="6" value="0.418184" />
+								</node>
+								<node id="Bound">
+									<attribute id="Type" type="1" value="2" />
+									<attribute id="Shape" type="1" value="1" />
+									<attribute id="Min" type="12" value="-0.06971779 0 -0.1062432" />
+									<attribute id="Max" type="12" value="0.1184767 0.3239878 0.0694262" />
+									<attribute id="Radius" type="6" value="0.114147" />
+									<attribute id="Height" type="6" value="0.418184" />
+								</node>
+							</children>
+						</node>
+						<node id="OnUsePeaceActions">
+							<children>
+								<node id="Action">
+									<attribute id="ActionType" type="4" value="7" />
+									<children>
+										<node id="Attributes">
+											<attribute id="Animation" type="22" value="" />
+											<attribute id="Conditions" type="23" value="(Player(context.Source) or (not HasStatus('SG_WeaponCoating', GetActiveWeapon(context.Source))))" />
+											<attribute id="StatsId" type="22" value="POISON_CRAWLER_MUCUS" />
+											<attribute id="StatusDuration" type="4" value="0" />
+											<attribute id="Consume" type="19" value="True" />
+										</node>
+									</children>
+								</node>
+							</children>
+						</node>
+						<node id="OnDestroyActions">
+							<children>
+								<node id="Action">
+									<attribute id="ActionType" type="4" value="26" />
+									<children>
+										<node id="Attributes">
+											<attribute id="Animation" type="22" value="" />
+											<attribute id="Conditions" type="23" value="" />
+											<attribute id="ActivateSoundEvent" type="22" value="3ea82655-5140-4287-9ab8-794559f182d3" />
+											<attribute id="PlayOnHUD" type="19" value="False" />
+										</node>
+									</children>
+								</node>
+								<node id="Action">
+									<attribute id="ActionType" type="4" value="5" />
+									<children>
+										<node id="Attributes">
+											<attribute id="Animation" type="22" value="" />
+											<attribute id="Conditions" type="23" value="" />
+											<attribute id="TargetItemState" type="1" value="0" />
+											<attribute id="SnapToGround" type="19" value="True" />
+											<attribute id="ExplodeFX" type="22" value="27053021-9868-38ff-c68a-224fe0986494" />
+											<attribute id="visualDestruction" type="22" value="00000000-0000-0000-0000-000000000000" />
+											<attribute id="VisualWithDynamicPhysics" type="22" value="" />
+											<attribute id="FadeOutDelay" type="6" value="0" />
+											<attribute id="FadeOutFX" type="22" value="" />
+											<attribute id="templateAfterDestruction" type="22" value="" />
+										</node>
+									</children>
+								</node>
+								<node id="Action">
+									<attribute id="ActionType" type="4" value="4" />
+									<children>
+										<node id="Attributes">
+											<attribute id="Animation" type="22" value="" />
+											<attribute id="Conditions" type="23" value="" />
+											<attribute id="SurfaceType" type="22" value="SurfaceCrawlerMucusCloud" />
+											<attribute id="LifeTime" type="6" value="1" />
+											<attribute id="Radius" type="6" value="1" />
+											<attribute id="ExternalCauseAsSurfaceOwner" type="19" value="True" />
+										</node>
+									</children>
+								</node>
+							</children>
+						</node>
+						<node id="Scripts">
+							<children>
+								<node id="Script">
+									<attribute id="UUID" type="22" value="a557ab71-77f3-4b0c-8174-f605e51c90c7" />
+									<children>
+										<node id="Parameters">
+											<children>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="HardcoreOnly" />
+													<attribute id="Type" type="4" value="1" />
+													<attribute id="Value" type="23" value="0" />
+												</node>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="LifeTime" />
+													<attribute id="Type" type="4" value="2" />
+													<attribute id="Value" type="23" value="0" />
+												</node>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="ProjectileSpell" />
+													<attribute id="Type" type="4" value="9" />
+													<attribute id="Value" type="23" value="Projectile_Poison_Destroy_CrawlerMucus" />
+												</node>
+											</children>
+										</node>
+									</children>
+								</node>
+							</children>
+						</node>
+					</children>
+				</node>
+			</children>
+		</node>
+	</region>
+</save>

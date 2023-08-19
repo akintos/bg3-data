@@ -1,0 +1,132 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<save>
+	<version major="4" minor="0" revision="9" build="204" />
+	<region id="Templates">
+		<node id="Templates">
+			<children>
+				<node id="GameObjects">
+					<attribute id="MapKey" type="22" value="d43f569e-af7b-44f6-9a70-615ceb786b78" />
+					<attribute id="Name" type="23" value="LOOT_HAG_Throwable_Goo_Ball_A_Poison_B" />
+					<attribute id="LevelName" type="22" value="" />
+					<attribute id="Type" type="22" value="item" />
+					<attribute id="ParentTemplateId" type="22" value="70d80397-5c0c-4217-a615-2d30fb906df1" />
+					<attribute id="VisualTemplate" type="22" value="d8a0396a-e3b4-5d44-61bc-e7d1e0883751" />
+					<attribute id="PhysicsTemplate" type="22" value="e0510802-3fbc-4963-be56-d5f795ce4cde" />
+					<attribute id="DisplayName" type="28" handle="h49c4496cg0f79g496cga71bgc4eff7d79d6b" version="1" />
+					<attribute id="Icon" type="22" value="Item_LOOT_HAG_Throwable_Goo_Ball_A_Poison_A" />
+					<attribute id="Stats" type="22" value="QUEST_HAG_GrenadeFire" />
+					<attribute id="StoryItem" type="19" value="True" />
+					<attribute id="EquipSound" type="22" value="92550df7-e13e-4474-8a7e-a59825eaa805" />
+					<attribute id="InventoryMoveSound" type="22" value="a77249ac-7929-43de-b1a2-9690a7a71024" />
+					<attribute id="DropSound" type="22" value="a77249ac-7929-43de-b1a2-9690a7a71024" />
+					<attribute id="PickupSound" type="22" value="92550df7-e13e-4474-8a7e-a59825eaa805" />
+					<attribute id="UseSound" type="22" value="5a1a3a01-8c0e-39e7-eb9b-85b86696653c" />
+					<attribute id="Description" type="28" handle="h860aa3e1g8ea4g4889gb992gac947a01e3b9" version="1" />
+					<children>
+						<node id="Bounds">
+							<children>
+								<node id="Bound">
+									<attribute id="Type" type="1" value="0" />
+									<attribute id="Shape" type="1" value="1" />
+									<attribute id="Min" type="12" value="-0.1305221 -0.002521425 -0.132197" />
+									<attribute id="Max" type="12" value="0.1308216 0.276378 0.1377912" />
+									<attribute id="Radius" type="6" value="0.433013" />
+									<attribute id="Height" type="6" value="1" />
+								</node>
+								<node id="Bound">
+									<attribute id="Type" type="1" value="1" />
+									<attribute id="Shape" type="1" value="1" />
+									<attribute id="Min" type="12" value="-0.1305221 -0.002521425 -0.132197" />
+									<attribute id="Max" type="12" value="0.1308216 0.276378 0.1377912" />
+									<attribute id="Radius" type="6" value="0.433013" />
+									<attribute id="Height" type="6" value="1" />
+								</node>
+								<node id="Bound">
+									<attribute id="Type" type="1" value="2" />
+									<attribute id="Shape" type="1" value="1" />
+									<attribute id="Min" type="12" value="-0.1305221 -0.002521425 -0.132197" />
+									<attribute id="Max" type="12" value="0.1308216 0.276378 0.1377912" />
+									<attribute id="Radius" type="6" value="0.433013" />
+									<attribute id="Height" type="6" value="1" />
+								</node>
+							</children>
+						</node>
+						<node id="OnUsePeaceActions">
+							<children>
+								<node id="Action">
+									<attribute id="ActionType" type="4" value="32" />
+									<children>
+										<node id="Attributes">
+											<attribute id="Animation" type="22" value="" />
+											<attribute id="Conditions" type="23" value="" />
+											<attribute id="FallbackPreviewRadius" type="6" value="0" />
+										</node>
+									</children>
+								</node>
+							</children>
+						</node>
+						<node id="OnDestroyActions">
+							<children>
+								<node id="Action">
+									<attribute id="ActionType" type="4" value="26" />
+									<children>
+										<node id="Attributes">
+											<attribute id="Animation" type="22" value="" />
+											<attribute id="Conditions" type="23" value="" />
+											<attribute id="ActivateSoundEvent" type="22" value="3ea82655-5140-4287-9ab8-794559f182d3" />
+											<attribute id="PlayOnHUD" type="19" value="False" />
+										</node>
+									</children>
+								</node>
+								<node id="Action">
+									<attribute id="ActionType" type="4" value="5" />
+									<children>
+										<node id="Attributes">
+											<attribute id="Animation" type="22" value="" />
+											<attribute id="Conditions" type="23" value="" />
+											<attribute id="TargetItemState" type="1" value="0" />
+											<attribute id="ExplodeFX" type="22" value="4e9004dc-3a33-4396-998a-b967c16c1daf" />
+											<attribute id="visualDestruction" type="22" value="" />
+											<attribute id="VisualWithDynamicPhysics" type="22" value="" />
+											<attribute id="FadeOutDelay" type="6" value="0" />
+											<attribute id="FadeOutFX" type="22" value="" />
+											<attribute id="templateAfterDestruction" type="22" value="" />
+										</node>
+									</children>
+								</node>
+							</children>
+						</node>
+						<node id="Scripts">
+							<children>
+								<node id="Script">
+									<attribute id="UUID" type="22" value="a557ab71-77f3-4b0c-8174-f605e51c90c7" />
+									<children>
+										<node id="Parameters">
+											<children>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="HardcoreOnly" />
+													<attribute id="Type" type="4" value="1" />
+													<attribute id="Value" type="23" value="0" />
+												</node>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="LifeTime" />
+													<attribute id="Type" type="4" value="2" />
+													<attribute id="Value" type="23" value="0" />
+												</node>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="ProjectileSpell" />
+													<attribute id="Type" type="4" value="9" />
+													<attribute id="Value" type="23" value="Projectile_HAG_HagGrenade_PoisonCloud" />
+												</node>
+											</children>
+										</node>
+									</children>
+								</node>
+							</children>
+						</node>
+					</children>
+				</node>
+			</children>
+		</node>
+	</region>
+</save>

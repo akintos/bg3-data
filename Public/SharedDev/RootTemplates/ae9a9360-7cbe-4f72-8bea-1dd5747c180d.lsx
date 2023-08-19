@@ -1,0 +1,131 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<save>
+	<version major="4" minor="0" revision="9" build="303" />
+	<region id="Templates">
+		<node id="Templates">
+			<children>
+				<node id="GameObjects">
+					<attribute id="MapKey" type="22" value="ae9a9360-7cbe-4f72-8bea-1dd5747c180d" />
+					<attribute id="Name" type="23" value="ALCH_Solution_Potion_Remedy" />
+					<attribute id="LevelName" type="22" value="" />
+					<attribute id="Type" type="22" value="item" />
+					<attribute id="ParentTemplateId" type="22" value="8e660fd9-489d-42ff-a762-e4392e826666" />
+					<attribute id="VisualTemplate" type="22" value="515d08d7-59cd-2002-d1bc-a577007fc2f3" />
+					<attribute id="PhysicsTemplate" type="22" value="d3d653d7-0e30-e60b-6e80-79e58536f6fe" />
+					<attribute id="DisplayName" type="28" handle="h18b6f717g0e1eg441cg851eg483cd5051b3d" version="2" />
+					<attribute id="Icon" type="22" value="Item_ALCH_Solution_Remedy" />
+					<attribute id="Stats" type="22" value="ALCH_Solution_Potion_Remedy" />
+					<attribute id="TreasureOnDestroy" type="19" value="True" />
+					<attribute id="Description" type="28" handle="h866f1297g6d2fg4e68g9909g1a363ba701aa" version="2" />
+					<attribute id="TechnicalDescription" type="28" handle="h732b0d75g52c6g427ag9604g8c8a52aa8618" version="2" />
+					<children>
+						<node id="Bounds">
+							<children>
+								<node id="Bound">
+									<attribute id="Type" type="1" value="0" />
+									<attribute id="Shape" type="1" value="1" />
+									<attribute id="Min" type="12" value="-0.1345685 -0.0009512827 -0.2660489" />
+									<attribute id="Max" type="12" value="0.1487026 0.1204626 0.3392585" />
+									<attribute id="Radius" type="6" value="0.1698125" />
+									<attribute id="Height" type="6" value="0.1214139" />
+								</node>
+								<node id="Bound">
+									<attribute id="Type" type="1" value="1" />
+									<attribute id="Shape" type="1" value="1" />
+									<attribute id="Min" type="12" value="-0.1345685 -0.0009512678 -0.2660489" />
+									<attribute id="Max" type="12" value="0.1487026 0.1204626 0.3392585" />
+									<attribute id="Radius" type="6" value="0.216506" />
+									<attribute id="Height" type="6" value="0.5" />
+								</node>
+								<node id="Bound">
+									<attribute id="Type" type="1" value="2" />
+									<attribute id="Shape" type="1" value="1" />
+									<attribute id="Min" type="12" value="-0.1345685 -0.0009512678 -0.2660489" />
+									<attribute id="Max" type="12" value="0.1487026 0.1204626 0.3392585" />
+									<attribute id="Radius" type="6" value="0.216506" />
+									<attribute id="Height" type="6" value="0.5" />
+								</node>
+							</children>
+						</node>
+						<node id="OnUsePeaceActions">
+							<children>
+								<node id="Action">
+									<attribute id="ActionType" type="4" value="7" />
+									<children>
+										<node id="Attributes">
+											<attribute id="Animation" type="22" value="" />
+											<attribute id="Conditions" type="23" value="" />
+											<attribute id="StatsId" type="22" value="ALCH_POTION_REMEDY" />
+											<attribute id="StatusDuration" type="4" value="0" />
+											<attribute id="Consume" type="19" value="True" />
+										</node>
+									</children>
+								</node>
+							</children>
+						</node>
+						<node id="OnDestroyActions">
+							<children>
+								<node id="Action">
+									<attribute id="ActionType" type="4" value="26" />
+									<children>
+										<node id="Attributes">
+											<attribute id="Animation" type="22" value="" />
+											<attribute id="Conditions" type="23" value="" />
+											<attribute id="ActivateSoundEvent" type="22" value="3ea82655-5140-4287-9ab8-794559f182d3" />
+											<attribute id="PlayOnHUD" type="19" value="False" />
+										</node>
+									</children>
+								</node>
+								<node id="Action">
+									<attribute id="ActionType" type="4" value="5" />
+									<children>
+										<node id="Attributes">
+											<attribute id="Animation" type="22" value="" />
+											<attribute id="Conditions" type="23" value="" />
+											<attribute id="TargetItemState" type="1" value="0" />
+											<attribute id="ExplodeFX" type="22" value="a3e6574b-46b4-7bdc-e657-baa3088c6792" />
+											<attribute id="visualDestruction" type="22" value="00000000-0000-0000-0000-000000000000" />
+											<attribute id="VisualWithDynamicPhysics" type="22" value="" />
+											<attribute id="FadeOutDelay" type="6" value="0" />
+											<attribute id="FadeOutFX" type="22" value="" />
+											<attribute id="templateAfterDestruction" type="22" value="" />
+										</node>
+									</children>
+								</node>
+							</children>
+						</node>
+						<node id="InventoryList" />
+						<node id="Scripts">
+							<children>
+								<node id="Script">
+									<attribute id="UUID" type="22" value="a557ab71-77f3-4b0c-8174-f605e51c90c7" />
+									<children>
+										<node id="Parameters">
+											<children>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="HardcoreOnly" />
+													<attribute id="Type" type="4" value="1" />
+													<attribute id="Value" type="23" value="0" />
+												</node>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="LifeTime" />
+													<attribute id="Type" type="4" value="2" />
+													<attribute id="Value" type="23" value="0" />
+												</node>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="ProjectileSpell" />
+													<attribute id="Type" type="4" value="9" />
+													<attribute id="Value" type="23" value="Projectile_Potion_Destroy_Remedy" />
+												</node>
+											</children>
+										</node>
+									</children>
+								</node>
+							</children>
+						</node>
+					</children>
+				</node>
+			</children>
+		</node>
+	</region>
+</save>

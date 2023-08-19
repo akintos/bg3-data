@@ -1,0 +1,1861 @@
+<ls:UIWidget x:Name="ActionRadials"
+             ls:UIWidget.ContextName="HotBar"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:b="http://schemas.microsoft.com/xaml/behaviors" 
+             xmlns:ls="clr-namespace:ls;assembly=SharedGUI"
+             xmlns:noesis="clr-namespace:NoesisGUIExtensions;assembly=Noesis.GUI.Extensions"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:System="clr-namespace:System;assembly=mscorlib"
+             mc:Ignorable="d"
+             d:DesignHeight="2160" d:DesignWidth="3840" FocusLeft="UITabPrev" FocusRight="UITabNext"
+             ls:TooltipExtender.Owner="{Binding CurrentPlayer.SelectedCharacter}" KeyboardNavigation.DirectionalNavigation="Continue"
+             d:DataContext="{d:DesignInstance {x:Type ls:DCHotBar}, IsDesignTimeCreatable=True}" CanCacheFocusSurroundingElements="True">
+
+    <b:Interaction.Triggers>
+        <b:EventTrigger EventName="GotKeyboardFocus">
+            <b:ChangePropertyAction TargetName="ActionRadials" PropertyName="Tag" Value="{Binding Path=FocusedElement, ElementName=ActionRadials}"/>
+            <b:InvokeCommandAction Command="{Binding ShowTooltipOnUIElement}" CommandParameter="{Binding Path=FocusedElement, ElementName=ActionRadials}"/>
+            <b:InvokeCommandAction Command="{Binding ClearResourceHighlightsCommand}"/>
+        </b:EventTrigger>
+
+        <b:EventTrigger EventName="Loaded">
+            <b:InvokeCommandAction Command="{Binding EnableTooltipOnUIElement}"/>
+        </b:EventTrigger>
+
+        <b:EventTrigger EventName="Loaded">
+            <b:ChangePropertyAction TargetObject="{Binding CurrentPlayer.UIData}" PropertyName="AreRadialsOpen" Value="True"/>
+            <!-- Tutorial UI Event - Action Radials Open -->
+            <b:InvokeCommandAction Command="{Binding TutorialEvent}" CommandParameter="f651618e-d396-4d4a-ba5a-8f50c3697708"/>
+            <ls:LSPlaySound Sound="UI_HUD_Controller_RadialMenu_Open" />
+        </b:EventTrigger>
+        <b:EventTrigger EventName="Loaded">
+            <b:Interaction.Behaviors>
+                <b:ConditionBehavior>
+                    <b:ConditionalExpression>
+                        <b:ComparisonCondition LeftOperand="{Binding Metadata, ElementName=ActionRadials}" Operator="Equal" RightOperand="CallAllies"/>
+                    </b:ConditionalExpression>
+                </b:ConditionBehavior>
+            </b:Interaction.Behaviors>
+            <b:InvokeCommandAction Command="{Binding CallAllies}"/>
+        </b:EventTrigger>
+
+        <b:EventTrigger EventName="Unloaded">
+            <b:ChangePropertyAction TargetName="ActionRadials" PropertyName="Tag" Value="{x:Null}"/>
+        </b:EventTrigger>
+
+        <b:EventTrigger EventName="WidgetClosing">
+            <b:InvokeCommandAction Command="{Binding HideTooltipOnUIElement}"/>
+            <b:InvokeCommandAction Command="{Binding ClearResourceHighlightsCommand}"/>
+            <b:ChangePropertyAction TargetObject="{Binding CurrentPlayer.UIData}" PropertyName="AreRadialsOpen" Value="False"/>
+            <ls:LSPlaySound Sound="UI_HUD_Controller_RadialMenu_Close" />
+        </b:EventTrigger>
+
+        <b:EventTrigger EventName="MoveFocusRight">
+            <ls:LSPlaySound Sound="UI_HUD_Controller_RadialMenu_MoveRight" />
+        </b:EventTrigger>
+
+        <b:EventTrigger EventName="MoveFocusLeft">
+            <ls:LSPlaySound Sound="UI_HUD_Controller_RadialMenu_MoveLeft" />
+        </b:EventTrigger>
+    </b:Interaction.Triggers>
+
+    <ls:UIWidget.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../Library/Radials_c.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+		  <System:Double x:Key="UnfocusedRadialsSizeModifier">0.7</System:Double>
+            <ImageSource x:Key="RadialBg">pack://application:,,,/GustavNoesisGUI;component/Assets/Radials/c_radial_bg_small.png</ImageSource>
+            <ImageSource x:Key="RadialBgMetaMagic">pack://application:,,,/GustavNoesisGUI;component/Assets/Radials/metaMagicSwirl.png</ImageSource>
+            <ImageSource x:Key="ActionDetailBGBlue">pack://application:,,,/GustavNoesisGUI;component/Assets/Radials/c_actionDetailsBG_blue.png</ImageSource>
+            <ImageSource x:Key="ActionDetailBGRed">pack://application:,,,/GustavNoesisGUI;component/Assets/Radials/c_actionDetailsBG_red.png</ImageSource>
+            <ImageSource x:Key="ActionDetailBGGrey">pack://application:,,,/GustavNoesisGUI;component/Assets/Radials/c_actionDetailsBG_grey.png</ImageSource>
+            <ImageSource x:Key="IconShadeBG">pack://application:,,,/GustavNoesisGUI;component/Assets/Radials/c_iconbShade.png</ImageSource>
+            
+            <Thickness x:Key="SlotPosition1">-172,-172,-172,-112</Thickness>
+            <Thickness x:Key="SlotPosition2">-172,-172,-172,-92</Thickness>
+
+            <Style x:Key="ActionDetailsBG9Slice" TargetType="ls:LSNineSliceImage" BasedOn="{StaticResource {x:Type ls:LSNineSliceImage}}">
+                <Setter Property="ImageSource" Value="{StaticResource ActionDetailBGGrey}" />
+                <Setter Property="Slices" Value="12" />
+                <Setter Property="MinWidth" Value="152" />
+                <Setter Property="MinHeight" Value="40" />
+                <Setter Property="Padding" Value="0,0,0,0" />
+                <Setter Property="Margin" Value="0" />
+                <Setter Property="Focusable" Value="False" />
+            </Style>
+
+            <Style x:Key="MetaMagicAnimationStyle" TargetType="ls:AnimatedImage">
+                <Setter Property="Template" Value="{StaticResource BaseAnimatedImage}"/>
+                <Setter Property="Time" Value="0:0:0.033"/>
+                <Setter Property="ClipSize" Value="216,240"/>
+                <Setter Property="RepeatBehavior" Value="1x"/>
+                <Setter Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/BottomBar/VFX/popExplosion.png"/>
+                <Setter Property="HorizontalAlignment" Value="Center"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="Visibility" Value="Hidden"/>
+
+            </Style>
+
+            <!-- Hint Text Pad-->
+            <ControlTemplate x:Key="InspectHintStyle" TargetType="ContentControl">
+                <ls:LSNineSliceImage Height="103" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,-5,0,0" ImageSource="{StaticResource InspectHintBackground}"  Slices="28,30,28,20" Focusable="False">
+                    <StackPanel Orientation="Horizontal">
+                        <ls:LSButton
+                                 ContentTemplate="{StaticResource ControllerButtonHintImageOnly}" Height="120" Width="120"  Margin="0,-4,0,0"  
+                                 Content="{Binding DataContext.CurrentPlayer.UIData.InputEvents, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}, ConverterParameter=UIShowInfo, Converter={StaticResource FindInputEventConverter}}" HorizontalAlignment="Left">
+                            <ls:LSButton.RenderTransform>
+                                <TransformGroup>
+                                    <ScaleTransform ScaleX="0.9"/>
+                                    <ScaleTransform ScaleY="0.9"/>
+                                </TransformGroup>
+                            </ls:LSButton.RenderTransform>
+                        </ls:LSButton>
+
+                        <TextBlock Text="{Binding Source='hafde27eeg294dg41c9g9aa1g5d5f2be9afea', Converter={StaticResource TranslatedStringConverter}}" HorizontalAlignment="Center" TextAlignment="Center" Foreground="{StaticResource TooltipColor.Primary}" FontSize="{StaticResource SmallishFontSize}" Margin="-12,18,40,-3" />
+                    </StackPanel>
+                </ls:LSNineSliceImage>
+            </ControlTemplate>
+
+            <Style x:Key="ActionDetailsBG9SliceRed" TargetType="ls:LSNineSliceImage" BasedOn="{StaticResource ActionDetailsBG9Slice}">
+                <Setter Property="ImageSource" Value="{StaticResource ActionDetailBGRed}" />
+            </Style>
+
+            <Style x:Key="AvailableSlotContainer" TargetType="ListBoxItem" BasedOn="{StaticResource {x:Type ListBoxItem}}">
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="Focusable" Value="True"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate>
+                            <Border>
+                                <ContentPresenter/>
+                            </Border>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="ContentTemplate">
+                    <Setter.Value>
+                        <DataTemplate>
+                            <Rectangle Fill="{Binding Icon}" Width="104" Height="104"/>
+                        </DataTemplate>
+                    </Setter.Value>
+                </Setter>
+                <Style.Triggers>
+                    <Trigger Property="IsSelected" Value="True">
+                        <Setter Property="Background" Value="Transparent"/>
+                        <Setter Property="BorderBrush" Value="Transparent"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+
+            <ItemsPanelTemplate x:Key="AvailableSlotsListPanelTemplate">
+                <ls:LSGrid ActionUpEvent="UIUp" ActionDownEvent="UIDown" ActionRightEvent="UIRight" ActionLeftEvent="UILeft" AutoIndex="True" ContainerData="{Binding }" Columns="5" CellWidth="120" CellHeight="120" DisableScrolling="True" EmptyCellTemplate="{DynamicResource EmptyCellTemplate}"/>
+            </ItemsPanelTemplate>
+
+            <DataTemplate x:Key="SpellGroupList">
+                <ls:LSListBox ItemsSource="{Binding Actions}" Focusable="False" Template="{StaticResource ScrolllessListBox}" ItemContainerStyle="{StaticResource AvailableSlotContainer}" ItemsPanel="{StaticResource AvailableSlotsListPanelTemplate}" />
+            </DataTemplate>
+
+            <DataTemplate x:Key="SlotIconTemplate">
+                <Grid>
+                    <Image x:Name="ElementDropShadow" Width="220" Height="220" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Radials/c_iconbShade.png" RenderTransformOrigin="0.5 0.5" Opacity="0.6" />
+                    <Image x:Name="spell" Width="120" Height="120"  Stretch="Fill" >
+                        <Image.Source>
+                            <MultiBinding Converter="{StaticResource IconIdToSourceConverter}" ConverterParameter="{StaticResource FallBackIconPath}">
+                                <Binding Source="Assets/ControllerUIIcons/skills_png/"/>
+                                <Binding Path="Spell.IconName"/>
+                            </MultiBinding>
+                        </Image.Source>
+                        <Image.Effect>
+                            <DropShadowEffect BlurRadius="25" ShadowDepth="0" Opacity="0.8" Color="Black"/>
+                        </Image.Effect>
+                    </Image>
+
+                    <Image x:Name="item" Width="120" Height="120" Stretch="Fill" Visibility="Collapsed">
+                        <Image.Source>
+                            <MultiBinding Converter="{StaticResource IconIdToSourceConverter}" ConverterParameter="{StaticResource FallBackIconPath}">
+                                <Binding Source="Assets/ControllerUIIcons/items_png/"/>
+                                <Binding Path="GameObject.IconName"/>
+                            </MultiBinding>
+                        </Image.Source>
+                        <Image.Effect>
+                            <DropShadowEffect BlurRadius="25" ShadowDepth="0" Opacity="0.8" Color="Black"/>
+                        </Image.Effect>
+                    </Image>
+
+                    <Image x:Name="passive" Width="120" Height="120" Stretch="Fill" Visibility="Collapsed">
+                        <Image.Source>
+                            <MultiBinding Converter="{StaticResource IconIdToSourceConverter}" ConverterParameter="{StaticResource FallBackIconPath}">
+                                <Binding Source="Assets/ControllerUIIcons/skills_png/"/>
+                                <Binding Path="Passive.IconName"/>
+                            </MultiBinding>
+                        </Image.Source>
+                        <Image.Effect>
+                            <DropShadowEffect BlurRadius="25" ShadowDepth="0" Opacity="0.8" Color="Black"/>
+                        </Image.Effect>
+                    </Image>
+
+                </Grid>
+                <DataTemplate.Triggers>
+                    <DataTrigger Binding="{Binding SlotType}" Value="Passive">
+                        <Setter TargetName="spell" Property="Visibility" Value="Collapsed"/>
+                        <Setter TargetName="item" Property="Visibility" Value="Collapsed"/>
+                        <Setter TargetName="passive" Property="Visibility" Value="Visible"/>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding SlotType}" Value="Item">
+                        <Setter TargetName="spell" Property="Visibility" Value="Collapsed"/>
+                        <Setter TargetName="item" Property="Visibility" Value="Visible"/>
+                        <Setter TargetName="passive" Property="Visibility" Value="Collapsed"/>
+                    </DataTrigger>
+                </DataTemplate.Triggers>
+            </DataTemplate>
+
+            <Style x:Key="ControllerMenuItemStyle" TargetType="ls:LSRadialListItem" BasedOn="{StaticResource {x:Type ls:LSRadialListItem}}">
+                <Setter Property="Index" Value="{Binding SlotIndex, Mode=OneWay}"/>
+                <Setter Property="IsEnabled" Value="{Binding CanUse}"/>
+                <!-- This is to allow for a content override in case of concentration -->
+                <Setter Property="Tag" Value="{Binding .}"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="ls:LSRadialListItem">
+                            <ControlTemplate.Resources>
+                                <DataTemplate DataType="{x:Type ls:VMHotBarSlot}">
+                                    <Grid x:Name="HotbarSlotRoot" >
+
+                                        <!-- MetaMagic Slot Visualisations-->
+                                        <Grid x:Name="IsModified" Visibility="Collapsed" Width="200" Height="200" >
+                                            <Grid  ls:LSRadialListItem.RotateType="Rotate"  RenderTransformOrigin="0.5 0.5" Margin="-80,-80,-80,-80">
+                                                <!-- MetaMagic Slot Swirl BG-->
+                                                <Image x:Name="IsModifiedSwirl" Opacity="0.8" Source="{StaticResource RadialBgMetaMagic}" RenderTransformOrigin="0.5 0.5"  Margin="68,68,68,68">
+                                                    <Image.RenderTransform>
+                                                        <RotateTransform Angle="0"/>
+                                                    </Image.RenderTransform>
+                                                </Image>
+                                                <!-- MetaMagic Pop Animation-->
+                                                <ls:AnimatedImage x:Name="IsModifiedPop" Style="{StaticResource MetaMagicAnimationStyle}" RenderTransformOrigin="0.5,0.5" Margin="-60,-60,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" ls:AttachedProperties.InheritedNumber="{Binding Source=0, Converter={StaticResource RandomConverter}, ConverterParameter=10}" Visibility="Hidden">
+                                                    <ls:AnimatedImage.RenderTransform>
+                                                        <TransformGroup>
+                                                            <ScaleTransform ScaleX="1.5" ScaleY="1.5" />
+                                                        </TransformGroup>
+                                                    </ls:AnimatedImage.RenderTransform>
+                                                </ls:AnimatedImage>
+                                                <b:Interaction.Triggers>
+                                                    <b:DataTrigger Binding="{Binding (ls:AnimatedImage.AnimationEnded), ElementName=IsModifiedPop}" Value="True">
+                                                        <b:ChangePropertyAction TargetName="IsModifiedPop" PropertyName="Visibility" Value="Hidden"/>
+                                                    </b:DataTrigger>
+
+                                                    <b:DataTrigger Binding="{Binding Visibility, ElementName=IsModified}" Value="Visible">
+                                                        <b:ChangePropertyAction TargetName="IsModifiedPop" PropertyName="Visibility" Value="Visible"/>
+                                                    </b:DataTrigger>
+                                                </b:Interaction.Triggers>
+                                            </Grid>
+
+                                        </Grid>
+
+                                        <!-- Active MetaMagic Slot Effects -->
+                                        <Grid x:Name="ActiveHolder" Width="200" Height="200" Visibility="Collapsed">
+
+                                            <Image x:Name="IsMetaMagicSwirl" Opacity="1" Source="{StaticResource RadialBgMetaMagic}" RenderTransformOrigin="0.5 0.5"  Margin="0,0,0,0">
+                                                <Image.RenderTransform>
+                                                    <RotateTransform Angle="0"/>
+                                                </Image.RenderTransform>
+                                            </Image>
+
+                                            <ls:AnimatedImage x:Name="VFX" Style="{StaticResource MetaMagicAnimationStyle}" RenderTransformOrigin="0.5,0.5" Margin="-60,-60,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" ls:AttachedProperties.InheritedNumber="{Binding Source=0, Converter={StaticResource RandomConverter}, ConverterParameter=10}">
+                                                <ls:AnimatedImage.RenderTransform>
+                                                    <TransformGroup>
+                                                        <ScaleTransform ScaleX="1.5" ScaleY="1.5" />
+                                                    </TransformGroup>
+                                                </ls:AnimatedImage.RenderTransform>
+                                            </ls:AnimatedImage>
+
+                                            <b:Interaction.Triggers>
+
+                                                <b:DataTrigger Binding="{Binding (ls:AnimatedImage.AnimationEnded), ElementName=VFX}" Value="True">
+                                                    <b:ChangePropertyAction TargetName="VFX" PropertyName="Visibility" Value="Hidden"/>
+                                                </b:DataTrigger>
+
+                                                <b:DataTrigger Binding="{Binding Visibility, ElementName=ActiveHolder}" Value="Visible">
+                                                    <b:ChangePropertyAction TargetName="VFX" PropertyName="Visibility" Value="Visible"/>
+                                                </b:DataTrigger>
+
+                                            </b:Interaction.Triggers>
+
+
+                                        </Grid>
+
+                                        <ContentPresenter x:Name="icon" Width="240" Height="240" ContentTemplate="{StaticResource SlotIconTemplate}" Content="{Binding .}" />
+                                        <Grid RenderTransformOrigin="0.5 0.5" ls:LSRadialListItem.RotateType="Rotate">
+
+                                            <Image x:Name="SubSelectIndicator" Source="{StaticResource IcoPlusImg}" Width="32" Height="32" Stretch="Fill" RenderTransformOrigin="0.5 0.5" ls:LSRadialListItem.RotateType="InvertRotate" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,28" Visibility="Collapsed"/>
+
+                                            <Control x:Name="PassiveIndicator" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,10" Visibility="Collapsed">
+                                                <Control.Template>
+                                                    <ControlTemplate>
+                                                        <Image x:Name="img" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Radials/c_passiveToggleOff_d.png" Stretch="None"/>
+                                                        <ControlTemplate.Triggers>
+                                                            <DataTrigger Binding="{Binding IsActive}" Value="True">
+                                                                <Setter TargetName="img" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Radials/c_passiveToggleOn_d.png"/>
+                                                            </DataTrigger>
+                                                            <MultiDataTrigger>
+                                                                <MultiDataTrigger.Conditions>
+                                                                    <Condition Binding="{Binding TemplatedParent.IsSelected, RelativeSource={RelativeSource Mode=TemplatedParent}}" Value="True"/>
+                                                                    <Condition Binding="{Binding TemplatedParent.IsEnabled, RelativeSource={RelativeSource Mode=TemplatedParent}}" Value="True"/>
+                                                                </MultiDataTrigger.Conditions>
+                                                                <Setter TargetName="img" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Radials/c_passiveToggleOff_h.png"/>
+                                                            </MultiDataTrigger>
+                                                            <MultiDataTrigger>
+                                                                <MultiDataTrigger.Conditions>
+                                                                    <Condition Binding="{Binding IsActive}" Value="True"/>
+                                                                    <Condition Binding="{Binding TemplatedParent.IsSelected, RelativeSource={RelativeSource Mode=TemplatedParent}}" Value="True"/>
+                                                                    <Condition Binding="{Binding TemplatedParent.IsEnabled, RelativeSource={RelativeSource Mode=TemplatedParent}}" Value="True"/>
+                                                                </MultiDataTrigger.Conditions>
+                                                                <Setter TargetName="img" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Radials/c_passiveToggleOn_h.png"/>
+                                                            </MultiDataTrigger>
+                                                        </ControlTemplate.Triggers>
+                                                    </ControlTemplate>
+                                                </Control.Template>
+                                            </Control>
+
+                                            <Image x:Name="DisabledOverlay" Stretch="None" Margin="0,-14,0,14"  Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Radials/c_radial_segment_disabled.png" RenderTransformOrigin="0.5 0.5" Visibility="{Binding CanUse, Converter={StaticResource BoolToHiddenConverter}}" Opacity="1" >
+                                                <Image.RenderTransform>
+                                                    <RotateTransform Angle="270"/>
+                                                </Image.RenderTransform>
+                                            </Image>
+
+                                        </Grid>
+                                        <TextBlock x:Name="slotInfo" Text="" Foreground="{StaticResource LS_specialTxtColor}" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="50,50,-50,-50" FontSize="{DynamicResource ScaledDefaultFontSize}" FontWeight="Bold" noesis:Text.Stroke="#FF000000" noesis:Text.StrokeThickness="5"/>
+                                    </Grid>
+                                    <DataTemplate.Triggers>
+                                        <DataTrigger Binding="{Binding Spell.IsModified}" Value="True">
+                                            <Setter TargetName="IsModified" Property="Visibility" Value="Visible"/>
+                                            <DataTrigger.EnterActions>
+                                                <BeginStoryboard x:Name="PotentialMetaMagicAnimationSwirl">
+                                                    <BeginStoryboard.Storyboard>
+                                                        <Storyboard TargetName="IsModifiedSwirl" AutoReverse="True"  RepeatBehavior="Forever" FillBehavior="Stop" >
+                                                            <DoubleAnimation From="0" To="360" Duration="0:0:2" RepeatBehavior="Forever" Storyboard.TargetProperty="(UIElement.RenderTransform).(RotateTransform.Angle)"/>
+                                                        </Storyboard>
+                                                    </BeginStoryboard.Storyboard>
+                                                </BeginStoryboard>
+                                            </DataTrigger.EnterActions>
+                                            <DataTrigger.ExitActions>
+                                                <StopStoryboard BeginStoryboardName="PotentialMetaMagicAnimationSwirl"/>
+                                            </DataTrigger.ExitActions>
+                                        </DataTrigger>
+
+                                        <DataTrigger Binding="{Binding Spell.IsContainer}" Value="True">
+                                            <Setter Property="Visibility" Value="Visible" TargetName="SubSelectIndicator" />
+                                        </DataTrigger>
+
+                                        <DataTrigger Binding="{Binding SlotType}" Value="Item">
+                                            <Setter TargetName="slotInfo" Property="Text" Value="{Binding GameObject.Count}"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding GameObject.Count}" Value="1">
+                                            <Setter TargetName="slotInfo" Property="Visibility" Value="Hidden"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding CanUse}" Value="false">
+                                            <Setter TargetName="icon" Property="Opacity" Value="0.7"/>
+                                        </DataTrigger>
+
+                                        <!-- Normal Passive Slot-->
+                                        <MultiDataTrigger>
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding SlotType}" Value="Passive"/>
+                                                <Condition Binding="{Binding Passive.IsMetamagic}" Value="False"/>
+                                            </MultiDataTrigger.Conditions>
+                                            <Setter TargetName="PassiveIndicator" Property="Visibility" Value="Visible"/>
+                                        </MultiDataTrigger>
+
+                                        <MultiDataTrigger>
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding Spell.IsContainer}" Value="False"/>
+                                                <Condition Binding="{Binding SlotType}" Value="Spell"/>
+                                            </MultiDataTrigger.Conditions>
+                                            <Setter TargetName="slotInfo" Property="Text" Value="{Binding Spell.SpellSlotLevel, Converter={StaticResource DecimalToRomanConverter}}"/>
+                                        </MultiDataTrigger>
+
+                                        <DataTrigger Binding="{Binding ., Converter={StaticResource TypeConverter}}" Value="ViewModel">
+                                            <Setter TargetName="DisabledOverlay" Property="Visibility" Value="Hidden"/>
+                                        </DataTrigger>
+
+                                        <MultiDataTrigger>
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding Spell.IsModified}" Value="False"/>
+                                                <Condition Binding="{Binding DataContext.CurrentPlayer.SelectedCharacter.PlayerCharacterProperties.MetamagicActive, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" Value="True"/>
+                                            </MultiDataTrigger.Conditions>
+                                            <Setter TargetName="DisabledOverlay" Property="Visibility" Value="Visible"/>
+                                            <Setter TargetName="DisabledOverlay" Property="Opacity" Value="0.2"/>
+                                            <Setter TargetName="icon" Property="Opacity" Value="0.7"/>
+                                        </MultiDataTrigger>
+
+
+                                        <!-- Active MetaMagic Slot-->
+                                        <MultiDataTrigger>
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding IsActive}" Value="True"/>
+                                                <Condition Binding="{Binding SlotType}" Value="Passive"/>
+                                                <Condition Binding="{Binding Passive.IsMetamagic}" Value="True"/>
+                                            </MultiDataTrigger.Conditions>
+                                            <Setter TargetName="ActiveHolder" Property="Visibility" Value="Visible" />
+
+                                            <MultiDataTrigger.EnterActions>
+
+                                                <BeginStoryboard x:Name="ActiveMetaMagicAnimationSwirl">
+                                                    <BeginStoryboard.Storyboard>
+                                                        <Storyboard TargetName="IsMetaMagicSwirl" AutoReverse="True"  RepeatBehavior="Forever" FillBehavior="Stop" >
+                                                            <DoubleAnimation From="0" To="360" Duration="0:0:2" RepeatBehavior="Forever" Storyboard.TargetProperty="(UIElement.RenderTransform).(RotateTransform.Angle)"/>
+                                                        </Storyboard>
+
+                                                    </BeginStoryboard.Storyboard>
+                                                </BeginStoryboard>
+
+                                            </MultiDataTrigger.EnterActions>
+                                            <MultiDataTrigger.ExitActions>
+                                                <StopStoryboard BeginStoryboardName="ActiveMetaMagicAnimationSwirl"/>
+                                            </MultiDataTrigger.ExitActions>
+                                        </MultiDataTrigger>
+                                    </DataTemplate.Triggers>
+                                </DataTemplate>
+                            </ControlTemplate.Resources>
+                            <Grid ls:LSRadialListItem.RotateType="Rotate" RenderTransformOrigin="0.5 1">
+                                <Grid x:Name="slotRoot" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,24,0,264">
+
+                                    <Image x:Name="SlotBg" Margin="0,-14,0,14" Stretch="None" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Radials/c_radial_segment_action.png" RenderTransformOrigin="0.5 0.5" >
+                                        <Image.RenderTransform>
+                                            <RotateTransform Angle="-90"/>
+                                        </Image.RenderTransform>
+                                    </Image>
+
+                                    <Grid  x:Name="metaMagicSlotBg" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,0,0" Opacity="0">
+                                        <Image Margin="0,-21,0,21" Stretch="None" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Radials/c_radial_segment_metaMagic.png" RenderTransformOrigin="0.5 0.5" >
+                                            <Image.RenderTransform>
+                                                <RotateTransform Angle="-90"/>
+                                            </Image.RenderTransform>
+                                        </Image>
+                                    </Grid>
+                                    <Grid  x:Name="metaMagicSlotBg2" VerticalAlignment="Center" HorizontalAlignment="Center" Opacity="0" Margin="0,0,0,0">
+                                        <Image Margin="0,-21,0,21" Stretch="None" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Radials/c_radial_segment_metaMagic.png" RenderTransformOrigin="0.5 0.5" >
+                                            <Image.RenderTransform>
+                                                <RotateTransform Angle="-90"/>
+                                            </Image.RenderTransform>
+                                        </Image>
+                                    </Grid>
+
+                                    <Image x:Name="Selected" Stretch="None" Margin="{StaticResource SlotPosition1}" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Radials/c_radial_segment_h_new.png" Opacity="0" RenderTransformOrigin="0.5 0.5">
+                                        <Image.RenderTransform>
+                                            <TransformGroup>
+                                                <RotateTransform Angle="-90"/>
+                                                <ScaleTransform ScaleX="1.05"/>
+                                                <ScaleTransform ScaleY="1.05"/>
+                                            </TransformGroup>
+                                        </Image.RenderTransform>
+                                    </Image>
+                                    <Image x:Name="Selected2" Stretch="None" Margin="{StaticResource SlotPosition1}" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Radials/c_radial_segment_h_new.png" Opacity="0" RenderTransformOrigin="0.5 0.5">
+                                        <Image.RenderTransform>
+                                            <TransformGroup>
+                                                <RotateTransform Angle="-90"/>
+                                                <ScaleTransform ScaleX="1.05"/>
+                                                <ScaleTransform ScaleY="1.05"/>
+                                            </TransformGroup>
+                                        </Image.RenderTransform>
+                                        <Image.Effect>
+                                            <DropShadowEffect BlurRadius="16" ShadowDepth="10" Opacity="1" Color="{StaticResource tint00}"/>
+                                        </Image.Effect>
+                                    </Image>
+
+
+                                    <Grid x:Name="slotRootAnimation" Margin="0,0,0,0" RenderTransformOrigin="1 1" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                        <Grid x:Name="PART_InverseRotation" Margin="0,0,0,0" RenderTransformOrigin="0.5 0.5">
+
+                                            <!-- Content is bound to Tag to allow for a possible override, whithout destroying the list content -->
+                                            <ContentPresenter x:Name="slotContent" ls:LSRadialListItem.RotateType="InvertRotate" RenderTransformOrigin="0.5 0.5"  Content="{TemplateBinding Tag}"/>
+
+                                            <Grid x:Name="ConcentrationHolder" VerticalAlignment="Center" HorizontalAlignment="Center" DataContext="{Binding DataContext.CurrentPlayer.SelectedCharacter, RelativeSource={RelativeSource AncestorType=ls:UIWidget}}" Margin="-40,-100,40,100" Visibility="Collapsed" >
+                                                <Ellipse Fill="{Binding Icon}" Width="64" Height="64" ls:LSRadialListItem.RotateType="InvertRotate" RenderTransformOrigin="0.5 0.5"/>
+                                                <Image Source="pack://application:,,,/GustavNoesisGUI;component/Assets/TargetInfo/concentration_character.png" Stretch="Uniform" Width="120"/>
+                                            </Grid>
+                                        </Grid>
+                                    </Grid>
+                                </Grid>
+                            </Grid>
+                            <ControlTemplate.Triggers>
+
+                                <DataTrigger Binding="{Binding Tag.Spell.IsModified, RelativeSource={RelativeSource Mode=Self}}" Value="True">
+                                    <Setter TargetName="metaMagicSlotBg" Property="Visibility" Value="Visible"/>
+                                    <Setter TargetName="metaMagicSlotBg2" Property="Visibility" Value="Visible"/>
+                                    <DataTrigger.EnterActions>
+                                        <BeginStoryboard x:Name="PotentialMetaMagicAnimation">
+                                            <BeginStoryboard.Storyboard>
+                                                <Storyboard TargetName="metaMagicSlotBg" TargetProperty="Opacity" AutoReverse="True"  RepeatBehavior="Forever" >
+                                                    <DoubleAnimationUsingKeyFrames>
+                                                        <EasingDoubleKeyFrame Value="0" KeyTime="0:0:0"/>
+                                                        <EasingDoubleKeyFrame Value="0.999" KeyTime="0:0:0.6"/>
+                                                        <EasingDoubleKeyFrame Value="0.999" KeyTime="0:0:1"/>
+                                                        <EasingDoubleKeyFrame Value="0" KeyTime="0:0:1.6"/>
+                                                    </DoubleAnimationUsingKeyFrames>
+                                                </Storyboard>
+                                            </BeginStoryboard.Storyboard>
+                                        </BeginStoryboard>
+                                        <BeginStoryboard x:Name="PotentialMetaMagicAnimation2">
+                                            <BeginStoryboard.Storyboard>
+                                                <Storyboard TargetName="metaMagicSlotBg2" TargetProperty="Opacity" AutoReverse="True"  RepeatBehavior="Forever" >
+                                                    <DoubleAnimationUsingKeyFrames>
+                                                        <EasingDoubleKeyFrame Value="0" KeyTime="0:0:0"/>
+                                                        <EasingDoubleKeyFrame Value="0.999" KeyTime="0:0:0.6"/>
+                                                        <EasingDoubleKeyFrame Value="0.999" KeyTime="0:0:1"/>
+                                                        <EasingDoubleKeyFrame Value="0" KeyTime="0:0:1.6"/>
+                                                    </DoubleAnimationUsingKeyFrames>
+                                                </Storyboard>
+                                            </BeginStoryboard.Storyboard>
+                                        </BeginStoryboard>
+                                    </DataTrigger.EnterActions>
+                                    <DataTrigger.ExitActions>
+                                        <StopStoryboard BeginStoryboardName="PotentialMetaMagicAnimation"/>
+                                        <StopStoryboard BeginStoryboardName="PotentialMetaMagicAnimation2"/>
+                                    </DataTrigger.ExitActions>
+                                </DataTrigger>
+
+                                <MultiDataTrigger>
+                                    <MultiDataTrigger.Conditions>
+                                        <Condition Binding="{Binding Tag.Spell.IsModified, RelativeSource={RelativeSource Mode=Self}}" Value="False"/>
+                                        <Condition Binding="{Binding DataContext.CurrentPlayer.SelectedCharacter.PlayerCharacterProperties.MetamagicActive, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" Value="True"/>
+                                    </MultiDataTrigger.Conditions>
+                                    <Setter TargetName="SlotBg" Property="Opacity" Value="0.1"/>
+                                </MultiDataTrigger>
+
+                                <MultiTrigger>
+                                    <MultiTrigger.Conditions>
+                                        <Condition Property="IsSelected" Value="True"/>
+                                        <Condition Property="IsEnabled" Value="True"/>
+                                    </MultiTrigger.Conditions>
+                                    <Setter TargetName="SlotBg" Property="Visibility" Value="Visible" />
+                                    <Setter TargetName="SlotBg" Property="Opacity" Value="1" />
+                                    <Setter TargetName="Selected" Property="Opacity" Value="1"/>
+                                    <Setter TargetName="Selected2" Property="Opacity" Value="1"/>
+                                    <Setter TargetName="Selected" Property="Margin" Value="{StaticResource SlotPosition2}"/>
+                                    <Setter TargetName="Selected2" Property="Margin" Value="{StaticResource SlotPosition2}"/>
+                                    <Setter TargetName="slotRootAnimation" Property="Margin" Value="0,-30,0,0"/>
+                                    <MultiTrigger.EnterActions>
+                                        <BeginStoryboard x:Name="FadeInSelectedAnim">
+                                            <Storyboard FillBehavior="Stop">
+                                                <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)"  Storyboard.TargetName="slotRootAnimation">
+                                                    <EasingThicknessKeyFrame KeyTime="0" Value="0,0,0,0"/>
+                                                    <EasingThicknessKeyFrame KeyTime="0:0:0.2" Value="0,-30,0,0"/>
+                                                </ThicknessAnimationUsingKeyFrames>
+                                                <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)"  Storyboard.TargetName="Selected">
+                                                    <EasingThicknessKeyFrame KeyTime="0" Value="{StaticResource SlotPosition1}"/>
+                                                    <EasingThicknessKeyFrame KeyTime="0:0:0.2" Value="{StaticResource SlotPosition2}"/>
+                                                </ThicknessAnimationUsingKeyFrames>
+                                                <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="Selected">
+                                                    <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                                                    <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="1"/>
+                                                </DoubleAnimationUsingKeyFrames>
+                                                <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)"  Storyboard.TargetName="Selected2">
+                                                    <EasingThicknessKeyFrame KeyTime="0" Value="{StaticResource SlotPosition1}"/>
+                                                    <EasingThicknessKeyFrame KeyTime="0:0:0.2" Value="{StaticResource SlotPosition2}"/>
+                                                </ThicknessAnimationUsingKeyFrames>
+                                                <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="Selected2">
+                                                    <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                                                    <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="1"/>
+                                                </DoubleAnimationUsingKeyFrames>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </MultiTrigger.EnterActions>
+                                    <MultiTrigger.ExitActions>
+                                        <BeginStoryboard x:Name="FadeOutSelectedAnim">
+                                            <Storyboard FillBehavior="Stop">
+                                                <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)"  Storyboard.TargetName="slotRootAnimation">
+                                                    <EasingThicknessKeyFrame KeyTime="0" Value="0,-30,0,0"/>
+                                                    <EasingThicknessKeyFrame KeyTime="0:0:0.2" Value="0,0,0,0"/>
+                                                </ThicknessAnimationUsingKeyFrames>
+                                                <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="Selected">
+                                                    <EasingDoubleKeyFrame KeyTime="0" Value="1"/>
+                                                    <EasingDoubleKeyFrame KeyTime="0:0:0.4" Value="0"/>
+                                                </DoubleAnimationUsingKeyFrames>
+                                                <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="Selected2">
+                                                    <EasingDoubleKeyFrame KeyTime="0" Value="1"/>
+                                                    <EasingDoubleKeyFrame KeyTime="0:0:0.4" Value="0"/>
+                                                </DoubleAnimationUsingKeyFrames>
+                                                <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)"  Storyboard.TargetName="Selected">
+                                                    <EasingThicknessKeyFrame KeyTime="0" Value="{StaticResource SlotPosition2}"/>
+                                                    <EasingThicknessKeyFrame KeyTime="0:0:0.2" Value="{StaticResource SlotPosition1}"/>
+                                                </ThicknessAnimationUsingKeyFrames>
+                                                <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)"  Storyboard.TargetName="Selected2">
+                                                    <EasingThicknessKeyFrame KeyTime="0" Value="{StaticResource SlotPosition2}"/>
+                                                    <EasingThicknessKeyFrame KeyTime="0:0:0.2" Value="{StaticResource SlotPosition1}"/>
+                                                </ThicknessAnimationUsingKeyFrames>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </MultiTrigger.ExitActions>
+                                </MultiTrigger>
+
+                                <EventTrigger RoutedEvent="FrameworkElement.Unloaded">
+                                    <StopStoryboard BeginStoryboardName="FadeInSelectedAnim"/>
+                                    <StopStoryboard BeginStoryboardName="FadeOutSelectedAnim"/>
+                                </EventTrigger>
+
+                                <DataTrigger Binding="{Binding ., Converter={StaticResource TypeConverter}}" Value="ViewModel">
+                                    <Setter TargetName="SlotBg" Property="Visibility" Value="Hidden"/>
+                                    <Setter TargetName="slotContent" Property="Visibility" Value="Hidden"/>
+                                </DataTrigger>
+
+                                <MultiDataTrigger>
+                                    <MultiDataTrigger.Conditions>
+                                        <Condition Binding="{Binding SlotType}" Value="Spell"/>
+                                        <Condition Value="True">
+                                            <Condition.Binding>
+                                                <MultiBinding Converter="{StaticResource EqualConverter}">
+                                                    <Binding Path="Spell.PrototypeID"/>
+                                                    <Binding Path="DataContext.CurrentPlayer.SelectedCharacter.ConcentrationSpell.PrototypeID" RelativeSource="{RelativeSource AncestorType={x:Type ls:UIWidget}}"/>
+                                                </MultiBinding>
+                                            </Condition.Binding>
+                                        </Condition>
+                                    </MultiDataTrigger.Conditions>
+                                    <Setter TargetName="ConcentrationHolder" Property="Visibility" Value="Visible"/>
+                                </MultiDataTrigger>
+
+                                <MultiDataTrigger>
+                                    <MultiDataTrigger.Conditions>
+                                        <Condition Binding="{Binding Tag, RelativeSource={RelativeSource Mode=Self}, Converter={StaticResource TypeConverter}}" Value="ls.VMHotBarSlot"/>
+                                        <Condition Binding="{Binding Tag.SlotType, RelativeSource={RelativeSource Mode=Self}}" Value="Passive"/>
+                                        <Condition Binding="{Binding Tag.Passive.IsMetamagic, RelativeSource={RelativeSource Mode=Self}}" Value="False"/>
+                                    </MultiDataTrigger.Conditions>
+                                    <Setter TargetName="SlotBg" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Radials/c_radial_segment_passive.png"/>
+                                </MultiDataTrigger>
+
+                                <MultiDataTrigger>
+                                    <MultiDataTrigger.Conditions>
+                                        <Condition Binding="{Binding Tag, RelativeSource={RelativeSource Mode=Self}, Converter={StaticResource TypeConverter}}" Value="ls.VMHotBarSlot"/>
+                                        <Condition Binding="{Binding Tag.SlotType, RelativeSource={RelativeSource Mode=Self}}" Value="Passive"/>
+                                        <Condition Binding="{Binding Tag.Passive.IsMetamagic, RelativeSource={RelativeSource Mode=Self}}" Value="True"/>
+                                    </MultiDataTrigger.Conditions>
+                                    <Setter TargetName="SlotBg" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Radials/c_radial_segment_metaMagic.png"/>
+                                    <Setter TargetName="SlotBg" Property="Margin" Value="0,-21,0,21"/>
+                                </MultiDataTrigger>
+
+                                <MultiDataTrigger>
+                                    <MultiDataTrigger.Conditions>
+                                        <Condition Binding="{Binding Tag, RelativeSource={RelativeSource Mode=Self}, Converter={StaticResource TypeConverter}}" Value="ls.VMHotBarSlot"/>
+                                        <Condition Binding="{Binding Tag.SlotType, RelativeSource={RelativeSource Mode=Self}}" Value="Item"/>
+                                        <Condition Binding="{Binding Tag.GameObject.MainCost, RelativeSource={RelativeSource Mode=Self}}" Value="Action"/>
+                                    </MultiDataTrigger.Conditions>
+                                    <Setter TargetName="SlotBg" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Radials/c_radial_segment_action.png"/>
+                                </MultiDataTrigger>
+
+                                <MultiDataTrigger>
+                                    <MultiDataTrigger.Conditions>
+                                        <Condition Binding="{Binding Tag, RelativeSource={RelativeSource Mode=Self}, Converter={StaticResource TypeConverter}}" Value="ls.VMHotBarSlot"/>
+                                        <Condition Binding="{Binding Tag.SlotType, RelativeSource={RelativeSource Mode=Self}}" Value="Item"/>
+                                        <Condition Binding="{Binding Tag.GameObject.MainCost, RelativeSource={RelativeSource Mode=Self}}" Value="BonusAction"/>
+                                    </MultiDataTrigger.Conditions>
+                                    <Setter TargetName="SlotBg" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Radials/c_radial_segment_bonus.png"/>
+                                </MultiDataTrigger>
+
+                                <MultiDataTrigger>
+                                    <MultiDataTrigger.Conditions>
+                                        <Condition Binding="{Binding Tag, RelativeSource={RelativeSource Mode=Self}, Converter={StaticResource TypeConverter}}" Value="ls.VMHotBarSlot"/>
+                                        <Condition Binding="{Binding Tag.SlotType, RelativeSource={RelativeSource Mode=Self}}" Value="Item"/>
+                                        <Condition Binding="{Binding Tag.GameObject.MainCost, RelativeSource={RelativeSource Mode=Self}}" Value="BothActions"/>
+                                    </MultiDataTrigger.Conditions>
+                                    <Setter TargetName="SlotBg" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Radials/c_radial_segment_bothActions.png"/>
+                                </MultiDataTrigger>
+
+                                <MultiDataTrigger>
+                                    <MultiDataTrigger.Conditions>
+                                        <Condition Binding="{Binding Tag, RelativeSource={RelativeSource Mode=Self}, Converter={StaticResource TypeConverter}}" Value="ls.VMHotBarSlot"/>
+                                        <Condition Binding="{Binding Tag.SlotType, RelativeSource={RelativeSource Mode=Self}}" Value="Spell"/>
+                                        <Condition Binding="{Binding Tag.Spell.MainCost, RelativeSource={RelativeSource Mode=Self}}" Value="Action"/>
+                                    </MultiDataTrigger.Conditions>
+                                    <Setter TargetName="SlotBg" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Radials/c_radial_segment_action.png"/>
+                                </MultiDataTrigger>
+
+                                <MultiDataTrigger>
+                                    <MultiDataTrigger.Conditions>
+                                        <Condition Binding="{Binding Tag, RelativeSource={RelativeSource Mode=Self}, Converter={StaticResource TypeConverter}}" Value="ls.VMHotBarSlot"/>
+                                        <Condition Binding="{Binding Tag.SlotType, RelativeSource={RelativeSource Mode=Self}}" Value="Spell"/>
+                                        <Condition Binding="{Binding Tag.Spell.MainCost, RelativeSource={RelativeSource Mode=Self}}" Value="BonusAction"/>
+                                    </MultiDataTrigger.Conditions>
+                                    <Setter TargetName="SlotBg" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Radials/c_radial_segment_bonus.png"/>
+                                </MultiDataTrigger>
+
+                                <MultiDataTrigger>
+                                    <MultiDataTrigger.Conditions>
+                                        <Condition Binding="{Binding Tag, RelativeSource={RelativeSource Mode=Self}, Converter={StaticResource TypeConverter}}" Value="ls.VMHotBarSlot"/>
+                                        <Condition Binding="{Binding Tag.SlotType, RelativeSource={RelativeSource Mode=Self}}" Value="Spell"/>
+                                        <Condition Binding="{Binding Tag.Spell.MainCost, RelativeSource={RelativeSource Mode=Self}}" Value="BothActions"/>
+                                    </MultiDataTrigger.Conditions>
+                                    <Setter TargetName="SlotBg" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Radials/c_radial_segment_bothActions.png"/>
+                                </MultiDataTrigger>
+
+                                <MultiDataTrigger>
+                                    <MultiDataTrigger.Conditions>
+                                        <Condition Binding="{Binding Tag, RelativeSource={RelativeSource Mode=Self}, Converter={StaticResource TypeConverter}}" Value="ls.VMHotBarSlot"/>
+                                        <Condition Binding="{Binding Tag.SlotType, RelativeSource={RelativeSource Mode=Self}}" Value="Action"/>
+                                        <Condition Binding="{Binding Tag.Spell.MainCost, RelativeSource={RelativeSource Mode=Self}}" Value="Action"/>
+                                    </MultiDataTrigger.Conditions>
+                                    <Setter TargetName="SlotBg" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Radials/c_radial_segment_action.png"/>
+                                </MultiDataTrigger>
+
+                                <MultiDataTrigger>
+                                    <MultiDataTrigger.Conditions>
+                                        <Condition Binding="{Binding Tag, RelativeSource={RelativeSource Mode=Self}, Converter={StaticResource TypeConverter}}" Value="ls.VMHotBarSlot"/>
+                                        <Condition Binding="{Binding Tag.SlotType, RelativeSource={RelativeSource Mode=Self}}" Value="Action"/>
+                                        <Condition Binding="{Binding Tag.Spell.MainCost, RelativeSource={RelativeSource Mode=Self}}" Value="BonusAction"/>
+                                    </MultiDataTrigger.Conditions>
+                                    <Setter TargetName="SlotBg" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Radials/c_radial_segment_bonus.png"/>
+                                </MultiDataTrigger>
+
+                                <MultiDataTrigger>
+                                    <MultiDataTrigger.Conditions>
+                                        <Condition Binding="{Binding Tag, RelativeSource={RelativeSource Mode=Self}, Converter={StaticResource TypeConverter}}" Value="ls.VMHotBarSlot"/>
+                                        <Condition Binding="{Binding Tag.SlotType, RelativeSource={RelativeSource Mode=Self}}" Value="Action"/>
+                                        <Condition Binding="{Binding Tag.Spell.MainCost, RelativeSource={RelativeSource Mode=Self}}" Value="BothActions"/>
+                                    </MultiDataTrigger.Conditions>
+                                    <Setter TargetName="SlotBg" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Radials/c_radial_segment_bothActions.png"/>
+                                </MultiDataTrigger>
+
+                                <MultiDataTrigger>
+                                    <MultiDataTrigger.Conditions>
+                                        <Condition Binding="{Binding Tag, RelativeSource={RelativeSource Mode=Self}, Converter={StaticResource TypeConverter}}" Value="ls.VMCharacterAction"/>
+                                        <Condition Binding="{Binding Tag.MainCost, RelativeSource={RelativeSource Mode=Self}}" Value="Action"/>
+                                    </MultiDataTrigger.Conditions>
+                                    <Setter TargetName="SlotBg" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Radials/c_radial_segment_action.png"/>
+                                </MultiDataTrigger>
+
+                                <MultiDataTrigger>
+                                    <MultiDataTrigger.Conditions>
+                                        <Condition Binding="{Binding Tag, RelativeSource={RelativeSource Mode=Self}, Converter={StaticResource TypeConverter}}" Value="ls.VMCharacterAction"/>
+                                        <Condition Binding="{Binding Tag.MainCost, RelativeSource={RelativeSource Mode=Self}}" Value="BonusAction"/>
+                                    </MultiDataTrigger.Conditions>
+                                    <Setter TargetName="SlotBg" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Radials/c_radial_segment_bonus.png"/>
+                                </MultiDataTrigger>
+
+                                <MultiDataTrigger>
+                                    <MultiDataTrigger.Conditions>
+                                        <Condition Binding="{Binding Tag, RelativeSource={RelativeSource Mode=Self}, Converter={StaticResource TypeConverter}}" Value="ls.VMCharacterAction"/>
+                                        <Condition Binding="{Binding Tag.MainCost, RelativeSource={RelativeSource Mode=Self}}" Value="BothActions"/>
+                                    </MultiDataTrigger.Conditions>
+                                    <Setter TargetName="SlotBg" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Radials/c_radial_segment_bothActions.png"/>
+                                </MultiDataTrigger>
+
+                                <DataTrigger Binding="{Binding Tag.CanUse, RelativeSource={RelativeSource Mode=Self}}" Value="False">
+                                    <Setter TargetName="SlotBg" Property="Visibility" Value="Collapsed"/>
+                                </DataTrigger>
+
+                                
+
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+                <Style.Triggers>
+                    <MultiDataTrigger>
+                        <MultiDataTrigger.Conditions>
+                            <Condition Binding="{Binding DataContext.CurrentPlayer.SelectedCharacter.RestState, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" Value="Disabled"/>
+                            <Condition Binding="{Binding DataContext.EventString, RelativeSource={RelativeSource Self}}" Value="Disabled"/>
+                        </MultiDataTrigger.Conditions>
+                        <Setter Property="IsEnabled" Value="False"/>
+                    </MultiDataTrigger>
+                    <MultiDataTrigger>
+                        <MultiDataTrigger.Conditions>
+                            <Condition Binding="{Binding DataContext.CurrentPlayer.SelectedCharacter.RestState, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" Value="Unavailable"/>
+                            <Condition Binding="{Binding DataContext.EventString, RelativeSource={RelativeSource Self}}" Value="CampTravel"/>
+                        </MultiDataTrigger.Conditions>
+                        <Setter Property="IsEnabled" Value="False"/>
+                    </MultiDataTrigger>
+                    <MultiDataTrigger>
+                        <MultiDataTrigger.Conditions>
+                            <Condition Binding="{Binding DataContext.CurrentPlayer.SelectedCharacter.CharacterMode, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" Value="InCombat"/>
+                            <Condition Binding="{Binding DataContext.EventString, RelativeSource={RelativeSource Self}}" Value="CampTravel"/>
+                        </MultiDataTrigger.Conditions>
+                        <Setter Property="IsEnabled" Value="False"/>
+                    </MultiDataTrigger>
+                    <MultiDataTrigger>
+                        <MultiDataTrigger.Conditions>
+                            <Condition Binding="{Binding SlotType}" Value="Spell"/>
+                            <Condition Value="True">
+                                <Condition.Binding>
+                                    <MultiBinding Converter="{StaticResource EqualConverter}">
+                                        <Binding Path="Spell.PrototypeID"/>
+                                        <Binding Path="DataContext.CurrentPlayer.SelectedCharacter.ConcentrationSpell.PrototypeID" RelativeSource="{RelativeSource AncestorType={x:Type ls:UIWidget}}"/>
+                                    </MultiBinding>
+                                </Condition.Binding>
+                            </Condition>
+                            <Condition Binding="{Binding DataContext.CurrentPlayer.SelectedCharacter.RecastSpell, RelativeSource={RelativeSource AncestorType=ls:UIWidget}, Converter={StaticResource NullToBoolFalseConverter}}" Value="True"/>
+                        </MultiDataTrigger.Conditions>
+                        <Setter Property="Tag" Value="{Binding DataContext.CurrentPlayer.SelectedCharacter.RecastSpell, RelativeSource={RelativeSource AncestorType=ls:UIWidget}}"/>
+                    </MultiDataTrigger>
+                </Style.Triggers>
+            </Style>
+        </ResourceDictionary>
+
+    </ls:UIWidget.Resources>
+
+    <ls:UIWidget.Template>
+        <ControlTemplate>
+            <ControlTemplate.Resources>
+
+
+                <Storyboard x:Key="rotateGlow" FillBehavior="Stop">
+                    <DoubleAnimation From="0" To="0.1" Duration="0:0:1" Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="metaMagicSwirl"/>
+                    <DoubleAnimation From="0" To="0.3" Duration="0:0:0.6" Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="metaMagicSwirl2"/>
+                    <DoubleAnimation From="0" To="0.8" Duration="0:0:0.5" Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="metaMagicSwirl3"/>
+                    <DoubleAnimation From="0" To="0.3" Duration="0:0:0.2" Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="metaMagicSwirl4"/>
+                    
+                    
+                    <DoubleAnimation From="0" To="360" Duration="0:0:2" RepeatBehavior="Forever" Storyboard.TargetProperty="(UIElement.RenderTransform).(RotateTransform.Angle)" Storyboard.TargetName="metaMagicSwirl"/>
+                    <DoubleAnimation From="0" To="360" Duration="0:0:4" RepeatBehavior="Forever" Storyboard.TargetProperty="(UIElement.RenderTransform).(RotateTransform.Angle)" Storyboard.TargetName="metaMagicSwirl2"/>
+                    <DoubleAnimation From="360" To="0" Duration="0:0:3" RepeatBehavior="Forever" Storyboard.TargetProperty="(UIElement.RenderTransform).(RotateTransform.Angle)" Storyboard.TargetName="metaMagicSwirl3"/>
+                    <DoubleAnimation From="0" To="360" Duration="0:0:6" RepeatBehavior="Forever" Storyboard.TargetProperty="(UIElement.RenderTransform).(RotateTransform.Angle)" Storyboard.TargetName="metaMagicSwirl4"/>
+                </Storyboard>
+                
+            </ControlTemplate.Resources>
+            <Grid x:Name="fadeInRadials" Tag="fadeInRadials">
+
+                <Image x:Name="metaMagicSwirl2" Visibility="Collapsed" Stretch="Fill" Margin="0,4,0,0" VerticalAlignment="Center" HorizontalAlignment="Center" Width="1100" Height="1100" Opacity="0.8" Source="{StaticResource RadialBgMetaMagic}" RenderTransformOrigin="0.5 0.5">
+                    <Image.RenderTransform>
+                        <RotateTransform Angle="0"/>
+                    </Image.RenderTransform>
+
+                </Image>
+                <Image x:Name="metaMagicSwirl3" Visibility="Collapsed" Stretch="Fill" Margin="0,4,0,0" VerticalAlignment="Center" HorizontalAlignment="Center" Width="900" Height="900" Opacity="0.5" Source="{StaticResource RadialBgMetaMagic}" RenderTransformOrigin="0.5 0.5">
+                    <Image.RenderTransform>
+                        <RotateTransform Angle="180"/>
+                    </Image.RenderTransform>
+
+                </Image>
+                <Image x:Name="metaMagicSwirl4" Visibility="Collapsed" Stretch="Fill" Margin="0,4,0,0" VerticalAlignment="Center" HorizontalAlignment="Center" Width="700" Height="700" Opacity="0.3" Source="{StaticResource RadialBgMetaMagic}" RenderTransformOrigin="0.5 0.5">
+                    <Image.RenderTransform>
+                        <RotateTransform Angle="90"/>
+                    </Image.RenderTransform>
+                </Image>
+                <Image x:Name="metaMagicSwirl" Visibility="Collapsed" Stretch="Fill" Margin="0,4,0,0" VerticalAlignment="Center" HorizontalAlignment="Center" Width="1400" Height="1400" Opacity="0.1" Source="{StaticResource RadialBgMetaMagic}" RenderTransformOrigin="0.5 0.5">
+                    <Image.RenderTransform>
+                        <RotateTransform Angle="0"/>
+                    </Image.RenderTransform>
+                </Image>
+
+                <Image x:Name="singleBarBG" Stretch="None" Margin="0,4,0,0" VerticalAlignment="Center" HorizontalAlignment="Center" Opacity="0.5" Visibility="Collapsed" Source="{StaticResource RadialBg}" RenderTransformOrigin="0.5 0.5">
+                    <Image.RenderTransform>
+                        <ScaleTransform ScaleX="0.85" ScaleY="0.85"/>
+                    </Image.RenderTransform>
+                </Image>
+               
+                <ScrollViewer ClipToBounds="True" VerticalScrollBarVisibility="Hidden">
+                    <ls:PagedList x:Name="singleBarHolder" ItemsSource="{Binding SingleHotBar.SlotList}" GroupAmount="12" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Collapsed">
+                        <b:Interaction.Behaviors>
+                            <ls:AutoScrollBehavior ScrollIntoView="{Binding FocusedElement, ElementName=ActionRadials}" ScrollTo="Center"/>
+                        </b:Interaction.Behaviors>
+                        <ls:PagedList.Template>
+                            <ControlTemplate TargetType="{x:Type ls:PagedList}">
+                                <StackPanel x:Name="PART_ItemContainer" Orientation="Horizontal"/>
+                            </ControlTemplate>
+                        </ls:PagedList.Template>
+                        <ls:PagedList.PageStyle>
+                            <Style TargetType="{x:Type ls:PageView}">
+                                <Setter Property="ls:MoveFocus.Focusable" Value="True"/>
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="{x:Type ls:PageView}">
+                                            <Grid x:Name="radialRoot" Width="1100" Height="1100" RenderTransformOrigin="0.5 0.5"
+                                                    ToolTipService.Placement="Right" ToolTipService.VerticalOffset="0" ToolTipService.PlacementTarget="{Binding ., RelativeSource={RelativeSource Mode=TemplatedParent}}"
+                                                    ToolTipService.IsEnabled="{Binding SelectedItem, ElementName=HotBarRadial, Converter={StaticResource NullToBoolFalseConverter}}">
+                                                <Grid.ToolTip>
+                                                    <ls:LSTooltip x:Name="hbTooltip" Opacity="0" Content="" ls:TooltipExtender.Context="Hotbar"/>
+                                                </Grid.ToolTip>
+                                                <Grid.RenderTransform>
+                                                    <ScaleTransform ScaleX="{StaticResource UnfocusedRadialsSizeModifier}" ScaleY="{StaticResource UnfocusedRadialsSizeModifier}"/>
+                                                </Grid.RenderTransform>
+                                                <Image Stretch="None" Margin="0,4,0,0" VerticalAlignment="Center" HorizontalAlignment="Center" Source="{StaticResource RadialBg}" />
+                                                <ls:Radial x:Name="SingleBar" LeftEvent="UIRadialLeft" RightEvent="UIRadialRight" ls:Radial.UpEvent="UIRadialUp" DownEvent="UIRadialDown" HalfElementOffset="True" StartIndex="{Binding StartIndex, RelativeSource={RelativeSource Mode=TemplatedParent}}"
+                                                    PlayerId="{Binding PlayerId, ElementName=ActionRadials}" FixedAmount="12" ItemsSource="{TemplateBinding ItemsSource}" IsEnabled="False"
+                                                    ItemContainerStyle="{StaticResource ControllerMenuItemStyle}" RenderTransformOrigin="0.5,0.5">
+                                                    <ls:Radial.Template>
+                                                        <ControlTemplate TargetType="{x:Type ls:Radial}">
+                                                            <Grid>
+                                                                <ItemsPresenter VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,-288,0,284"/>
+
+                                                                <DockPanel x:Name="PART_Rotation"  RenderTransformOrigin="0.5 0.5" Visibility="Hidden" Margin="0,0,0,0">
+                                                                    <Image VerticalAlignment="Center" RenderTransformOrigin="0.5 0.5" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Radials/c_actionRadial_pointer.png" Stretch="None" Margin="0,-264,0,264">
+                                                                        <Image.RenderTransform>
+                                                                            <RotateTransform Angle="91"/>
+                                                                        </Image.RenderTransform>
+                                                                    </Image>
+                                                                </DockPanel>
+
+                                                            </Grid>
+                                                            <ControlTemplate.Triggers>
+
+                                                                <MultiDataTrigger>
+                                                                    <MultiDataTrigger.Conditions>
+                                                                        <Condition Binding="{Binding Path=(ls:MoveFocus.IsFocused), RelativeSource={RelativeSource Mode=TemplatedParent}}" Value="True"/>
+                                                                        <Condition Binding="{Binding LocalFocus, RelativeSource={RelativeSource Mode=Self}, Converter={StaticResource NullToBoolFalseConverter}}" Value="True"/>
+                                                                    </MultiDataTrigger.Conditions>
+                                                                    <Setter Property="Visibility" Value="Visible" TargetName="PART_Rotation"/>
+                                                                </MultiDataTrigger>
+                                                            </ControlTemplate.Triggers>
+                                                        </ControlTemplate>
+                                                    </ls:Radial.Template>
+
+                                                    <b:Interaction.Triggers>
+                                                        <b:EventTrigger EventName="LocalFocusChanged">
+                                                            <b:ChangePropertyAction TargetName="ActionRadials" PropertyName="Tag" Value="{Binding LocalFocus.Tag, ElementName=SingleBar}"/>
+                                                            <b:InvokeCommandAction Command="{Binding DataContext.ShowTooltipOnUIElement, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" CommandParameter="{Binding ., RelativeSource={RelativeSource Mode=TemplatedParent}}"/>
+                                                            <b:InvokeCommandAction Command="{Binding DataContext.CreateFocusedTooltipDataCommand, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" CommandParameter="{Binding LocalFocus.Tag, ElementName=SingleBar}"/>
+                                                            <b:InvokeCommandAction Command="{Binding DataContext.HighlightResourcesCommand, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" CommandParameter="{Binding LocalFocus.Tag, ElementName=SingleBar}"/>
+                                                            <ls:LSPlaySound Sound="UI_HUD_Controller_RadialMenu_SlotHover" />
+                                                        </b:EventTrigger>
+                                                    </b:Interaction.Triggers>
+                                                </ls:Radial>
+
+                                                <b:Interaction.Triggers>
+                                                    <b:DataTrigger Binding="{Binding Path=(ls:MoveFocus.IsFocused), RelativeSource={RelativeSource Mode=TemplatedParent}}" Value="False">
+                                                        <b:InvokeCommandAction Command="{Binding DataContext.CreateFocusedTooltipDataCommand, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"/>
+                                                        <b:ChangePropertyAction PropertyName="LocalFocus" TargetName="SingleBar" Value="{x:Null}"/>
+                                                    </b:DataTrigger>
+                                                    <b:EventTrigger EventName="Loaded">
+                                                        <b:Interaction.Behaviors>
+                                                            <b:ConditionBehavior>
+                                                                <b:ConditionalExpression>
+                                                                    <b:ComparisonCondition LeftOperand="{Binding StartIndex, RelativeSource={RelativeSource Mode=TemplatedParent}}" Operator="Equal" RightOperand="0"/>
+                                                                </b:ConditionalExpression>
+                                                            </b:ConditionBehavior>
+                                                        </b:Interaction.Behaviors>
+                                                        <ls:SetMoveFocusAction TargetName="ActionRadials" FocusElement="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}}"/>
+                                                    </b:EventTrigger>
+                                                    <b:EventTrigger EventName="Unloaded">
+                                                        <ls:SetMoveFocusAction TargetName="ActionRadials" FocusElement="{x:Null}"/>
+                                                    </b:EventTrigger>
+                                                </b:Interaction.Triggers>
+                                            </Grid>
+                                            <ControlTemplate.Triggers>
+                                                <DataTrigger Binding="{Binding LocalFocus.DataContext.SlotType, ElementName=SingleBar}" Value="Empty">
+                                                    <Setter TargetName="radialRoot" Property="ToolTipService.IsEnabled" Value="False"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding LocalFocus.DataContext, ElementName=SingleBar, Converter={StaticResource TypeConverter}}" Value="ViewModel">
+                                                    <Setter TargetName="radialRoot" Property="ToolTipService.IsEnabled" Value="False"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding LocalFocus.Tag.SlotType, ElementName=SingleBar}" Value="Item">
+                                                    <Setter TargetName="hbTooltip" Property="Content" Value="{Binding LocalFocus.Tag.GameObject, ElementName=SingleBar}"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding LocalFocus.Tag.SlotType, ElementName=SingleBar}" Value="Passive">
+                                                    <Setter TargetName="hbTooltip" Property="Content" Value="{Binding LocalFocus.Tag.Passive, ElementName=SingleBar}"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding LocalFocus.Tag.SlotType, ElementName=SingleBar}" Value="Spell">
+                                                    <Setter TargetName="hbTooltip" Property="Content" Value="{Binding LocalFocus.Tag.Spell, ElementName=SingleBar}"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding LocalFocus.Tag.SlotType, ElementName=SingleBar}" Value="Action">
+                                                    <Setter TargetName="hbTooltip" Property="Content" Value="{Binding LocalFocus.Tag.Spell, ElementName=SingleBar}"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding LocalFocus.Tag, ElementName=SingleBar, Converter={StaticResource TypeConverter}}" Value="ls.VMCharacterAction">
+                                                    <Setter TargetName="hbTooltip" Property="Content" Value="{Binding LocalFocus.Tag, ElementName=SingleBar}"/>
+                                                </DataTrigger>
+
+                                                <Trigger Property="ls:MoveFocus.IsFocused" Value="True">
+                                                    <Setter TargetName="radialRoot" Property="RenderTransform">
+                                                        <Setter.Value>
+                                                            <ScaleTransform ScaleX="1" ScaleY="1"/>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                    <Setter TargetName="SingleBar" Property="IsEnabled" Value="True"/>
+                                                </Trigger>
+
+                                                <Trigger Property="ls:MoveFocus.IsFocused" Value="False">
+                                                    <Setter TargetName="SingleBar" Property="LocalFocus" Value="{x:Null}"/>
+                                                </Trigger>
+
+                                                <EventTrigger RoutedEvent="FrameworkElement.Unloaded">
+                                                    <StopStoryboard BeginStoryboardName="EnabledFadeInAnim"/>
+                                                </EventTrigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </ls:PagedList.PageStyle>
+                    </ls:PagedList>
+                </ScrollViewer>
+
+                <Grid x:Name="MainHotbarListHolder">
+                    <Grid.OpacityMask>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                            <LinearGradientBrush.GradientStops>
+                                <GradientStop Offset="0" Color="Transparent"/>
+                                <GradientStop Offset="0.1" Color="Black"/>
+                                <GradientStop Offset="0.9" Color="Black"/>
+                                <GradientStop Offset="1" Color="Transparent"/>
+                            </LinearGradientBrush.GradientStops>
+                        </LinearGradientBrush>
+                    </Grid.OpacityMask>
+                    <Image x:Name="nameBackground" Width="560" Height="280" Stretch="Fill" Source="{StaticResource IconShadeBG}" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,280,0,0" Opacity="0.4" />
+                    <!-- Swap Slots -->
+                    <Grid VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="{Binding InSwapSlotState, Converter={StaticResource BoolToVisibleConverter}}">
+                        <Ellipse Fill="{StaticResource LS_PopUpBackgroundColor}" Width="600" Height="600"/>
+                        <ContentPresenter x:Name="icon" ContentTemplate="{StaticResource SlotIconTemplate}" Content="{Binding CurrentActiveSlot}" RenderTransformOrigin="0.5,0.5" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0, -50, 0, 50">
+                            <ContentPresenter.RenderTransform>
+                                <ScaleTransform ScaleX="1.5" ScaleY="1.5"/>
+                            </ContentPresenter.RenderTransform>
+                        </ContentPresenter>
+                    </Grid>
+
+                    <!-- Action Radials -->
+                    <ListBox x:Name="HotBarList" VerticalAlignment="Center" HorizontalAlignment="Center" ItemsSource="{Binding CurrentPlayer.SelectedCharacter.HotBars}" IsEnabled="{Binding AssigningSlot, Converter={StaticResource InvertBoolConverter}}">
+                        <b:Interaction.Behaviors>
+                            <ls:AutoScrollBehavior ScrollIntoView="{Binding FocusedElement, ElementName=ActionRadials}" ScrollTo="Center"/>
+                        </b:Interaction.Behaviors>
+                        <ListBox.ItemContainerStyle>
+                            <Style TargetType="{x:Type ListBoxItem}">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                                            <ls:PagedList x:Name="PagedList" ItemsSource="{Binding SlotList}" GroupAmount="{Binding CellColumns}" IndexProperty="SlotIndex" MinPageAmount="1"
+                                                          GlobalActiveItem="{Binding DataContext.CurrentPlayer.UIData.ActiveSlot, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ls:UIWidget}}">
+                                                <ls:PagedList.Template>
+                                                    <ControlTemplate TargetType="{x:Type ls:PagedList}">
+                                                        <StackPanel x:Name="PART_ItemContainer" Orientation="Horizontal">
+                                                            <b:Interaction.Triggers>
+                                                                <b:EventTrigger EventName="Loaded">
+                                                                    <b:Interaction.Behaviors>
+                                                                        <b:ConditionBehavior>
+                                                                            <b:ConditionalExpression>
+                                                                                <b:ComparisonCondition LeftOperand="{Binding HotBarType}" Operator="Equal" RightOperand="ClassHotBar"/>
+                                                                                <b:ComparisonCondition LeftOperand="{Binding DataContext.CurrentPlayer.SelectedCharacter.IsShapeShifted, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"
+                                                                                                       Operator="Equal" RightOperand="{StaticResource FalseValue}"/>
+                                                                                <b:ComparisonCondition LeftOperand="{Binding FocusedElement, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}, Converter={StaticResource NullToBoolTrueConverter}}"
+                                                                                                       Operator="Equal" RightOperand="{StaticResource TrueValue}"/>
+                                                                            </b:ConditionalExpression>
+                                                                        </b:ConditionBehavior>
+                                                                    </b:Interaction.Behaviors>
+                                                                    <ls:SetMoveFocusAction TargetName="ActionRadials"/>
+                                                                </b:EventTrigger>
+                                                            </b:Interaction.Triggers>
+                                                        </StackPanel>
+                                                    </ControlTemplate>
+                                                </ls:PagedList.Template>
+                                                <ls:PagedList.PageStyle>
+                                                    <Style TargetType="{x:Type ls:PageView}">
+                                                        <Setter Property="ls:MoveFocus.Focusable" Value="True"/>
+                                                        <Setter Property="Margin" Value="-320,0"/>
+                                                        <Setter Property="Template">
+                                                            <Setter.Value>
+                                                                <ControlTemplate TargetType="{x:Type ls:PageView}">
+                                                                    <Grid x:Name="radialRoot" Width="1560" Height="1560" RenderTransformOrigin="0.5 0.5" ToolTipService.Placement="Right" ToolTipService.VerticalOffset="300"
+                                                                          ToolTipService.PlacementTarget="{Binding ., RelativeSource={RelativeSource Mode=TemplatedParent}}"
+                                                                          ToolTipService.IsEnabled="{Binding SelectedItem, ElementName=HotBarRadial, Converter={StaticResource NullToBoolFalseConverter}}" Margin="0,0">
+                                                                        <Grid.ToolTip>
+                                                                            <ls:LSTooltip x:Name="hbTooltip" Opacity="0" Content="" ls:TooltipExtender.Context="Hotbar"/>
+                                                                        </Grid.ToolTip>
+                                                                        <Grid.RenderTransform>
+                                                                            <ScaleTransform ScaleX="{StaticResource UnfocusedRadialsSizeModifier}" ScaleY="{StaticResource UnfocusedRadialsSizeModifier}"/>
+                                                                        </Grid.RenderTransform>
+                                                                        <Image Stretch="None" Margin="0,4,0,0" Opacity="0.8" VerticalAlignment="Center" HorizontalAlignment="Center" Source="{StaticResource RadialBg}" />
+                                                                        <ls:Radial x:Name="HotBarRadial" LeftEvent="UIRadialLeft" RightEvent="UIRadialRight" ls:Radial.UpEvent="UIRadialUp" DownEvent="UIRadialDown" HalfElementOffset="True" OverrideIndex="False"
+                                                                                   StartIndex="{Binding StartIndex, RelativeSource={RelativeSource Mode=TemplatedParent}}" PlayerId="{Binding PlayerId, ElementName=ActionRadials}" FixedAmount="12"
+                                                                                   ItemsSource="{TemplateBinding ItemsSource}" ItemContainerStyle="{StaticResource ControllerMenuItemStyle}"
+                                                                                   IsEnabled="{Binding Path=(ls:MoveFocus.IsFocused), RelativeSource={RelativeSource Mode=TemplatedParent}}" RenderTransformOrigin="0.5,0.5">
+                                                                            <ls:Radial.Template>
+                                                                                <ControlTemplate TargetType="{x:Type ls:Radial}">
+                                                                                    <Grid>
+                                                                                        <ItemsPresenter VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,-288,0,284"/>
+
+                                                                                        <Grid x:Name="PART_Rotation" RenderTransformOrigin="0.5 0.5" Margin="0,0,0,0">
+                                                                                            <Image x:Name="Selector" Visibility="Collapsed" VerticalAlignment="Center" HorizontalAlignment="Center" RenderTransformOrigin="0.5 0.5" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Radials/c_actionRadial_pointer.png" Stretch="None" Margin="6,-264, -6, 264">
+                                                                                                <Image.RenderTransform>
+                                                                                                    <RotateTransform Angle="91"/>
+                                                                                                </Image.RenderTransform>
+                                                                                            </Image>
+                                                                                            <Ellipse x:Name="strengthIndicator" Fill="{StaticResource LS_specialTxtColor}" Width="32" Height="32" HorizontalAlignment="Center" VerticalAlignment="Center" RenderTransformOrigin="0.5 0.5"
+                                                                                                     Opacity="{Binding SelectionStrength, RelativeSource={RelativeSource AncestorType=ls:Radial}, Converter={StaticResource MultiplierConverter}, ConverterParameter='2.5'}">
+                                                                                                <Ellipse.RenderTransform>
+                                                                                                    <TransformGroup>
+                                                                                                        <TranslateTransform X="0" Y="{Binding SelectionStrength, RelativeSource={RelativeSource AncestorType=ls:Radial}, Converter={StaticResource MultiplierConverter}, ConverterParameter='-300'}"/>
+                                                                                                    </TransformGroup>
+                                                                                                </Ellipse.RenderTransform>
+                                                                                            </Ellipse>
+                                                                                        </Grid>
+                                                                                    </Grid>
+                                                                                    <ControlTemplate.Triggers>
+
+                                                                                        <MultiDataTrigger>
+                                                                                            <MultiDataTrigger.Conditions>
+                                                                                                <Condition Binding="{Binding Path=(ls:MoveFocus.IsFocused), RelativeSource={RelativeSource Mode=TemplatedParent}}" Value="True"/>
+                                                                                                <Condition Binding="{Binding LocalFocus, RelativeSource={RelativeSource Mode=Self}, Converter={StaticResource NullToBoolFalseConverter}}" Value="True"/>
+                                                                                            </MultiDataTrigger.Conditions>
+                                                                                            <Setter Property="Visibility" Value="Visible" TargetName="Selector"/>
+                                                                                            <Setter TargetName="strengthIndicator" Property="Visibility" Value="Collapsed"/>
+                                                                                        </MultiDataTrigger>
+                                                                                        <Trigger Property="SelectionStrength" Value="0">
+                                                                                            <Setter TargetName="strengthIndicator" Property="Visibility" Value="Collapsed"/>
+                                                                                        </Trigger>
+                                                                                    </ControlTemplate.Triggers>
+                                                                                </ControlTemplate>
+                                                                            </ls:Radial.Template>
+
+                                                                            <b:Interaction.Triggers>
+                                                                                <b:EventTrigger EventName="LocalFocusChanged">
+                                                                                    <b:ChangePropertyAction TargetName="ActionRadials" PropertyName="Tag" Value="{Binding LocalFocus.Tag, ElementName=HotBarRadial}"/>
+                                                                                    <b:InvokeCommandAction Command="{Binding DataContext.ShowTooltipOnUIElement, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" CommandParameter="{Binding ., RelativeSource={RelativeSource Mode=TemplatedParent}}"/>
+                                                                                    <b:InvokeCommandAction Command="{Binding DataContext.CreateFocusedTooltipDataCommand, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" CommandParameter="{Binding LocalFocus.Tag,  ElementName=HotBarRadial}"/>
+                                                                                    <b:InvokeCommandAction Command="{Binding DataContext.HighlightResourcesCommand, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" CommandParameter="{Binding LocalFocus.Tag, ElementName=HotBarRadial}"/>
+                                                                                    <ls:LSPlaySound Sound="UI_HUD_Controller_RadialMenu_SlotHover" />
+                                                                                </b:EventTrigger>
+                                                                                <b:DataTrigger Binding="{Binding Path=(ls:MoveFocus.IsFocused), RelativeSource={RelativeSource Mode=TemplatedParent}}" Value="True">
+                                                                                    <b:ChangePropertyAction TargetName="HotBarList" PropertyName="Tag" Value="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}}"/>
+                                                                                </b:DataTrigger>
+                                                                            </b:Interaction.Triggers>
+                                                                        </ls:Radial>
+
+                                                                        <ls:LSInputBinding x:Name="swapSlotBinding" Command="{Binding DataContext.UseSlotCommand, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"
+                                                                                                           IsEnabled="{Binding DataContext.InSwapSlotState, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"
+                                                                                                           EatInput="{Binding DataContext.InSwapSlotState, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"
+                                                                                                           BoundEvent="UIAccept">
+                                                                            <ls:LSInputBinding.CommandParameter>
+                                                                                <MultiBinding Converter="{StaticResource PassThroughConverter}">
+                                                                                    <Binding Path="DataContext" RelativeSource="{RelativeSource Mode=TemplatedParent}"/>
+                                                                                    <Binding Path="LocalFocus.Index" ElementName="HotBarRadial"/>
+                                                                                    <Binding Path="LocalFocus.DataContext" ElementName="HotBarRadial"/>
+                                                                                </MultiBinding>
+                                                                            </ls:LSInputBinding.CommandParameter>
+                                                                        </ls:LSInputBinding>
+
+                                                                        <b:Interaction.Triggers>
+                                                                            <!-- On creating or removing a radial, update focus to force a check on left/right available radials -->
+                                                                            <b:EventTrigger EventName="Loaded">
+                                                                                <ls:SetMoveFocusAction TargetName="ActionRadials" InvalidateFocus="True"/>
+                                                                            </b:EventTrigger>
+                                                                            <b:EventTrigger EventName="Unloaded">
+                                                                                <ls:SetMoveFocusAction TargetName="ActionRadials" InvalidateFocus="True"/>
+                                                                            </b:EventTrigger>
+
+                                                                            <b:DataTrigger Binding="{Binding Path=(ls:MoveFocus.IsFocused), RelativeSource={RelativeSource Mode=TemplatedParent}}" Value="False">
+                                                                                <b:InvokeCommandAction Command="{Binding DataContext.CreateFocusedTooltipDataCommand, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"/>
+                                                                                <b:ChangePropertyAction PropertyName="LocalFocus" TargetName="HotBarRadial" Value="{x:Null}"/>
+                                                                            </b:DataTrigger>
+                                                                            <b:EventTrigger EventName="Loaded">
+                                                                                <b:Interaction.Behaviors>
+                                                                                    <b:ConditionBehavior>
+                                                                                        <b:ConditionalExpression>
+                                                                                            <b:ComparisonCondition LeftOperand="{Binding ActiveItem, RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource NullToBoolFalseConverter}}" Operator="Equal" RightOperand="{StaticResource TrueValue}"/>
+                                                                                        </b:ConditionalExpression>
+                                                                                    </b:ConditionBehavior>
+                                                                                </b:Interaction.Behaviors>
+                                                                                <ls:SetMoveFocusAction TargetName="ActionRadials" FocusElement="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}}"/>
+                                                                            </b:EventTrigger>
+                                                                        </b:Interaction.Triggers>
+                                                                        <Grid.ContextMenu>
+                                                                            <ls:ContextMenu>
+                                                                                <ls:ContextMenuItem Header="{Binding Source='he3f4fe5cga90ag4438g8f5bg79c19473e30a', Converter={StaticResource TranslatedStringConverter}}" IsTitle="True" IsEnabled="False"/>
+                                                                                <ls:ContextMenuItem x:Name="AssignSlotItem" IsIndented="True" Header="{Binding Source='h40295ee1g2029g4282ga924g61751691cb3d', Converter={StaticResource TranslatedStringConverter}}" Command="{Binding DataContext.RequestAssignSlotCommand, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}">
+                                                                                    <ls:ContextMenuItem.CommandParameter>
+                                                                                        <MultiBinding Converter="{StaticResource PassThroughConverter}">
+                                                                                            <Binding Path="DataContext" RelativeSource="{RelativeSource AncestorType={x:Type ls:PageView}}"/>
+                                                                                            <Binding Path="LocalFocus.Index" ElementName="HotBarRadial"/>
+                                                                                        </MultiBinding>
+                                                                                    </ls:ContextMenuItem.CommandParameter>
+                                                                                </ls:ContextMenuItem>
+                                                                                <ls:ContextMenuItem x:Name="SwapSlotItem" IsIndented="True" Header="{Binding Source='h18e19f89g10e2g4546gadfdg6657ad7f56b8', Converter={StaticResource TranslatedStringConverter}}" Command="{Binding DataContext.SwapSlotCommand, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" CommandParameter="{Binding Tag, ElementName=ActionRadials}"/>
+                                                                                <ls:ContextMenuItem x:Name="ClearSlotItem" IsIndented="True" Header="{Binding Source='haba68145g1fc9g4380g9ff0gf498f5ee383d', Converter={StaticResource TranslatedStringConverter}}" Command="{Binding DataContext.ClearSlotCommand, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" CommandParameter="{Binding Tag, ElementName=ActionRadials}"/>
+                                                                                <ls:ContextMenuItem Header="{Binding Source='h921d24b9g4a44g441agbbbag176eef91b713', Converter={StaticResource TranslatedStringConverter}}" IsTitle="True" IsEnabled="False"/>
+                                                                                <ls:ContextMenuItem x:Name="AddRadialItem" IsIndented="True" Header="{Binding Source='hfab2af0fg32feg4c0ag9ac8g40e08eb46ad3', Converter={StaticResource TranslatedStringConverter}}" Command="{Binding DataContext.AddRadialCommand, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" CommandParameter="{Binding .}"/>
+                                                                                <ls:ContextMenuItem x:Name="RemoveRadialItem" IsIndented="True" Header="{Binding Source='hd79704d4g27bag4aa7gac16g9fdf4554e53f', Converter={StaticResource TranslatedStringConverter}}" Command="{Binding DataContext.RemoveRadialCommand, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}">
+                                                                                    <ls:ContextMenuItem.CommandParameter>
+                                                                                        <MultiBinding Converter="{StaticResource PassThroughConverter}">
+                                                                                            <Binding Path="."/>
+                                                                                            <Binding Path="FocusedElement.PageIndex" ElementName="ActionRadials"/>
+                                                                                        </MultiBinding>
+                                                                                    </ls:ContextMenuItem.CommandParameter>
+                                                                                </ls:ContextMenuItem>
+                                                                            </ls:ContextMenu>
+                                                                        </Grid.ContextMenu>
+                                                                    </Grid>
+                                                                    <ControlTemplate.Triggers>
+                                                                        <DataTrigger Binding="{Binding HotBarType}" Value="CommonHotBar">
+                                                                            <Setter TargetName="AddRadialItem" Property="IsEnabled" Value="False"/>
+                                                                            <Setter TargetName="RemoveRadialItem" Property="IsEnabled" Value="False"/>
+                                                                        </DataTrigger>
+
+                                                                        <DataTrigger Binding="{Binding NumberOfBars}" Value="1">
+                                                                            <Setter TargetName="RemoveRadialItem" Property="IsEnabled" Value="False"/>
+                                                                        </DataTrigger>
+
+                                                                        <DataTrigger Binding="{Binding LocalFocus, ElementName=HotBarRadial, Converter={StaticResource NullToBoolFalseConverter}}" Value="False">
+                                                                            <Setter TargetName="swapSlotBinding" Property="IsEnabled" Value="False"/>
+                                                                            <Setter TargetName="AssignSlotItem" Property="IsEnabled" Value="False"/>
+                                                                            <Setter TargetName="SwapSlotItem" Property="IsEnabled" Value="False"/>
+                                                                            <Setter TargetName="ClearSlotItem" Property="IsEnabled" Value="False"/>
+                                                                        </DataTrigger>
+                                                                        <DataTrigger Binding="{Binding LocalFocus, ElementName=HotBarRadial, Converter={StaticResource NullToBoolFalseConverter}}" Value="True">
+                                                                            <Setter Property="CommandParameter" TargetName="swapSlotBinding">
+                                                                                <Setter.Value>
+                                                                                    <MultiBinding Converter="{StaticResource PassThroughConverter}">
+                                                                                        <Binding Path="DataContext" RelativeSource="{RelativeSource Mode=TemplatedParent}"/>
+                                                                                        <Binding Path="LocalFocus.Index" ElementName="HotBarRadial"/>
+                                                                                        <Binding Path="LocalFocus.DataContext" ElementName="HotBarRadial"/>
+                                                                                    </MultiBinding>
+                                                                                </Setter.Value>
+                                                                            </Setter>
+                                                                        </DataTrigger>
+                                                                        <DataTrigger Binding="{Binding LocalFocus.DataContext.SlotType, ElementName=HotBarRadial}" Value="Empty">
+                                                                            <Setter TargetName="radialRoot" Property="ToolTipService.IsEnabled" Value="False"/>
+                                                                        </DataTrigger>
+                                                                        <DataTrigger Binding="{Binding LocalFocus.DataContext, ElementName=HotBarRadial, Converter={StaticResource TypeConverter}}" Value="ViewModel">
+                                                                            <Setter TargetName="radialRoot" Property="ToolTipService.IsEnabled" Value="False"/>
+                                                                        </DataTrigger>
+                                                                        <DataTrigger Binding="{Binding LocalFocus.Tag.SlotType, ElementName=HotBarRadial}" Value="Item">
+                                                                            <Setter TargetName="hbTooltip" Property="Content" Value="{Binding LocalFocus.Tag.GameObject, ElementName=HotBarRadial}"/>
+
+                                                                        </DataTrigger>
+                                                                        <DataTrigger Binding="{Binding LocalFocus.Tag.SlotType, ElementName=HotBarRadial}" Value="Passive">
+                                                                            <Setter TargetName="hbTooltip" Property="Content" Value="{Binding LocalFocus.Tag.Passive, ElementName=HotBarRadial}"/>
+
+                                                                        </DataTrigger>
+                                                                        <DataTrigger Binding="{Binding LocalFocus.Tag.SlotType, ElementName=HotBarRadial}" Value="Spell">
+                                                                            <Setter TargetName="hbTooltip" Property="Content" Value="{Binding LocalFocus.Tag.Spell, ElementName=HotBarRadial}"/>
+
+                                                                        </DataTrigger>
+                                                                        <DataTrigger Binding="{Binding LocalFocus.Tag.SlotType, ElementName=HotBarRadial}" Value="Action">
+                                                                            <Setter TargetName="hbTooltip" Property="Content" Value="{Binding LocalFocus.Tag.Spell, ElementName=HotBarRadial}"/>
+
+                                                                        </DataTrigger>
+                                                                        <DataTrigger Binding="{Binding LocalFocus.Tag, ElementName=HotBarRadial, Converter={StaticResource TypeConverter}}" Value="ls.VMCharacterAction">
+                                                                            <Setter TargetName="hbTooltip" Property="Content" Value="{Binding LocalFocus.Tag, ElementName=HotBarRadial}"/>
+
+                                                                        </DataTrigger>
+
+                                                                        <Trigger Property="ls:MoveFocus.IsFocused" Value="True">
+                                                                            <Setter TargetName="radialRoot" Property="RenderTransform">
+                                                                                <Setter.Value>
+                                                                                    <ScaleTransform ScaleX="1" ScaleY="1"/>
+                                                                                </Setter.Value>
+                                                                            </Setter>
+                                                                            <Setter TargetName="HotBarRadial" Property="IsEnabled" Value="True"/>
+                                                                        </Trigger>
+
+                                                                        <Trigger Property="ls:MoveFocus.IsFocused" Value="False">
+                                                                            <Setter TargetName="HotBarRadial" Property="LocalFocus" Value="{x:Null}"/>
+                                                                        </Trigger>
+
+                                                                        <EventTrigger RoutedEvent="FrameworkElement.Unloaded">
+                                                                            <StopStoryboard BeginStoryboardName="EnabledFadeInAnim"/>
+                                                                        </EventTrigger>
+                                                                    </ControlTemplate.Triggers>
+                                                                </ControlTemplate>
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                    </Style>
+                                                </ls:PagedList.PageStyle>
+                                            </ls:PagedList>
+
+                                            <ControlTemplate.Triggers>
+                                                <DataTrigger Binding="{Binding HotBarType}" Value="ClassHotBar">
+                                                    <Setter TargetName="PagedList" Property="MinPageAmount" Value="{Binding NumberOfBars, Mode=TwoWay}"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding HotBarType}" Value="ItemHotBar">
+                                                    <Setter TargetName="PagedList" Property="MinPageAmount" Value="{Binding NumberOfBars, Mode=TwoWay}"/>
+                                                </DataTrigger>
+                                            </ControlTemplate.Triggers>
+
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ControllerType}" Value="Keyboard">
+                                        <Setter Property="Template" Value="{x:Null}"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding HotBarType}" Value="PassivesHotBar">
+                                        <Setter Property="Template" Value="{x:Null}"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding HotBarType}" Value="FixedSideBar">
+                                        <Setter Property="Template" Value="{x:Null}"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ListBox.ItemContainerStyle>
+
+                        <ListBox.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel HorizontalAlignment="Center" Orientation="Horizontal"/>
+                            </ItemsPanelTemplate>
+                        </ListBox.ItemsPanel>
+
+                        <ListBox.Template>
+                            <ControlTemplate TargetType="{x:Type ListBox}">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid Visibility="{Binding LeftFocusElement, ElementName=ActionRadials, Converter={StaticResource NullToCollapsedConverter}}" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,520,680">
+                                        <ContentPresenter x:Name="leftHint" Tag=" " ContentTemplate="{StaticResource ControllerButtonHint}" Content="{Binding CurrentPlayer.UIData.InputEvents, ConverterParameter=UITabPrev, Converter={StaticResource FindInputEventConverter}}"/>
+                                        <Image Stretch="None" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared_c/c_carousel_arrow_d.png" Opacity="1" Margin="0,320,-120,0" >
+                                            <Image.RenderTransform>
+                                                <RotateTransform Angle="180"/>
+                                            </Image.RenderTransform>
+                                        </Image>
+                                    </Grid>
+                                    <ItemsPresenter Grid.Column="0" Grid.ColumnSpan="2"/>
+                                    <Grid Visibility="{Binding RightFocusElement, ElementName=ActionRadials, Converter={StaticResource NullToCollapsedConverter}}" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="520,0,0,680" >
+                                        <ContentPresenter x:Name="rightHint" Tag=" "  ContentTemplate="{StaticResource ControllerButtonHint}" Content="{Binding CurrentPlayer.UIData.InputEvents, ConverterParameter=UITabNext, Converter={StaticResource FindInputEventConverter}}"/>
+                                        <Image Stretch="None" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared_c/c_carousel_arrow_d.png" Opacity="1" Margin="0,180,0,0"/>
+                                    </Grid>
+                                </Grid>
+
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="ls:MoveFocus.IsKeyboardFocusWithin" Value="False">
+                                        <Setter TargetName="leftHint" Property="Visibility" Value="Collapsed"/>
+                                        <Setter TargetName="rightHint" Property="Visibility" Value="Collapsed"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </ListBox.Template>
+                    </ListBox>
+
+
+
+                </Grid>
+
+                <StackPanel x:Name="ActionButton" DataContext="{Binding Path=Tag, ElementName=ActionRadials}" Visibility="{Binding DataContext.Name, RelativeSource={RelativeSource Self}, Converter={StaticResource NullToCollapsedConverter}, ConverterParameter='EmptyString', FallbackValue=Collapsed}"  Orientation="Vertical" VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="0,0,0,840" >
+
+                    <ls:LSButton x:Name="ActionButtonIcon" DataContext="{Binding DataContext.CurrentPlayer.UIData.InputEvents, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIAccept'}" Style="{StaticResource ControllerButtonIconOnly}" Width="{StaticResource ScaledControllerHintSize}" Height="{StaticResource ScaledControllerHintSize}" EatInput="False" VerticalAlignment="Center" Visibility="Hidden" SoundID="UI_HUD_Controller_RadialMenu_SlotSelect"/>
+
+                    <TextBlock x:Name="RadialActionErrorMessage" Text="{Binding Source='hc4df7df6gdc7dg48fdgac0fg0a299ddf74f6', Converter={StaticResource TranslatedStringConverter}}" FontSize="{StaticResource ScaledMediumFontSize}" Visibility="Collapsed" TextWrapping="Wrap" HorizontalAlignment="Center" TextAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" Style="{StaticResource HUD.TitleTextStyle}" FontWeight="DemiBold" Foreground="{StaticResource LS_baseTxtColor}" />
+
+                    <Control x:Name="MetamagicLabel" Margin="-10,0,8,0" Template="{StaticResource MetamagicLabelTemplate}" FontSize="{StaticResource ScaledMediumFontSize}" VerticalAlignment="Center" FontStyle="Italic" FontWeight="DemiBold" />
+                    <TextBlock x:Name="ActionButtonDescription" Width="480" TextAlignment="Center" Text="{Binding Name}" HorizontalAlignment="Center" FontSize="{StaticResource ScaledIntermediateFontSize}" TextWrapping="Wrap" Foreground="{StaticResource LS_tint100}" Style="{StaticResource HUD.TitleTextStyle}" FontWeight="DemiBold" />
+                    <TextBlock x:Name="UpcastInfo" Text="{Binding Spell.SlotLevel, Converter={StaticResource DecimalToRomanConverter}}" TextAlignment="Center" VerticalAlignment="Center" FontSize="{StaticResource ScaledIntermediateFontSize}" FontWeight="DemiBold"  />
+                </StackPanel>
+
+                <!-- Radial type -->
+                <TextBlock x:Name="RadialTypeText" Visibility="Collapsed" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,-140,0,140" Style="{StaticResource HUD.DefaultTextStyle}"/>
+                
+                <Grid x:Name="Root" VerticalAlignment="Bottom" >
+                    <Grid.ColumnDefinitions>
+                    <ColumnDefinition x:Name="resourceBarLeftPadding" Width="600"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition x:Name="resourceBarRightPadding" Width="600"/>
+                </Grid.ColumnDefinitions>
+
+                    <StackPanel x:Name="ResourceContainer" Grid.Column="1" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,46" Width="Auto">
+
+                    <!-- Movement Bar -->
+                    <Grid Height="40" Margin="0,0,0,-17" DataContext="{Binding DataContext.CurrentPlayer.UIData.MovementResourceCostPreview, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" VerticalAlignment="Bottom" HorizontalAlignment="Center" Panel.ZIndex="2" >
+
+                        <ls:LSProgressBar Value="{Binding ActionResource.Value, Mode=OneWay}" Maximum="{Binding ActionResource.MaxValue}"
+                                                                                      Minimum="0" Background="#E0000000"
+                                                                                      Width="584" Height="14" Margin="0,8,0,0">
+                            <ls:LSProgressBar.Foreground>
+                                <LinearGradientBrush EndPoint="424,22" MappingMode="Absolute" >
+                                    <LinearGradientBrush.RelativeTransform>
+                                        <TransformGroup>
+                                            <ScaleTransform CenterY="0.5" CenterX="0.5"/>
+                                            <SkewTransform CenterY="0.5" CenterX="0.5"/>
+                                            <RotateTransform Angle="90" CenterY="0.5" CenterX="0.5"/>
+                                            <TranslateTransform/>
+                                        </TransformGroup>
+                                    </LinearGradientBrush.RelativeTransform>
+                                    <GradientStop Color="White" Offset="0" />
+                                    <GradientStop Color="White" Offset="1"/>
+                                </LinearGradientBrush>
+                            </ls:LSProgressBar.Foreground>
+                        </ls:LSProgressBar>
+
+
+                        <ls:LSProgressBar Value="{Binding ValueAfterUse, Mode=OneWay}"  Maximum="{Binding ActionResource.MaxValue}"
+                                                                                      Minimum="0" Background="Transparent"
+                                                                                      Width="584" Height="14" Margin="0,8,0,0">
+                            <ls:LSProgressBar.Foreground>
+                                <LinearGradientBrush EndPoint="424,22" MappingMode="Absolute" >
+                                    <LinearGradientBrush.RelativeTransform>
+                                        <TransformGroup>
+                                            <ScaleTransform CenterY="0.5" CenterX="0.5"/>
+                                            <SkewTransform CenterY="0.5" CenterX="0.5"/>
+                                            <RotateTransform Angle="90" CenterY="0.5" CenterX="0.5"/>
+                                            <TranslateTransform/>
+                                        </TransformGroup>
+                                    </LinearGradientBrush.RelativeTransform>
+                                    <GradientStop Color="{StaticResource MovementCol1}" Offset="0" />
+                                    <GradientStop Color="{StaticResource MovementCol2}" Offset="1"/>
+                                </LinearGradientBrush>
+                            </ls:LSProgressBar.Foreground>
+                        </ls:LSProgressBar>
+                        <Image Source="pack://application:,,,/GustavNoesisGUI;component/Assets/ActionResources_c/c_movementBar.png" Stretch="None" />
+                    </Grid>
+                    <!-- Action Resources -->
+                    <ls:LSNineSliceImage x:Name="ActionRadialResourceBar" Style="{StaticResource ResourceBar9Slice}" HorizontalAlignment="Center"  Panel.ZIndex="1">
+                        <Grid VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,-4,0,0" >
+                                <Rectangle x:Name="ActionRadialResourceBarBG" Height="Auto" VerticalAlignment="Stretch" Opacity="0.7" Margin="-30,-4,-30,-4" Panel.ZIndex="0">
+                                    <Rectangle.Fill>
+                                    <LinearGradientBrush StartPoint="0,1" EndPoint="1,0">
+                                        <GradientStop Offset="0" Color="#00000000" />
+                                        <GradientStop Offset="0.1" Color="#0c0906"/>
+                                        <GradientStop Offset="0.9" Color="#0c0906"/>
+                                        <GradientStop Offset="1" Color="#00000000" />
+                                    </LinearGradientBrush>
+                                </Rectangle.Fill>
+                            </Rectangle>
+                            <Control x:Name="actionResourceBar" Template="{StaticResource ActionResourcesTemplate}" DataContext="{Binding DataContext.CurrentPlayer.UIData.ActionResourcesHoverCostPreview, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ls:UIWidget}}}" VerticalAlignment="Bottom" IsEnabled="False"/>
+                        </Grid>
+                    </ls:LSNineSliceImage>
+                </StackPanel>
+                </Grid>
+
+                <ContentPresenter x:Name="SwapSlotHint" ContentTemplate="{StaticResource ControllerButtonHint}" Content="{Binding CurrentPlayer.UIData.InputEvents, ConverterParameter=UIAccept, Converter={StaticResource FindInputEventConverter}}" 
+                                          Tag="{Binding Source='h18e19f89g10e2g4546gadfdg6657ad7f56b8', Converter={StaticResource TranslatedStringConverter}}" Visibility="Collapsed"
+                                  VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0, 100, 0, -100"/>
+
+                <!-- Name, short description and action details -->
+                <ls:LSNineSliceImage x:Name="ActionDetailsPanel" Margin="0,1340,0,0" Style="{StaticResource ActionDetailsBG9Slice}" DataContext="{Binding Path=Tag, ElementName=ActionRadials}" Visibility="{Binding DataContext.Name, RelativeSource={RelativeSource Self}, Converter={StaticResource NullToCollapsedConverter}, ConverterParameter='EmptyString', FallbackValue=Collapsed}" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="320,12,320,12" >
+
+                    <Grid x:Name="ActionDescriptionSection" VerticalAlignment="Center" MinHeight="240" Margin="0,22,0,0" >
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <!-- Inspect Prompt -->
+                        <ContentControl x:Name="uiHintContainer" HorizontalAlignment="Center" Template="{StaticResource InspectHintStyle}"  Margin="-1000,-110,0,0" />
+
+
+                        <!-- Action Details -->
+                        <TextBlock Grid.Row="0" x:Name="ActionButtonTooltipDescription" TextAlignment="Center" Text="{Binding Name}" HorizontalAlignment="Center" FontSize="{StaticResource ScaledIntermediateFontSize}" Foreground="{StaticResource LS_tint100}" Style="{StaticResource HUD.TitleTextStyle}" FontWeight="DemiBold" Margin="0,-12,0,0"/>
+                        <Control x:Name="ActionDetails" Grid.Row="1"  Margin="0,8,0,8" Template="{StaticResource ActionDetailsTemplate}" HorizontalAlignment="Center" VerticalAlignment="Top" Visibility="Collapsed"/>
+
+                        <!-- Action Descriptions -->
+                        <Grid Grid.Row="2" VerticalAlignment="Stretch" Margin="0,-8,0,22">
+                            <TextBlock x:Name="ActionDescriptionItem" Style="{StaticResource HUD.DefaultTextStyle}" MaxWidth="1400" FontSize="{StaticResource ScaledSmallishFontSize}" FontWeight="DemiBold" Foreground="{StaticResource LS_baseTxtColor}" TextAlignment="Center" TextWrapping="Wrap" LineStackingStrategy="BlockLineHeight" LineHeight="56" VerticalAlignment="Center" Visibility="{Binding GameObject, Converter={StaticResource NullToCollapsedConverter}}">
+                                <b:Interaction.Behaviors>
+                                    <ls:CtxTransStringRunGeneratorBehavior Source="{Binding GameObject.ShortDescription}" ParamRunStyle="{StaticResource TooltipUnitParamRun}" />
+                                </b:Interaction.Behaviors>
+                            </TextBlock>
+                            <TextBlock x:Name="ActionDescriptionSpell" Style="{StaticResource HUD.DefaultTextStyle}" MaxWidth="1400" FontSize="{StaticResource ScaledSmallishFontSize}" FontWeight="DemiBold" Foreground="{StaticResource LS_baseTxtColor}" TextAlignment="Center" TextWrapping="Wrap" LineStackingStrategy="BlockLineHeight" VerticalAlignment="Center" LineHeight="56" Visibility="{Binding Spell, Converter={StaticResource NullToCollapsedConverter}}">
+                                <b:Interaction.Behaviors>
+                                    <ls:CtxTransStringRunGeneratorBehavior Source="{Binding Spell.ShortDescription}" ParamRunStyle="{StaticResource TooltipUnitParamRun}" />
+                                </b:Interaction.Behaviors>
+                            </TextBlock>
+                            <TextBlock x:Name="PassiveDescriptionSpell" Style="{StaticResource HUD.DefaultTextStyle}" MaxWidth="1400" FontSize="{StaticResource ScaledSmallishFontSize}" FontWeight="DemiBold" Foreground="{StaticResource LS_baseTxtColor}" TextAlignment="Center" VerticalAlignment="Center" TextWrapping="Wrap" LineStackingStrategy="BlockLineHeight" LineHeight="56" Visibility="{Binding Passive, Converter={StaticResource NullToCollapsedConverter}}">
+                                <b:Interaction.Behaviors>
+                                    <ls:CtxTransStringRunGeneratorBehavior Source="{Binding Passive.Description}" ParamRunStyle="{StaticResource TooltipUnitParamRun}" />
+                                </b:Interaction.Behaviors>
+                            </TextBlock>
+                        </Grid>
+
+                        <!-- Concentration -->
+                        <StackPanel Grid.Row="3" Orientation="Horizontal" Visibility="{Binding Spell.IsConcentrationSpell, Converter={StaticResource BoolToVisibleConverter}, FallbackValue=Collapsed}" HorizontalAlignment="Center" Margin="0,-12,0,16">
+                            <Image Source="{StaticResource IconConcentration}" Margin="0,0,8,0"/>
+                            <TextBlock Text="{Binding Source='hdda88715g0f4fg49c1ga22dga11b80dcf8b9', Converter={StaticResource TranslatedStringConverter}}"  Style="{StaticResource HUD.DefaultTextStyle}" FontSize="{StaticResource ScaledSmallishFontSize}" FontWeight="DemiBold" Foreground="{StaticResource LS_accent75TxtColor}"/>
+                        </StackPanel>
+
+                        <!-- Action Cost -->
+                        <Border x:Name="ActionCostSection" HorizontalAlignment="Stretch" Grid.Row="4" VerticalAlignment="Bottom" Visibility="Collapsed" Margin="0,-4,0,0">
+                            <Border.Background>
+                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                    <GradientStop Color="{StaticResource Trade.BackgroundTransparentColor}" Offset="0"/>
+                                    <GradientStop Color="#9C000000" Offset="0.5"/>
+                                    <GradientStop Color="{StaticResource Trade.BackgroundTransparentColor}" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Border.Background>
+
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" >
+                                <TextBlock x:Name="CostLabel" FontSize="{DynamicResource ScaledSmallishFontSize}" Margin="0,0,12,0" VerticalAlignment="Center" FontWeight="DemiBold" FontStyle="Italic" Foreground="{StaticResource LS_accent75TxtColor}" Style="{StaticResource HUD.DefaultTextStyle}">
+                            <Run Text="{Binding Source='h8189a676g99feg436fgb9e6g7500c6690fb6', Converter={StaticResource TranslatedStringConverter}}" />
+                            <Run Text="{Binding Source='hb897c56egaa6fg460bg8676g8ebfa0340954', Converter={StaticResource TranslatedStringConverter}}" />
+                                </TextBlock>
+
+                                <ItemsControl x:Name="ActionCostSummary" HorizontalAlignment="Center" ItemTemplate="{StaticResource ActionCostSummaryList}"
+                              Visibility="{Binding InSwapSlotState, Converter={StaticResource BoolToCollapsedConverter}}"  >
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <StackPanel Orientation="Horizontal" />
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+
+                                </ItemsControl>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+                </ls:LSNineSliceImage>
+
+                <!-- Slot assigning pop-up-->
+                <Control x:Name="SlotAssignHolder" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                    <Control.Style>
+                        <Style TargetType="Control">
+                            <Setter Property="Template" Value="{x:Null}"/>
+
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding AssigningSlot}" Value="True">
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate>
+                                                <Grid x:Name="SlotAssignTemplate">
+                                                    <Grid x:Name="bgFade" Background="{StaticResource LS_PopUpBackgroundColor}"/>
+
+                                                    <ContentControl x:Name="assignSlotPanel" Template="{StaticResource BaseOverlayBG}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="-600,0,0,0">
+                                                        <Grid Height="760" MaxHeight="760">
+
+                                                            <ls:LSListBox x:Name="AssignList" Background="Black" KeyboardNavigation.DirectionalNavigation="Contained" ActionNextEvent="UIDown" ActionPrevEvent="UIUp" SelectedIndex="0"
+                                                                  LocalFocusSelector="{Binding ElementName=SelectorAssign,Mode=OneWay}" Height="760" ItemTemplate="{StaticResource SpellGroupList}">
+                                                                <ls:LSListBox.ToolTip>
+                                                                    <ls:LSTooltip x:Name="assignSlotTooltip" ToolTipService.Placement="Right" ToolTipService.HorizontalOffset="40" ToolTipService.VerticalOffset="-84"  />
+                                                                </ls:LSListBox.ToolTip>
+                                                                <ls:LSListBox.Template>
+                                                                    <ControlTemplate TargetType="{x:Type ListBox}">
+                                                                        <ScrollViewer HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Visible" Padding="32,-46,0,-46" Template="{StaticResource ScrollViewerTemplate}" >
+                                                                            <ScrollViewer.Resources>
+                                                                                <GridLength x:Key="Top">0</GridLength>
+                                                                                <GridLength x:Key="Bottom">0</GridLength>
+                                                                            </ScrollViewer.Resources>
+                                                                            <ItemsPresenter/>
+                                                                        </ScrollViewer>
+                                                                    </ControlTemplate>
+                                                                </ls:LSListBox.Template>
+
+                                                                <ls:LSListBox.ItemsPanel>
+                                                                    <ItemsPanelTemplate>
+                                                                        <ls:LSVirtualizingStackPanel/>
+                                                                    </ItemsPanelTemplate>
+                                                                </ls:LSListBox.ItemsPanel>
+
+                                                                <!-- Spells & actions list -->
+                                                                <ls:LSListBoxItem HorizontalAlignment="Center">
+                                                                    <ls:LSListBox x:Name="SpellGroupList" ItemsSource="{Binding CurrentPlayer.SelectedCharacter.SpellsAndActions}" ActionNextEvent="UIDown" ActionPrevEvent="UIUp" ItemTemplate="{StaticResource SpellGroupList}" KeyboardNavigation.DirectionalNavigation="Continue" MaxWidth="860" Template="{StaticResource ScrolllessListBox}">
+                                                                        <ls:LSListBox.ItemContainerStyle>
+                                                                            <Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource {x:Type ListBoxItem}}">
+                                                                                <Setter Property="Background" Value="Transparent"/>
+                                                                                <Style.Triggers>
+                                                                                    <Trigger Property="IsSelected" Value="True">
+                                                                                        <Setter Property="Background" Value="Transparent"/>
+                                                                                        <Setter Property="BorderBrush" Value="Transparent"/>
+                                                                                    </Trigger>
+                                                                                    <DataTrigger Binding="{Binding Actions.Count}" Value="0">
+                                                                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                                                                    </DataTrigger>
+                                                                                </Style.Triggers>
+                                                                            </Style>
+                                                                        </ls:LSListBox.ItemContainerStyle>
+                                                                    </ls:LSListBox>
+                                                                </ls:LSListBoxItem>
+
+                                                                <!-- Passives list -->
+                                                                <ls:LSListBoxItem HorizontalAlignment="Center" x:Name="PassivesHolder">
+                                                                    <b:Interaction.Behaviors>
+                                                                        <ls:CollectionFilterBehavior x:Name="PassivesFilter" ItemsSource="{Binding CurrentPlayer.SelectedCharacter.Stats.Passives}" Predicate="{Binding CurrentPlayer.SelectedCharacter.TogglablePassivePredicate}"/>
+                                                                    </b:Interaction.Behaviors>
+                                                                    <ls:LSListBox ItemsSource="{Binding (b:Interaction.Behaviors)[0].FilteredItems, ElementName=PassivesHolder}" KeyboardNavigation.DirectionalNavigation="Continue" MaxWidth="860" Template="{StaticResource ScrolllessListBox}"
+                                                                                      Visibility="{Binding (b:Interaction.Behaviors)[0].FilteredItems.Count, ElementName=PassivesHolder, Converter={StaticResource CountToVisibilityConverter}}" ItemContainerStyle="{StaticResource AvailableSlotContainer}" ItemsPanel="{StaticResource AvailableSlotsListPanelTemplate}"/>
+                                                                </ls:LSListBoxItem>
+
+                                                                <!-- MetaMagic list -->
+                                                                <ls:LSListBoxItem HorizontalAlignment="Center" x:Name="MetaMagicHolder">
+                                                                    <b:Interaction.Behaviors>
+                                                                        <ls:CollectionFilterBehavior x:Name="MetaMagicFilter" ItemsSource="{Binding CurrentPlayer.SelectedCharacter.Stats.Passives}" Predicate="{Binding CurrentPlayer.SelectedCharacter.TogglableMetaMagicPassivePredicate}"/>
+                                                                    </b:Interaction.Behaviors>
+                                                                    <ls:LSListBox ItemsSource="{Binding (b:Interaction.Behaviors)[0].FilteredItems, ElementName=MetaMagicHolder}" KeyboardNavigation.DirectionalNavigation="Continue" MaxWidth="860" Template="{StaticResource ScrolllessListBox}"
+                                                                                      Visibility="{Binding (b:Interaction.Behaviors)[0].FilteredItems.Count, ElementName=MetaMagicHolder, Converter={StaticResource CountToVisibilityConverter}}" ItemContainerStyle="{StaticResource AvailableSlotContainer}" ItemsPanel="{StaticResource AvailableSlotsListPanelTemplate}"/>
+                                                                </ls:LSListBoxItem>
+
+                                                                <!-- Inventory list -->
+                                                                <ls:LSListBoxItem HorizontalAlignment="Center" x:Name="InventoryListHolder">
+
+                                                                    <ls:LSListBox ItemsSource="{Binding CurrentPlayer.SelectedCharacter.Inventory.Slots}" Style="{StaticResource InventoryGrid}" KeyboardNavigation.DirectionalNavigation="Continue" MaxWidth="860" Template="{StaticResource ScrolllessListBox}" ItemsPanel="{StaticResource AvailableSlotsListPanelTemplate}"/>
+                                                                </ls:LSListBoxItem>
+
+                                                                <b:Interaction.Triggers>
+                                                                    <b:EventTrigger EventName="LocalFocusChanged">
+                                                                        <!-- Make sure the Content is set on the LSToolTip before ShowTooltipOnUIElement is called -->
+                                                                        <b:ChangePropertyAction TargetName="assignSlotTooltip" PropertyName="Content" Value="{Binding LocalFocus.DataContext, ElementName=AssignList}" />
+                                                                        <b:InvokeCommandAction IsEnabled="{Binding LocalFocus, ElementName=AssignList,Converter={StaticResource NullToBoolFalseConverter}}" Command="{Binding ShowTooltipOnUIElement}" CommandParameter="{Binding ., ElementName=AssignList}"/>
+                                                                        <b:InvokeCommandAction IsEnabled="{Binding LocalFocus, ElementName=AssignList,Converter={StaticResource NullToBoolTrueConverter}}" Command="{Binding ShowTooltipOnUIElement}" CommandParameter="{x:Null}"/>
+                                                                    </b:EventTrigger>
+
+                                                                    <b:EventTrigger EventName="LocalFocusChanged">
+                                                                        <b:Interaction.Behaviors>
+                                                                            <b:ConditionBehavior>
+                                                                                <b:ConditionalExpression>
+                                                                                    <b:ComparisonCondition LeftOperand="{Binding LocalFocus.DataContext.Object, ElementName=AssignList}" Operator="NotEqual" RightOperand="{x:Null}"/>
+                                                                                </b:ConditionalExpression>
+                                                                            </b:ConditionBehavior>
+                                                                        </b:Interaction.Behaviors>
+                                                                        <b:ChangePropertyAction TargetName="assignSlotTooltip" PropertyName="Content" Value="{Binding LocalFocus.DataContext.Object, ElementName=AssignList}" />
+                                                                    </b:EventTrigger>
+                                                                </b:Interaction.Triggers>
+                                                            </ls:LSListBox>
+
+                                                            <Control x:Name="SelectorAssign" IsHitTestVisible="False" VerticalAlignment="Top" HorizontalAlignment="Left" Template="{StaticResource SelectorTemplate}" Visibility="{Binding Visibility, ElementName=AssignList}"/>
+                                                        </Grid>
+                                                       
+                                                    </ContentControl>
+                                                    <!-- Hints  -->
+                                                    <StackPanel x:Name="BtnHintStackPanel" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="-600,0,0,600">
+
+                                                        <!-- Assign Slot-->
+                                                        <ls:LSButton VerticalAlignment="Center" x:Name="AssignButton" Margin="0,0,20,0" Style="{StaticResource ControllerButtonWBG}"
+                                                             DataContext = "{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIAccept'}" 
+                                                             Content="Set Slot"
+                                                             Command="{Binding DataContext.AssignSlotCommand, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"
+                                                             CommandParameter="{Binding LocalFocus.DataContext, ElementName=AssignList}"/>
+
+                                                        <!-- Cancel button -->
+                                                        <ls:LSButton VerticalAlignment="Center" Style="{StaticResource ControllerButtonWBG}"
+                                                             DataContext ="{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UICancel'}"
+                                                             Content="{Binding Source='h43f0dd5cg543cg46f5gaa87g4f14f4803cd1',Converter={StaticResource TranslatedStringConverter}}"
+                                                             Command="{Binding DataContext.AssignSlotCommand, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"
+                                                             CommandParameter=""/>
+                                                    </StackPanel>
+
+                                                    <Grid.Triggers>
+                                                        
+                                                        <EventTrigger RoutedEvent="FrameworkElement.Loaded">
+                                                            <BeginStoryboard>
+                                                                <Storyboard FillBehavior="Stop">
+                                                                    <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="bgFade" >
+                                                                        <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                                                                        <EasingDoubleKeyFrame KeyTime="0:0:0.50" Value="1">
+                                                                            <EasingDoubleKeyFrame.EasingFunction>
+                                                                                <CubicEase EasingMode="EaseOut"/>
+                                                                            </EasingDoubleKeyFrame.EasingFunction>
+                                                                        </EasingDoubleKeyFrame>
+                                                                    </DoubleAnimationUsingKeyFrames>
+
+                                                                    <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)"  Storyboard.TargetName="BtnHintStackPanel">
+                                                                        <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                                                                        <EasingDoubleKeyFrame KeyTime="0:0:0.25" Value="1">
+                                                                            <EasingDoubleKeyFrame.EasingFunction>
+                                                                                <CubicEase EasingMode="EaseOut"/>
+                                                                            </EasingDoubleKeyFrame.EasingFunction>
+                                                                        </EasingDoubleKeyFrame>
+                                                                    </DoubleAnimationUsingKeyFrames>
+                                                                </Storyboard>
+                                                            </BeginStoryboard>
+                                                        </EventTrigger>
+                                                    </Grid.Triggers>
+                                                </Grid>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Control.Style>
+                </Control>
+
+
+                <!-- button hints -->
+                <StackPanel x:Name="ButtonHintsContainer" Style="{StaticResource ButtonHint.Container.RightStacked}" IsEnabled="{Binding AssigningSlot, Converter={StaticResource InvertBoolConverter}}">
+
+                    <ls:LSButton x:Name="SelectButtonVisual"
+                                 Tag="{Binding Source='h04f38549g65b8g4b72g834eg87ee8863fdc5', Converter={StaticResource TranslatedStringConverter}}"  
+                                 ContentTemplate="{StaticResource ControllerButtonHint}" 
+                                 Content="{Binding CurrentPlayer.UIData.InputEvents, ConverterParameter=UIAccept, Converter={StaticResource FindInputEventConverter}}" HorizontalAlignment="Left" Visibility="Collapsed" />
+
+                    <ls:LSButton x:Name="CancelConcentrationButton" Style="{StaticResource ControllerHoldButtonStyle}" DataContext="{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIEndTurn'}" 
+                                 Command="{Binding DataContext.ReleaseConcentrationCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ls:UIWidget}}}" 
+                                 CommandParameter="{Binding DataContext.CurrentPlayer.SelectedCharacter, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ls:UIWidget}}}" 
+                                 Tag="{Binding Source='h1018e7a5gdb9ag4b51g9898gc30c5b0ab518', Converter={StaticResource TranslatedStringConverter}}" VerticalAlignment="Center" EatInput="False" Visibility="{Binding DataContext.CurrentPlayer.SelectedCharacter.ConcentrationSpell, Converter={StaticResource NullToCollapsedConverter}, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ls:UIWidget}}}" HorizontalAlignment="Left" Margin="10,0,0,0"/>
+
+                    <ls:LSButton x:Name="ShowContextMenu" Command="{Binding ShowContextMenu}" CommandParameter="{Binding FocusedElement, ElementName=ActionRadials}" BoundEvent="ContextMenu" Tag="{Binding Source='h921d24b9g4a44g441agbbbag176eef91b713', Converter={StaticResource TranslatedStringConverter}}" 
+                                 ContentTemplate="{StaticResource ControllerButtonHint}" Content="{Binding CurrentPlayer.UIData.InputEvents, ConverterParameter=ContextMenu, Converter={StaticResource FindInputEventConverter}}" HorizontalAlignment="Left"/>
+
+                    <ls:LSInputBinding x:Name="UseSlotBinding" Command="{Binding UseSlotCommand}" CommandParameter="{Binding Tag, ElementName=ActionRadials}" ls:LSInputBinding.BoundEvent="UIAccept" HorizontalAlignment="Left"/>
+
+                    <ls:LSButton x:Name="CancelButton" BoundEvent="UICancel" Command="{Binding ClearSingleHotbarCommand}" Tag="{Binding Source='h01d5c470g61bfg498cgb17eg7be425444fa5', Converter={StaticResource TranslatedStringConverter}}" 
+                                 ContentTemplate="{StaticResource ControllerButtonHint}" Content="{Binding CurrentPlayer.UIData.InputEvents, ConverterParameter=UICancel, Converter={StaticResource FindInputEventConverter}}" HorizontalAlignment="Left">
+                        <b:Interaction.Triggers>
+                            <b:EventTrigger EventName="LSButtonReleased">
+                                <ls:SetMoveFocusAction TargetName="ActionRadials" FocusElement="{Binding Tag, ElementName=HotBarList}"/>
+                            </b:EventTrigger>
+                        </b:Interaction.Triggers>
+                    </ls:LSButton>
+
+                    <ls:LSInputBinding x:Name="PinTooltipBinding" Style="{StaticResource PinTooltipBindingRadialStyle}"/>
+                </StackPanel>
+            </Grid>
+            <ControlTemplate.Triggers>
+
+                <DataTrigger Binding="{Binding CurrentPlayer.SelectedCharacter.PlayerCharacterProperties.MetamagicActive}" Value="True">
+                    <Setter TargetName="metaMagicSwirl" Property="Visibility" Value="Visible"/>
+                    <Setter TargetName="metaMagicSwirl2" Property="Visibility" Value="Visible"/>
+                    <Setter TargetName="metaMagicSwirl3" Property="Visibility" Value="Visible"/>
+                    <Setter TargetName="metaMagicSwirl4" Property="Visibility" Value="Visible"/>
+
+                    <DataTrigger.EnterActions>
+                        <BeginStoryboard x:Name="swirlyAnimation" Storyboard="{StaticResource rotateGlow}" />
+                    </DataTrigger.EnterActions>
+                    <DataTrigger.ExitActions>
+                        <StopStoryboard BeginStoryboardName="swirlyAnimation" />
+                    </DataTrigger.ExitActions>
+
+                </DataTrigger>
+
+                <DataTrigger Binding="{Binding Layout}" Value="Left">
+                    <Setter TargetName="resourceBarRightPadding" Property="Width" Value="200"/>
+                    <Setter TargetName="resourceBarLeftPadding" Property="Width" Value="200"/>
+                </DataTrigger>
+
+                <DataTrigger Binding="{Binding Layout}" Value="Right">
+                    <Setter TargetName="resourceBarRightPadding" Property="Width" Value="200"/>
+                    <Setter TargetName="resourceBarLeftPadding" Property="Width" Value="200"/>
+                </DataTrigger>
+
+                <MultiDataTrigger>
+                    <MultiDataTrigger.Conditions>
+                        <Condition Binding="{Binding CurrentPlayer.SelectedCharacter.IsCurrentTurn}" Value="True"/>
+                        <Condition Binding="{Binding CurrentPlayer.SelectedCharacter.InTurnBasedMode}" Value="True"/>
+                    </MultiDataTrigger.Conditions>
+                    <Setter TargetName="ActionRadialResourceBar" Property="ImageSource" Value="{x:Null}"/>
+                    <Setter TargetName="ActionRadialResourceBarBG" Property="Opacity" Value="0"/>
+
+                </MultiDataTrigger>
+                <MultiDataTrigger>
+                    <MultiDataTrigger.Conditions>
+                        <Condition Binding="{Binding CurrentPlayer.SelectedCharacter.IsCurrentTurn}" Value="False"/>
+                        <Condition Binding="{Binding CurrentPlayer.SelectedCharacter.InTurnBasedMode}" Value="True"/>
+                    </MultiDataTrigger.Conditions>
+                    <Setter TargetName="ActionRadialResourceBarBG" Property="Opacity" Value="0.7"/>
+
+                </MultiDataTrigger>
+
+                <DataTrigger Binding="{Binding SingleHotBar.SlotList.Count, Converter={StaticResource GreaterThanConverter},ConverterParameter=0}" Value="True">
+                    <Setter TargetName="singleBarHolder" Property="Visibility" Value="Visible"/>
+                    <Setter TargetName="singleBarBG" Property="Visibility" Value="Visible"/>
+                    <Setter TargetName="MainHotbarListHolder" Property="Visibility" Value="Collapsed"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding DataContext.IsShowingAContainerWithVariants, ElementName=ActionRadials}" Value="True">
+                    <Setter TargetName="RadialTypeText" Property="Text" Value="{Binding Source='h79b6dc4egf450g4037gad34g8bfd57289b9a', Converter={StaticResource TranslatedStringConverter}}"/>
+                    <Setter TargetName="RadialTypeText" Property="Visibility" Value="Visible"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding DataContext.IsSelectingUpcastedSpell, ElementName=ActionRadials}" Value="True">
+                    <Setter TargetName="RadialTypeText" Property="Text" Value="{Binding Source='hcc0de24fgee83g49cdgb15fg2fa9b96203c9', Converter={StaticResource TranslatedStringConverter}}"/>
+                    <Setter TargetName="RadialTypeText" Property="Visibility" Value="Visible"/>
+                </DataTrigger>
+
+                <DataTrigger Binding="{Binding AssigningSlot}" Value="True">
+                    <Setter TargetName="ActionDescriptionSection" Property="Visibility" Value="Collapsed"/>
+                    <Setter TargetName="ActionDetailsPanel" Property="Visibility" Value="Collapsed"/>
+                    <Setter TargetName="ButtonHintsContainer" Property="Visibility" Value="Collapsed"/>
+                    <Setter TargetName="ActionButton" Property="Visibility" Value="Collapsed"/>
+                </DataTrigger>
+
+                <DataTrigger Binding="{Binding Path=Tag.GameObject, ElementName=ActionRadials, Converter={StaticResource NullToBoolFalseConverter}, FallbackValue={x:Null}}" Value="True">
+                    <Setter TargetName="ActionDetails" Property="DataContext" Value="{Binding Tag.GameObject, ElementName=ActionRadials}"/>
+                    <Setter TargetName="ActionDetails" Property="Visibility" Value="Visible"/>
+                    <Setter TargetName="MetamagicLabel" Property="DataContext" Value="{Binding Tag.GameObject, ElementName=ActionRadials}"/>
+                    <Setter TargetName="ActionCostSummary" Property="ItemsSource" Value="{Binding Tag.GameObject.CostSummary, ElementName=ActionRadials}"/>
+                    <Setter TargetName="ActionCostSummary" Property="AlternationCount" Value="{Binding Tag.GameObject.CostSummary.Count, ElementName=ActionRadials}"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Path=Tag.Spell, ElementName=ActionRadials, Converter={StaticResource NullToBoolFalseConverter}, FallbackValue={x:Null}}" Value="True">
+                    <Setter TargetName="ActionDetails" Property="DataContext" Value="{Binding Tag.Spell, ElementName=ActionRadials}"/>
+                    <Setter TargetName="ActionDetails" Property="Visibility" Value="Visible"/>
+                    <Setter TargetName="MetamagicLabel" Property="DataContext" Value="{Binding Tag.Spell, ElementName=ActionRadials}"/>
+                    <Setter TargetName="ActionCostSummary" Property="ItemsSource" Value="{Binding Tag.Spell.CostSummary, ElementName=ActionRadials}"/>
+                    <Setter TargetName="ActionCostSummary" Property="AlternationCount" Value="{Binding Tag.Spell.CostSummary.Count, ElementName=ActionRadials}"/>
+                </DataTrigger>
+
+                <DataTrigger Binding="{Binding Tag.Spell.CostSummary.Count, ElementName=ActionRadials, Converter={StaticResource GreaterThanConverter}, ConverterParameter='0', FallbackValue=False}" Value="True">
+                    <Setter TargetName="ActionCostSection" Property="Visibility" Value="Visible" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Tag.GameObject.CostSummary.Count, ElementName=ActionRadials, Converter={StaticResource GreaterThanConverter}, ConverterParameter='0', FallbackValue=False}" Value="True">
+                    <Setter TargetName="ActionCostSection" Property="Visibility" Value="Visible" />
+                </DataTrigger>
+
+                <DataTrigger Binding="{Binding Path=Tag.CanUse, ElementName=ActionRadials}" Value="False">
+                    <Setter TargetName="ActionButtonIcon" Property="Opacity" Value="0.75"/>
+                    <Setter TargetName="ActionButtonDescription" Property="Opacity" Value="0.75"/>
+                    <Setter TargetName="ActionButtonTooltipDescription" Property="Opacity" Value="0.75"/>
+                    <Setter TargetName="UseSlotBinding" Property="IsEnabled" Value="False"/>
+                    <Setter TargetName="RadialActionErrorMessage" Property="Visibility" Value="Visible" />
+                </DataTrigger>
+
+                <DataTrigger Binding="{Binding SingleHotBar.SlotList.Count}" Value="0">
+                    <Setter TargetName="CancelButton" Property="Command" Value="{Binding CustomEvent}"/>
+                    <Setter TargetName="CancelButton" Property="CommandParameter" Value="CloseWidget"/>
+                    <Setter TargetName="CancelButton" Property="Tag" Value="{Binding Source='h411fb88eg5261g437aga291g2fb260e633c6', Converter={StaticResource TranslatedStringConverter}}"/>
+                </DataTrigger>
+
+                <DataTrigger Binding="{Binding CurrentPlayer.SelectedCharacter.IsShapeShifted}" Value="True">
+                    <Setter TargetName="CancelButton" Property="Command" Value="{Binding CustomEvent}"/>
+                    <Setter TargetName="CancelButton" Property="CommandParameter" Value="CloseWidget"/>
+                    <Setter TargetName="CancelButton" Property="Tag" Value="{Binding Source='h411fb88eg5261g437aga291g2fb260e633c6', Converter={StaticResource TranslatedStringConverter}}"/>
+                    
+                    <Setter TargetName="ShowContextMenu" Property="Visibility" Value="Collapsed"/>
+                    <Setter TargetName="singleBarBG" Property="Visibility" Value="Collapsed"/>
+                </DataTrigger>
+
+                <DataTrigger Binding="{Binding CurrentPlayer.SelectedCharacter.CharacterType}" Value="Summon">
+                    <Setter TargetName="CancelButton" Property="Command" Value="{Binding CustomEvent}"/>
+                    <Setter TargetName="CancelButton" Property="CommandParameter" Value="CloseWidget"/>
+                    <Setter TargetName="CancelButton" Property="Tag" Value="{Binding Source='h411fb88eg5261g437aga291g2fb260e633c6', Converter={StaticResource TranslatedStringConverter}}"/>
+                    
+                    <Setter TargetName="ShowContextMenu" Property="Visibility" Value="Collapsed"/>
+                    <Setter TargetName="singleBarBG" Property="Visibility" Value="Collapsed"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding CurrentPlayer.SelectedCharacter.CharacterType}" Value="Follower">
+                    <Setter TargetName="CancelButton" Property="Command" Value="{Binding CustomEvent}"/>
+                    <Setter TargetName="CancelButton" Property="CommandParameter" Value="CloseWidget"/>
+                    <Setter TargetName="CancelButton" Property="Tag" Value="{Binding Source='h411fb88eg5261g437aga291g2fb260e633c6', Converter={StaticResource TranslatedStringConverter}}"/>
+
+                    <Setter TargetName="ShowContextMenu" Property="Visibility" Value="Collapsed"/>
+                    <Setter TargetName="singleBarBG" Property="Visibility" Value="Collapsed"/>
+                </DataTrigger>
+
+                <DataTrigger Binding="{Binding InSwapSlotState}" Value="True">
+                    <Setter TargetName="CancelButton" Property="Command" Value="{Binding UseSlotCommand}"/>
+                    <Setter TargetName="CancelButton" Property="CommandParameter" Value="{x:Null}"/>
+                    <Setter TargetName="CancelButton" Property="Tag" Value="{Binding Source='h01d5c470g61bfg498cgb17eg7be425444fa5', Converter={StaticResource TranslatedStringConverter}}"/>
+                    <Setter TargetName="UseSlotBinding" Property="Command" Value="{x:Null}"/>
+                    <Setter TargetName="UseSlotBinding" Property="EatInput" Value="False"/>
+                    <Setter TargetName="ActionButton" Property="Visibility" Value="Hidden"/>
+                    <Setter TargetName="SwapSlotHint" Property="Visibility" Value="Visible"/>
+                </DataTrigger>
+
+                <DataTrigger Binding="{Binding Layout}" Value="Left">
+                    <Setter TargetName="ButtonHintsContainer" Property="Style" Value="{StaticResource ButtonHint.Container.RightStackedSplit}"/>
+                    <Setter TargetName="CancelButton" Property="Margin" Value="0,500,0,0" />
+                    <Setter TargetName="CancelButton" Property="ContentTemplate" Value="{x:Null}" />
+                    <Setter TargetName="CancelButton" Property="Content" Value="{x:Null}" />
+
+                </DataTrigger>
+
+                <DataTrigger Binding="{Binding Layout}" Value="Right">
+                    <Setter TargetName="ButtonHintsContainer" Property="Style" Value="{StaticResource ButtonHint.Container.LeftStackedSplit}"/>
+                    <Setter TargetName="CancelButton" Property="Margin" Value="0,500,0,0" />
+                    <Setter TargetName="CancelButton" Property="ContentTemplate" Value="{x:Null}" />
+                    <Setter TargetName="CancelButton" Property="Content" Value="{x:Null}" />
+                    <Setter TargetName="uiHintContainer" Property="Margin" Value="1000,-110,0,0" />
+                </DataTrigger>
+
+                <MultiDataTrigger>
+                    <MultiDataTrigger.Conditions>
+                        <Condition Binding="{Binding Layout}" Value="Common"/>
+                        <Condition Binding="{Binding Data.AspectRatio, Converter={StaticResource LessThanConverter}, ConverterParameter=0.75}" Value="True"/>
+                    </MultiDataTrigger.Conditions>
+                    <Setter TargetName="SelectButtonVisual" Property="Visibility" Value="Visible" />
+                </MultiDataTrigger>
+
+                <EventTrigger RoutedEvent="FrameworkElement.Loaded">
+                    <BeginStoryboard x:Name="WidgetFadeInAnim">
+                        <Storyboard FillBehavior="Stop">
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)"  Storyboard.TargetName="fadeInRadials">
+                                <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                                <EasingDoubleKeyFrame KeyTime="0:0:0.12" Value="1"/>
+                            </DoubleAnimationUsingKeyFrames>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+                <EventTrigger RoutedEvent="FrameworkElement.Unloaded">
+                    <StopStoryboard BeginStoryboardName="WidgetFadeInAnim"/>
+                </EventTrigger>
+
+                <DataTrigger Binding="{Binding ActualHeight, ElementName=actionResourceBar, Converter={StaticResource GreaterThanConverter}, ConverterParameter=140}" Value="True">
+                    <Setter TargetName="ResourceContainer" Property="Margin" Value="0,0,0,10"/>
+                </DataTrigger>
+
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+    </ls:UIWidget.Template>
+</ls:UIWidget>

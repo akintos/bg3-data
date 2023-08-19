@@ -1,0 +1,71 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<save>
+	<version major="4" minor="0" revision="9" build="320" />
+	<region id="Templates">
+		<node id="Templates">
+			<children>
+				<node id="GameObjects">
+					<attribute id="MapKey" type="22" value="a85b863d-6b2e-48c5-9065-61bd05a1c8ba" />
+					<attribute id="Name" type="23" value="LOW_Ghost_A" />
+					<attribute id="LevelName" type="22" value="" />
+					<attribute id="Type" type="22" value="character" />
+					<attribute id="ParentTemplateId" type="22" value="e90d8b03-2355-46da-a74a-ad66795759ac" />
+					<attribute id="DisplayName" type="28" handle="hbbfea02dgc603g4095g9883g64ef2b4357b1" version="1" />
+					<attribute id="Icon" type="22" value="e2f30fd7-f6dc-baa0-7161-39d2211ce84f-_(Icon_Nightmare_Nurse)" />
+					<attribute id="Stats" type="22" value="Ghost" />
+					<attribute id="SpellSet" type="22" value="" />
+					<attribute id="BloodType" type="22" value="" />
+					<attribute id="BloodSurfaceType" type="22" value="SurfaceNone" />
+					<attribute id="LevelOverride" type="4" value="8" />
+					<attribute id="CharacterVisualResourceID" type="22" value="e2f30fd7-f6dc-baa0-7161-39d2211ce84f" />
+					<attribute id="Archetype" type="22" value="mage" />
+					<children>
+						<node id="OnDeathActions" />
+						<node id="SkillList">
+							<children>
+								<node id="Skill">
+									<attribute id="Skill" type="22" value="Target_LOW_OskarsBeloved_WitheringTouch" />
+									<attribute id="SpellCastingAbility" type="1" value="0" />
+									<attribute id="LearningStrategy" type="1" value="0" />
+									<attribute id="ScoreModifier" type="6" value="1" />
+									<attribute id="StartRound" type="4" value="0" />
+									<attribute id="FallbackStartRound" type="4" value="-1" />
+									<attribute id="MinimumImpact" type="4" value="0" />
+									<attribute id="OnlyCastOnSelf" type="19" value="False" />
+									<attribute id="AIFlags" type="3" value="0" />
+									<children>
+										<node id="SourceConditions">
+											<attribute id="MinimumHealthPercentage" type="4" value="0" />
+											<attribute id="MaximumHealthPercentage" type="4" value="100" />
+											<children>
+												<node id="Tags" />
+											</children>
+										</node>
+										<node id="TargetConditions">
+											<attribute id="MinimumHealthPercentage" type="4" value="0" />
+											<attribute id="MaximumHealthPercentage" type="4" value="100" />
+											<children>
+												<node id="Tags" />
+											</children>
+										</node>
+									</children>
+								</node>
+							</children>
+						</node>
+						<node id="StatusList">
+							<children>
+								<node id="Status">
+									<attribute id="Object" type="22" value="GHOST_FX" />
+								</node>
+								<node id="Status">
+									<attribute id="Object" type="22" value="DISINTEGRATE_DEATH" />
+								</node>
+							</children>
+						</node>
+						<node id="LocomotionParams" />
+					</children>
+				</node>
+			</children>
+		</node>
+	</region>
+</save>

@@ -1,0 +1,134 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<save>
+	<version major="4" minor="0" revision="9" build="320" />
+	<region id="Templates">
+		<node id="Templates">
+			<children>
+				<node id="GameObjects">
+					<attribute id="MapKey" type="22" value="72e3f454-5a68-4bb2-acef-7b8d595b5015" />
+					<attribute id="Name" type="23" value="CONT_Barrel_Oil_A" />
+					<attribute id="LevelName" type="22" value="" />
+					<attribute id="Type" type="22" value="item" />
+					<attribute id="ParentTemplateId" type="22" value="253b6d64-91f4-46a2-b05a-a606b0d7b342" />
+					<attribute id="ReadinessFlags" type="5" value="16" />
+					<attribute id="VisualTemplate" type="22" value="ae062e4f-07b3-4e64-b7ba-48816d03da43" />
+					<attribute id="PhysicsTemplate" type="22" value="9c8f2431-6d0a-e061-b431-b66e9d722811" />
+					<attribute id="RecieveDecal" type="19" value="False" />
+					<attribute id="DisplayName" type="28" handle="he7997288g0771g4139gba45geb8ebdf94104" version="2" />
+					<attribute id="CanShootThrough" type="19" value="False" />
+					<attribute id="Icon" type="22" value="Item_CONT_Barrel_Oil_A" />
+					<attribute id="Stats" type="22" value="OBJ_Barrel_Filled_Oil" />
+					<attribute id="Description" type="28" handle="hf0f3a86cg6dcag4ad9g9a3agdd9b9434afd2" version="2" />
+					<attribute id="ShowAttachedSpellDescriptions" type="19" value="True" />
+					<children>
+						<node id="Bounds">
+							<children>
+								<node id="Bound">
+									<attribute id="Type" type="1" value="1" />
+									<attribute id="Shape" type="1" value="1" />
+									<attribute id="Min" type="12" value="-0.4 0.00834632 -0.4" />
+									<attribute id="Max" type="12" value="0.4 1.33442 0.4" />
+									<attribute id="Radius" type="6" value="0.507822" />
+									<attribute id="Height" type="6" value="1.32607" />
+								</node>
+								<node id="Bound">
+									<attribute id="Type" type="1" value="2" />
+									<attribute id="Shape" type="1" value="1" />
+									<attribute id="Min" type="12" value="-0.4 0.00834632 -0.4" />
+									<attribute id="Max" type="12" value="0.4 1.33442 0.4" />
+									<attribute id="Radius" type="6" value="0.507822" />
+									<attribute id="Height" type="6" value="1.32607" />
+								</node>
+								<node id="Bound">
+									<attribute id="Type" type="1" value="0" />
+									<attribute id="Shape" type="1" value="1" />
+									<attribute id="Min" type="12" value="-0.2 0.00834632 -0.2" />
+									<attribute id="Max" type="12" value="0.2 1.33442 0.2" />
+									<attribute id="Radius" type="6" value="0.253911" />
+									<attribute id="Height" type="6" value="1.32607" />
+								</node>
+							</children>
+						</node>
+						<node id="OnDestroyActions">
+							<children>
+								<node id="Action">
+									<attribute id="ActionType" type="4" value="5" />
+									<children>
+										<node id="Attributes">
+											<attribute id="Animation" type="22" value="" />
+											<attribute id="Conditions" type="23" value="" />
+											<attribute id="TargetItemState" type="1" value="0" />
+											<attribute id="SnapToGround" type="19" value="True" />
+											<attribute id="ExplodeFX" type="22" value="1760d26e-b8ae-f2bd-0ed0-472387e15eb9" />
+											<attribute id="visualDestruction" type="22" value="" />
+											<attribute id="VisualWithDynamicPhysics" type="22" value="a73c1e4a-a47f-a50a-bd75-e6be6bb11a0a" />
+											<attribute id="FadeOutDelay" type="6" value="0" />
+											<attribute id="FadeOutFX" type="22" value="" />
+											<attribute id="templateAfterDestruction" type="22" value="2d2659ed-4c51-4167-9b22-343553b4f72e" />
+										</node>
+									</children>
+								</node>
+								<node id="Action">
+									<attribute id="ActionType" type="4" value="26" />
+									<children>
+										<node id="Attributes">
+											<attribute id="Animation" type="22" value="" />
+											<attribute id="Conditions" type="23" value="" />
+											<attribute id="ActivateSoundEvent" type="22" value="d95a2d68-1157-3bf4-f111-3794fcddb696" />
+											<attribute id="PlayOnHUD" type="19" value="False" />
+										</node>
+									</children>
+								</node>
+								<node id="Action">
+									<attribute id="ActionType" type="4" value="10" />
+									<children>
+										<node id="Attributes">
+											<attribute id="Animation" type="22" value="" />
+											<attribute id="Conditions" type="23" value="" />
+											<attribute id="SurfaceType" type="22" value="SurfaceOil" />
+											<attribute id="LifeTime" type="6" value="-1" />
+											<attribute id="Timeout" type="6" value="0" />
+											<attribute id="TotalCells" type="4" value="120" />
+											<attribute id="CellAtGrow" type="4" value="50" />
+											<attribute id="GrowTimer" type="6" value="0.02" />
+											<attribute id="ExternalCauseAsSurfaceOwner" type="19" value="True" />
+											<attribute id="ApplyDeathTypeBloodCheck" type="19" value="True" />
+										</node>
+									</children>
+								</node>
+							</children>
+						</node>
+						<node id="Scripts">
+							<children>
+								<node id="Script">
+									<attribute id="UUID" type="22" value="3250732e-6269-4ebb-b9dd-556c237f687d" />
+									<children>
+										<node id="Parameters">
+											<children>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="CasterLevel" />
+													<attribute id="Type" type="4" value="1" />
+													<attribute id="Value" type="23" value="20" />
+												</node>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="ExplosionProjectile" />
+													<attribute id="Type" type="4" value="9" />
+													<attribute id="Value" type="23" value="Projectile_Barrel_Explosion" />
+												</node>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="HardcoreOnly" />
+													<attribute id="Type" type="4" value="1" />
+													<attribute id="Value" type="23" value="0" />
+												</node>
+											</children>
+										</node>
+									</children>
+								</node>
+							</children>
+						</node>
+					</children>
+				</node>
+			</children>
+		</node>
+	</region>
+</save>

@@ -1,0 +1,136 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<save>
+	<version major="4" minor="0" revision="9" build="320" />
+	<region id="Templates">
+		<node id="Templates">
+			<children>
+				<node id="GameObjects">
+					<attribute id="MapKey" type="22" value="c69fb092-2f4f-4688-82b6-7d92405626b1" />
+					<attribute id="Name" type="23" value="CONS_Potion_Hill_Giant_Strength" />
+					<attribute id="LevelName" type="22" value="" />
+					<attribute id="Type" type="22" value="item" />
+					<attribute id="ParentTemplateId" type="22" value="eef254dd-b983-4e59-bf49-5ed76a536220" />
+					<attribute id="Flag" type="4" value="0" />
+					<attribute id="VisualTemplate" type="22" value="1d60bdf0-001e-410b-848a-27e2938641c1" />
+					<attribute id="PhysicsTemplate" type="22" value="8bdd2a00-30fd-71ff-c62f-3d3fd239c4c8" />
+					<attribute id="Scale" type="6" value="0.9" />
+					<attribute id="DisplayName" type="28" handle="h64e52462g9f53g4bc8g951dg206dbec0ad6a" version="2" />
+					<attribute id="Icon" type="22" value="Item_CONS_Potion_Hill_Giant_Strength_2" />
+					<attribute id="Stats" type="22" value="OBJ_Potion_Of_Hill_Giant_Strength" />
+					<attribute id="TreasureOnDestroy" type="19" value="True" />
+					<attribute id="OnUseDescription" type="28" handle="h78906736g437dg4895g999dg1705813d1aa4" version="1" />
+					<attribute id="DisplayNameAlchemy" type="28" handle="h6aa87794g453ag4842g88a4geb5c4fe1f766" version="1" />
+					<attribute id="Description" type="28" handle="h9c05c9dfg5cacg40d3g8a5bg65f171aff230" version="6" />
+					<attribute id="TechnicalDescription" type="28" handle="hf8dbc1d6gae25g4265g99c4gcc422d88cdce" version="2" />
+					<children>
+						<node id="Bounds">
+							<children>
+								<node id="Bound">
+									<attribute id="Type" type="1" value="1" />
+									<attribute id="Shape" type="1" value="1" />
+									<attribute id="Min" type="12" value="-0.1221158 0.008464992 -0.1065644" />
+									<attribute id="Max" type="12" value="0.1215922 0.51682 0.1076255" />
+									<attribute id="Radius" type="6" value="0.114147" />
+									<attribute id="Height" type="6" value="0.418184" />
+								</node>
+								<node id="Bound">
+									<attribute id="Type" type="1" value="2" />
+									<attribute id="Shape" type="1" value="1" />
+									<attribute id="Min" type="12" value="-0.1221158 0.008464992 -0.1065644" />
+									<attribute id="Max" type="12" value="0.1215922 0.51682 0.1076255" />
+									<attribute id="Radius" type="6" value="0.114147" />
+									<attribute id="Height" type="6" value="0.418184" />
+								</node>
+								<node id="Bound">
+									<attribute id="Type" type="1" value="0" />
+									<attribute id="Shape" type="1" value="1" />
+									<attribute id="Min" type="12" value="-0.1221158 0.00834024 -0.1065644" />
+									<attribute id="Max" type="12" value="0.1215922 0.51682 0.1076255" />
+									<attribute id="Radius" type="6" value="0.1507943" />
+									<attribute id="Height" type="6" value="0.5084797" />
+								</node>
+							</children>
+						</node>
+						<node id="OnUsePeaceActions">
+							<children>
+								<node id="Action">
+									<attribute id="ActionType" type="4" value="7" />
+									<children>
+										<node id="Attributes">
+											<attribute id="Animation" type="22" value="" />
+											<attribute id="Conditions" type="23" value="" />
+											<attribute id="StatsId" type="22" value="POTION_OF_STRENGTH_HILL_GIANT" />
+											<attribute id="StatusDuration" type="4" value="-1" />
+											<attribute id="Consume" type="19" value="True" />
+											<attribute id="IsHiddenStatus" type="19" value="False" />
+										</node>
+									</children>
+								</node>
+							</children>
+						</node>
+						<node id="OnDestroyActions">
+							<children>
+								<node id="Action">
+									<attribute id="ActionType" type="4" value="26" />
+									<children>
+										<node id="Attributes">
+											<attribute id="Animation" type="22" value="" />
+											<attribute id="Conditions" type="23" value="" />
+											<attribute id="ActivateSoundEvent" type="22" value="3ea82655-5140-4287-9ab8-794559f182d3" />
+											<attribute id="PlayOnHUD" type="19" value="False" />
+										</node>
+									</children>
+								</node>
+								<node id="Action">
+									<attribute id="ActionType" type="4" value="5" />
+									<children>
+										<node id="Attributes">
+											<attribute id="Animation" type="22" value="" />
+											<attribute id="Conditions" type="23" value="" />
+											<attribute id="TargetItemState" type="1" value="0" />
+											<attribute id="SnapToGround" type="19" value="True" />
+											<attribute id="ExplodeFX" type="22" value="ae67912d-b400-94c7-0e44-b2fffeed13e4" />
+											<attribute id="visualDestruction" type="22" value="00000000-0000-0000-0000-000000000000" />
+											<attribute id="VisualWithDynamicPhysics" type="22" value="" />
+											<attribute id="FadeOutDelay" type="6" value="0" />
+											<attribute id="FadeOutFX" type="22" value="" />
+											<attribute id="templateAfterDestruction" type="22" value="" />
+										</node>
+									</children>
+								</node>
+							</children>
+						</node>
+						<node id="Scripts">
+							<children>
+								<node id="Script">
+									<attribute id="UUID" type="22" value="a557ab71-77f3-4b0c-8174-f605e51c90c7" />
+									<children>
+										<node id="Parameters">
+											<children>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="HardcoreOnly" />
+													<attribute id="Type" type="4" value="1" />
+													<attribute id="Value" type="23" value="0" />
+												</node>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="LifeTime" />
+													<attribute id="Type" type="4" value="2" />
+													<attribute id="Value" type="23" value="0" />
+												</node>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="ProjectileSpell" />
+													<attribute id="Type" type="4" value="9" />
+													<attribute id="Value" type="23" value="Projectile_Potion_Destroy_Strength_HillGiant" />
+												</node>
+											</children>
+										</node>
+									</children>
+								</node>
+							</children>
+						</node>
+					</children>
+				</node>
+			</children>
+		</node>
+	</region>
+</save>

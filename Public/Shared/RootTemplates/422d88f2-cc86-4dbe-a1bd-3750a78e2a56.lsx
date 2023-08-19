@@ -1,0 +1,141 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<save>
+	<version major="4" minor="0" revision="6" build="200" />
+	<region id="Templates">
+		<node id="Templates">
+			<children>
+				<node id="GameObjects">
+					<attribute id="MapKey" type="22" value="422d88f2-cc86-4dbe-a1bd-3750a78e2a56" />
+					<attribute id="Name" type="23" value="PUZ_Underdark_Mushroom_Exploding_C" />
+					<attribute id="LevelName" type="22" value="" />
+					<attribute id="Type" type="22" value="item" />
+					<attribute id="ParentTemplateId" type="22" value="90ec2f64-e124-474c-8b27-a56bba6f6c88" />
+					<attribute id="ReadinessFlags" type="5" value="128" />
+					<attribute id="VisualTemplate" type="22" value="ccc47404-e97e-d255-c74c-ccd46b92bca5" />
+					<attribute id="PhysicsTemplate" type="22" value="dd4aa837-a95d-df85-d5bc-3b13deadade4" />
+					<attribute id="DisplayName" type="28" handle="h4fc7866bg5662g4137g8a08ga6b457165442" version="1" />
+					<attribute id="Icon" type="22" value="Item_PUZ_Underdark_Mushroom_Exploding_B" />
+					<attribute id="Stats" type="22" value="OBJ_TorchstalkMushroom" />
+					<attribute id="Hostile" type="19" value="True" />
+					<attribute id="Description" type="28" handle="hc0cafe4fg450dg4f88gbb03g12b64f08ae11" version="1" />
+					<children>
+						<node id="Tags">
+							<children>
+								<node id="Tag">
+									<attribute id="Object" type="31" value="421e9ec8-03d2-47eb-caa6-7adb0aa3c4b7" />
+								</node>
+							</children>
+						</node>
+						<node id="Bounds">
+							<children>
+								<node id="Bound">
+									<attribute id="Type" type="1" value="1" />
+									<attribute id="Shape" type="1" value="1" />
+									<attribute id="Min" type="12" value="-0.9169999 -0.05926204 -0.9139999" />
+									<attribute id="Max" type="12" value="0.901 1.798 0.876" />
+									<attribute id="Radius" type="6" value="1.242982" />
+									<attribute id="Height" type="6" value="1.847016" />
+								</node>
+								<node id="Bound">
+									<attribute id="Type" type="1" value="0" />
+									<attribute id="Shape" type="1" value="1" />
+									<attribute id="Min" type="12" value="-0.9169999 -0.05926204 -0.9139999" />
+									<attribute id="Max" type="12" value="0.901 1.798 0.876" />
+									<attribute id="Radius" type="6" value="1.242982" />
+									<attribute id="Height" type="6" value="1.847016" />
+								</node>
+								<node id="Bound">
+									<attribute id="Type" type="1" value="2" />
+									<attribute id="Shape" type="1" value="1" />
+									<attribute id="Min" type="12" value="-0.9169999 -0.05926204 -0.9139999" />
+									<attribute id="Max" type="12" value="0.901 1.798 0.876" />
+									<attribute id="Radius" type="6" value="1.242982" />
+									<attribute id="Height" type="6" value="1.847016" />
+								</node>
+							</children>
+						</node>
+						<node id="OnDestroyActions">
+							<children>
+								<node id="Action">
+									<attribute id="ActionType" type="4" value="5" />
+									<children>
+										<node id="Attributes">
+											<attribute id="Animation" type="22" value="" />
+											<attribute id="TargetItemState" type="1" value="0" />
+											<attribute id="ExplodeFX" type="22" value="21ffa1c9-184e-c5d4-c528-e984895f77c6" />
+											<attribute id="visualDestruction" type="22" value="" />
+											<attribute id="VisualWithDynamicPhysics" type="22" value="" />
+											<attribute id="FadeOutDelay" type="6" value="0" />
+											<attribute id="FadeOutFX" type="22" value="" />
+											<attribute id="templateAfterDestruction" type="22" value="bc5c0459-e3f4-41d1-8293-f3314e4f3aa0" />
+										</node>
+									</children>
+								</node>
+							</children>
+						</node>
+						<node id="InventoryList">
+							<children>
+								<node id="InventoryItem">
+									<attribute id="Object" type="22" value="Empty" />
+								</node>
+							</children>
+						</node>
+						<node id="Scripts">
+							<children>
+								<node id="Script">
+									<attribute id="UUID" type="22" value="d27c44bc-d537-5a7b-74e6-8774135c5705" />
+									<children>
+										<node id="Parameters">
+											<children>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="ArmingTime" />
+													<attribute id="Type" type="4" value="2" />
+													<attribute id="Value" type="23" value="1" />
+												</node>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="ExplosionDelayTime" />
+													<attribute id="Type" type="4" value="2" />
+													<attribute id="Value" type="23" value="0.5" />
+												</node>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="ExplosionRadius" />
+													<attribute id="Type" type="4" value="2" />
+													<attribute id="Value" type="23" value="3.5" />
+												</node>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="GlowingFX" />
+													<attribute id="Type" type="4" value="3" />
+													<attribute id="Value" type="23" value="VFX_Script_PUZ_Underdark_Mushroom_Exploding_C_01" />
+												</node>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="HardcoreOnly" />
+													<attribute id="Type" type="4" value="1" />
+													<attribute id="Value" type="23" value="0" />
+												</node>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="MineProjectile" />
+													<attribute id="Type" type="4" value="9" />
+													<attribute id="Value" type="23" value="Projectile_Torchstalk_Explosion" />
+												</node>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="PulsatingFX" />
+													<attribute id="Type" type="4" value="3" />
+													<attribute id="Value" type="23" value="VFX_Script_PUZ_Underdark_Mushroom_Exploding_C_02" />
+												</node>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="WarningRadius" />
+													<attribute id="Type" type="4" value="2" />
+													<attribute id="Value" type="23" value="4.5" />
+												</node>
+											</children>
+										</node>
+									</children>
+								</node>
+							</children>
+						</node>
+					</children>
+				</node>
+			</children>
+		</node>
+	</region>
+</save>

@@ -1,0 +1,105 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<save>
+	<version major="4" minor="0" revision="9" build="319" />
+	<region id="Templates">
+		<node id="Templates">
+			<children>
+				<node id="GameObjects">
+					<attribute id="MapKey" type="22" value="955d3880-3d10-4fb5-845b-96b6b52aef9a" />
+					<attribute id="Name" type="23" value="ALCH_Solution_Oil_DamageAttackBuff" />
+					<attribute id="LevelName" type="22" value="" />
+					<attribute id="Type" type="22" value="item" />
+					<attribute id="ParentTemplateId" type="22" value="19a6fbb0-7123-460b-a4a8-643bb6cab5b5" />
+					<attribute id="VisualTemplate" type="22" value="da47bd9a-0e12-690e-69f6-8bf6f7ea6587" />
+					<attribute id="PhysicsTemplate" type="22" value="20ce31dc-de54-1286-440d-2d6c3ec42562" />
+					<attribute id="DisplayName" type="28" handle="h5328ed09g6785g4646gb6ebgdf29afb2ee1a" version="2" />
+					<attribute id="Icon" type="22" value="Item_CONS_Potion_Immortality_A" />
+					<attribute id="Stats" type="22" value="ALCH_Solution_Oil_DamageAttackBuff" />
+					<attribute id="Tooltip" type="1" value="2" />
+					<attribute id="CanBeImprovisedWeapon" type="19" value="True" />
+					<attribute id="InventoryMoveSound" type="22" value="299dcdc3-c9c9-5ba3-2e87-60800daf6ef6" />
+					<attribute id="DropSound" type="22" value="299dcdc3-c9c9-5ba3-2e87-60800daf6ef6" />
+					<attribute id="PickupSound" type="22" value="c07d7d7b-78c1-3173-4250-df729da5276a" />
+					<attribute id="UseSound" type="22" value="a41724e5-f266-d2bc-f5b7-640a1e9d02db" />
+					<attribute id="Description" type="28" handle="h955e7e61g57e9g42fbg9d35g899dd8177e28" version="2" />
+					<attribute id="TechnicalDescription" type="28" handle="hf17cabeag409bg403cg9c07g93c7a442a897" version="5" />
+					<attribute id="TechnicalDescriptionParams" type="23" value="1" />
+					<children>
+						<node id="Bounds">
+							<children>
+								<node id="Bound">
+									<attribute id="Type" type="1" value="0" />
+									<attribute id="Shape" type="1" value="1" />
+									<attribute id="Min" type="12" value="-0.05830131 -0.05670664 -0.3319795" />
+									<attribute id="Max" type="12" value="0.05671947 0.08383667 0.3370807" />
+									<attribute id="Radius" type="6" value="0.114147" />
+									<attribute id="Height" type="6" value="0.418184" />
+								</node>
+								<node id="Bound">
+									<attribute id="Type" type="1" value="1" />
+									<attribute id="Shape" type="1" value="1" />
+									<attribute id="Min" type="12" value="-0.05830131 -0.05670664 -0.3319795" />
+									<attribute id="Max" type="12" value="0.05671947 0.08383667 0.3370807" />
+									<attribute id="Radius" type="6" value="0.114147" />
+									<attribute id="Height" type="6" value="0.418184" />
+								</node>
+								<node id="Bound">
+									<attribute id="Type" type="1" value="2" />
+									<attribute id="Shape" type="1" value="1" />
+									<attribute id="Min" type="12" value="-0.05830131 -0.05670664 -0.3319795" />
+									<attribute id="Max" type="12" value="0.05671947 0.08383667 0.3370807" />
+									<attribute id="Radius" type="6" value="0.114147" />
+									<attribute id="Height" type="6" value="0.418184" />
+								</node>
+							</children>
+						</node>
+						<node id="OnUsePeaceActions">
+							<children>
+								<node id="Action">
+									<attribute id="ActionType" type="4" value="7" />
+									<children>
+										<node id="Attributes">
+											<attribute id="Animation" type="22" value="" />
+											<attribute id="Conditions" type="23" value="(Player(context.Source) or (not HasStatus('SG_WeaponCoating', GetActiveWeapon(context.Source))))" />
+											<attribute id="StatsId" type="22" value="ALCH_OIL_DAMAGEATTACKBUFF" />
+											<attribute id="StatusDuration" type="4" value="-1" />
+											<attribute id="Consume" type="19" value="True" />
+										</node>
+									</children>
+								</node>
+							</children>
+						</node>
+						<node id="Scripts">
+							<children>
+								<node id="Script">
+									<attribute id="UUID" type="22" value="a557ab71-77f3-4b0c-8174-f605e51c90c7" />
+									<children>
+										<node id="Parameters">
+											<children>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="HardcoreOnly" />
+													<attribute id="Type" type="4" value="1" />
+													<attribute id="Value" type="23" value="0" />
+												</node>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="LifeTime" />
+													<attribute id="Type" type="4" value="2" />
+													<attribute id="Value" type="23" value="10" />
+												</node>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="ProjectileSpell" />
+													<attribute id="Type" type="4" value="9" />
+													<attribute id="Value" type="23" value="Projectile_Solution_Oil_DamageAttackBuff_Destroy" />
+												</node>
+											</children>
+										</node>
+									</children>
+								</node>
+							</children>
+						</node>
+					</children>
+				</node>
+			</children>
+		</node>
+	</region>
+</save>

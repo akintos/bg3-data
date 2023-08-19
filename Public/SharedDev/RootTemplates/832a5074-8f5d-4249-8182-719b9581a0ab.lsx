@@ -1,0 +1,88 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<save>
+	<version major="4" minor="0" revision="9" build="309" />
+	<region id="Templates">
+		<node id="Templates">
+			<children>
+				<node id="GameObjects">
+					<attribute id="MapKey" type="22" value="832a5074-8f5d-4249-8182-719b9581a0ab" />
+					<attribute id="Name" type="23" value="Hollyphant_Delirium_Poison" />
+					<attribute id="LevelName" type="22" value="" />
+					<attribute id="Type" type="22" value="character" />
+					<attribute id="ParentTemplateId" type="22" value="03bfae2b-55bd-4f6e-9253-6868b199e55a" />
+					<attribute id="DisplayName" type="28" handle="h901d5d03g0897g4e05gb44bgd19cadd8c7af" version="1" />
+					<attribute id="Icon" type="22" value="2a2e351a-164f-9775-0c33-65ae0b8050eb-_(Icon_Hollyphant)" />
+					<attribute id="Stats" type="22" value="TWN_Brewer_Hollyphant_Poison" />
+					<attribute id="WalkThrough" type="19" value="True" />
+					<attribute id="Faction" type="31" value="f993dc41-916f-40a5-ff88-65d31b4134bc" />
+					<children>
+						<node id="Tags">
+							<children>
+								<node id="Tag">
+									<attribute id="Object" type="31" value="b47643e0-583c-4808-08b1-d3f605b6a9b0" />
+								</node>
+							</children>
+						</node>
+						<node id="OnDeathActions">
+							<children>
+								<node id="Action">
+									<attribute id="ActionType" type="4" value="10" />
+									<children>
+										<node id="Attributes">
+											<attribute id="Animation" type="22" value="" />
+											<attribute id="Conditions" type="23" value="" />
+											<attribute id="SurfaceType" type="22" value="SurfacePoison" />
+											<attribute id="LifeTime" type="6" value="60" />
+											<attribute id="Timeout" type="6" value="0" />
+											<attribute id="TotalCells" type="4" value="4" />
+											<attribute id="CellAtGrow" type="4" value="2" />
+											<attribute id="GrowTimer" type="6" value="0.4" />
+											<attribute id="ExternalCauseAsSurfaceOwner" type="19" value="True" />
+											<attribute id="ApplyDeathTypeBloodCheck" type="19" value="True" />
+										</node>
+									</children>
+								</node>
+							</children>
+						</node>
+						<node id="SkillList">
+							<children>
+								<node id="Skill">
+									<attribute id="Skill" type="22" value="Zone_TrumpetOfBlasting_Hollyphant" />
+									<attribute id="SpellCastingAbility" type="1" value="0" />
+									<attribute id="LearningStrategy" type="1" value="0" />
+									<attribute id="ScoreModifier" type="6" value="1" />
+									<attribute id="StartRound" type="4" value="0" />
+									<attribute id="FallbackStartRound" type="4" value="-1" />
+									<attribute id="MinimumImpact" type="4" value="0" />
+									<attribute id="CasualExplorer" type="19" value="True" />
+									<attribute id="Classic" type="19" value="True" />
+									<attribute id="TacticianHardcore" type="19" value="True" />
+									<attribute id="HonorHardcore" type="19" value="True" />
+									<attribute id="OnlyCastOnSelf" type="19" value="False" />
+									<attribute id="AIFlags" type="3" value="0" />
+									<children>
+										<node id="SourceConditions">
+											<attribute id="MinimumHealthPercentage" type="4" value="0" />
+											<attribute id="MaximumHealthPercentage" type="4" value="100" />
+											<children>
+												<node id="Tags" />
+											</children>
+										</node>
+										<node id="TargetConditions">
+											<attribute id="MinimumHealthPercentage" type="4" value="0" />
+											<attribute id="MaximumHealthPercentage" type="4" value="100" />
+											<children>
+												<node id="Tags" />
+											</children>
+										</node>
+									</children>
+								</node>
+							</children>
+						</node>
+						<node id="LocomotionParams" />
+					</children>
+				</node>
+			</children>
+		</node>
+	</region>
+</save>

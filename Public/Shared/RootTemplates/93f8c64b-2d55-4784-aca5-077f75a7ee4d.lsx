@@ -1,0 +1,126 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<save>
+	<version major="4" minor="0" revision="6" build="200" />
+	<region id="Templates">
+		<node id="Templates">
+			<children>
+				<node id="GameObjects">
+					<attribute id="MapKey" type="22" value="93f8c64b-2d55-4784-aca5-077f75a7ee4d" />
+					<attribute id="Name" type="23" value="CONT_Egg_Spider_A_CombatThrowable" />
+					<attribute id="LevelName" type="22" value="" />
+					<attribute id="Type" type="22" value="item" />
+					<attribute id="ParentTemplateId" type="22" value="0c96850b-eef9-49b6-927a-1e0d29329a95" />
+					<attribute id="ReadinessFlags" type="5" value="128" />
+					<attribute id="VisualTemplate" type="22" value="29cb236d-3598-0ad8-41b7-9b2e45179730" />
+					<attribute id="PhysicsTemplate" type="22" value="53d34aac-6131-ceac-94eb-669766a5c8e3" />
+					<attribute id="DisplayName" type="28" handle="h593767d1gd801g47eagbf8eg170350d284ac" version="1" />
+					<attribute id="CoverAmount" type="1" value="0" />
+					<attribute id="CanClimbOn" type="19" value="True" />
+					<attribute id="CanShootThrough" type="19" value="True" />
+					<attribute id="WalkOn" type="19" value="True" />
+					<attribute id="Icon" type="22" value="Item_CONT_Egg_Spider_A_CombatThrowable" />
+					<attribute id="Stats" type="22" value="OBJ_THR_SpiderEggSack" />
+					<attribute id="LevelOverride" type="4" value="-1" />
+					<attribute id="CanBePickedUp" type="19" value="True" />
+					<attribute id="CanBeMoved" type="19" value="True" />
+					<attribute id="Tooltip" type="1" value="1" />
+					<attribute id="Description" type="28" handle="hdf43735bg65eeg4399ga470gef7d3af345ab" version="1" />
+					<children>
+						<node id="Tags">
+							<children>
+								<node id="Tag">
+									<attribute id="Object" type="31" value="fe0d86c3-a562-430e-33a6-bfd8b29b8472" />
+								</node>
+							</children>
+						</node>
+						<node id="Bounds">
+							<children>
+								<node id="Bound">
+									<attribute id="Type" type="1" value="1" />
+									<attribute id="Shape" type="1" value="1" />
+									<attribute id="Min" type="12" value="-0.2801493 -0.001308322 -0.2424407" />
+									<attribute id="Max" type="12" value="0.2831813 0.4835408 0.2419535" />
+									<attribute id="Radius" type="6" value="0.508077" />
+									<attribute id="Height" type="6" value="1.1683" />
+								</node>
+								<node id="Bound">
+									<attribute id="Type" type="1" value="2" />
+									<attribute id="Shape" type="1" value="1" />
+									<attribute id="Min" type="12" value="-0.2801493 -0.001308322 -0.2424407" />
+									<attribute id="Max" type="12" value="0.2831813 0.4835408 0.2419535" />
+									<attribute id="Radius" type="6" value="0.508077" />
+									<attribute id="Height" type="6" value="1.1683" />
+								</node>
+								<node id="Bound">
+									<attribute id="Type" type="1" value="0" />
+									<attribute id="Shape" type="1" value="1" />
+									<attribute id="Min" type="12" value="-0.1400747 -0.001308322 -0.1212204" />
+									<attribute id="Max" type="12" value="0.1415907 0.4835408 0.1209768" />
+									<attribute id="Radius" type="6" value="0.2540385" />
+									<attribute id="Height" type="6" value="1.1683" />
+								</node>
+							</children>
+						</node>
+						<node id="OnDestroyActions">
+							<children>
+								<node id="Action">
+									<attribute id="ActionType" type="4" value="5" />
+									<children>
+										<node id="Attributes">
+											<attribute id="Animation" type="22" value="" />
+											<attribute id="TargetItemState" type="1" value="0" />
+											<attribute id="ExplodeFX" type="22" value="7ffc0ca4-c1ca-fb8a-baa5-89e660369973" />
+											<attribute id="visualDestruction" type="22" value="" />
+											<attribute id="VisualWithDynamicPhysics" type="22" value="" />
+											<attribute id="FadeOutDelay" type="6" value="0" />
+											<attribute id="FadeOutFX" type="22" value="" />
+											<attribute id="templateAfterDestruction" type="22" value="b17c3d4c-de86-403b-9754-caea06e105f2" />
+										</node>
+									</children>
+								</node>
+								<node id="Action">
+									<attribute id="ActionType" type="4" value="26" />
+									<children>
+										<node id="Attributes">
+											<attribute id="Animation" type="22" value="" />
+											<attribute id="ActivateSoundEvent" type="22" value="3ea82655-5140-4287-9ab8-794559f182d3" />
+											<attribute id="PlayOnHUD" type="19" value="False" />
+										</node>
+									</children>
+								</node>
+							</children>
+						</node>
+						<node id="Scripts">
+							<children>
+								<node id="Script">
+									<attribute id="UUID" type="22" value="a557ab71-77f3-4b0c-8174-f605e51c90c7" />
+									<children>
+										<node id="Parameters">
+											<children>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="HardcoreOnly" />
+													<attribute id="Type" type="4" value="1" />
+													<attribute id="Value" type="23" value="0" />
+												</node>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="LifeTime" />
+													<attribute id="Type" type="4" value="2" />
+													<attribute id="Value" type="23" value="0" />
+												</node>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="ProjectileSpell" />
+													<attribute id="Type" type="4" value="9" />
+													<attribute id="Value" type="23" value="Projectile_SpiderlingSpawning" />
+												</node>
+											</children>
+										</node>
+									</children>
+								</node>
+							</children>
+						</node>
+					</children>
+				</node>
+			</children>
+		</node>
+	</region>
+</save>

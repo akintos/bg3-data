@@ -1,0 +1,164 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<save>
+	<version major="4" minor="0" revision="9" build="204" />
+	<region id="Templates">
+		<node id="Templates">
+			<children>
+				<node id="GameObjects">
+					<attribute id="MapKey" type="22" value="d96c73de-3c4c-4e91-9be4-871e74cf427c" />
+					<attribute id="Name" type="23" value="LTS_HAG_Bubbly_Fireflies_C" />
+					<attribute id="LevelName" type="22" value="" />
+					<attribute id="Type" type="22" value="item" />
+					<attribute id="ParentTemplateId" type="22" value="31fa5a83-0a3e-490f-b65e-6c8fffffa4cf" />
+					<attribute id="VisualTemplate" type="22" value="d5870da1-7f4c-f404-0ea5-91de0f61d478" />
+					<attribute id="PhysicsTemplate" type="22" value="81356ac3-023f-a946-3f2d-5f7dcd3fd2fd" />
+					<attribute id="DisplayName" type="28" handle="h221cb1d4gabbag4b06g9d7dga9bd612b7b16" version="1" />
+					<attribute id="WalkThrough" type="19" value="True" />
+					<attribute id="Icon" type="22" value="Item_LTS_HAG_Bubbly_Fireflies_C" />
+					<attribute id="Stats" type="22" value="HAG_Bubbly_Fireflies" />
+					<attribute id="IsPublicDomain" type="19" value="False" />
+					<attribute id="IsInspector" type="19" value="False" />
+					<children>
+						<node id="Bounds">
+							<children>
+								<node id="Bound">
+									<attribute id="Type" type="1" value="1" />
+									<attribute id="Shape" type="1" value="1" />
+									<attribute id="Min" type="12" value="-0.1260659 -0.928239 -0.147442" />
+									<attribute id="Max" type="12" value="0.1260659 0.0380882 0.1474422" />
+									<attribute id="Radius" type="6" value="0.07869343" />
+									<attribute id="Height" type="6" value="0.05857804" />
+								</node>
+								<node id="Bound">
+									<attribute id="Type" type="1" value="2" />
+									<attribute id="Shape" type="1" value="1" />
+									<attribute id="Min" type="12" value="-0.1260659 -0.928239 -0.147442" />
+									<attribute id="Max" type="12" value="0.1260659 0.0380882 0.1474422" />
+									<attribute id="Radius" type="6" value="0.07869343" />
+									<attribute id="Height" type="6" value="0.05857804" />
+								</node>
+								<node id="Bound">
+									<attribute id="Type" type="1" value="0" />
+									<attribute id="Shape" type="1" value="1" />
+									<attribute id="Min" type="12" value="-0.1260659 -0.928239 -0.147442" />
+									<attribute id="Max" type="12" value="0.1260659 0.0380882 0.1474422" />
+									<attribute id="Radius" type="6" value="0.03934672" />
+									<attribute id="Height" type="6" value="0.05857804" />
+								</node>
+							</children>
+						</node>
+						<node id="OnDestroyActions">
+							<children>
+								<node id="Action">
+									<attribute id="ActionType" type="4" value="26" />
+									<children>
+										<node id="Attributes">
+											<attribute id="Animation" type="22" value="" />
+											<attribute id="Conditions" type="23" value="" />
+											<attribute id="ActivateSoundEvent" type="22" value="86c0c000-5bf7-74ba-2765-d75bb9840ea5" />
+											<attribute id="PlayOnHUD" type="19" value="False" />
+										</node>
+									</children>
+								</node>
+								<node id="Action">
+									<attribute id="ActionType" type="4" value="5" />
+									<children>
+										<node id="Attributes">
+											<attribute id="Animation" type="22" value="" />
+											<attribute id="Conditions" type="23" value="" />
+											<attribute id="TargetItemState" type="1" value="0" />
+											<attribute id="ExplodeFX" type="22" value="72179f89-3b2e-72f0-08cd-f6e044c7bc47" />
+											<attribute id="visualDestruction" type="22" value="00000000-0000-0000-0000-000000000000" />
+											<attribute id="VisualWithDynamicPhysics" type="22" value="" />
+											<attribute id="FadeOutDelay" type="6" value="0" />
+											<attribute id="FadeOutFX" type="22" value="" />
+											<attribute id="templateAfterDestruction" type="22" value="" />
+										</node>
+									</children>
+								</node>
+							</children>
+						</node>
+						<node id="Scripts">
+							<children>
+								<node id="Script">
+									<attribute id="UUID" type="22" value="d289389c-882d-4695-a8d5-dda2a1351711" />
+									<children>
+										<node id="Parameters">
+											<children>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="AllowUserInteraction" />
+													<attribute id="Type" type="4" value="1" />
+													<attribute id="Value" type="23" value="1" />
+												</node>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="BurnEffect" />
+													<attribute id="Type" type="4" value="3" />
+													<attribute id="Value" type="23" value="VFX_LightSources_HAG_Bubbly_Fireflies_C_01" />
+												</node>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="BurnEffectBone" />
+													<attribute id="Type" type="4" value="4" />
+													<attribute id="Value" type="23" value="Dummy_DEC_HAG_Bubbly_Fireflies_C" />
+												</node>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="EnableGameplayLight" />
+													<attribute id="Type" type="4" value="1" />
+													<attribute id="Value" type="23" value="1" />
+												</node>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="GameplayLightOffsetX" />
+													<attribute id="Type" type="4" value="2" />
+													<attribute id="Value" type="23" value="0" />
+												</node>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="GameplayLightOffsetY" />
+													<attribute id="Type" type="4" value="2" />
+													<attribute id="Value" type="23" value="-3" />
+												</node>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="GameplayLightOffsetZ" />
+													<attribute id="Type" type="4" value="2" />
+													<attribute id="Value" type="23" value="0" />
+												</node>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="GameplayLightRadius" />
+													<attribute id="Type" type="4" value="2" />
+													<attribute id="Value" type="23" value="5" />
+												</node>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="HardcoreOnly" />
+													<attribute id="Type" type="4" value="1" />
+													<attribute id="Value" type="23" value="0" />
+												</node>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="LightSharpnessOverride" />
+													<attribute id="Type" type="4" value="2" />
+													<attribute id="Value" type="23" value="0.95" />
+												</node>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="LightSourceOffSound" />
+													<attribute id="Type" type="4" value="3" />
+													<attribute id="Value" type="23" value="DEC_Interactive_Lightsources_Torch_Small_Off" />
+												</node>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="LightSourceOnSound" />
+													<attribute id="Type" type="4" value="3" />
+													<attribute id="Value" type="23" value="DEC_Interactive_Lightsources_Torch_Small_On" />
+												</node>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="StartLit" />
+													<attribute id="Type" type="4" value="1" />
+													<attribute id="Value" type="23" value="1" />
+												</node>
+											</children>
+										</node>
+									</children>
+								</node>
+							</children>
+						</node>
+					</children>
+				</node>
+			</children>
+		</node>
+	</region>
+</save>

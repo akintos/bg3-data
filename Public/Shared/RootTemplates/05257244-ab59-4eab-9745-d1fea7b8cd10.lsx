@@ -1,0 +1,134 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<save>
+	<version major="4" minor="0" revision="9" build="319" />
+	<region id="Templates">
+		<node id="Templates">
+			<children>
+				<node id="GameObjects">
+					<attribute id="Description" type="28" handle="he91260c1gf08cg4a84g914eg736be99031fd" version="2" />
+					<attribute id="DisplayName" type="28" handle="h2a7f7b48ge9e5g428eg96ecgc307b4eddd5f" version="3" />
+					<attribute id="DisplayNameAlchemy" type="28" handle="h48cffa3fg3a5eg4160g9390gd24d9e047500" version="1" />
+					<attribute id="Flag" type="4" value="0" />
+					<attribute id="Icon" type="22" value="Item_CONS_Potion_Lightning_Resistance_2" />
+					<attribute id="LevelName" type="22" value="" />
+					<attribute id="MapKey" type="22" value="05257244-ab59-4eab-9745-d1fea7b8cd10" />
+					<attribute id="Name" type="23" value="CONS_Potion_Lightning_Resistance" />
+					<attribute id="OnUseDescription" type="28" handle="hfacd9d93gfae8g4d4aga1f3ge511b345cdfa" version="1" />
+					<attribute id="ParentTemplateId" type="22" value="eef254dd-b983-4e59-bf49-5ed76a536220" />
+					<attribute id="PhysicsTemplate" type="22" value="46401964-bf1c-e6c0-1580-feae2b2beac0" />
+					<attribute id="Stats" type="22" value="OBJ_Potion_Of_Lightning_Resistance" />
+					<attribute id="TechnicalDescription" type="28" handle="hd280d2d6g6781g43ebg8623gf51b8c71d436" version="3" />
+					<attribute id="TreasureOnDestroy" type="19" value="True" />
+					<attribute id="Type" type="22" value="item" />
+					<attribute id="VisualTemplate" type="22" value="a0709b86-8dd0-bd3f-12c3-7230d9a4c10b" />
+					<children>
+						<node id="Bounds">
+							<children>
+								<node id="Bound">
+									<attribute id="Height" type="6" value="0.5016686" />
+									<attribute id="Max" type="12" value="0.07659103 0.3642874 0.07386688" />
+									<attribute id="Min" type="12" value="-0.07647787 -0.0001305938 -0.07585671" />
+									<attribute id="Radius" type="6" value="0.1570965" />
+									<attribute id="Shape" type="1" value="1" />
+									<attribute id="Type" type="1" value="0" />
+								</node>
+								<node id="Bound">
+									<attribute id="Height" type="6" value="0.418184" />
+									<attribute id="Max" type="12" value="0.07659103 0.3642874 0.07386688" />
+									<attribute id="Min" type="12" value="-0.07647787 -0.0001305938 -0.07585671" />
+									<attribute id="Radius" type="6" value="0.114147" />
+									<attribute id="Shape" type="1" value="1" />
+									<attribute id="Type" type="1" value="1" />
+								</node>
+								<node id="Bound">
+									<attribute id="Height" type="6" value="0.418184" />
+									<attribute id="Max" type="12" value="0.07659103 0.3642874 0.07386688" />
+									<attribute id="Min" type="12" value="-0.07647787 -0.0001305938 -0.07585671" />
+									<attribute id="Radius" type="6" value="0.114147" />
+									<attribute id="Shape" type="1" value="1" />
+									<attribute id="Type" type="1" value="2" />
+								</node>
+							</children>
+						</node>
+						<node id="OnDestroyActions">
+							<children>
+								<node id="Action">
+									<attribute id="ActionType" type="4" value="26" />
+									<children>
+										<node id="Attributes">
+											<attribute id="ActivateSoundEvent" type="22" value="3ea82655-5140-4287-9ab8-794559f182d3" />
+											<attribute id="Animation" type="22" value="" />
+											<attribute id="Conditions" type="23" value="" />
+											<attribute id="PlayOnHUD" type="19" value="False" />
+										</node>
+									</children>
+								</node>
+								<node id="Action">
+									<attribute id="ActionType" type="4" value="5" />
+									<children>
+										<node id="Attributes">
+											<attribute id="Animation" type="22" value="" />
+											<attribute id="Conditions" type="23" value="" />
+											<attribute id="ExplodeFX" type="22" value="f5cbd00a-aa6c-94ca-7eaf-3c778e6731e2" />
+											<attribute id="FadeOutDelay" type="6" value="0" />
+											<attribute id="FadeOutFX" type="22" value="" />
+											<attribute id="SnapToGround" type="19" value="True" />
+											<attribute id="TargetItemState" type="1" value="0" />
+											<attribute id="VisualWithDynamicPhysics" type="22" value="" />
+											<attribute id="templateAfterDestruction" type="22" value="" />
+											<attribute id="visualDestruction" type="22" value="00000000-0000-0000-0000-000000000000" />
+										</node>
+									</children>
+								</node>
+							</children>
+						</node>
+						<node id="OnUsePeaceActions">
+							<children>
+								<node id="Action">
+									<attribute id="ActionType" type="4" value="7" />
+									<children>
+										<node id="Attributes">
+											<attribute id="Animation" type="22" value="" />
+											<attribute id="Conditions" type="23" value="" />
+											<attribute id="Consume" type="19" value="True" />
+											<attribute id="StatsId" type="22" value="POTION_OF_RESISTANCE_LIGHTNING" />
+											<attribute id="StatusDuration" type="4" value="-1" />
+										</node>
+									</children>
+								</node>
+							</children>
+						</node>
+						<node id="Scripts">
+							<children>
+								<node id="Script">
+									<attribute id="UUID" type="22" value="a557ab71-77f3-4b0c-8174-f605e51c90c7" />
+									<children>
+										<node id="Parameters">
+											<children>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="HardcoreOnly" />
+													<attribute id="Type" type="4" value="1" />
+													<attribute id="Value" type="23" value="0" />
+												</node>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="LifeTime" />
+													<attribute id="Type" type="4" value="2" />
+													<attribute id="Value" type="23" value="0" />
+												</node>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="ProjectileSpell" />
+													<attribute id="Type" type="4" value="9" />
+													<attribute id="Value" type="23" value="Projectile_Potion_Destroy_Resistance_Lightning" />
+												</node>
+											</children>
+										</node>
+									</children>
+								</node>
+							</children>
+						</node>
+					</children>
+				</node>
+			</children>
+		</node>
+	</region>
+</save>

@@ -1,0 +1,418 @@
+<ls:UIWidget x:Name="ReactionDecisionPopup_c"
+             ls:UIWidget.ContextName="ReactionDecision"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:System="clr-namespace:System;assembly=mscorlib"
+             xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:ls="clr-namespace:ls;assembly=SharedGUI"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"   
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance {x:Type ls:DCReactionDecision}, IsDesignTimeCreatable=True}"
+             xmlns:noesis="clr-namespace:NoesisGUIExtensions;assembly=Noesis.GUI.Extensions"
+             FocusDown="UIDown" FocusLeft="UILeft" FocusRight="UIRight" FocusUp="UIUp"
+             d:DesignWidth="3840" d:DesignHeight="2160">
+    <ls:UIWidget.Template>
+        <ControlTemplate>
+            <ControlTemplate.Resources>
+                <ResourceDictionary>
+                    <Storyboard x:Key="AnimateInPanelFromLeft" FillBehavior="Stop">
+                        <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="SideDock">
+                            <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                            <EasingDoubleKeyFrame KeyTime="0:0:0.30" Value="1">
+                                <EasingDoubleKeyFrame.EasingFunction>
+                                    <CubicEase EasingMode="EaseOut"/>
+                                </EasingDoubleKeyFrame.EasingFunction>
+                            </EasingDoubleKeyFrame>
+                        </DoubleAnimationUsingKeyFrames>
+
+                        <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)" Storyboard.TargetName="SideDock">
+                            <EasingDoubleKeyFrame KeyTime="0:0:0.0" Value="-200"/>
+                            <EasingDoubleKeyFrame KeyTime="0:0:0.30" Value="0">
+                                <EasingDoubleKeyFrame.EasingFunction>
+                                    <CubicEase EasingMode="EaseOut"/>
+                                </EasingDoubleKeyFrame.EasingFunction>
+                            </EasingDoubleKeyFrame>
+                        </DoubleAnimationUsingKeyFrames>
+                    </Storyboard>
+
+                    <Storyboard x:Key="AnimateInPanelFromRight" FillBehavior="Stop">
+                        <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)"  Storyboard.TargetName="SideDock">
+                            <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                            <EasingDoubleKeyFrame KeyTime="0:0:0.30" Value="1">
+                                <EasingDoubleKeyFrame.EasingFunction>
+                                    <CubicEase EasingMode="EaseOut"/>
+                                </EasingDoubleKeyFrame.EasingFunction>
+                            </EasingDoubleKeyFrame>
+                        </DoubleAnimationUsingKeyFrames>
+
+                        <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)" Storyboard.TargetName="SideDock">
+                            <EasingDoubleKeyFrame KeyTime="0:0:0.0" Value="200"/>
+                            <EasingDoubleKeyFrame KeyTime="0:0:0.30" Value="0">
+                                <EasingDoubleKeyFrame.EasingFunction>
+                                    <CubicEase EasingMode="EaseOut"/>
+                                </EasingDoubleKeyFrame.EasingFunction>
+                            </EasingDoubleKeyFrame>
+                        </DoubleAnimationUsingKeyFrames>
+                    </Storyboard>
+
+                    <DataTemplate x:Key="SinglePlayerEntry" DataType="{x:Type ls:Player}">
+                        <ItemsControl x:Name="InterruptorsList" ItemsSource="{Binding FilteredItems, ElementName=charactersFiltered}" HorizontalAlignment="Center" ls:AttachedProperties.InheritedTag="{Binding .}"
+                                        AlternationCount="{Binding FilteredItems.Count, ElementName=charactersFiltered}">
+                        <b:Interaction.Behaviors>
+                            <ls:CollectionFilterBehavior x:Name="charactersFiltered" ItemsSource="{Binding DataContext.Interruptors, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ScrollViewer}}"
+                                                                Predicate="{Binding DataContext.Data.PredicateInterruptorOwnerUser, RelativeSource={RelativeSource AncestorType=ls:UIWidget}}"
+                                                                CompareParam="{Binding .}"/>
+                        </b:Interaction.Behaviors>
+                        <b:Interaction.Triggers>
+                                <b:EventTrigger EventName="Loaded">
+                                    <ls:SetMoveFocusAction TargetName="ReactionDecisionPopup_c"/>
+                                </b:EventTrigger>
+                            </b:Interaction.Triggers>
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.Template>
+                                <ControlTemplate TargetType="ItemsControl">
+                                    <ItemsPresenter/>
+                                </ControlTemplate>
+                            </ItemsControl.Template>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate DataType="ls:VMInterruptor">
+                                    <StackPanel x:Name="InterruptorRoot" MinHeight="10" MinWidth="10" Orientation="Horizontal" ls:TooltipExtender.Owner="{Binding Character}" >
+                                        <ContentPresenter x:Name="Portrait" ContentTemplate="{StaticResource CharacterPortraitTemplate}" Content="{Binding Character}" Margin="0,-40,0,0"  VerticalAlignment="Top" />
+                                        <StackPanel x:Name="InterruptorList" Width="800" Margin="20,0,60,8">
+                                            <ItemsControl ItemsSource="{Binding Path=InterruptDecisions}" HorizontalAlignment="Stretch" ItemTemplate="{StaticResource InterruptDecisionItemTemplate}">
+                                                <ItemsControl.Template>
+                                                    <ControlTemplate TargetType="ItemsControl">
+                                                        <ItemsPresenter/>
+                                                    </ControlTemplate>
+                                                </ItemsControl.Template>
+                                            </ItemsControl>
+                                            <ls:LSButton x:Name="DontReactBtn" Style="{StaticResource FocusableButtonStyle}" Margin="4" ContentTemplate="{x:Null}"
+                                                            Command="{Binding DataContext.InterruptDontReactCommand, ElementName=ReactionDecisionPopup_c}"
+                                                            CommandParameter="{Binding .}">
+                                                <DockPanel Margin="20,10" MinHeight="106">
+                                                    <Image x:Name="State" DockPanel.Dock="Right" VerticalAlignment="Center" Stretch="None" Source="{StaticResource IconReactionOn}" Visibility="Hidden"/>
+                                                    <TextBlock x:Name="Name" VerticalAlignment="Center" HorizontalAlignment="Left" TextAlignment="Left" Margin="126,0" FontSize="{StaticResource ScaledDefaultFontSize}"
+                                                                Text="{Binding Source='ha13dce2cgf0cfg4b73g9fb7gc12b29c68a6b', Converter={StaticResource TranslatedStringConverter}}"
+                                                                Foreground="{StaticResource LS_accent75TxtColor}" TextTrimming="CharacterEllipsis"/>
+                                                </DockPanel>
+                                            </ls:LSButton>
+                                        </StackPanel>
+                                    </StackPanel>
+                                    <DataTemplate.Triggers>
+                                        <DataTrigger Binding="{Binding Path=DoesntReact}" Value="True">
+                                            <Setter TargetName="State" Property="Visibility" Value="Visible"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding (ls:MoveFocus.IsFocused), ElementName=DontReactBtn}" Value="True">
+                                            <Setter TargetName="Name" Property="Foreground" Value="{StaticResource LS_extraspecialTxtColor}"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding IsEnabled, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ItemsControl}}" Value="False">
+                                            <Setter TargetName="DontReactBtn" Property="ls:MoveFocus.Focusable" Value="False"/>
+                                            <Setter TargetName="DontReactBtn" Property="Focusable" Value="False"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding (ItemsControl.AlternationIndex), RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContentPresenter}}}" Value="0">
+                                            <Setter TargetName="Portrait" Property="Margin" Value="0"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding ElementName=MainPlayer, Path=ActualHeight}" Value="0">
+                                            <Setter TargetName="InterruptorList" Property="Opacity" Value="0.4"/>
+                                        </DataTrigger>
+                                    </DataTemplate.Triggers>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                        <DataTemplate.Triggers>
+                            <DataTrigger Binding="{Binding Path=FilteredItems.Count,ElementName=charactersFiltered}" Value="0">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                            </DataTrigger>
+                        </DataTemplate.Triggers>
+                    </DataTemplate>
+
+                    <DataTemplate x:Key="PlayerEntry" DataType="{x:Type ls:Player}">
+                        <DataTemplate.Resources>
+                            <Thickness x:Key="LinesMargin">82,0,0,0</Thickness>
+                            <System:Double x:Key="LinesThickness">4</System:Double>
+                        </DataTemplate.Resources>
+                        <Grid Margin="0,0,0,30">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <Line Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Left" Stroke="{StaticResource LS_guestTxtColor}" StrokeThickness="{StaticResource LinesThickness}" Margin="{StaticResource LinesMargin}"
+                                  StrokeDashArray="6 3" X1="0" Y1="0" Y2="0">
+                                <Line.X2>
+                                    <MultiBinding Converter="{StaticResource AddMultipleConverter}">
+                                        <Binding Source="472"/>
+                                        <Binding Path="ActualWidth" ElementName="PlayerHeader" Converter="{StaticResource MultiplierConverter}" ConverterParameter="-0.5"/>
+                                    </MultiBinding>
+                                </Line.X2>
+                                <Line.OpacityMask>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                        <GradientStop Offset="0" Color="#FF000000" />
+                                        <GradientStop Offset="0.3" Color="#FF000000" />
+                                        <GradientStop Offset="1" Color="#00000000" />
+                                    </LinearGradientBrush>
+                                </Line.OpacityMask>
+                            </Line>
+                            <Line Grid.Row="0" Grid.RowSpan="2" VerticalAlignment="Stretch" HorizontalAlignment="Left" Stroke="{StaticResource LS_guestTxtColor}" StrokeThickness="{StaticResource LinesThickness}" Margin="82,50,0,0"
+                                  StrokeDashArray="6 3" X1="0" Y1="0" X2="0" Y2="{Binding ActualHeight, RelativeSource={RelativeSource Self}}"/>
+                            <Line Grid.Row="1" VerticalAlignment="Bottom" HorizontalAlignment="Left" Stroke="{StaticResource LS_guestTxtColor}" StrokeThickness="{StaticResource LinesThickness}" Margin="{StaticResource LinesMargin}"
+                                  StrokeDashArray="6 3" X1="0" Y1="0" X2="640" Y2="0">
+                                <Line.OpacityMask>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                        <GradientStop Offset="0" Color="#FF000000" />
+                                        <GradientStop Offset="0.4" Color="#FF000000" />
+                                        <GradientStop Offset="1" Color="#00000000" />
+                                    </LinearGradientBrush>
+                                </Line.OpacityMask>
+                            </Line>
+                            <StackPanel x:Name="PlayerHeader" Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center">
+                                <Border Background="{Binding CommunityIcon}" Height="90" Width="90" BorderThickness="4" CornerRadius="8"  BorderBrush="{StaticResource LS_guestTxtColor}"/>
+                                <TextBlock Margin="20,0,0,0" FontSize="{StaticResource ScaledMediumFontSize}" Foreground="{StaticResource LS_accent75TxtColor}"
+                                           Text="{Binding Name}"/>
+                            </StackPanel>
+                            <ContentPresenter x:Name="ListControl" Grid.Row="1" Content="{Binding .}" ContentTemplate="{StaticResource SinglePlayerEntry}" IsEnabled="False" Margin="0,0,0,30"/>
+                        </Grid>
+                        <DataTemplate.Triggers>
+                            <DataTrigger Binding="{Binding Visibility, ElementName=ListControl}" Value="Collapsed">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                            </DataTrigger>
+                        </DataTemplate.Triggers>
+                    </DataTemplate>
+
+                    <Style x:Key="TitleParamRun" TargetType="ls:LSRun" BasedOn="{StaticResource CombatLog.Tooltip.ParamRun}">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Type}" Value="DiceValue">
+                                <Setter Property="Foreground" Value="{StaticResource LS_specialTxtColor}"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+
+                    <Thickness x:Key="SinglePlayerMargin">200,0,0,0</Thickness>
+                </ResourceDictionary>
+            </ControlTemplate.Resources>
+
+            <Grid x:Name="Root" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="{Binding FilteredItems.Count, ElementName=CustomEventsCollection, Converter={StaticResource CountToVisibilityConverter}}"
+                  IsEnabled="{Binding IsVisible, RelativeSource={RelativeSource Self}}">
+
+                <b:Interaction.Behaviors>
+                    <ls:CollectionFilterBehavior x:Name="CustomEventsCollection" ItemsSource="{Binding Data.InterruptEvents}" Predicate="{Binding HasSelectedCharacterPredicate}"/>
+                </b:Interaction.Behaviors>
+
+                <Rectangle x:Name="SideShading" HorizontalAlignment="Left" VerticalAlignment="Stretch" Fill="{StaticResource LeftSideShadingBrush}" Width="{Binding ActualWidth, ElementName=SideDock, Converter={StaticResource AddConverter}, ConverterParameter=1200}"/>
+               
+
+                <DockPanel x:Name="SideDock" HorizontalAlignment="Left" VerticalAlignment="Stretch" LastChildFill="False">
+                    <DockPanel.RenderTransform>
+                        <TranslateTransform/>
+                    </DockPanel.RenderTransform>
+
+                    <b:Interaction.Triggers>
+                        <b:EventTrigger EventName="Loaded">
+                            <ls:SetMoveFocusAction TargetName="ReactionDecisionPopup_c"/>
+                        </b:EventTrigger>
+                        <b:EventTrigger EventName="Loaded">
+                            <b:Interaction.Behaviors>
+                                <b:ConditionBehavior>
+                                    <b:ConditionalExpression>
+                                        <b:ComparisonCondition LeftOperand="{Binding Layout}" Operator="Equal" RightOperand="Common"/>
+                                    </b:ConditionalExpression>
+                                </b:ConditionBehavior>
+                            </b:Interaction.Behaviors>
+                            <b:ControlStoryboardAction ControlStoryboardOption="Play" Storyboard="{StaticResource AnimateInPanelFromLeft}"/>
+                        </b:EventTrigger>
+                        <b:EventTrigger EventName="Loaded">
+                            <b:Interaction.Behaviors>
+                                <b:ConditionBehavior>
+                                    <b:ConditionalExpression>
+                                        <b:ComparisonCondition LeftOperand="{Binding Layout}" Operator="Equal" RightOperand="Left"/>
+                                    </b:ConditionalExpression>
+                                </b:ConditionBehavior>
+                            </b:Interaction.Behaviors>
+                            <b:ControlStoryboardAction ControlStoryboardOption="Play" Storyboard="{StaticResource AnimateInPanelFromLeft}"/>
+                        </b:EventTrigger>
+                        <b:EventTrigger EventName="Loaded">
+                            <b:Interaction.Behaviors>
+                                <b:ConditionBehavior>
+                                    <b:ConditionalExpression>
+                                        <b:ComparisonCondition LeftOperand="{Binding Layout}" Operator="Equal" RightOperand="Right"/>
+                                    </b:ConditionalExpression>
+                                </b:ConditionBehavior>
+                            </b:Interaction.Behaviors>
+                            <b:ControlStoryboardAction ControlStoryboardOption="Play" Storyboard="{StaticResource AnimateInPanelFromRight}"/>
+                        </b:EventTrigger>
+                    </b:Interaction.Triggers>
+
+                    <ItemsControl x:Name="EventsList" DockPanel.Dock="Top" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ItemsSource="{Binding FilteredItems, ElementName=CustomEventsCollection}"
+                                  AlternationCount="{Binding FilteredItems.Count, ElementName=CustomEventsCollection}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <Grid IsItemsHost="True"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.Template>
+                            <ControlTemplate TargetType="ItemsControl">
+                                <ItemsPresenter/>
+                            </ControlTemplate>
+                        </ItemsControl.Template>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate DataType="{x:Type ls:VMInterruptEvent}">
+                                <StackPanel x:Name="EventRoot" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                                    <TextBlock FontSize="{StaticResource ScaledTitleFontSize}" Foreground="{StaticResource LS_extraspecialTxtColor}" HorizontalAlignment="Center" TextAlignment="Center" Margin="0,180,0,0"
+                                               Text="{Binding Source='h43f4dbfeg0d62g49eegbecagad62630e032d', Converter={StaticResource TranslatedStringConverter}}"/>
+                                    <TextBlock Name="ReactionTypeText" HorizontalAlignment="Stretch" TextWrapping="Wrap" TextAlignment="Center" Margin="10,0">
+                                        <b:Interaction.Behaviors>
+                                            <ls:CtxTransStringRunGeneratorBehavior Source="{Binding Description}" ParamRunStyle="{StaticResource TitleParamRun}"/>
+                                        </b:Interaction.Behaviors>
+                                    </TextBlock>
+                                    <TextBlock Name="ReactionCTAText" FontSize="{StaticResource ScaledMediumFontSize}" Foreground="{StaticResource LS_accent25TxtColor}" HorizontalAlignment="Center" TextAlignment="Center" Margin="0,0,0,40"
+                                               Text="{Binding Source='hb49a2b0ag17d5g4171g9060gffc9684f2189', Converter={StaticResource TranslatedStringConverter}}"/>
+                                    <ScrollViewer  HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+                                        <StackPanel>
+                                            <ContentPresenter x:Name="MainPlayer" ls:MoveFocus.FocusMovementMode="Closest" Margin="0,0,0,20" Content="{Binding DataContext.CurrentPlayer, ElementName=ReactionDecisionPopup_c}"
+                                                              ContentTemplate="{StaticResource SinglePlayerEntry}"/>
+                                            <ItemsControl x:Name="MultiPlayerList" ItemsSource="{Binding DataContext.Data.Players, ElementName=ReactionDecisionPopup_c}" ItemTemplate="{StaticResource PlayerEntry}">
+                                                <ItemsControl.ItemsPanel>
+                                                    <ItemsPanelTemplate>
+                                                        <StackPanel/>
+                                                    </ItemsPanelTemplate>
+                                                </ItemsControl.ItemsPanel>
+                                                <ItemsControl.Template>
+                                                    <ControlTemplate TargetType="ItemsControl">
+                                                        <ItemsPresenter/>
+                                                    </ControlTemplate>
+                                                </ItemsControl.Template>
+                                                <ItemsControl.ItemContainerStyle>
+                                                    <Style TargetType="ContentPresenter">
+                                                        <Setter Property="Visibility" Value="Visible"/>
+                                                        <Style.Triggers>
+                                                            <DataTrigger Value="True">
+                                                                <DataTrigger.Binding>
+                                                                    <MultiBinding Converter="{StaticResource EqualConverter}">
+                                                                        <Binding Path="." />
+                                                                        <Binding Path="DataContext.CurrentPlayer" ElementName="ReactionDecisionPopup_c"/>
+                                                                    </MultiBinding>
+                                                                </DataTrigger.Binding>
+                                                                <Setter Property="Visibility" Value="Collapsed" />
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </ItemsControl.ItemContainerStyle>
+                                            </ItemsControl>
+                                        </StackPanel>
+                                    </ScrollViewer>
+                                </StackPanel>
+                                <DataTemplate.Triggers>
+                                    <DataTrigger Binding="{Binding ElementName=MainPlayer, Path=ActualHeight}" Value="0">
+                                        <Setter TargetName="ReactionCTAText" Property="Text" Value="{Binding Source='h8c0332e0gc656g43aegafcegc7c66c6e3516', Converter={StaticResource TranslatedStringConverter}}"/>
+                                        <Setter TargetName="ReactionCTAText" Property="Foreground" Value="{StaticResource LS_guestTxtColor}"/>
+                                    </DataTrigger>
+                                </DataTemplate.Triggers>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                        <ItemsControl.ItemContainerStyle>
+                            <Style TargetType="ContentPresenter">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                                <Style.Triggers>
+                                    <Trigger Property="ItemsControl.AlternationIndex" Value="0">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ItemsControl.ItemContainerStyle>
+
+                    </ItemsControl>
+                    <StackPanel x:Name="BottomButtons" DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Center">
+                        <ls:LSButton x:Name="SelectBtn" Focusable="False" BoundEvent="UIAccept" Margin="{StaticResource ButtonHint.Margin}" VerticalAlignment="Bottom"
+                                     Visibility="Collapsed" IsEnabled="False"
+                                     Content="{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIAccept'}"
+                                     Tag="{Binding Source='hd0c08193ga7f2g4a7eg8225g63748c7b3096',Converter={StaticResource TranslatedStringConverter}}"
+                                     ContentTemplate="{StaticResource ControllerButtonHint}"
+                                     Command="{Binding FocusedElement.Command, ElementName=ReactionDecisionPopup_c}"
+                                     CommandParameter="{Binding FocusedElement.CommandParameter, ElementName=ReactionDecisionPopup_c}"/>
+                        <ls:LSButton x:Name="ToggleTooltips" Focusable="False" BoundEvent="UIShowInfo" Margin="{StaticResource ButtonHint.Margin}" VerticalAlignment="Bottom"
+                                     Content="{Binding CurrentPlayer.UIData.InputEvents, ConverterParameter=UIShowInfo, Converter={StaticResource FindInputEventConverter}}"
+                                     Tag="{Binding Source='h2a8cab0cgbfb8g4890gbfbdg5a9426e29457', Converter={StaticResource TranslatedStringConverter}}"
+                                     ContentTemplate="{StaticResource ControllerButtonHint}"
+                                     Command="{Binding ToggleTooltipOnUIElement}"
+                                     CommandParameter="{Binding FocusedElement, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"/>
+                    </StackPanel>
+                </DockPanel>
+
+                <!--These input bindings are used to eat some inputs while the reactions are visible-->
+                <ls:LSInputBinding x:Name="ToggleSpellsInputBinding" BoundEvent="ToggleSpells" EatInput="True" PlayerId="{Binding CurrentPlayer.PlayerId}"/>
+                <ls:LSInputBinding x:Name="ToggleManualTurnBasedModeInputBinding" BoundEvent="ToggleManualTurnBasedMode" EatInput="True" PlayerId="{Binding CurrentPlayer.PlayerId}"/>
+                <ls:LSInputBinding x:Name="ToggleRestPanelInputBinding" BoundEvent="ToggleRestPanel" EatInput="True" PlayerId="{Binding CurrentPlayer.PlayerId}"/>
+                <ls:LSInputBinding x:Name="PanelSelectInputBinding" BoundEvent="PanelSelect" EatInput="True" PlayerId="{Binding CurrentPlayer.PlayerId}"/>
+                <ls:LSInputBinding x:Name="PartyManagementInputBinding" BoundEvent="PartyManagement" EatInput="True" PlayerId="{Binding CurrentPlayer.PlayerId}"/>
+                <b:Interaction.Triggers>
+                    <!-- Play a UI looping sound while the reaction decision pop up is active -->
+                    <b:DataTrigger Binding="{Binding Path=IsVisible, ElementName=Root}" Value="True">
+                        <b:Interaction.Behaviors>
+                            <b:ConditionBehavior>
+                                <b:ConditionalExpression>
+                                    <b:ComparisonCondition LeftOperand="{Binding Data.InterruptEvents.Count}" Operator="GreaterThan" RightOperand="0"/>
+                                </b:ConditionalExpression>
+                            </b:ConditionBehavior>
+                        </b:Interaction.Behaviors>
+                        <ls:LSPlaySound  Sound="UI_HUD_Reaction_LoopStart"/>
+                        <!-- Tutorial UI Event - Reactions Decision Opened-->
+                        <b:InvokeCommandAction Command="{Binding TutorialEvent}" CommandParameter="1a3c4bbd-4db8-4c58-9620-f1f78d57c964"/>
+                    </b:DataTrigger>
+                    <b:DataTrigger Binding="{Binding Path=IsVisible, ElementName=Root}" Value="False">
+                        <b:Interaction.Behaviors>
+                            <b:ConditionBehavior>
+                                <b:ConditionalExpression>
+                                    <b:ComparisonCondition LeftOperand="{Binding Data.InterruptEvents.Count}" Operator="Equal" RightOperand="0"/>
+                                </b:ConditionalExpression>
+                            </b:ConditionBehavior>
+                        </b:Interaction.Behaviors>
+                        <ls:LSPlaySound  Sound="UI_HUD_Reaction_LoopStop"/>
+                    </b:DataTrigger>
+                    <b:EventTrigger EventName="Unloaded">
+                        <ls:LSPlaySound Sound="UI_HUD_Reaction_LoopStop"/>
+                    </b:EventTrigger>
+                </b:Interaction.Triggers>
+            </Grid>
+            <ControlTemplate.Triggers>
+                <DataTrigger Binding="{Binding Path=FocusedElement.DataContext, ElementName=ReactionDecisionPopup_c, Converter={StaticResource NullToBoolFalseConverter}, FallbackValue=False}" Value="True">
+                    <Setter TargetName="SelectBtn" Property="Visibility" Value="Visible"/>
+                    <Setter TargetName="SelectBtn" Property="IsEnabled" Value="True"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Layout}" Value="Common">
+                    <Setter TargetName="SideDock" Property="Margin" Value="{StaticResource SinglePlayerMargin}"/>
+                    <Setter TargetName="SideShading" Property="Width" Value="{Binding ActualWidth, ElementName=SideDock, Converter={StaticResource AddConverter}, ConverterParameter=1400}"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Layout}" Value="Right">
+                    <Setter TargetName="SideDock" Property="HorizontalAlignment" Value="Right"/>
+                    <Setter TargetName="SideShading" Property="HorizontalAlignment" Value="Right"/>
+                    <Setter TargetName="SideShading" Property="Fill" Value="{StaticResource RightSideShadingBrush}"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding IsVisible, ElementName=Root}" Value="False">
+                    <Setter TargetName="ToggleSpellsInputBinding" Property="IsEnabled" Value="False"/>
+                    <Setter TargetName="ToggleManualTurnBasedModeInputBinding" Property="IsEnabled" Value="False"/>
+                    <Setter TargetName="ToggleRestPanelInputBinding" Property="IsEnabled" Value="False"/>
+                    <Setter TargetName="PanelSelectInputBinding" Property="IsEnabled" Value="False"/>
+                    <Setter TargetName="PartyManagementInputBinding" Property="IsEnabled" Value="False"/>
+                </DataTrigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+    </ls:UIWidget.Template>
+    <b:Interaction.Triggers>
+        <b:EventTrigger EventName="FocusChanged">
+            <b:InvokeCommandAction Command="{Binding ShowTooltipOnUIElement}" CommandParameter="{Binding Path=FocusedElement, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"/>
+        </b:EventTrigger>
+
+        <b:EventTrigger EventName="MoveFocusUp">
+            <ls:LSPlaySound Sound="UI_Shared_Hover" />
+        </b:EventTrigger>
+
+        <b:EventTrigger EventName="MoveFocusDown">
+            <ls:LSPlaySound Sound="UI_Shared_Hover" />
+        </b:EventTrigger>
+    </b:Interaction.Triggers>
+</ls:UIWidget>

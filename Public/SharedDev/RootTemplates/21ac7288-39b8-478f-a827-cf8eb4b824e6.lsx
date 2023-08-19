@@ -1,0 +1,254 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<save>
+	<version major="4" minor="0" revision="9" build="320" />
+	<region id="Templates">
+		<node id="Templates">
+			<children>
+				<node id="GameObjects">
+					<attribute id="MapKey" type="22" value="21ac7288-39b8-478f-a827-cf8eb4b824e6" />
+					<attribute id="Name" type="23" value="Crawling_Claw" />
+					<attribute id="LevelName" type="22" value="" />
+					<attribute id="Type" type="22" value="character" />
+					<attribute id="ParentTemplateId" type="22" value="b0e8e97e-9c77-43d9-a68e-6ee1aac48166" />
+					<attribute id="VisualTemplate" type="22" value="" />
+					<attribute id="PhysicsTemplate" type="22" value="ed00afe4-1929-aac2-00d4-c94a97fc1f51" />
+					<attribute id="Scale" type="6" value="1.1" />
+					<attribute id="DisplayName" type="28" handle="h7202295eg2619g457dg93dbg042a0cdd740b" version="1" />
+					<attribute id="Icon" type="22" value="4307d9bf-95ce-580a-b05e-91c528650c40-_(Icon_Crawling_Claw)" />
+					<attribute id="Stats" type="22" value="CrawlingClaw" />
+					<attribute id="BloodType" type="22" value="Red" />
+					<attribute id="ExplodedResourceID" type="22" value="3dd938ff-cd2f-797b-459a-6f3113a96bfa" />
+					<attribute id="LightID" type="22" value="c20762da-c531-4a81-bb07-78a651af6b1b" />
+					<attribute id="VocalVictoryResourceID" type="22" value="" />
+					<attribute id="CharacterVisualResourceID" type="22" value="4307d9bf-95ce-580a-b05e-91c528650c40" />
+					<attribute id="AnubisConfigName" type="22" value="DefaultCombat" />
+					<attribute id="Archetype" type="22" value="beast" />
+					<attribute id="CanFight" type="19" value="True" />
+					<children>
+						<node id="Tags">
+							<children>
+								<node id="Tag">
+									<attribute id="Object" type="31" value="6d60bed7-10cc-4b52-b78f-a7ba815149cd" />
+								</node>
+								<node id="Tag">
+									<attribute id="Object" type="31" value="90101158-141e-4896-608e-dbf8f603e3dd" />
+								</node>
+								<node id="Tag">
+									<attribute id="Object" type="31" value="b47643e0-583c-4808-08b1-d3f605b6a9b0" />
+								</node>
+								<node id="Tag">
+									<attribute id="Object" type="31" value="693d950b-2617-43ac-3c8e-f52fa7fd56f9" />
+								</node>
+							</children>
+						</node>
+						<node id="Bounds">
+							<children>
+								<node id="Bound">
+									<attribute id="Type" type="1" value="0" />
+									<attribute id="Shape" type="1" value="2" />
+									<attribute id="Min" type="12" value="-0.4356735 -0.02879691 -0.3920231" />
+									<attribute id="Max" type="12" value="0.4356737 0.5290233 0.4551426" />
+									<attribute id="Radius" type="6" value="0.2" />
+									<attribute id="Height" type="6" value="0.4" />
+								</node>
+								<node id="Bound">
+									<attribute id="Type" type="1" value="1" />
+									<attribute id="Shape" type="1" value="2" />
+									<attribute id="Min" type="12" value="-0.4356735 -0.02879691 -0.3920231" />
+									<attribute id="Max" type="12" value="0.4356737 0.5290233 0.4551426" />
+									<attribute id="Radius" type="6" value="0.2" />
+									<attribute id="Height" type="6" value="0.4" />
+								</node>
+								<node id="Bound">
+									<attribute id="Type" type="1" value="2" />
+									<attribute id="Shape" type="1" value="2" />
+									<attribute id="Min" type="12" value="-0.4356735 -0.02879691 -0.3920231" />
+									<attribute id="Max" type="12" value="0.4356737 0.5290233 0.4551426" />
+									<attribute id="Radius" type="6" value="0.35" />
+									<attribute id="Height" type="6" value="0.4" />
+								</node>
+							</children>
+						</node>
+						<node id="SpeakerGroupList">
+							<children>
+								<node id="SpeakerGroup">
+									<attribute id="Object" type="31" value="a84f4caa-5ad9-1572-6a27-43c7e311ff73" />
+								</node>
+								<node id="SpeakerGroup">
+									<attribute id="Object" type="31" value="b8a3417f-8f4d-4787-ef89-8288a3f9e183" />
+								</node>
+							</children>
+						</node>
+						<node id="OnDeathActions">
+							<children>
+								<node id="Action">
+									<attribute id="ActionType" type="4" value="10" />
+									<children>
+										<node id="Attributes">
+											<attribute id="Animation" type="22" value="" />
+											<attribute id="Conditions" type="23" value="" />
+											<attribute id="SurfaceType" type="22" value="SurfaceBlood" />
+											<attribute id="LifeTime" type="6" value="60" />
+											<attribute id="Timeout" type="6" value="0" />
+											<attribute id="TotalCells" type="4" value="2" />
+											<attribute id="CellAtGrow" type="4" value="2" />
+											<attribute id="GrowTimer" type="6" value="0.4" />
+											<attribute id="ExternalCauseAsSurfaceOwner" type="19" value="True" />
+											<attribute id="ApplyDeathTypeBloodCheck" type="19" value="True" />
+										</node>
+									</children>
+								</node>
+							</children>
+						</node>
+						<node id="SkillList">
+							<children>
+								<node id="Skill">
+									<attribute id="Skill" type="22" value="Target_Claws_CrawlingClaw" />
+									<attribute id="SpellCastingAbility" type="1" value="0" />
+									<attribute id="LearningStrategy" type="1" value="0" />
+									<attribute id="ScoreModifier" type="6" value="1" />
+									<attribute id="StartRound" type="4" value="0" />
+									<attribute id="FallbackStartRound" type="4" value="-1" />
+									<attribute id="MinimumImpact" type="4" value="0" />
+									<attribute id="OnlyCastOnSelf" type="19" value="False" />
+									<attribute id="AIFlags" type="3" value="0" />
+									<children>
+										<node id="SourceConditions">
+											<attribute id="MinimumHealthPercentage" type="4" value="0" />
+											<attribute id="MaximumHealthPercentage" type="4" value="100" />
+											<children>
+												<node id="Tags" />
+											</children>
+										</node>
+										<node id="TargetConditions">
+											<attribute id="MinimumHealthPercentage" type="4" value="0" />
+											<attribute id="MaximumHealthPercentage" type="4" value="100" />
+											<children>
+												<node id="Tags" />
+											</children>
+										</node>
+									</children>
+								</node>
+							</children>
+						</node>
+						<node id="Treasures">
+							<children>
+								<node id="TreasureItem">
+									<attribute id="Object" type="22" value="Empty" />
+								</node>
+							</children>
+						</node>
+						<node id="TradeTreasures">
+							<children>
+								<node id="TreasureItem">
+									<attribute id="Object" type="22" value="Empty" />
+								</node>
+							</children>
+						</node>
+						<node id="PickingPhysics">
+							<children>
+								<node id="PickingPhysicsTemplates">
+									<attribute id="MapKey" type="22" value="CharacterSittingPicking" />
+									<attribute id="MapValue" type="22" value="ed00afe4-1929-aac2-00d4-c94a97fc1f51" />
+								</node>
+								<node id="PickingPhysicsTemplates">
+									<attribute id="MapKey" type="22" value="CharacterDeadPicking" />
+									<attribute id="MapValue" type="22" value="ed00afe4-1929-aac2-00d4-c94a97fc1f51" />
+								</node>
+								<node id="PickingPhysicsTemplates">
+									<attribute id="MapKey" type="22" value="CharacterLyingPicking" />
+									<attribute id="MapValue" type="22" value="ed00afe4-1929-aac2-00d4-c94a97fc1f51" />
+								</node>
+							</children>
+						</node>
+						<node id="FootStepInfos">
+							<children>
+								<node id="FootStepInfo">
+									<attribute id="Name" type="23" value="Footstep_Front_Left" />
+									<attribute id="FootPrintEffectName" type="23" value="" />
+									<attribute id="FootSmearEffectName" type="23" value="" />
+									<attribute id="FootSlideEffectName" type="23" value="" />
+									<attribute id="FootHearingEffectName" type="23" value="" />
+									<attribute id="FootBoneName" type="22" value="Dummy_L_Foot_01" />
+									<attribute id="FootSoundEventName" type="22" value="Movement_Footstep" />
+									<attribute id="FootScuffEventName" type="22" value="Movement_Scuff" />
+								</node>
+								<node id="FootStepInfo">
+									<attribute id="Name" type="23" value="Footstep_Front_Right" />
+									<attribute id="FootPrintEffectName" type="23" value="" />
+									<attribute id="FootSmearEffectName" type="23" value="" />
+									<attribute id="FootSlideEffectName" type="23" value="" />
+									<attribute id="FootHearingEffectName" type="23" value="" />
+									<attribute id="FootBoneName" type="22" value="Dummy_R_Foot_01" />
+									<attribute id="FootSoundEventName" type="22" value="Movement_Footstep" />
+									<attribute id="FootScuffEventName" type="22" value="Movement_Scuff" />
+								</node>
+								<node id="FootStepInfo">
+									<attribute id="Name" type="23" value="Footstep_Mid_Front_Left" />
+									<attribute id="FootPrintEffectName" type="23" value="" />
+									<attribute id="FootSmearEffectName" type="23" value="" />
+									<attribute id="FootSlideEffectName" type="23" value="" />
+									<attribute id="FootHearingEffectName" type="23" value="" />
+									<attribute id="FootBoneName" type="22" value="Dummy_L_Foot_02" />
+									<attribute id="FootSoundEventName" type="22" value="Movement_Footstep" />
+									<attribute id="FootScuffEventName" type="22" value="Movement_Scuff" />
+								</node>
+								<node id="FootStepInfo">
+									<attribute id="Name" type="23" value="Footstep_Mid_Front_Right" />
+									<attribute id="FootPrintEffectName" type="23" value="" />
+									<attribute id="FootSmearEffectName" type="23" value="" />
+									<attribute id="FootSlideEffectName" type="23" value="" />
+									<attribute id="FootHearingEffectName" type="23" value="" />
+									<attribute id="FootBoneName" type="22" value="Dummy_R_Foot_02" />
+									<attribute id="FootSoundEventName" type="22" value="Movement_Footstep" />
+									<attribute id="FootScuffEventName" type="22" value="Movement_Scuff" />
+								</node>
+								<node id="FootStepInfo">
+									<attribute id="Name" type="23" value="Footstep_Mid_Back_Left" />
+									<attribute id="FootPrintEffectName" type="23" value="" />
+									<attribute id="FootSmearEffectName" type="23" value="" />
+									<attribute id="FootSlideEffectName" type="23" value="" />
+									<attribute id="FootHearingEffectName" type="23" value="" />
+									<attribute id="FootBoneName" type="22" value="Dummy_L_Foot_03" />
+									<attribute id="FootSoundEventName" type="22" value="Movement_Footstep" />
+									<attribute id="FootScuffEventName" type="22" value="Movement_Scuff" />
+								</node>
+								<node id="FootStepInfo">
+									<attribute id="Name" type="23" value="Footstep_Mid_Back_Right" />
+									<attribute id="FootPrintEffectName" type="23" value="" />
+									<attribute id="FootSmearEffectName" type="23" value="" />
+									<attribute id="FootSlideEffectName" type="23" value="" />
+									<attribute id="FootHearingEffectName" type="23" value="" />
+									<attribute id="FootBoneName" type="22" value="Dummy_R_Foot_03" />
+									<attribute id="FootSoundEventName" type="22" value="Movement_Footstep" />
+									<attribute id="FootScuffEventName" type="22" value="Movement_Scuff" />
+								</node>
+								<node id="FootStepInfo">
+									<attribute id="Name" type="23" value="Footstep_Back_Left" />
+									<attribute id="FootPrintEffectName" type="23" value="" />
+									<attribute id="FootSmearEffectName" type="23" value="" />
+									<attribute id="FootSlideEffectName" type="23" value="" />
+									<attribute id="FootHearingEffectName" type="23" value="" />
+									<attribute id="FootBoneName" type="22" value="Dummy_L_Foot_04" />
+									<attribute id="FootSoundEventName" type="22" value="Movement_Footstep" />
+									<attribute id="FootScuffEventName" type="22" value="Movement_Scuff" />
+								</node>
+								<node id="FootStepInfo">
+									<attribute id="Name" type="23" value="Footstep_Back_Right" />
+									<attribute id="FootPrintEffectName" type="23" value="" />
+									<attribute id="FootSmearEffectName" type="23" value="" />
+									<attribute id="FootSlideEffectName" type="23" value="" />
+									<attribute id="FootHearingEffectName" type="23" value="" />
+									<attribute id="FootBoneName" type="22" value="Dummy_R_Foot_04" />
+									<attribute id="FootSoundEventName" type="22" value="Movement_Footstep" />
+									<attribute id="FootScuffEventName" type="22" value="Movement_Scuff" />
+								</node>
+							</children>
+						</node>
+						<node id="LocomotionParams" />
+					</children>
+				</node>
+			</children>
+		</node>
+	</region>
+</save>

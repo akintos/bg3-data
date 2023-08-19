@@ -1,0 +1,131 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<save>
+	<version major="4" minor="0" revision="9" build="319" />
+	<region id="Templates">
+		<node id="Templates">
+			<children>
+				<node id="GameObjects">
+					<attribute id="MapKey" type="22" value="e4f7cb7f-1cb3-411b-b078-f4ac25b750a8" />
+					<attribute id="Name" type="23" value="ALCH_Solution_Oil_Wizardsbane" />
+					<attribute id="LevelName" type="22" value="" />
+					<attribute id="Type" type="22" value="item" />
+					<attribute id="ParentTemplateId" type="22" value="19a6fbb0-7123-460b-a4a8-643bb6cab5b5" />
+					<attribute id="VisualTemplate" type="22" value="3720b8d6-55cb-332e-2f9e-7542569a0587" />
+					<attribute id="PhysicsTemplate" type="22" value="a75a8374-b616-e38f-12b9-629d6a9bc898" />
+					<attribute id="DisplayName" type="28" handle="hf87ac9e6g682bg4582gbb36gd2bf861daa58" version="1" />
+					<attribute id="Icon" type="22" value="Item_GRN_HolyWaterFlask_A" />
+					<attribute id="Stats" type="22" value="ALCH_Solution_Oil_Wizardsbane" />
+					<attribute id="Description" type="28" handle="h82855513gb8afg49a9ga7aege6e06b873e59" version="2" />
+					<attribute id="TechnicalDescription" type="28" handle="h313901b3gb5c4g4b11ga12ag7d6fabd38850" version="9" />
+					<attribute id="TechnicalDescriptionParams" type="23" value="-3;2" />
+					<children>
+						<node id="Bounds">
+							<children>
+								<node id="Bound">
+									<attribute id="Type" type="1" value="0" />
+									<attribute id="Shape" type="1" value="1" />
+									<attribute id="Min" type="12" value="-0.1274766 -0.004336417 -0.2828192" />
+									<attribute id="Max" type="12" value="0.1122967 0.560785 0.1781298" />
+									<attribute id="Radius" type="6" value="0.1919192" />
+									<attribute id="Height" type="6" value="0.5651214" />
+								</node>
+								<node id="Bound">
+									<attribute id="Type" type="1" value="1" />
+									<attribute id="Shape" type="1" value="1" />
+									<attribute id="Min" type="12" value="-0.0413989 -2.23517E-07 -0.0413989" />
+									<attribute id="Max" type="12" value="0.0422017 0.179735 0.0414001" />
+									<attribute id="Radius" type="6" value="0.114147" />
+									<attribute id="Height" type="6" value="0.418184" />
+								</node>
+								<node id="Bound">
+									<attribute id="Type" type="1" value="2" />
+									<attribute id="Shape" type="1" value="1" />
+									<attribute id="Min" type="12" value="-0.0413989 -2.23517E-07 -0.0413989" />
+									<attribute id="Max" type="12" value="0.0422017 0.179735 0.0414001" />
+									<attribute id="Radius" type="6" value="0.114147" />
+									<attribute id="Height" type="6" value="0.418184" />
+								</node>
+							</children>
+						</node>
+						<node id="OnUsePeaceActions">
+							<children>
+								<node id="Action">
+									<attribute id="ActionType" type="4" value="7" />
+									<children>
+										<node id="Attributes">
+											<attribute id="Animation" type="22" value="" />
+											<attribute id="Conditions" type="23" value="(Player(context.Source) or (not HasStatus('SG_WeaponCoating', GetActiveWeapon(context.Source))))" />
+											<attribute id="StatsId" type="22" value="ALCH_OIL_WIZARDSBANE" />
+											<attribute id="StatusDuration" type="4" value="0" />
+											<attribute id="Consume" type="19" value="True" />
+										</node>
+									</children>
+								</node>
+							</children>
+						</node>
+						<node id="OnDestroyActions">
+							<children>
+								<node id="Action">
+									<attribute id="ActionType" type="4" value="26" />
+									<children>
+										<node id="Attributes">
+											<attribute id="Animation" type="22" value="" />
+											<attribute id="Conditions" type="23" value="" />
+											<attribute id="ActivateSoundEvent" type="22" value="3ea82655-5140-4287-9ab8-794559f182d3" />
+											<attribute id="PlayOnHUD" type="19" value="False" />
+										</node>
+									</children>
+								</node>
+								<node id="Action">
+									<attribute id="ActionType" type="4" value="5" />
+									<children>
+										<node id="Attributes">
+											<attribute id="Animation" type="22" value="" />
+											<attribute id="Conditions" type="23" value="" />
+											<attribute id="TargetItemState" type="1" value="0" />
+											<attribute id="SnapToGround" type="19" value="True" />
+											<attribute id="ExplodeFX" type="22" value="c8b2ee46-65b3-0b31-f26f-26ff284f2cc1" />
+											<attribute id="visualDestruction" type="22" value="" />
+											<attribute id="VisualWithDynamicPhysics" type="22" value="" />
+											<attribute id="FadeOutDelay" type="6" value="0" />
+											<attribute id="FadeOutFX" type="22" value="" />
+											<attribute id="templateAfterDestruction" type="22" value="" />
+										</node>
+									</children>
+								</node>
+							</children>
+						</node>
+						<node id="Scripts">
+							<children>
+								<node id="Script">
+									<attribute id="UUID" type="22" value="a557ab71-77f3-4b0c-8174-f605e51c90c7" />
+									<children>
+										<node id="Parameters">
+											<children>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="HardcoreOnly" />
+													<attribute id="Type" type="4" value="1" />
+													<attribute id="Value" type="23" value="0" />
+												</node>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="LifeTime" />
+													<attribute id="Type" type="4" value="2" />
+													<attribute id="Value" type="23" value="0" />
+												</node>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="ProjectileSpell" />
+													<attribute id="Type" type="4" value="9" />
+													<attribute id="Value" type="23" value="Projectile_Solution_Oil_Wizardsbane_Destroy" />
+												</node>
+											</children>
+										</node>
+									</children>
+								</node>
+							</children>
+						</node>
+					</children>
+				</node>
+			</children>
+		</node>
+	</region>
+</save>

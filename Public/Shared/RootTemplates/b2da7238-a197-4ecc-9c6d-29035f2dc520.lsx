@@ -1,0 +1,89 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<save>
+	<version major="4" minor="0" revision="0" build="49" />
+	<region id="Templates">
+		<node id="Templates">
+			<children>
+				<node id="GameObjects">
+					<attribute id="MapKey" type="22" value="b2da7238-a197-4ecc-9c6d-29035f2dc520" />
+					<attribute id="Name" type="23" value="LOOT_Eye_ScryingEyeSummon" />
+					<attribute id="LevelName" type="22" value="" />
+					<attribute id="Type" type="22" value="item" />
+					<attribute id="ParentTemplateId" type="22" value="0e92c207-f20f-46a7-a92a-6d71114122f8" />
+					<attribute id="Flag" type="4" value="0" />
+					<attribute id="DisplayName" type="28" handle="h318ffe77gdba7g45aagb6dfg12440b25290b" version="1" />
+					<attribute id="WalkOn" type="19" value="False" />
+					<attribute id="Icon" type="22" value="Item_LOOT_Eye_ScryingEyeSummon" />
+					<attribute id="owner" type="22" value="6d59bb8e-90e4-4ea0-b710-280402a5bbd7" />
+					<attribute id="IsSurfaceCloudBlocker" type="19" value="True" />
+					<children>
+						<node id="Bounds">
+							<children>
+								<node id="Bound">
+									<attribute id="Type" type="1" value="1" />
+									<attribute id="Shape" type="1" value="1" />
+									<attribute id="Min" type="12" value="-0.5 0 -0.5" />
+									<attribute id="Max" type="12" value="0.5 1 0.5" />
+									<attribute id="Radius" type="6" value="0.433013" />
+									<attribute id="Height" type="6" value="1" />
+								</node>
+								<node id="Bound">
+									<attribute id="Type" type="1" value="2" />
+									<attribute id="Shape" type="1" value="1" />
+									<attribute id="Min" type="12" value="-0.5 0 -0.5" />
+									<attribute id="Max" type="12" value="0.5 1 0.5" />
+									<attribute id="Radius" type="6" value="0.433013" />
+									<attribute id="Height" type="6" value="1" />
+								</node>
+								<node id="Bound">
+									<attribute id="Type" type="1" value="0" />
+									<attribute id="Shape" type="1" value="1" />
+									<attribute id="Min" type="12" value="-0.25 0 -0.25" />
+									<attribute id="Max" type="12" value="0.25 1 0.25" />
+									<attribute id="Radius" type="6" value="0.2165065" />
+									<attribute id="Height" type="6" value="1" />
+								</node>
+							</children>
+						</node>
+						<node id="GameMaster" />
+						<node id="OnUsePeaceActions">
+							<children>
+								<node id="Action">
+									<attribute id="ActionType" type="4" value="12" />
+									<children>
+										<node id="Attributes">
+											<attribute id="Animation" type="22" value="" />
+											<attribute id="SkillID" type="22" value="Target_Scrying" />
+											<attribute id="Consume" type="19" value="False" />
+										</node>
+									</children>
+								</node>
+							</children>
+						</node>
+						<node id="OnDestroyActions">
+							<children>
+								<node id="Action">
+									<attribute id="ActionType" type="4" value="26" />
+									<children>
+										<node id="Attributes">
+											<attribute id="Animation" type="22" value="" />
+											<attribute id="ActivateSoundEvent" type="22" value="3ea82655-5140-4287-9ab8-794559f182d3" />
+											<attribute id="PlayOnHUD" type="19" value="False" />
+										</node>
+									</children>
+								</node>
+							</children>
+						</node>
+						<node id="InventoryList">
+							<children>
+								<node id="InventoryItem">
+									<attribute id="Object" type="22" value="Empty" />
+								</node>
+							</children>
+						</node>
+					</children>
+				</node>
+			</children>
+		</node>
+	</region>
+</save>

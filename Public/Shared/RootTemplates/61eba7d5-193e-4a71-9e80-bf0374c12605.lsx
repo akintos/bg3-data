@@ -1,0 +1,95 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<save>
+	<version major="4" minor="0" revision="9" build="319" />
+	<region id="Templates">
+		<node id="Templates">
+			<children>
+				<node id="GameObjects">
+					<attribute id="MapKey" type="22" value="61eba7d5-193e-4a71-9e80-bf0374c12605" />
+					<attribute id="Name" type="23" value="PUZ_GEN_Abbey_Wall_Breakable_A" />
+					<attribute id="LevelName" type="22" value="" />
+					<attribute id="Type" type="22" value="item" />
+					<attribute id="ParentTemplateId" type="22" value="90ec2f64-e124-474c-8b27-a56bba6f6c88" />
+					<attribute id="VisualTemplate" type="22" value="edd7140a-100c-982b-595a-0e24df22f2fb" />
+					<attribute id="PhysicsTemplate" type="22" value="38973698-64c7-be9a-d90d-48f223db0d53" />
+					<attribute id="RecieveDecal" type="19" value="True" />
+					<attribute id="DisplayName" type="28" handle="h3cd46b14g2f53g47c8gb0fbg2df772d16156" version="1" />
+					<attribute id="Icon" type="22" value="Item_PUZ_GEN_DestructibleWall_Stone_A" />
+					<attribute id="Stats" type="22" value="GOB_DestructibleWall_Stone" />
+					<attribute id="GravityType" type="1" value="0" />
+					<attribute id="Faction" type="31" value="00000000-0000-0000-0000-000000000000" />
+					<attribute id="IsInspector" type="19" value="False" />
+					<children>
+						<node id="Bounds">
+							<children>
+								<node id="Bound">
+									<attribute id="Type" type="1" value="0" />
+									<attribute id="Shape" type="1" value="1" />
+									<attribute id="Min" type="12" value="-2.156945 -0.0005431175 -0.3443805" />
+									<attribute id="Max" type="12" value="1.923023 4.681017 0.3551606" />
+									<attribute id="Radius" type="6" value="2.039984" />
+									<attribute id="Height" type="6" value="4.68156" />
+								</node>
+								<node id="Bound">
+									<attribute id="Type" type="1" value="1" />
+									<attribute id="Shape" type="1" value="1" />
+									<attribute id="Min" type="12" value="-2.156945 -0.0005431175 -0.3443805" />
+									<attribute id="Max" type="12" value="1.923023 4.681017 0.3551606" />
+									<attribute id="Radius" type="6" value="2.039984" />
+									<attribute id="Height" type="6" value="4.68156" />
+								</node>
+								<node id="Bound">
+									<attribute id="Type" type="1" value="2" />
+									<attribute id="Shape" type="1" value="1" />
+									<attribute id="Min" type="12" value="-2.156945 -0.0005431175 -0.3443805" />
+									<attribute id="Max" type="12" value="1.923023 4.681017 0.3551606" />
+									<attribute id="Radius" type="6" value="2.039984" />
+									<attribute id="Height" type="6" value="4.68156" />
+								</node>
+							</children>
+						</node>
+						<node id="OnDestroyActions">
+							<children>
+								<node id="Action">
+									<attribute id="ActionType" type="4" value="5" />
+									<children>
+										<node id="Attributes">
+											<attribute id="Animation" type="22" value="" />
+											<attribute id="Conditions" type="23" value="" />
+											<attribute id="TargetItemState" type="1" value="0" />
+											<attribute id="SnapToGround" type="19" value="True" />
+											<attribute id="ExplodeFX" type="22" value="" />
+											<attribute id="visualDestruction" type="22" value="" />
+											<attribute id="VisualWithDynamicPhysics" type="22" value="b41c3cd8-233b-4159-fea5-d431228d01f4" />
+											<attribute id="FadeOutDelay" type="6" value="0" />
+											<attribute id="FadeOutFX" type="22" value="" />
+											<attribute id="templateAfterDestruction" type="22" value="9999fb19-c6a1-4738-a4b2-33de269a13ba" />
+										</node>
+									</children>
+								</node>
+								<node id="Action">
+									<attribute id="ActionType" type="4" value="26" />
+									<children>
+										<node id="Attributes">
+											<attribute id="Animation" type="22" value="" />
+											<attribute id="Conditions" type="23" value="" />
+											<attribute id="ActivateSoundEvent" type="22" value="3ea82655-5140-4287-9ab8-794559f182d3" />
+											<attribute id="PlayOnHUD" type="19" value="False" />
+										</node>
+									</children>
+								</node>
+							</children>
+						</node>
+						<node id="StatusList">
+							<children>
+								<node id="Status">
+									<attribute id="Object" type="22" value="DEBRIS_THRESHOLD_LESSER" />
+								</node>
+							</children>
+						</node>
+					</children>
+				</node>
+			</children>
+		</node>
+	</region>
+</save>

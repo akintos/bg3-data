@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<save>
+	<version major="4" minor="0" revision="9" build="319" />
+	<region id="Templates">
+		<node id="Templates">
+			<children>
+				<node id="GameObjects">
+					<attribute id="MapKey" type="22" value="a5d93495-c01c-4dd4-928c-3793f620121f" />
+					<attribute id="Name" type="23" value="TWN_Poison_Paralytic_A" />
+					<attribute id="LevelName" type="22" value="" />
+					<attribute id="Type" type="22" value="item" />
+					<attribute id="ParentTemplateId" type="22" value="5865caed-4a5d-45b7-b365-1113334a8e7b" />
+					<attribute id="VisualTemplate" type="22" value="32106559-6699-5ce9-41eb-07a0cc51eb63" />
+					<attribute id="PhysicsTemplate" type="22" value="63d01037-d52b-21d5-8ce9-afef871eacfa" />
+					<attribute id="DisplayName" type="28" handle="h26b98c18ge801g4d48g911cg091dc956a524" version="4" />
+					<attribute id="Icon" type="22" value="Item_CONS_Poison_Paralytic_A" />
+					<children>
+						<node id="Bounds">
+							<children>
+								<node id="Bound">
+									<attribute id="Type" type="1" value="0" />
+									<attribute id="Shape" type="1" value="1" />
+									<attribute id="Min" type="12" value="-0.1117382 0 -0.1139338" />
+									<attribute id="Max" type="12" value="0.1117383 0.4434289 0.1117382" />
+									<attribute id="Radius" type="6" value="0.1231574" />
+									<attribute id="Height" type="6" value="0.3354251" />
+								</node>
+								<node id="Bound">
+									<attribute id="Type" type="1" value="1" />
+									<attribute id="Shape" type="1" value="1" />
+									<attribute id="Min" type="12" value="-0.1117382 0 -0.1139338" />
+									<attribute id="Max" type="12" value="0.1117383 0.4434289 0.1117382" />
+									<attribute id="Radius" type="6" value="0.1838912" />
+									<attribute id="Height" type="6" value="0.5428302" />
+								</node>
+								<node id="Bound">
+									<attribute id="Type" type="1" value="2" />
+									<attribute id="Shape" type="1" value="1" />
+									<attribute id="Min" type="12" value="-0.1117382 0 -0.1139338" />
+									<attribute id="Max" type="12" value="0.1117383 0.4434289 0.1117382" />
+									<attribute id="Radius" type="6" value="0.1838912" />
+									<attribute id="Height" type="6" value="0.5428302" />
+								</node>
+							</children>
+						</node>
+						<node id="OnUsePeaceActions">
+							<children>
+								<node id="Action">
+									<attribute id="ActionType" type="4" value="7" />
+									<children>
+										<node id="Attributes">
+											<attribute id="Animation" type="22" value="" />
+											<attribute id="Conditions" type="23" value="(Player(context.Source) or (not HasStatus('SG_WeaponCoating', GetActiveWeapon(context.Source))))" />
+											<attribute id="StatsId" type="22" value="TWN_PARALYTIC_POISON" />
+											<attribute id="StatusDuration" type="4" value="0" />
+											<attribute id="Consume" type="19" value="True" />
+										</node>
+									</children>
+								</node>
+							</children>
+						</node>
+					</children>
+				</node>
+			</children>
+		</node>
+	</region>
+</save>

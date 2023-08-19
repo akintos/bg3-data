@@ -1,0 +1,172 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<save>
+	<version major="4" minor="0" revision="8" build="604" />
+	<region id="Templates">
+		<node id="Templates">
+			<children>
+				<node id="GameObjects">
+					<attribute id="MapKey" type="22" value="d4bafa1b-2022-495d-a1ac-87323d104e22" />
+					<attribute id="Name" type="23" value="LTS_GEN_Candle_Candelabra_Common_B" />
+					<attribute id="LevelName" type="22" value="" />
+					<attribute id="Type" type="22" value="item" />
+					<attribute id="ParentTemplateId" type="22" value="3b89a5b7-e0b8-47f3-be55-070f9667a94a" />
+					<attribute id="VisualTemplate" type="22" value="fdf2036c-23d2-dff5-67b1-461ac294ec09" />
+					<attribute id="PhysicsTemplate" type="22" value="f8ce134c-dac6-c509-9315-a765b1da18bd" />
+					<attribute id="DisplayName" type="28" handle="hfd431f08g5d0cg4d69g9980ga4375dfef62b" version="1" />
+					<attribute id="Stats" type="22" value="OBJ_Candlestick" />
+					<attribute id="CanBeMoved" type="19" value="True" />
+					<attribute id="CanBeImprovisedWeapon" type="19" value="True" />
+					<children>
+						<node id="Bounds">
+							<children>
+								<node id="Bound">
+									<attribute id="Type" type="1" value="0" />
+									<attribute id="Shape" type="1" value="1" />
+									<attribute id="Min" type="12" value="-0.1272738 -5.960464E-08 -0.220487" />
+									<attribute id="Max" type="12" value="0.1272738 0.8954127 0.2213526" />
+									<attribute id="Radius" type="6" value="0.2209198" />
+									<attribute id="Height" type="6" value="0.8954128" />
+								</node>
+								<node id="Bound">
+									<attribute id="Type" type="1" value="1" />
+									<attribute id="Shape" type="1" value="1" />
+									<attribute id="Min" type="12" value="-0.1272738 -5.960464E-08 -0.220487" />
+									<attribute id="Max" type="12" value="0.1272738 0.8954127 0.2213526" />
+									<attribute id="Radius" type="6" value="0.2209198" />
+									<attribute id="Height" type="6" value="0.8954128" />
+								</node>
+								<node id="Bound">
+									<attribute id="Type" type="1" value="2" />
+									<attribute id="Shape" type="1" value="1" />
+									<attribute id="Min" type="12" value="-0.1272738 -5.960464E-08 -0.220487" />
+									<attribute id="Max" type="12" value="0.1272738 0.8954127 0.2213526" />
+									<attribute id="Radius" type="6" value="0.2209198" />
+									<attribute id="Height" type="6" value="0.8954128" />
+								</node>
+							</children>
+						</node>
+						<node id="OnUsePeaceActions">
+							<children>
+								<node id="Action">
+									<attribute id="ActionType" type="4" value="8" />
+									<children>
+										<node id="Attributes">
+											<attribute id="Animation" type="22" value="" />
+										</node>
+									</children>
+								</node>
+							</children>
+						</node>
+						<node id="OnDestroyActions">
+							<children>
+								<node id="Action">
+									<attribute id="ActionType" type="4" value="26" />
+									<children>
+										<node id="Attributes">
+											<attribute id="Animation" type="22" value="" />
+											<attribute id="ActivateSoundEvent" type="22" value="3ea82655-5140-4287-9ab8-794559f182d3" />
+											<attribute id="PlayOnHUD" type="19" value="False" />
+										</node>
+									</children>
+								</node>
+								<node id="Action">
+									<attribute id="ActionType" type="4" value="5" />
+									<children>
+										<node id="Attributes">
+											<attribute id="Animation" type="22" value="" />
+											<attribute id="TargetItemState" type="1" value="0" />
+											<attribute id="ExplodeFX" type="22" value="15362651-9b96-579a-86f5-829e53325d8b" />
+											<attribute id="visualDestruction" type="22" value="" />
+											<attribute id="VisualWithDynamicPhysics" type="22" value="bd55bd1c-5dec-db45-98a2-acb4a66e76f5" />
+											<attribute id="FadeOutDelay" type="6" value="0" />
+											<attribute id="FadeOutFX" type="22" value="" />
+											<attribute id="templateAfterDestruction" type="22" value="713fb3ad-02f2-4750-a563-31a09c41926e" />
+										</node>
+									</children>
+								</node>
+							</children>
+						</node>
+						<node id="Scripts">
+							<children>
+								<node id="Script">
+									<attribute id="UUID" type="22" value="d289389c-882d-4695-a8d5-dda2a1351711" />
+									<children>
+										<node id="Parameters">
+											<children>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="AllowUserInteraction" />
+													<attribute id="Type" type="4" value="1" />
+													<attribute id="Value" type="23" value="1" />
+												</node>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="BurnEffect" />
+													<attribute id="Type" type="4" value="3" />
+													<attribute id="Value" type="23" value="VFX_LightSources_GEN_Candle_Candelabra_Common_B_01" />
+												</node>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="BurnEffectBone" />
+													<attribute id="Type" type="4" value="4" />
+													<attribute id="Value" type="23" value="Dummy_LTS_GEN_Candle_Candelabra_Common_B" />
+												</node>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="EnableGameplayLight" />
+													<attribute id="Type" type="4" value="1" />
+													<attribute id="Value" type="23" value="1" />
+												</node>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="GameplayLightOffsetX" />
+													<attribute id="Type" type="4" value="2" />
+													<attribute id="Value" type="23" value="0" />
+												</node>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="GameplayLightOffsetY" />
+													<attribute id="Type" type="4" value="2" />
+													<attribute id="Value" type="23" value="0" />
+												</node>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="GameplayLightOffsetZ" />
+													<attribute id="Type" type="4" value="2" />
+													<attribute id="Value" type="23" value="0" />
+												</node>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="GameplayLightRadius" />
+													<attribute id="Type" type="4" value="2" />
+													<attribute id="Value" type="23" value="3" />
+												</node>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="HardcoreOnly" />
+													<attribute id="Type" type="4" value="1" />
+													<attribute id="Value" type="23" value="0" />
+												</node>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="LightSharpnessOverride" />
+													<attribute id="Type" type="4" value="2" />
+													<attribute id="Value" type="23" value="0.95" />
+												</node>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="LightSourceOffSound" />
+													<attribute id="Type" type="4" value="3" />
+													<attribute id="Value" type="23" value="DEC_Interactive_Lightsources_Candle_Off" />
+												</node>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="LightSourceOnSound" />
+													<attribute id="Type" type="4" value="3" />
+													<attribute id="Value" type="23" value="DEC_Interactive_Lightsources_Candle_On" />
+												</node>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="StartLit" />
+													<attribute id="Type" type="4" value="1" />
+													<attribute id="Value" type="23" value="1" />
+												</node>
+											</children>
+										</node>
+									</children>
+								</node>
+							</children>
+						</node>
+					</children>
+				</node>
+			</children>
+		</node>
+	</region>
+</save>

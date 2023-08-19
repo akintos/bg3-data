@@ -1,0 +1,150 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<save>
+	<version major="4" minor="0" revision="9" build="316" />
+	<region id="Templates">
+		<node id="Templates">
+			<children>
+				<node id="GameObjects">
+					<attribute id="MapKey" type="22" value="e2814e05-f7e7-4cd9-8792-f554743135da" />
+					<attribute id="Name" type="23" value="PUZ_Underdark_Mushroom_ToxicWall_A_Destruct" />
+					<attribute id="LevelName" type="22" value="" />
+					<attribute id="Type" type="22" value="item" />
+					<attribute id="ParentTemplateId" type="22" value="90ec2f64-e124-474c-8b27-a56bba6f6c88" />
+					<attribute id="VisualTemplate" type="22" value="8175f8a8-689f-f66e-b72e-8f34b3970e10" />
+					<attribute id="PhysicsTemplate" type="22" value="ea501150-57de-c8af-d26a-715a16e21bb5" />
+					<attribute id="RecieveDecal" type="19" value="True" />
+					<attribute id="DisplayName" type="28" handle="h33d2665dg9bccg46e8gb1e2ge151dd69a828" version="1" />
+					<attribute id="Icon" type="22" value="Item_AlchemyIngredient_Mushroom_Barrelstalk" />
+					<attribute id="Stats" type="22" value="OBJ_Mushroom_ToxicWall_Barrelstalk" />
+					<attribute id="TreasureOnDestroy" type="19" value="True" />
+					<attribute id="OnUseDescription" type="28" handle="hef8ee429gb6f1g4d8egb10eg6dfd0496244f" version="1" />
+					<attribute id="AnubisConfigName" type="22" value="UND_ToxicWall" />
+					<children>
+						<node id="Bounds">
+							<children>
+								<node id="Bound">
+									<attribute id="Type" type="1" value="0" />
+									<attribute id="Shape" type="1" value="1" />
+									<attribute id="Min" type="12" value="-1.176465 -0.06899011 -1.063707" />
+									<attribute id="Max" type="12" value="0.7271191 1.19429 1.187363" />
+									<attribute id="Radius" type="6" value="0.7264186" />
+									<attribute id="Height" type="6" value="1.978085" />
+								</node>
+								<node id="Bound">
+									<attribute id="Type" type="1" value="1" />
+									<attribute id="Shape" type="1" value="1" />
+									<attribute id="Min" type="12" value="-1.176465 -0.06899011 -1.063707" />
+									<attribute id="Max" type="12" value="0.7271191 1.19429 1.187363" />
+									<attribute id="Radius" type="6" value="0.7264186" />
+									<attribute id="Height" type="6" value="1.978085" />
+								</node>
+								<node id="Bound">
+									<attribute id="Type" type="1" value="2" />
+									<attribute id="Shape" type="1" value="1" />
+									<attribute id="Min" type="12" value="-1.176465 -0.06899011 -1.063707" />
+									<attribute id="Max" type="12" value="0.7271191 1.19429 1.187363" />
+									<attribute id="Radius" type="6" value="0.7264186" />
+									<attribute id="Height" type="6" value="1.978085" />
+								</node>
+							</children>
+						</node>
+						<node id="OnUsePeaceActions">
+							<children>
+								<node id="Action">
+									<attribute id="ActionType" type="4" value="8" />
+									<children>
+										<node id="Attributes">
+											<attribute id="Animation" type="22" value="f891c618-1706-44e0-88ee-b08c4f0e191d" />
+											<attribute id="Conditions" type="23" value="" />
+										</node>
+									</children>
+								</node>
+							</children>
+						</node>
+						<node id="OnDestroyActions" />
+						<node id="InventoryList">
+							<children>
+								<node id="InventoryItem">
+									<attribute id="Object" type="22" value="Empty" />
+								</node>
+							</children>
+						</node>
+						<node id="Scripts">
+							<children>
+								<node id="Script">
+									<attribute id="UUID" type="22" value="49a54114-f505-4577-9044-df11bf02dd64" />
+									<children>
+										<node id="Parameters">
+											<children>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="Active" />
+													<attribute id="Type" type="4" value="1" />
+													<attribute id="Value" type="23" value="1" />
+												</node>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="ActiveFlag" />
+													<attribute id="Type" type="4" value="4" />
+													<attribute id="Value" type="23" value="" />
+												</node>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="AllowSingleIgnite" />
+													<attribute id="Type" type="4" value="1" />
+													<attribute id="Value" type="23" value="0" />
+												</node>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="DestroyOnDisarm" />
+													<attribute id="Type" type="4" value="1" />
+													<attribute id="Value" type="23" value="1" />
+												</node>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="DialogKey" />
+													<attribute id="Type" type="4" value="3" />
+													<attribute id="Value" type="23" value="GEN_AD_DisarmTrap" />
+												</node>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="GasRadius" />
+													<attribute id="Type" type="4" value="2" />
+													<attribute id="Value" type="23" value="2" />
+												</node>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="GasType" />
+													<attribute id="Type" type="4" value="10" />
+													<attribute id="Value" type="23" value="SurfaceSporeGreenCloud" />
+												</node>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="HardcoreOnly" />
+													<attribute id="Type" type="4" value="1" />
+													<attribute id="Value" type="23" value="0" />
+												</node>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="MaxWeight" />
+													<attribute id="Type" type="4" value="2" />
+													<attribute id="Value" type="23" value="50" />
+												</node>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="OffEvent" />
+													<attribute id="Type" type="4" value="3" />
+													<attribute id="Value" type="23" value="UND_ToxicWall_Off" />
+												</node>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="OnEvent" />
+													<attribute id="Type" type="4" value="3" />
+													<attribute id="Value" type="23" value="UND_ToxicWall_On" />
+												</node>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="SurfaceCheck" />
+													<attribute id="Type" type="4" value="10" />
+													<attribute id="Value" type="23" value="SurfaceFire" />
+												</node>
+											</children>
+										</node>
+									</children>
+								</node>
+							</children>
+						</node>
+					</children>
+				</node>
+			</children>
+		</node>
+	</region>
+</save>

@@ -1,0 +1,119 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<save>
+	<version major="4" minor="0" revision="9" build="325" />
+	<region id="Templates">
+		<node id="Templates">
+			<children>
+				<node id="GameObjects">
+					<attribute id="MapKey" type="22" value="e8c4a4fe-c08b-43ef-86d9-100a060da5c0" />
+					<attribute id="Name" type="23" value="PUZ_Trap_Gortash_ControlPanel" />
+					<attribute id="LevelName" type="22" value="" />
+					<attribute id="Type" type="22" value="item" />
+					<attribute id="ParentTemplateId" type="22" value="e1ba7d3b-7649-4ad7-bec2-370397e0dbeb" />
+					<attribute id="VisualTemplate" type="22" value="5e9bbfdf-3022-4b0b-55f0-5e3cbc42244c" />
+					<attribute id="PhysicsTemplate" type="22" value="a7360758-c380-fe37-1997-a5030279ff74" />
+					<attribute id="DisplayName" type="28" handle="h0b13af74gcf47g4263g9da3ge5ce1cc6cd8d" version="1" />
+					<attribute id="ShootThroughType" type="27" value="6" />
+					<attribute id="Icon" type="22" value="Item_PUZ_Trap_Gortash_ControlPanel" />
+					<attribute id="Stats" type="22" value="WYR_Gortash_ControlPanel" />
+					<attribute id="DisarmDifficultyClassID" type="31" value="bddbb9b8-a242-4c3e-eba2-d23fc07439c5" />
+					<attribute id="IsTrap" type="19" value="False" />
+					<attribute id="TreasureOnDestroy" type="19" value="True" />
+					<attribute id="CanJoinCombat" type="19" value="True" />
+					<children>
+						<node id="Bounds">
+							<children>
+								<node id="Bound">
+									<attribute id="Type" type="1" value="0" />
+									<attribute id="Shape" type="1" value="1" />
+									<attribute id="Min" type="12" value="-0.4069836 -0.5500571 -0.4104398" />
+									<attribute id="Max" type="12" value="0.5812914 0.650377 0.03157288" />
+									<attribute id="Radius" type="6" value="0.4941375" />
+									<attribute id="Height" type="6" value="1.200434" />
+								</node>
+								<node id="Bound">
+									<attribute id="Type" type="1" value="1" />
+									<attribute id="Shape" type="1" value="1" />
+									<attribute id="Min" type="12" value="-0.4069836 -0.5500571 -0.4104398" />
+									<attribute id="Max" type="12" value="0.5812914 0.650377 0.03157288" />
+									<attribute id="Radius" type="6" value="0.4941375" />
+									<attribute id="Height" type="6" value="1.200434" />
+								</node>
+								<node id="Bound">
+									<attribute id="Type" type="1" value="2" />
+									<attribute id="Shape" type="1" value="1" />
+									<attribute id="Min" type="12" value="-0.4069836 -0.5500571 -0.4104398" />
+									<attribute id="Max" type="12" value="0.5812914 0.650377 0.03157288" />
+									<attribute id="Radius" type="6" value="0.4941375" />
+									<attribute id="Height" type="6" value="1.200434" />
+								</node>
+							</children>
+						</node>
+						<node id="OnUsePeaceActions" />
+						<node id="OnDestroyActions">
+							<children>
+								<node id="Action">
+									<attribute id="ActionType" type="4" value="26" />
+									<children>
+										<node id="Attributes">
+											<attribute id="Animation" type="22" value="" />
+											<attribute id="Conditions" type="23" value="" />
+											<attribute id="ActivateSoundEvent" type="22" value="3ea82655-5140-4287-9ab8-794559f182d3" />
+											<attribute id="PlayOnHUD" type="19" value="False" />
+										</node>
+									</children>
+								</node>
+								<node id="Action">
+									<attribute id="ActionType" type="4" value="5" />
+									<children>
+										<node id="Attributes">
+											<attribute id="Animation" type="22" value="" />
+											<attribute id="Conditions" type="23" value="" />
+											<attribute id="TargetItemState" type="1" value="0" />
+											<attribute id="SnapToGround" type="19" value="True" />
+											<attribute id="ExplodeFX" type="22" value="15362651-9b96-579a-86f5-829e53325d8b" />
+											<attribute id="visualDestruction" type="22" value="" />
+											<attribute id="VisualWithDynamicPhysics" type="22" value="183a6c74-70b5-d2be-b85d-37ecd8c1e901" />
+											<attribute id="FadeOutDelay" type="6" value="0" />
+											<attribute id="FadeOutFX" type="22" value="" />
+											<attribute id="templateAfterDestruction" type="22" value="cd04af2d-72d0-4372-a992-96a8018f3c3d" />
+										</node>
+									</children>
+								</node>
+							</children>
+						</node>
+						<node id="InventoryList" />
+						<node id="Scripts">
+							<children>
+								<node id="Script">
+									<attribute id="UUID" type="22" value="54e8b2c0-0ed0-00f7-40ca-39a8816ea890" />
+									<children>
+										<node id="Parameters">
+											<children>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="ConnectedObject" />
+													<attribute id="Type" type="4" value="6" />
+													<attribute id="Value" type="23" value="0xbaadf00d" />
+												</node>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="DestroyOnDisarm" />
+													<attribute id="Type" type="4" value="1" />
+													<attribute id="Value" type="23" value="1" />
+												</node>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="HardcoreOnly" />
+													<attribute id="Type" type="4" value="1" />
+													<attribute id="Value" type="23" value="0" />
+												</node>
+											</children>
+										</node>
+									</children>
+								</node>
+							</children>
+						</node>
+					</children>
+				</node>
+			</children>
+		</node>
+	</region>
+</save>

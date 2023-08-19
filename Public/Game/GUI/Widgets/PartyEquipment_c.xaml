@@ -1,0 +1,175 @@
+﻿<ls:UIWidget x:Name="PartyEquipment_c"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:System="clr-namespace:System;assembly=mscorlib"
+             xmlns:ls="clr-namespace:ls;assembly=SharedGUI"
+             xmlns:noesis="clr-namespace:NoesisGUIExtensions;assembly=Noesis.GUI.Extensions"
+             xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
+    		 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+			 mc:Ignorable="d"
+             d:DesignWidth="3840" d:DesignHeight="2160"
+             ls:UIWidget.Focusable="False"
+             Template="{StaticResource StandardFraming}" d:DataContext="{d:DesignInstance {x:Type ls:Widget}, IsDesignTimeCreatable=True}">
+
+    <ls:UIWidget.Resources>
+
+        <DataTemplate x:Key="PartyEquipmentTemplate">
+            <StackPanel ls:TooltipExtender.Owner="{Binding .}">
+                <StackPanel.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform/>
+                        <SkewTransform/>
+                        <RotateTransform/>
+                        <TranslateTransform/>
+                    </TransformGroup>
+                </StackPanel.RenderTransform>
+                <ContentControl Content="{Binding}" ContentTemplate="{DynamicResource EquipmentTemplate_c}" ls:AttachedProperties.InheritedCharacter="{Binding .}"/>
+
+                <Control x:Name="BottomProgressBar" Template="{DynamicResource XPBarTemplate}" VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="0,0,0,-75"/>
+
+                <b:Interaction.Triggers>
+                    <b:EventTrigger EventName="Loaded">
+                        <b:ControlStoryboardAction Storyboard="{StaticResource AnimReset}"/>
+                    </b:EventTrigger>
+                    <b:TimerTrigger EventName="Loaded" MillisecondsPerTick="{Binding (ItemsControl.AlternationIndex), RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListBoxItem}}, Converter={StaticResource MultiplierConverter}, ConverterParameter=100}" TotalTicks="1">
+                        <b:ControlStoryboardAction Storyboard="{StaticResource animSlotIn_c}"/>
+                    </b:TimerTrigger>
+                </b:Interaction.Triggers>
+            </StackPanel>
+        </DataTemplate>
+    </ls:UIWidget.Resources>
+
+    <Grid>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0, 30, 0, 0">
+            <Image Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared_c/c_ico_equipment.png" Stretch="None"/>
+            <TextBlock Text="{Binding Source='h091222a8ga54fg4ac6g862dg4b260b2c37f0',Converter={StaticResource TranslatedStringConverter}}"  Foreground="{DynamicResource LS_PrimaryColor}" FontSize="{DynamicResource MediumFontSize}" FontWeight="Bold" VerticalAlignment="Center"/>
+        </StackPanel>
+
+        <Grid HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0 65 0 0">
+            <!-- Vacant Slots -->
+            <ContentControl HorizontalAlignment="Left" VerticalAlignment="Top" ContentTemplate="{StaticResource PartyVacantSlots}" Resources="{StaticResource ArchedVacantSlot}" Content="{Binding}"/>
+
+            <!-- Horizontal list of Characters -->
+            <!-- Party Lineup -->
+            <ls:LSListBox x:Name="PartyLineup" 
+                          ItemsSource="{Binding Data.Players}"
+                          VerticalAlignment="Top" HorizontalAlignment="Left"
+                          ActionPrevEvent="UILeft" ActionNextEvent="UIRight">
+
+                <b:Interaction.Triggers>
+                    <b:EventTrigger EventName="LocalFocusChanged">
+                        <b:InvokeCommandAction Command="{Binding DataContext.ShowTooltipOnUIElement, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" CommandParameter="{Binding Path=LocalFocus, ElementName=PartyLineup}"/>
+                    </b:EventTrigger>
+                </b:Interaction.Triggers>
+
+                <ls:LSListBox.ItemContainerStyle>
+                    <Style TargetType="ls:LSListBoxItem" BasedOn="{StaticResource {x:Type ls:LSListBoxItem}}">
+                        <Setter Property="Padding" Value="0" />
+                    </Style>
+                </ls:LSListBox.ItemContainerStyle>
+                <ls:LSListBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Horizontal"/>
+                    </ItemsPanelTemplate>
+                </ls:LSListBox.ItemsPanel>
+                <ls:LSListBox.ItemTemplate>
+                    <DataTemplate>
+                        <ls:LSListBox VerticalAlignment="Top" HorizontalAlignment="Left"
+                                      ActionPrevEvent="UILeft" ActionNextEvent="UIRight"
+                                      ItemsSource="{Binding AssignedCharacters}"
+                                      SelectedItem="{Binding DataContext.CurrentPlayer.SelectedCharacter, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"
+                                      LocalFocusSelector="{Binding ElementName=Selector,Mode=OneWay}"
+                                      AlternationCount="{Binding AssignedCharacters.Count}" 
+                                      ItemTemplate="{StaticResource PartyEquipmentTemplate}"
+                                      ItemContainerStyle="{StaticResource PartyMemberStyle_c}"
+                                      ScrollViewer.HorizontalScrollBarVisibility="Disabled" 
+                                      ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                                      AutoScrollSelectedIntoView="True"
+                                      BorderBrush="Transparent" Background="Transparent"
+                                      MaxWidth="3840">
+                            <ls:LSListBox.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Horizontal"/>
+                                </ItemsPanelTemplate>
+                            </ls:LSListBox.ItemsPanel>
+                        </ls:LSListBox>
+                    </DataTemplate>
+                </ls:LSListBox.ItemTemplate>
+            </ls:LSListBox>
+
+            <Control x:Name="Selector" IsHitTestVisible="False" VerticalAlignment="Top" HorizontalAlignment="Left" Template="{StaticResource SelectorTemplate}" Visibility="{Binding ElementName=PartyLineup, Path=LocalFocus, Converter={StaticResource NullToBoolFalseConverter}}"/>
+        </Grid>
+
+        <!-- Controller buttons -->
+        <StackPanel VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="0,0,0,20" Orientation="Horizontal">
+            <ls:LSButton Margin="20,0" 
+                         DataContext = "{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIAccept'}"
+                         Content="{Binding Source='h17d7ddccg1b46g4342g8b5eg98094c4e9a66',Converter={StaticResource TranslatedStringConverter}}" 
+                         CommandParameter="{Binding Path=LocalFocus.DataContext, ElementName=PartyLineup}" 
+                         IsEnabled="{Binding ElementName=PartyLineup, Path=LocalFocus, Converter={StaticResource NullToBoolFalseConverter}}">
+                <ls:LSButton.Style>
+                    <Style TargetType="ls:LSButton" BasedOn="{StaticResource ControllerButton}">
+                        <Setter Property="Command" Value="{Binding DataContext.ShowAvailableEquipmentCommand, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Path=LocalFocus.DataContext, ElementName=PartyLineup, Converter={StaticResource TypeConverter}}" Value="ls.VMItem">
+                                <Setter Property="Command" Value="{Binding DataContext.EquipItemCommand, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </ls:LSButton.Style>
+            </ls:LSButton>
+            
+            <ls:LSButton Style="{StaticResource ControllerButton}" Margin="20,0" 
+                         DataContext = "{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='ContextMenu'}"
+                         Content="{Binding Source='heb4b592bgc665g4e17ga685g07e2eb5e25db',Converter={StaticResource TranslatedStringConverter}}" 
+                         Command="{Binding DataContext.ShowContextMenu, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"
+                         CommandParameter="{Binding Path=LocalFocus, ElementName=PartyLineup}"
+                         IsEnabled="{Binding ElementName=PartyLineup, Path=LocalFocus, Converter={StaticResource NullToBoolFalseConverter}}"/>
+            
+            <ls:LSButton Style="{StaticResource ControllerButton}" Margin="20,0" 
+                         DataContext = "{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIShowInfo'}"
+                         Content="{Binding Source='h07aaca85g63dbg4e60g88a2g0590077ea7e2',Converter={StaticResource TranslatedStringConverter}}" 
+                         Command="{Binding DataContext.ToggleTooltipOnUIElement, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" 
+                         CommandParameter="{Binding Path=LocalFocus, ElementName=PartyLineup}"
+                         IsEnabled="{Binding ElementName=PartyLineup, Path=LocalFocus, Converter={StaticResource NullToBoolFalseConverter}}"/>
+            <ls:LSButton Style="{StaticResource ControllerButton}" Margin="20,0" 
+                         DataContext = "{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UICancel'}"
+                         Content="{Binding Source='h6fefa28bg2149g4cacga071gd95b236b2d0b',Converter={StaticResource TranslatedStringConverter}}" 
+                         Command="{Binding DataContext.CustomEvent, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"
+                         SoundID="UI_Shared_Cancel"
+                         CommandParameter="CloseWidget"/>
+            
+            <ls:LSButton Style="{StaticResource ControllerButton}" Margin="20,0" 
+                         DataContext = "{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='PanelSelect'}"
+                         Content="{Binding Source='h77bed846g5b7dg4d9dg9a6dg48f5f5a1e56c',Converter={StaticResource TranslatedStringConverter}}"
+                         EatInput="False"/>
+            
+            <ls:LSButton Style="{StaticResource ControllerButton}"
+                         DataContext = "{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UILeft'}"
+                         BoundEvent="GUIDPad" Margin="20,0" 
+                         Content="{Binding Source='h6209ea30gd0cbg4a8bg9867g404a74082149',Converter={StaticResource TranslatedStringConverter}}" 
+                         EatInput="False"/>
+            
+            <ls:LSButton Style="{StaticResource ControllerButton}" Margin="20,0" 
+                         DataContext = "{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIMarkWares'}"
+                         Content="{Binding Source='h4f2017d4g74f8g40bbga527g91ebb9aa184c',Converter={StaticResource TranslatedStringConverter}}" 
+                         IsEnabled="False"/>
+        </StackPanel>
+
+        <b:Interaction.Triggers>
+            <b:EventTrigger EventName="Loaded">
+                <b:InvokeCommandAction Command="{Binding DataContext.ToggleTooltipOnUIElement, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" CommandParameter="{Binding Path=LocalFocus, ElementName=PartyLineup}"/>
+            </b:EventTrigger>
+        </b:Interaction.Triggers>
+
+    </Grid>
+    <b:Interaction.Triggers>
+        <b:EventTrigger EventName="Loaded">
+            <ls:LSPlaySound Sound="UI_HUD_Equipment_Open"/>
+        </b:EventTrigger>
+        <b:EventTrigger EventName="Unloaded">
+            <ls:LSPlaySound Sound="UI_HUD_Equipment_Close"/>
+        </b:EventTrigger>
+    </b:Interaction.Triggers>
+</ls:UIWidget>

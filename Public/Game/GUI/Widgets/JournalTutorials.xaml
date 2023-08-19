@@ -1,0 +1,279 @@
+<ls:UIWidget x:Name="JournalTutorial"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:ls="clr-namespace:ls;assembly=SharedGUI"
+             xmlns:noesis="clr-namespace:NoesisGUIExtensions;assembly=Noesis.GUI.Extensions"
+			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:System="clr-namespace:System;assembly=mscorlib"
+			 mc:Ignorable="d"
+             ls:UIWidget.ContextName="JournalTutorial" d:DataContext="{d:DesignInstance {x:Type ls:DCJournalTutorial}, IsDesignTimeCreatable=True}"
+             d:DesignHeight="2160" d:DesignWidth="3840">
+
+    <ls:UIWidget.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../Library/JournalTemplates.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+            <Style x:Key="TopTreeviewNodesTextBlockStyle" TargetType="TextBlock">
+                <Setter Property="Foreground" Value="{StaticResource LS_accent75TxtColor}"/>
+                <Setter Property="FontSize" Value="{StaticResource LargeFontSize}"/>
+            </Style>
+
+            <HierarchicalDataTemplate DataType="{x:Type ls:TutorialContainer}" ItemsSource="{Binding Tutorials}">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top" >
+                    <ToggleButton x:Name="Expander" ClickMode="Press" Style="{StaticResource ExpandCollapseToggleStyle}"
+                                  IsChecked="{Binding IsExpanded, Mode=TwoWay, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=TreeViewItem}}"/>
+                    <TextBlock x:Name="txt" Margin="5,0,0,0" Style="{StaticResource TopTreeviewNodesTextBlockStyle}"/>
+                </StackPanel>
+                <HierarchicalDataTemplate.Triggers>
+                    <DataTrigger Binding="{Binding Section}" Value="Actions">
+                        <Setter TargetName="txt" Property="Text" Value="{Binding Source='h1988a9a5g8b63g4d67gb237ga5ec8f73f748',Converter={StaticResource TranslatedStringConverter}}"/>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Section}" Value="Campaign">
+                        <Setter TargetName="txt" Property="Text" Value="{Binding Source='hc3bda295g3ab5g4e09g8d6cg08fc929c670a',Converter={StaticResource TranslatedStringConverter}}"/>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Section}" Value="Combat">
+                        <Setter TargetName="txt" Property="Text" Value="{Binding Source='h478895a1g83b5g4667ga9e7g769579c6fc33',Converter={StaticResource TranslatedStringConverter}}"/>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Section}" Value="CoreRules">
+                        <Setter TargetName="txt" Property="Text" Value="{Binding Source='h3fdd4afcgfba7g47dag9712g5c0fa336b747',Converter={StaticResource TranslatedStringConverter}}"/>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Section}" Value="CharactersAndRelationships">
+                        <Setter TargetName="txt" Property="Text" Value="{Binding Source='h6ef661bcg219ag4341gafa6g2413a75f9117',Converter={StaticResource TranslatedStringConverter}}"/>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Section}" Value="Exploration">
+                        <Setter TargetName="txt" Property="Text" Value="{Binding Source='hf5fe3449g238bg4744g9fe3gb6d3483ded8c',Converter={StaticResource TranslatedStringConverter}}"/>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Section}" Value="GameEnvironment">
+                        <Setter TargetName="txt" Property="Text" Value="{Binding Source='h09db355bgc5b7g4f83ga7d5gfd3dfba864f3',Converter={StaticResource TranslatedStringConverter}}"/>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Section}" Value="General">
+                        <Setter TargetName="txt" Property="Text" Value="{Binding Source='hcd22269fg67d5g4977g9429g8c26e9b2cc81',Converter={StaticResource TranslatedStringConverter}}"/>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Section}" Value="InventoryAndCrafting">
+                        <Setter TargetName="txt" Property="Text" Value="{Binding Source='h2abbdcc6gf2e6g4a35g98c1g2f1e476bf504',Converter={StaticResource TranslatedStringConverter}}"/>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Section}" Value="Magic">
+                        <Setter TargetName="txt" Property="Text" Value="{Binding Source='h4623c5acg878bg4b58g8e0dg9aaed909384a',Converter={StaticResource TranslatedStringConverter}}"/>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Section}" Value="Resting">
+                        <Setter TargetName="txt" Property="Text" Value="{Binding Source='hf955f62fge757g4843g9c9bgc1dbe98d9a76',Converter={StaticResource TranslatedStringConverter}}"/>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Section}" Value="Gameplay">
+                        <Setter TargetName="txt" Property="Text" Value="{Binding Source='hc834ace7gd3f9g4dc7ga38fg9b0bd7fa35a1',Converter={StaticResource TranslatedStringConverter}}"/>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Section}" Value="Camp">
+                        <Setter TargetName="txt" Property="Text" Value="{Binding Source='hdac50e1cga1bbg4666gb12bgf65c152d1671',Converter={StaticResource TranslatedStringConverter}}"/>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Section}" Value="CharacterCreation">
+                        <Setter TargetName="txt" Property="Text" Value="{Binding Source='h28efff2ag1fd7g4aa1gae56g2eb60e1fe9db',Converter={StaticResource TranslatedStringConverter}}"/>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Section}" Value="Class">
+                        <Setter TargetName="txt" Property="Text" Value="{Binding Source='ha96374c0g7ef8g43f3gadcfg212afe5077a6',Converter={StaticResource TranslatedStringConverter}}"/>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Section}" Value="Companions">
+                        <Setter TargetName="txt" Property="Text" Value="{Binding Source='heae01775g25b9g4dc7gba15g0de79658dd3d',Converter={StaticResource TranslatedStringConverter}}"/>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Section}" Value="Crafting">
+                        <Setter TargetName="txt" Property="Text" Value="{Binding Source='h29f2722dga435g400agad84g31b447770bf6',Converter={StaticResource TranslatedStringConverter}}"/>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Section}" Value="Crime">
+                        <Setter TargetName="txt" Property="Text" Value="{Binding Source='h0618fe95g58feg40cbg8de4gf104642e85ee',Converter={StaticResource TranslatedStringConverter}}"/>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Section}" Value="Hotbar">
+                        <Setter TargetName="txt" Property="Text" Value="{Binding Source='h60d08ba4geec9g4f27g80e8ga3575cca0f76',Converter={StaticResource TranslatedStringConverter}}"/>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Section}" Value="Illithid">
+                        <Setter TargetName="txt" Property="Text" Value="{Binding Source='h8a163644g8b63g4ab2g9f6cg2e4e1f5fd918',Converter={StaticResource TranslatedStringConverter}}"/>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Section}" Value="Inventory">
+                        <Setter TargetName="txt" Property="Text" Value="{Binding Source='h6191733cg1985g4ddcgb883g26cf71fa7e12',Converter={StaticResource TranslatedStringConverter}}"/>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Section}" Value="Journal">
+                        <Setter TargetName="txt" Property="Text" Value="{Binding Source='h5d0415e7gf1f6g415agae0agd10a3771eb3a',Converter={StaticResource TranslatedStringConverter}}"/>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Section}" Value="Map">
+                        <Setter TargetName="txt" Property="Text" Value="{Binding Source='ha202834cg43a6g48b9gb5a7g1e529df332f3',Converter={StaticResource TranslatedStringConverter}}"/>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Section}" Value="Multiplayer">
+                        <Setter TargetName="txt" Property="Text" Value="{Binding Source='hf396af98gb571g4e01g9a9fg5557d4652a95',Converter={StaticResource TranslatedStringConverter}}"/>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Section}" Value="Stats">
+                        <Setter TargetName="txt" Property="Text" Value="{Binding Source='h9b9ab4fdg5705g4daegac56g6b1a0451fb3b',Converter={StaticResource TranslatedStringConverter}}"/>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Section}" Value="Social">
+                        <Setter TargetName="txt" Property="Text" Value="{Binding Source='h13cedb87gd0ecg4c91gb7a8gc4b5b0f35295',Converter={StaticResource TranslatedStringConverter}}"/>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Section}" Value="Trading">
+                        <Setter TargetName="txt" Property="Text" Value="{Binding Source='hb3b29e54g6da6g4af3g8ee8g2dc3671d7006',Converter={StaticResource TranslatedStringConverter}}"/>
+                    </DataTrigger>
+
+                    <DataTrigger Binding="{Binding IsMouseOver, ElementName=txt}" Value="True">
+                        <Setter TargetName="txt" Property="Foreground" Value="{StaticResource LS_tint100}"/>
+                    </DataTrigger>
+                </HierarchicalDataTemplate.Triggers>
+            </HierarchicalDataTemplate>
+
+            <HierarchicalDataTemplate DataType="{x:Type ls:TutorialView}">
+                <StackPanel x:Name="Root" MinHeight="65" Orientation="Horizontal">
+                    <Image x:Name="ImgState" Stretch="None"/>
+                    <TextBlock x:Name="Text" Text="{Binding Title}" FontSize="{StaticResource ScaledLargeFontSize}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="12,0,0,0" Foreground="{StaticResource LS_baseTxtColor}"/>
+                </StackPanel>
+                <HierarchicalDataTemplate.Triggers>
+                    <DataTrigger Binding="{Binding IsNewTutorial}" Value="True">
+                        <Setter TargetName="ImgState" Property="Source" Value="{StaticResource Journal.IconQuestUpdated}"/>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType={x:Type TreeViewItem}}}" Value="True">
+                        <Setter TargetName="Text" Property="Foreground" Value="{StaticResource LS_tint100}"/>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding IsMouseOver, ElementName=Root}" Value="True">
+                        <Setter TargetName="Text" Property="Foreground" Value="{StaticResource LS_tint100}"/>
+                    </DataTrigger>
+                </HierarchicalDataTemplate.Triggers>
+            </HierarchicalDataTemplate>
+
+            <BitmapImage x:Key="FrameTutorialVideo" UriSource="pack://application:,,,/GustavNoesisGUI;component/Assets/Journal/frame_tutorial.png"/>
+        </ResourceDictionary>
+    </ls:UIWidget.Resources>
+
+    <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ls:TooltipExtender.Owner="{Binding CurrentPlayer.SelectedCharacter}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Image Grid.Row="0" Grid.RowSpan="3" Source="{StaticResource OptionsBackground}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stretch="UniformToFill"/>
+
+        <Control Grid.Row="0" HorizontalAlignment="Center" Template="{StaticResource JournalHeader}"/>
+
+        <ls:LSButton Grid.Row="0" BoundEvent="UICancel" Style="{StaticResource SmallCloseButton}" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="{StaticResource Journal.CloseButtonMargin}"
+                     Command="{Binding CustomEvent}" CommandParameter="CloseWidget" SoundID="UI_HUD_Panel_Close"/>
+
+        <TextBlock Grid.Row="1" Text="{Binding Source='h20907681g950fg42f3g844fg251c11592d4d',Converter={StaticResource TranslatedStringConverter}}" Foreground="{StaticResource LS_tint100}" FontWeight="DemiBold"
+                   FontSize="{StaticResource ScaledGiganticFontSize}" HorizontalAlignment="Left" Margin="{StaticResource Journal.TitleMargin}"/>
+
+        <Grid Grid.Row="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="{StaticResource Journal.ContentMargin}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <ls:LSTreeView x:Name="TutorialTreeView" Grid.Column="0" ItemsSource="{Binding TutorialsContainers}" BorderBrush="Transparent" InitialSelection="{Binding InitialSelection}" Width="1440" VerticalAlignment="Stretch"
+                           Margin="0,100,0,0">
+                <ls:LSTreeView.Template>
+                    <ControlTemplate>
+                        <ScrollViewer Template="{StaticResource ScrollViewerTemplate}" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Margin="{StaticResource Journal.LeftSideScrollViewerMargin}">
+                            <ScrollViewer.Resources>
+                                <Style TargetType="ScrollBar" BasedOn="{StaticResource BaseScrollBar}">
+                                    <Setter Property="Margin" Value="{StaticResource Journal.LeftScrollBarMargin}"/>
+                                </Style>
+                                <GridLength x:Key="Top">6</GridLength>
+                                <GridLength x:Key="Bottom">0</GridLength>
+                            </ScrollViewer.Resources>
+                            <Grid Background="Transparent" HorizontalAlignment="Stretch">
+                                <ItemsPresenter Margin="{StaticResource Journal.LeftSideItemsPresenterMargin}"/>
+                            </Grid>
+                        </ScrollViewer>
+                    </ControlTemplate>
+                </ls:LSTreeView.Template>
+                <ls:LSTreeView.ItemContainerStyle>
+                    <Style TargetType="{x:Type TreeViewItem}">
+                        <Setter Property="IsExpanded" Value="True"/>
+                        <Setter Property="BorderBrush" Value="Transparent" />
+                        <Setter Property="Background" Value="Transparent" />
+                        <Setter Property="Padding" Value="0" />
+                        <Setter Property="BorderThickness" Value="0" />
+                        <Setter Property="Template" Value="{StaticResource Journal.SidePanelTreeViewItemTemplate}"/>
+                        <Style.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter Property="BorderBrush" Value="Transparent" />
+                                <Setter Property="Background" Value="Transparent" />
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="BorderBrush" Value="Transparent" />
+                                <Setter Property="Background" Value="Transparent" />
+                            </Trigger>
+                            <DataTrigger Binding="{Binding InputType, FallbackValue=TutorialInputKeyboard}" Value="TutorialInputGamepad">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </ls:LSTreeView.ItemContainerStyle>
+
+                <b:Interaction.Triggers>
+                    <b:EventTrigger EventName="SelectedItemChanged">
+                        <b:InvokeCommandAction Command="{Binding ChangeSelectedTutorialCommand}" CommandParameter="{Binding ElementName=TutorialTreeView, Path=SelectedItem}"/>
+                    </b:EventTrigger>
+                </b:Interaction.Triggers>
+            </ls:LSTreeView>
+
+            <!-- Details Pane -->
+            <Grid Grid.Column="1" Visibility="{Binding ElementName=TutorialTreeView, Path=SelectedItem.Title, Converter={StaticResource StringToVisibilityConverter}}"
+                  HorizontalAlignment="Stretch" Margin="{StaticResource Journal.RightSideContentMargin}" VerticalAlignment="Top">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" Text="{Binding ElementName=TutorialTreeView, Path=SelectedItem.Title}" FontSize="{StaticResource ScaledHugeFontSize}" Foreground="{StaticResource LS_accent100TxtColor}"
+                           VerticalAlignment="Top" HorizontalAlignment="Left" Margin="80,50,80,0"/>
+
+                <ScrollViewer Grid.Row="1" DataContext="{Binding ElementName=TutorialTreeView, Path=SelectedItem}" d:DataContext="{d:DesignInstance {x:Type ls:TutorialView}, IsDesignTimeCreatable=True}"
+                              VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Template="{StaticResource ScrollViewerTemplate}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
+                              Background="Transparent">
+                    <ScrollViewer.Resources>
+                        <Style TargetType="{x:Type ScrollBar}" BasedOn="{StaticResource BaseScrollBar}"/>
+                        <GridLength x:Key="Top">20</GridLength>
+                        <GridLength x:Key="Bottom">20</GridLength>
+                    </ScrollViewer.Resources>
+                    <StackPanel Margin="20,0,480,0">
+                        <!--No videos for now-->
+                        <!--<ls:LSNineSliceImage ImageSource="{StaticResource FrameTutorialVideo}" VerticalAlignment="Top" HorizontalAlignment="Stretch" Visibility="{Binding Video, Converter={StaticResource StringToVisibilityConverter}}"
+                                             Slices="60,60" Padding="30,30">
+                            <ls:LSVideoPanel HorizontalAlignment="Stretch" Video="{Binding Video}"/>
+                        </ls:LSNineSliceImage>-->
+                        <TextBlock FontSize="{StaticResource LargeFontSize}" Foreground="{StaticResource LS_baseTxtColor}" HorizontalAlignment="Stretch" TextAlignment="Left" TextWrapping="Wrap"
+                                   Margin="60,30,0,0">
+                            <TextBlock.Resources>
+                                <Style TargetType="ls:LSSpan" BasedOn="{StaticResource LSSpanStyle}">
+                                    <Setter Property="Foreground" Value="{StaticResource LS_baseTxtColor}"/>
+                                </Style>
+                            </TextBlock.Resources>
+                            <b:Interaction.Behaviors>
+                                <ls:CtxTransStringRunGeneratorBehavior LocaSource="{Binding Description}"
+                                                                       NamedParamInputEvents="{Binding Path=DataContext.CurrentPlayer.UIData.InputEvents, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}">
+                                    <ls:CtxTransStringRunGeneratorBehavior.NamedParamContentStyle>
+                                        <Style TargetType="ContentControl">
+                                            <Setter Property="Margin" Value="0,0,0,-15" />
+                                            <Setter Property="Template">
+                                                <Setter.Value>
+                                                    <ControlTemplate>
+                                                        <TextBlock Foreground="{StaticResource LS_accent75TxtColor}" Text="{Binding Shortcut}" VerticalAlignment="Bottom" TextWrapping="Wrap"/>
+                                                    </ControlTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Style>
+                                    </ls:CtxTransStringRunGeneratorBehavior.NamedParamContentStyle>
+                                </ls:CtxTransStringRunGeneratorBehavior>
+                            </b:Interaction.Behaviors>
+                        </TextBlock>
+                    </StackPanel>
+                </ScrollViewer>
+            </Grid>
+        </Grid>
+
+        <Image Grid.Row="2" Source="{StaticResource Journal.DecorButtonCenter}" HorizontalAlignment="Center" VerticalAlignment="Bottom" Stretch="None" Margin="{StaticResource Journal.DecorButtonCenterMargin}"/>
+    </Grid>
+
+    <b:Interaction.Triggers>
+        <b:EventTrigger EventName="Loaded">
+            <ls:LSPlaySound Sound="UI_HUD_JournalSelection_Open"/>
+        </b:EventTrigger>
+        <b:EventTrigger EventName="Unloaded">
+            <ls:LSPlaySound Sound="UI_HUD_Journal_Close"/>
+        </b:EventTrigger>
+    </b:Interaction.Triggers>
+</ls:UIWidget>

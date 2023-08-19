@@ -1,0 +1,200 @@
+<ls:UIWidget x:Name="RewardPanel_c"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:ls="clr-namespace:ls;assembly=SharedGUI"
+             xmlns:System="clr-namespace:System;assembly=mscorlib"
+             xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d"
+             ls:UIWidget.UseCustomDC="True"
+             ls:UIWidget.ContextName="RewardPanel"
+             d:DesignWidth="3840" d:DesignHeight="2160"
+             d:DataContext="{d:DesignInstance Type=ls:DCRewardPanel, IsDesignTimeCreatable=True}"
+    		 ls:TooltipExtender.Owner="{Binding CurrentPlayer.SelectedCharacter}"
+             FocusDown="UIDown" FocusLeft="UILeft" FocusRight="UIRight" FocusUp="UIUp">
+    <ls:UIWidget.Resources>
+
+        <!--overriding these to keep the old sizes since this ui doesn't support cell scaling yet-->
+        <System:Double x:Key="ScaledNewItemIconSize">102</System:Double>
+        <System:Double x:Key="ScaledNewItemIconSizeHighlight">104</System:Double>
+        <System:Double x:Key="ScaledNewSlotSize">112</System:Double>
+
+        <System:Double x:Key="FadedItemOpacity">0.6</System:Double>
+        <System:Double x:Key="SelectionBorderSize">138</System:Double>
+        <System:Double x:Key="MinOptionsBGWidth">820</System:Double>
+        <System:Double x:Key="MaxOptionsBGWidth">1400</System:Double>
+
+        <BitmapImage x:Key="PageBackground" UriSource="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared_c/c_fullScreenOverlayPanelBG.png"/>
+        <BitmapImage x:Key="PanelBackground" UriSource="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared_c/c_panelContentSection.png"/>
+        <BitmapImage x:Key="RewardFancySurround" UriSource="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared_c/c_fancySlot.png"/>
+
+    </ls:UIWidget.Resources>
+
+    <ls:UIWidget.Template>
+        <ControlTemplate>
+            <Grid x:Name="root" Background="{StaticResource LS_PanelBackground}">
+                <ls:LSNineSliceImage x:Name="BackgroundPanel" ImageSource="{StaticResource PageBackground}" Slices="0,40" IconWidth="180" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <StackPanel x:Name="QuestInfo" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0 60 0 10" MinWidth="1600">
+                        <TextBlock x:Name="Title" Text="{Binding Source='h41bffdc7g230bg47a5g80c0g23ea99df1a98', Converter={StaticResource TranslatedStringConverter}}" Foreground="{StaticResource LS_tint100}" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="{StaticResource ScaledTitleFontSize}"/>
+                        <TextBlock x:Name="QuestName" Text="{Binding QuestName}" Foreground="{StaticResource LS_accent75TxtColor}" FontSize="{StaticResource ScaledSmallFontSize}" HorizontalAlignment="Center" Margin="0 40 10 0"/>
+                        <TextBlock x:Name="Description" Text="{Binding QuestDescription}" HorizontalAlignment="Center" TextWrapping="Wrap" Foreground="{StaticResource LS_accent75TxtColor}" Margin="0 40 0 0" FontSize="{StaticResource ScaledSmallFontSize}" FontStyle="Italic" TextAlignment="Center" Width="1100"/>
+
+                        <!--Fixed quest rewards list-->
+                        <StackPanel x:Name="FixedSection" Visibility="{Binding MandatoryItems.Slots.Count, Converter={StaticResource CountToVisibilityConverter}, Mode=Default}">
+                            <TextBlock x:Name="YouReceive" Text="{Binding Source='h24eeec24gae44g42edg81f2g6de76f80bd10', Converter={StaticResource TranslatedStringConverter}}" Foreground="{StaticResource LS_tint100}" HorizontalAlignment="Center" Margin="0 80 0 0"/>
+                            <ls:LSNineSliceImage x:Name="MandatoryPanel" ImageSource="{StaticResource PanelBackground}" Slices="0 40" IconWidth="100" HorizontalAlignment="Center" MinWidth="{StaticResource MinOptionsBGWidth}" MaxWidth="{StaticResource MaxOptionsBGWidth}">
+                                <ItemsControl x:Name="MandatoryTreasure" Focusable="True" ItemsSource="{Binding MandatoryItems.Slots}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="60">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Grid x:Name="Container" DataContext="{Binding Object}" ls:MoveFocus.Focusable="True" Focusable="True">
+                                                <Grid.ToolTip>
+                                                    <ls:LSTooltip IsHitTestVisible="False" Content="{Binding DataContext.Object, RelativeSource={RelativeSource Mode=TemplatedParent}}"/>
+                                                </Grid.ToolTip>
+                                                <Image x:Name="slot" Stretch="None" Source="{StaticResource RewardFancySurround}"/>
+                                                <ContentPresenter Content="{Binding}" ContentTemplate="{StaticResource Template.GameObject}" IsHitTestVisible="False"/>
+                                                <Border x:Name="Selector" BorderBrush="{StaticResource LS_tint100}" BorderThickness="2" Width="{StaticResource SelectionBorderSize}" Height="{StaticResource SelectionBorderSize}" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding (ls:MoveFocus.IsFocused), ElementName=Container, Converter={StaticResource BoolToVisibleConverter}}"/>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <WrapPanel/>
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <b:Interaction.Triggers>
+                                        <b:EventTrigger EventName="Loaded">
+                                            <ls:SetMoveFocusAction TargetName="RewardPanel_c"/>
+                                        </b:EventTrigger>
+                                    </b:Interaction.Triggers>
+                                </ItemsControl>
+                            </ls:LSNineSliceImage>
+                        </StackPanel>
+
+                        <!--Optional quest rewards list-->
+                        <StackPanel x:Name="OptionalSection" Visibility="{Binding OptionalItems.Slots.Count, Converter={StaticResource CountToVisibilityConverter}, Mode=OneWay}">
+                            <TextBlock x:Name="Choose" FontSize="{StaticResource ScaledMediumFontSize }" Foreground="{StaticResource LS_tint100}" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0 80 0 0">
+                                <TextBlock.Text>
+                                    <MultiBinding Converter="{StaticResource ParameterizedTranslatedStringConverter}">
+                                        <Binding Source="h01c14450gb52cg49feg9148gd355f3548935"/>
+                                        <Binding Path="SelectedItems.Count"/>
+                                        <Binding Path="MaxSelectedItems"/>
+                                    </MultiBinding>
+                                </TextBlock.Text>
+                            </TextBlock>
+
+                            <ls:LSNineSliceImage x:Name="OptionalPanel" ImageSource="{StaticResource PanelBackground}" Slices="0 40" IconWidth="100" HorizontalAlignment="Center" MinWidth="{StaticResource MinOptionsBGWidth}" MaxWidth="{StaticResource MaxOptionsBGWidth}">
+
+                                <ListBox x:Name="OptionalTreasure" ItemsSource="{Binding OptionalItems.Slots}" Background="Transparent" BorderThickness="0"  HorizontalAlignment="Center" Margin="60">
+                                    <ListBox.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <WrapPanel/>
+                                        </ItemsPanelTemplate>
+                                    </ListBox.ItemsPanel>
+                                    <ListBox.ItemContainerStyle>
+                                        <Style TargetType="ListBoxItem" BasedOn="{StaticResource {x:Type ListBoxItem}}">
+                                            <Setter Property="Template">
+                                                <Setter.Value>
+                                                    <ControlTemplate>
+                                                        <ControlTemplate.Resources>
+                                                            <BitmapImage x:Key="Checkmark" UriSource="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared_c/c_ico_bigTick.png"/>
+                                                            <BitmapImage x:Key="RewardFancySurroundSelected" UriSource="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared_c/c_rewardChosenSurround.png"/>
+                                                        </ControlTemplate.Resources>
+
+                                                        <Grid x:Name="Container" ls:MoveFocus.Focusable="True" Focusable="True">
+                                                            <Grid.ToolTip>
+                                                                <ls:LSTooltip IsHitTestVisible="False" Content="{Binding DataContext.Object, ElementName=Container}"/>
+                                                            </Grid.ToolTip>
+                                                            <b:Interaction.Behaviors>
+                                                                <ls:CollectionContainsItemBehavior x:Name="IsSelectedBehaviour" ItemSource="{Binding Object}" CollectionSource="{Binding DataContext.SelectedItems, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"/>
+                                                            </b:Interaction.Behaviors>
+
+                                                            <Image x:Name="bg" Stretch="None" Source="{StaticResource RewardFancySurround}"/>
+                                                            <ContentPresenter x:Name="Icon" Content="{Binding Object}" ContentTemplate="{StaticResource Template.GameObject}" IsHitTestVisible="False"/>
+                                                            <Border x:Name="Selector" BorderBrush="{StaticResource LS_tint100}" BorderThickness="2" Width="{StaticResource SelectionBorderSize}" Height="{StaticResource SelectionBorderSize}" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding (ls:MoveFocus.IsFocused), ElementName=Container, Converter={StaticResource BoolToVisibleConverter}}"/>
+                                                            <Image x:Name="FancySelectedBorder" Stretch="None" Source="{StaticResource RewardFancySurroundSelected}" VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="{Binding Result, ElementName=IsSelectedBehaviour, Converter={StaticResource BoolToVisibleConverter}}"/>
+                                                            <Image x:Name="checkmark" Stretch="None" Source="{StaticResource Checkmark}" VerticalAlignment="Bottom" HorizontalAlignment="Center" Visibility="{Binding Result, ElementName=IsSelectedBehaviour, Converter={StaticResource BoolToVisibleConverter}}" Margin="0,20,0,-20"/>
+                                                        </Grid>
+                                                        <ControlTemplate.Triggers>
+                                                            <MultiDataTrigger>
+                                                                <MultiDataTrigger.Conditions>
+                                                                    <Condition Binding="{Binding Result, ElementName=IsSelectedBehaviour}" Value="False"/>
+                                                                    <Condition Binding="{Binding DataContext.IsAllSelected, ElementName=RewardPanel_c}" Value="True"/>
+                                                                </MultiDataTrigger.Conditions>
+                                                                <MultiDataTrigger.Setters>
+                                                                    <Setter TargetName="bg" Property="Opacity" Value="{StaticResource FadedItemOpacity}"/>
+                                                                    <Setter TargetName="Icon" Property="Opacity" Value="{StaticResource FadedItemOpacity}"/>
+                                                                </MultiDataTrigger.Setters>
+                                                            </MultiDataTrigger>
+                                                        </ControlTemplate.Triggers>
+                                                    </ControlTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Style>
+                                    </ListBox.ItemContainerStyle>
+                                    <b:Interaction.Triggers>
+                                        <b:EventTrigger EventName="Loaded">
+                                            <b:Interaction.Behaviors>
+                                                <b:ConditionBehavior>
+                                                    <b:ConditionalExpression>
+                                                        <b:ComparisonCondition LeftOperand="{Binding FocusedElement, ElementName=RewardPanel_c}" Operator="Equal" RightOperand="{x:Null}" />
+                                                    </b:ConditionalExpression>
+                                                </b:ConditionBehavior>
+                                            </b:Interaction.Behaviors>
+
+                                            <ls:SetMoveFocusAction TargetName="RewardPanel_c"/>
+                                        </b:EventTrigger>
+                                    </b:Interaction.Triggers>
+                                </ListBox>
+                            </ls:LSNineSliceImage>
+                        </StackPanel>
+
+                        <!--Accept Selection button-->
+                        <Grid x:Name="AcceptContainer">
+                            <Image HorizontalAlignment="Center" VerticalAlignment="Center" Source="/GustavNoesisGUI;component/Assets/Shared_c/c_fullScreenOverlayGradiant.png" Stretch="None" Height="100"/>
+                            <ls:LSButton x:Name="AcceptSelectionButton" Template="{StaticResource PrimaryButtonTemplate}" VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="0,0,0,-84" Command="{Binding GetRewardsAndClose.ActionCommand}" BoundEvent="UIEndTurn" ContentTemplate="{StaticResource ControllerButtonHint}" Content="{Binding CurrentPlayer.UIData.InputEvents, ConverterParameter=UIEndTurn, Converter={StaticResource FindInputEventConverter}}" Tag="{Binding Source='hbea25d3bg076dg435dg9b99g33350b45445a', Converter={StaticResource TranslatedStringConverter}}" Style="{StaticResource ButtonHint.Container.BaseStyle}">
+                                <ls:LSButton.IsEnabled>
+                                    <MultiBinding Converter="{StaticResource BoolAndConverter}">
+                                        <Binding Path="IsAllSelected"/>
+                                        <Binding Path="CurrentPlayer.SelectedCharacter.IsMultiplayerCharacter" />
+                                    </MultiBinding>
+                                </ls:LSButton.IsEnabled>
+                            </ls:LSButton>
+                        </Grid>
+                    </StackPanel>
+                </ls:LSNineSliceImage>
+
+                <!--Button prompts-->
+                <StackPanel x:Name="ButtonHints" Style="{StaticResource ButtonHint.Container.Center}" >
+
+                    <ls:LSButton x:Name="SelectItemButton" ContentTemplate="{StaticResource ControllerButtonHint}"
+                         Content="{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIAccept'}"
+                         BoundEvent="UIAccept" TapTime="{StaticResource DefaultButtonTapTime}"
+                         Tag="{Binding Source='h04f38549g65b8g4b72g834eg87ee8863fdc5', Converter={StaticResource TranslatedStringConverter}}"
+                         Command="{Binding ToggleOptionalItemCommand}"
+                         SoundID="UI_Shared_Accept" OverwriteClickSound="UI_HUD_RewardSelect_Confirm_Click"
+                         EatInput="False" IsEnabled="{Binding IsKeyboardFocusWithin, ElementName=OptionalTreasure}"
+                         CommandParameter="{Binding FocusedElement.DataContext.Object, ElementName=RewardPanel_c}"
+                         Visibility="{Binding MaxSelectedItems, Converter={StaticResource CountToVisibilityConverter}}">
+                    </ls:LSButton>
+
+                    <ls:LSButton x:Name="ToggleTooltipsButton" ContentTemplate="{StaticResource ControllerButtonHint}" SoundID="" VerticalAlignment="Center" BoundEvent="UIShowInfo"
+                         Content="{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIShowInfo'}"
+                         Tag="{Binding Source='h07aaca85g63dbg4e60g88a2g0590077ea7e2',Converter={StaticResource TranslatedStringConverter}}"
+                         Command="{Binding ToggleTooltipOnUIElement}"
+                         CommandParameter="{Binding Path=FocusedElement, ElementName=RewardPanel_c}"/>
+                </StackPanel>
+
+                <b:Interaction.Triggers>
+                    <b:EventTrigger EventName="FocusChanged">
+                        <b:InvokeCommandAction Command="{Binding ShowTooltipOnUIElement}" CommandParameter="{Binding Path=FocusedElement, ElementName=RewardPanel_c}"/>
+                    </b:EventTrigger>
+
+                    <b:EventTrigger EventName="Loaded">
+                        <ls:LSPlaySound Sound="UI_HUD_Reward_Notification"/>
+                    </b:EventTrigger>
+                </b:Interaction.Triggers>
+            </Grid>
+        </ControlTemplate>
+    </ls:UIWidget.Template>
+</ls:UIWidget>

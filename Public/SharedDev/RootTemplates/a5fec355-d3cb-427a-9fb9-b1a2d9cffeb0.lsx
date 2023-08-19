@@ -1,0 +1,159 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<save>
+	<version major="4" minor="0" revision="9" build="330" />
+	<region id="Templates">
+		<node id="Templates">
+			<children>
+				<node id="GameObjects">
+					<attribute id="MapKey" type="22" value="a5fec355-d3cb-427a-9fb9-b1a2d9cffeb0" />
+					<attribute id="Name" type="23" value="Gremishka" />
+					<attribute id="LevelName" type="22" value="" />
+					<attribute id="Type" type="22" value="character" />
+					<attribute id="ParentTemplateId" type="22" value="704a9343-2f4c-49a1-b936-c6d0594ade86" />
+					<attribute id="PhysicsTemplate" type="22" value="ed00afe4-1929-aac2-00d4-c94a97fc1f51" />
+					<attribute id="DisplayName" type="28" handle="h2b28b353gabd7g462eg973fge3940c84fe8b" version="1" />
+					<attribute id="Stats" type="22" value="Gremishka" />
+					<attribute id="SpellSet" type="22" value="CommonBeastActions" />
+					<attribute id="CanClimbLadders" type="19" value="True" />
+					<attribute id="CanOpenDoors" type="19" value="True" />
+					<attribute id="LightID" type="22" value="10d14e1c-5047-487f-ad77-2ae819efd234" />
+					<attribute id="AnubisConfigName" type="22" value="DefaultMonster" />
+					<attribute id="Faction" type="31" value="d376a9f5-1c31-4aa3-58b7-17c223d9ea7c" />
+					<children>
+						<node id="Tags">
+							<children>
+								<node id="Tag">
+									<attribute id="Object" type="31" value="6d60bed7-10cc-4b52-b78f-a7ba815149cd" />
+								</node>
+							</children>
+						</node>
+						<node id="Bounds">
+							<children>
+								<node id="Bound">
+									<attribute id="Type" type="1" value="0" />
+									<attribute id="Shape" type="1" value="2" />
+									<attribute id="Min" type="12" value="-0.1402566 -0.005310297 -0.5155202" />
+									<attribute id="Max" type="12" value="0.1312325 0.5938815 0.7860835" />
+									<attribute id="Radius" type="6" value="0.175" />
+									<attribute id="Height" type="6" value="0.75" />
+								</node>
+								<node id="Bound">
+									<attribute id="Type" type="1" value="1" />
+									<attribute id="Shape" type="1" value="2" />
+									<attribute id="Min" type="12" value="-0.1402566 -0.005310297 -0.5155202" />
+									<attribute id="Max" type="12" value="0.1312325 0.5938815 0.7860835" />
+									<attribute id="Radius" type="6" value="0.35" />
+									<attribute id="Height" type="6" value="0.55" />
+								</node>
+								<node id="Bound">
+									<attribute id="Type" type="1" value="2" />
+									<attribute id="Shape" type="1" value="2" />
+									<attribute id="Min" type="12" value="-0.1402566 -0.005310297 -0.5155202" />
+									<attribute id="Max" type="12" value="0.1312325 0.5938815 0.7860835" />
+									<attribute id="Radius" type="6" value="0.35" />
+									<attribute id="Height" type="6" value="0.75" />
+								</node>
+							</children>
+						</node>
+						<node id="OnDeathActions">
+							<children>
+								<node id="Action">
+									<attribute id="ActionType" type="4" value="10" />
+									<children>
+										<node id="Attributes">
+											<attribute id="Animation" type="22" value="" />
+											<attribute id="Conditions" type="23" value="" />
+											<attribute id="SurfaceType" type="22" value="SurfaceBlood" />
+											<attribute id="LifeTime" type="6" value="60" />
+											<attribute id="Timeout" type="6" value="0" />
+											<attribute id="TotalCells" type="4" value="10" />
+											<attribute id="CellAtGrow" type="4" value="2" />
+											<attribute id="GrowTimer" type="6" value="0.4" />
+											<attribute id="ExternalCauseAsSurfaceOwner" type="19" value="True" />
+											<attribute id="ApplyDeathTypeBloodCheck" type="19" value="True" />
+										</node>
+									</children>
+								</node>
+							</children>
+						</node>
+						<node id="SkillList">
+							<children>
+								<node id="Skill">
+									<attribute id="Skill" type="22" value="Target_Bite_Gremishka" />
+									<attribute id="SpellCastingAbility" type="1" value="0" />
+									<attribute id="LearningStrategy" type="1" value="0" />
+									<attribute id="ScoreModifier" type="6" value="1" />
+									<attribute id="StartRound" type="4" value="0" />
+									<attribute id="FallbackStartRound" type="4" value="-1" />
+									<attribute id="MinimumImpact" type="4" value="0" />
+									<attribute id="OnlyCastOnSelf" type="19" value="False" />
+									<attribute id="AIFlags" type="3" value="0" />
+									<children>
+										<node id="SourceConditions">
+											<attribute id="MinimumHealthPercentage" type="4" value="0" />
+											<attribute id="MaximumHealthPercentage" type="4" value="100" />
+											<children>
+												<node id="Tags" />
+											</children>
+										</node>
+										<node id="TargetConditions">
+											<attribute id="MinimumHealthPercentage" type="4" value="0" />
+											<attribute id="MaximumHealthPercentage" type="4" value="100" />
+											<children>
+												<node id="Tags" />
+											</children>
+										</node>
+									</children>
+								</node>
+								<node id="Skill">
+									<attribute id="Skill" type="22" value="Projectile_Jump_Gremishka" />
+									<attribute id="SpellCastingAbility" type="1" value="0" />
+									<attribute id="LearningStrategy" type="1" value="0" />
+									<attribute id="ScoreModifier" type="6" value="1" />
+									<attribute id="StartRound" type="4" value="0" />
+									<attribute id="FallbackStartRound" type="4" value="-1" />
+									<attribute id="MinimumImpact" type="4" value="0" />
+									<attribute id="OnlyCastOnSelf" type="19" value="False" />
+									<attribute id="AIFlags" type="3" value="0" />
+									<children>
+										<node id="SourceConditions">
+											<attribute id="MinimumHealthPercentage" type="4" value="0" />
+											<attribute id="MaximumHealthPercentage" type="4" value="100" />
+											<children>
+												<node id="Tags" />
+											</children>
+										</node>
+										<node id="TargetConditions">
+											<attribute id="MinimumHealthPercentage" type="4" value="0" />
+											<attribute id="MaximumHealthPercentage" type="4" value="100" />
+											<children>
+												<node id="Tags" />
+											</children>
+										</node>
+									</children>
+								</node>
+							</children>
+						</node>
+						<node id="StatusList">
+							<children>
+								<node id="Status">
+									<attribute id="Object" type="22" value="GREMISHKA_MAGICALLERGY_AURA" />
+								</node>
+							</children>
+						</node>
+						<node id="Treasures">
+							<children>
+								<node id="TreasureItem">
+									<attribute id="Object" type="22" value="Monster_Gremishka" />
+								</node>
+							</children>
+						</node>
+						<node id="LocomotionParams">
+							<attribute id="ProbeSpineBOffset" type="6" value="-3" />
+						</node>
+					</children>
+				</node>
+			</children>
+		</node>
+	</region>
+</save>

@@ -1,0 +1,133 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<save>
+	<version major="4" minor="0" revision="9" build="327" />
+	<region id="Templates">
+		<node id="Templates">
+			<children>
+				<node id="GameObjects">
+					<attribute id="MapKey" type="22" value="809d5026-4896-4b3a-986e-95da58da77e2" />
+					<attribute id="Name" type="23" value="CONS_Potion_Invisible_A" />
+					<attribute id="LevelName" type="22" value="" />
+					<attribute id="Type" type="22" value="item" />
+					<attribute id="ParentTemplateId" type="22" value="8e660fd9-489d-42ff-a762-e4392e826666" />
+					<attribute id="VisualTemplate" type="22" value="d2793a1f-7b4f-ed28-7ca9-5943d5e5348c" />
+					<attribute id="PhysicsTemplate" type="22" value="f371fadc-1367-ad59-3bd4-f99711757db6" />
+					<attribute id="DisplayName" type="28" handle="h301c00f1g5521g4cacg96bfge108ed494803" version="1" />
+					<attribute id="Icon" type="22" value="Item_CONS_Potion_Invisible_A" />
+					<attribute id="Stats" type="22" value="OBJ_Potion_Of_Invisibility" />
+					<attribute id="TreasureOnDestroy" type="19" value="True" />
+					<attribute id="Description" type="28" handle="hd8eb3890ge202g4b4bgbc3bga6511f36ef2e" version="1" />
+					<attribute id="TechnicalDescription" type="28" handle="hd5a13195g8caag43d1gaf55gc3868f50c607" version="1" />
+					<children>
+						<node id="Bounds">
+							<children>
+								<node id="Bound">
+									<attribute id="Type" type="1" value="1" />
+									<attribute id="Shape" type="1" value="1" />
+									<attribute id="Min" type="12" value="-0.1345685 -0.0009512678 -0.2660489" />
+									<attribute id="Max" type="12" value="0.1487026 0.1204626 0.3392585" />
+									<attribute id="Radius" type="6" value="0.216506" />
+									<attribute id="Height" type="6" value="0.5" />
+								</node>
+								<node id="Bound">
+									<attribute id="Type" type="1" value="2" />
+									<attribute id="Shape" type="1" value="1" />
+									<attribute id="Min" type="12" value="-0.1345685 -0.0009512678 -0.2660489" />
+									<attribute id="Max" type="12" value="0.1487026 0.1204626 0.3392585" />
+									<attribute id="Radius" type="6" value="0.216506" />
+									<attribute id="Height" type="6" value="0.5" />
+								</node>
+								<node id="Bound">
+									<attribute id="Type" type="1" value="0" />
+									<attribute id="Shape" type="1" value="1" />
+									<attribute id="Min" type="12" value="-0.1345685 -0.0009512827 -0.2660489" />
+									<attribute id="Max" type="12" value="0.1487026 0.1204626 0.3392585" />
+									<attribute id="Radius" type="6" value="0.1698125" />
+									<attribute id="Height" type="6" value="0.1214139" />
+								</node>
+							</children>
+						</node>
+						<node id="OnUsePeaceActions">
+							<children>
+								<node id="Action">
+									<attribute id="ActionType" type="4" value="7" />
+									<children>
+										<node id="Attributes">
+											<attribute id="Animation" type="22" value="" />
+											<attribute id="Conditions" type="23" value="" />
+											<attribute id="StatsId" type="22" value="POTION_OF_INVISIBILITY" />
+											<attribute id="StatusDuration" type="4" value="10" />
+											<attribute id="Consume" type="19" value="True" />
+											<attribute id="IsHiddenStatus" type="19" value="False" />
+										</node>
+									</children>
+								</node>
+							</children>
+						</node>
+						<node id="OnDestroyActions">
+							<children>
+								<node id="Action">
+									<attribute id="ActionType" type="4" value="26" />
+									<children>
+										<node id="Attributes">
+											<attribute id="Animation" type="22" value="" />
+											<attribute id="Conditions" type="23" value="" />
+											<attribute id="ActivateSoundEvent" type="22" value="3ea82655-5140-4287-9ab8-794559f182d3" />
+											<attribute id="PlayOnHUD" type="19" value="False" />
+										</node>
+									</children>
+								</node>
+								<node id="Action">
+									<attribute id="ActionType" type="4" value="5" />
+									<children>
+										<node id="Attributes">
+											<attribute id="Animation" type="22" value="" />
+											<attribute id="Conditions" type="23" value="" />
+											<attribute id="TargetItemState" type="1" value="0" />
+											<attribute id="SnapToGround" type="19" value="True" />
+											<attribute id="ExplodeFX" type="22" value="a3e6574b-46b4-7bdc-e657-baa3088c6792" />
+											<attribute id="visualDestruction" type="22" value="00000000-0000-0000-0000-000000000000" />
+											<attribute id="VisualWithDynamicPhysics" type="22" value="" />
+											<attribute id="FadeOutDelay" type="6" value="0" />
+											<attribute id="FadeOutFX" type="22" value="" />
+											<attribute id="templateAfterDestruction" type="22" value="" />
+										</node>
+									</children>
+								</node>
+							</children>
+						</node>
+						<node id="InventoryList" />
+						<node id="Scripts">
+							<children>
+								<node id="Script">
+									<attribute id="UUID" type="22" value="a557ab71-77f3-4b0c-8174-f605e51c90c7" />
+									<children>
+										<node id="Parameters">
+											<children>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="HardcoreOnly" />
+													<attribute id="Type" type="4" value="1" />
+													<attribute id="Value" type="23" value="0" />
+												</node>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="LifeTime" />
+													<attribute id="Type" type="4" value="2" />
+													<attribute id="Value" type="23" value="0" />
+												</node>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="ProjectileSpell" />
+													<attribute id="Type" type="4" value="9" />
+													<attribute id="Value" type="23" value="Projectile_Potion_Destroy_Invisibility" />
+												</node>
+											</children>
+										</node>
+									</children>
+								</node>
+							</children>
+						</node>
+					</children>
+				</node>
+			</children>
+		</node>
+	</region>
+</save>

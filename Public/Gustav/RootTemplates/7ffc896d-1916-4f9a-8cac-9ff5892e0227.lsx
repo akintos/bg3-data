@@ -1,0 +1,128 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<save>
+	<version major="4" minor="0" revision="9" build="319" />
+	<region id="Templates">
+		<node id="Templates">
+			<children>
+				<node id="GameObjects">
+					<attribute id="MapKey" type="22" value="7ffc896d-1916-4f9a-8cac-9ff5892e0227" />
+					<attribute id="Name" type="23" value="UNI_DEC_GEN_BoilingCauldron_Apprentice_Antidote" />
+					<attribute id="LevelName" type="22" value="" />
+					<attribute id="Type" type="22" value="item" />
+					<attribute id="ParentTemplateId" type="22" value="50a192ef-16b5-4ff6-a307-a93d9218a3c9" />
+					<attribute id="ReadinessFlags" type="5" value="128" />
+					<attribute id="VisualTemplate" type="22" value="c2268034-3554-d50c-05f2-529e77b0da10" />
+					<attribute id="PhysicsTemplate" type="22" value="e05ef459-e5b4-6d2e-329e-19f79adcc908" />
+					<attribute id="DisplayName" type="28" handle="h2255d244gfe63g495eg9ae6g9acd2f60647d" version="1" />
+					<attribute id="CoverAmount" type="1" value="0" />
+					<attribute id="CanClimbOn" type="19" value="False" />
+					<attribute id="CanShootThrough" type="19" value="True" />
+					<attribute id="CanClickThrough" type="19" value="False" />
+					<attribute id="WalkThrough" type="19" value="False" />
+					<attribute id="WalkOn" type="19" value="False" />
+					<attribute id="Wadable" type="19" value="False" />
+					<attribute id="LoopSound" type="22" value="" />
+					<attribute id="SoundInitEvent" type="22" value="" />
+					<attribute id="SoundAttenuation" type="2" value="-1" />
+					<attribute id="IsPointerBlocker" type="19" value="False" />
+					<attribute id="Icon" type="22" value="Item_DEC_GEN_Kitchen_Pot_Cauldron_Covered_A" />
+					<attribute id="Stats" type="22" value="DEN_Apprentice_AntidoteCauldron" />
+					<attribute id="LevelOverride" type="4" value="-1" />
+					<attribute id="Tooltip" type="1" value="2" />
+					<attribute id="IsInspector" type="19" value="False" />
+					<attribute id="CanJoinCombat" type="19" value="False" />
+					<children>
+						<node id="Bounds">
+							<children>
+								<node id="Bound">
+									<attribute id="Type" type="1" value="0" />
+									<attribute id="Shape" type="1" value="1" />
+									<attribute id="Min" type="12" value="-0.5573377 0.0006740093 -0.5454121" />
+									<attribute id="Max" type="12" value="0.5573377 0.9250674 0.5198281" />
+									<attribute id="Radius" type="6" value="0.2165065" />
+									<attribute id="Height" type="6" value="1" />
+								</node>
+								<node id="Bound">
+									<attribute id="Type" type="1" value="1" />
+									<attribute id="Shape" type="1" value="1" />
+									<attribute id="Min" type="12" value="-0.5573377 0.0006740093 -0.5454121" />
+									<attribute id="Max" type="12" value="0.5573377 0.9250674 0.5198281" />
+									<attribute id="Radius" type="6" value="0.433013" />
+									<attribute id="Height" type="6" value="1" />
+								</node>
+								<node id="Bound">
+									<attribute id="Type" type="1" value="2" />
+									<attribute id="Shape" type="1" value="1" />
+									<attribute id="Min" type="12" value="-0.5573377 0.0006740093 -0.5454121" />
+									<attribute id="Max" type="12" value="0.5573377 0.9250674 0.5198281" />
+									<attribute id="Radius" type="6" value="0.433013" />
+									<attribute id="Height" type="6" value="1" />
+								</node>
+							</children>
+						</node>
+						<node id="OnUsePeaceActions">
+							<children>
+								<node id="Action">
+									<attribute id="ActionType" type="4" value="23" />
+									<children>
+										<node id="Attributes">
+											<attribute id="Animation" type="22" value="" />
+											<attribute id="Conditions" type="23" value="" />
+											<attribute id="CombineSlots" type="27" value="1" />
+											<attribute id="IsBase" type="19" value="True" />
+										</node>
+									</children>
+								</node>
+							</children>
+						</node>
+						<node id="OnDestroyActions">
+							<children>
+								<node id="Action">
+									<attribute id="ActionType" type="4" value="5" />
+									<children>
+										<node id="Attributes">
+											<attribute id="Animation" type="22" value="" />
+											<attribute id="Conditions" type="23" value="" />
+											<attribute id="TargetItemState" type="1" value="0" />
+											<attribute id="SnapToGround" type="19" value="True" />
+											<attribute id="ExplodeFX" type="22" value="00642d99-55b8-ae03-793b-1f8dc71a7521" />
+											<attribute id="visualDestruction" type="22" value="df653eda-752d-65d6-8f52-eb6b28a2b9de" />
+											<attribute id="VisualWithDynamicPhysics" type="22" value="" />
+											<attribute id="FadeOutDelay" type="6" value="0" />
+											<attribute id="FadeOutFX" type="22" value="" />
+											<attribute id="templateAfterDestruction" type="22" value="d38a7878-e634-4254-8818-92eca4ece0e2" />
+										</node>
+									</children>
+								</node>
+								<node id="Action">
+									<attribute id="ActionType" type="4" value="26" />
+									<children>
+										<node id="Attributes">
+											<attribute id="Animation" type="22" value="" />
+											<attribute id="Conditions" type="23" value="" />
+											<attribute id="ActivateSoundEvent" type="22" value="3ea82655-5140-4287-9ab8-794559f182d3" />
+											<attribute id="PlayOnHUD" type="19" value="False" />
+										</node>
+									</children>
+								</node>
+								<node id="Action">
+									<attribute id="ActionType" type="4" value="4" />
+									<children>
+										<node id="Attributes">
+											<attribute id="Animation" type="22" value="" />
+											<attribute id="Conditions" type="23" value="" />
+											<attribute id="SurfaceType" type="22" value="SurfaceWater" />
+											<attribute id="LifeTime" type="6" value="0" />
+											<attribute id="Radius" type="6" value="3" />
+											<attribute id="ExternalCauseAsSurfaceOwner" type="19" value="True" />
+										</node>
+									</children>
+								</node>
+							</children>
+						</node>
+					</children>
+				</node>
+			</children>
+		</node>
+	</region>
+</save>

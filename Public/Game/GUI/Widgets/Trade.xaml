@@ -1,0 +1,1471 @@
+﻿<ls:UIWidget ls:UIWidget.ContextName="Trade"
+             x:Name="Trade"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:ls="clr-namespace:ls;assembly=SharedGUI"
+             xmlns:System="clr-namespace:System;assembly=mscorlib"
+    		 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:noesis="clr-namespace:NoesisGUIExtensions;assembly=Noesis.GUI.Extensions"
+			 mc:Ignorable="d"
+             d:DesignWidth="3840" d:DesignHeight="2160"
+             d:DataContext="{d:DesignInstance Type=ls:DCTrade}"
+             ls:UIWidget.Focusable="False" ls:TooltipExtender.Owner="{Binding CurrentPlayer.SelectedCharacter}">
+    <ls:UIWidget.Resources>
+        <ResourceDictionary>
+            <ls:LSTooltip x:Key="ManagedTooltip" IsHitTestVisible="False" Content="{Binding DataContext, RelativeSource={RelativeSource Mode=TemplatedParent}}"/>
+            <!--overriding these to keep the old sizes since this ui doesn't support cell scaling yet-->
+            <System:Double x:Key="ScaledNewItemIconSize">94</System:Double>
+            <System:Double x:Key="ScaledNewItemIconSizeHighlight">96</System:Double>
+            <System:Double x:Key="ScaledNewSlotSize">104</System:Double>
+
+            <DataTemplate x:Key="InvViewTabTradeTemplate" >
+                <ls:LSButton Command="{Binding DataContext.SelectFilterCommand, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" CommandParameter="{Binding}">
+                    <ls:LSButton.Template>
+                        <ControlTemplate TargetType="ls:LSButton">
+                            <Grid x:Name="tabBtn" ToolTipService.Placement="Bottom" ToolTip="{StaticResource NameTooltip}">
+                                <Grid.Tag>
+                                    <MultiBinding Converter="{StaticResource EqualConverter}">
+                                        <Binding Path="."/>
+                                        <Binding Path="DataContext.CurrentInventoryTab" RelativeSource="{RelativeSource AncestorType={x:Type ls:UIWidget}}"/>
+                                    </MultiBinding>
+                                </Grid.Tag>
+                                <Image x:Name="bg" Style="{StaticResource InvViewTabButtonBackgroundStyle}"/>
+                                <Image x:Name="icon" Stretch="None" Style="{StaticResource InvViewTabIconInactive}"/>
+                            </Grid>
+                            <ControlTemplate.Triggers>
+                                <DataTrigger Binding="{Binding Tag, ElementName=tabBtn}" Value="True">
+                                    <Setter TargetName="bg" Property="Style" Value="{StaticResource ActiveTabButtonBackgroundStyle}"/>
+                                    <Setter TargetName="icon" Property="Style" Value="{StaticResource InvViewTabIconActive}"/>
+                                </DataTrigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </ls:LSButton.Template>
+                </ls:LSButton>
+            </DataTemplate>
+
+            <Style x:Key="InventoryViewTabTradeStyle" TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource InventoryViewTabStyle}" >
+                <Setter Property="ContentTemplate" Value="{StaticResource InvViewTabTradeTemplate}" />
+            </Style>
+
+            <!-- Trade Combo Box -->
+
+            <DataTemplate x:Key="TradeSlotTemplate" DataType="{x:Type ls:VMInventorySlot}">
+                <Grid x:Name="root" Width="{StaticResource ScaledNewSlotSize}" Height="{StaticResource ScaledNewSlotSize}" Background="Transparent">
+                    <Grid.ToolTip>
+                        <ls:LSTooltip IsHitTestVisible="False" Content="{Binding DataContext.Object, RelativeSource={RelativeSource Mode=TemplatedParent}}"/>
+                    </Grid.ToolTip>
+                    <Grid.InputBindings>
+                        <MouseBinding Gesture="LeftDoubleClick" Command="{Binding DataContext.TradeItemCommand, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" CommandParameter="{Binding Object}"/>
+                    </Grid.InputBindings>
+                    <ContentPresenter Content="{Binding Object}" ContentTemplate="{StaticResource Template.GameObject}" IsHitTestVisible="False"/>
+                    <Border x:Name="focusImage" BorderBrush="White" BorderThickness="4" Visibility="Collapsed" IsHitTestVisible="False"/>
+
+                    <b:Interaction.Triggers>
+                        <b:EventTrigger EventName="MouseEnter">
+                            <ls:LSPlaySound Sound="UI_Shared_Hover"/>
+                        </b:EventTrigger>
+                    </b:Interaction.Triggers>
+                </Grid>
+                <DataTemplate.Triggers>
+                    <DataTrigger Binding="{Binding IsMouseOver, ElementName=root}" Value="True">
+                        <Setter Property="Visibility" Value="Visible" TargetName="focusImage"/>
+                    </DataTrigger>
+                </DataTemplate.Triggers>
+            </DataTemplate>
+
+            <ItemsPanelTemplate x:Key="BarterItemsPanelTemplate">
+                <ls:LSGrid x:Name="InvGridBarter" Columns="{DynamicResource invCols}" Rows="{DynamicResource invRows}"
+                        ContainerData="{Binding }"
+                        Background="{StaticResource InventoryCell2x2Brush}"
+                        CellWidth="{DynamicResource InvSlotSize}" 
+                        CellHeight="{DynamicResource InvSlotSize}" 
+                        VerticalSpacing="{DynamicResource InvSpacing}" 
+                        HorizontalSpacing="{DynamicResource InvSpacing}"
+                        AllowDrop="True"
+                        AutoIndex="True">
+                    <b:Interaction.Behaviors>
+                        <ls:DropOnInventoryGridBehavior DropCommand="{Binding DataContext.DropOnInventorySlotCommand, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"/>
+                    </b:Interaction.Behaviors>
+                </ls:LSGrid>
+            </ItemsPanelTemplate>
+
+            <Style x:Key="BarterListItems" TargetType="ListBoxItem" BasedOn="{StaticResource BaseInvContainerItemStyle}">
+                <Setter Property="Width" Value="{StaticResource InvSlotSize}" />
+                <Setter Property="Height" Value="{StaticResource InvSlotSize}" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="ListBoxItem">
+                            <ls:LSEntityObject x:Name="CellRoot" Context="{Binding (ls:ContextMenuService.Context) , RelativeSource={RelativeSource Mode=TemplatedParent} }" ls:ContextMenuService.GenerateEnabled="False" DataContext="{Binding Object}" EntityRef="{Binding EntityHandle}" Background="Transparent" ToolTipService.Placement="Right">
+                                <ls:LSEntityObject.ToolTip>
+                                    <ls:LSTooltip Content="{Binding DataContext.Object,RelativeSource={RelativeSource Mode=TemplatedParent}}"/>
+                                </ls:LSEntityObject.ToolTip>
+
+                                <b:Interaction.Behaviors>
+                                    <ls:ContextMenuFillBehavior Context="{Binding (ls:ContextMenuService.Context) , RelativeSource={RelativeSource Mode=TemplatedParent} }" Player="{Binding DataContext.CurrentPlayer, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" TargetObject="{Binding .}" Source="{Binding SelectedItems,RelativeSource={RelativeSource AncestorType=ListBox}}" Command="{Binding DataContext.ContextActionPressed, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"/>
+                                </b:Interaction.Behaviors>
+
+                                <b:Interaction.Triggers>
+                                    <b:EventTrigger EventName="MouseEnter">
+                                        <b:InvokeCommandAction IsEnabled="{Binding IsNew}" Command="{Binding DataContext.ClearItemNewFlag, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" CommandParameter="{Binding .}"/>
+                                        <ls:LSPlaySound Sound="UI_Shared_Hover"/>
+                                    </b:EventTrigger>
+                                </b:Interaction.Triggers>
+
+                                <ls:LSEntityObject.InputBindings>
+                                    <MouseBinding Gesture="LeftDoubleClick" Command="{Binding DataContext.MoveTradeItem, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" CommandParameter="{Binding .}"/>
+                                </ls:LSEntityObject.InputBindings>
+
+                                <ContentPresenter  IsHitTestVisible="False"/>
+                                <Image x:Name="SelectedImg" Source="{StaticResource InvSlot_Selector}" IsHitTestVisible="False" Visibility="Hidden" Opacity="1.0" />
+                            </ls:LSEntityObject>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter TargetName="SelectedImg" Property="Visibility" Value="Visible" />
+                                    <Setter TargetName="SelectedImg" Property="Opacity" Value="0.8"/>
+                                </Trigger>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="SelectedImg" Property="Visibility" Value="Visible" />
+                                    <Setter TargetName="SelectedImg" Property="Opacity" Value="1.0"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="noesis:StyleInteraction.Triggers">
+                    <Setter.Value>
+                        <noesis:StyleTriggerCollection>
+                            <b:EventTrigger EventName="MouseEnter">
+                                <ls:LSPlaySound Sound="UI_Shared_Hover"/>
+                            </b:EventTrigger>
+                        </noesis:StyleTriggerCollection>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <ControlTemplate x:Key="BarterGridFlipped" TargetType="ContentControl">
+                <Grid>
+                    <b:Interaction.Triggers>
+                        <b:DataTrigger Binding="{Binding IsKeyboardFocusWithin, ElementName=Items}" Value="False">
+                            <b:ChangePropertyAction TargetName="Items" PropertyName="SelectedIndex" Value="-1" />
+                        </b:DataTrigger>
+                        <b:EventTrigger EventName="MouseRightButtonUp" SourceObject="{Binding RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}">
+                            <b:Interaction.Behaviors>
+                                <b:ConditionBehavior>
+                                    <b:ConditionalExpression>
+                                        <b:ComparisonCondition LeftOperand="{Binding Path=IsMouseOver, ElementName=Items}" Operator="Equal" RightOperand="False"/>
+                                    </b:ConditionalExpression>
+                                </b:ConditionBehavior>
+                            </b:Interaction.Behaviors>
+                            <b:ChangePropertyAction TargetName="Items" PropertyName="SelectedIndex" Value="-1" />
+                        </b:EventTrigger>
+                    </b:Interaction.Triggers>
+                    <ls:LSInputBinding BoundEvent="ActionCancel" EatInput="False" IsEnabled="True" PlayerId="{Binding PlayerId, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}">
+                        <b:Interaction.Triggers>
+                            <b:EventTrigger EventName="LSInputBindingPressed">
+                                <b:ChangePropertyAction TargetName="Items" PropertyName="SelectedIndex" Value="-1" />
+                            </b:EventTrigger>
+                        </b:Interaction.Triggers>
+                    </ls:LSInputBinding>
+
+                    <ListBox x:Name="Items" ItemsSource="{Binding Content, RelativeSource={RelativeSource TemplatedParent}}" ItemTemplate="{StaticResource Template.InventorySlot}" ItemsPanel="{StaticResource BarterItemsPanelTemplate}" Padding="-16,0,0,0" VirtualizingPanel.ScrollUnit="Pixel" VirtualizingPanel.IsContainerVirtualizable="True" VirtualizingPanel.VirtualizationMode="Recycling" SelectionMode="Single" ItemContainerStyle="{StaticResource BarterListItems}" ls:MultiSelect.IsEnabled="False">
+                        <b:Interaction.Behaviors>
+                            <ls:DragGenericBehavior StartDragCommand="{Binding DataContext.DragInventoryCommand , RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"/>
+                        </b:Interaction.Behaviors>
+                        <ListBox.Template>
+                            <ControlTemplate TargetType="ListBox">
+                                <ScrollViewer Template="{StaticResource FlippedScrollViewerTemplate}"
+                                    CanContentScroll="True" Padding="{TemplateBinding Padding}" Focusable="False">
+                                    <b:Interaction.Behaviors>
+                                        <ls:DragScrollingBehavior />
+                                    </b:Interaction.Behaviors>
+                                    <ItemsPresenter />
+                                </ScrollViewer>
+                            </ControlTemplate>
+                        </ListBox.Template>
+                    </ListBox>
+                </Grid>
+            </ControlTemplate>
+
+            <ControlTemplate x:Key="BarterGrid" TargetType="ContentControl">
+                <Grid>
+                    <b:Interaction.Triggers>
+                        <b:DataTrigger Binding="{Binding IsKeyboardFocusWithin, ElementName=Items}" Value="False">
+                            <b:ChangePropertyAction TargetName="Items" PropertyName="SelectedIndex" Value="-1" />
+                        </b:DataTrigger>
+                        <b:EventTrigger EventName="MouseRightButtonUp" SourceObject="{Binding RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}">
+                            <b:Interaction.Behaviors>
+                                <b:ConditionBehavior>
+                                    <b:ConditionalExpression>
+                                        <b:ComparisonCondition LeftOperand="{Binding Path=IsMouseOver, ElementName=Items}" Operator="Equal" RightOperand="False"/>
+                                    </b:ConditionalExpression>
+                                </b:ConditionBehavior>
+                            </b:Interaction.Behaviors>
+                            <b:ChangePropertyAction TargetName="Items" PropertyName="SelectedIndex" Value="-1" />
+                        </b:EventTrigger>
+                    </b:Interaction.Triggers>
+                    <ls:LSInputBinding BoundEvent="ActionCancel" EatInput="False" IsEnabled="True" PlayerId="{Binding PlayerId, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}">
+                        <b:Interaction.Triggers>
+                            <b:EventTrigger EventName="LSInputBindingPressed">
+                                <b:ChangePropertyAction TargetName="Items" PropertyName="SelectedIndex" Value="-1" />
+                            </b:EventTrigger>
+                        </b:Interaction.Triggers>
+                    </ls:LSInputBinding>
+                    <ListBox x:Name="Items" ItemsSource="{Binding Content, RelativeSource={RelativeSource TemplatedParent}}" ItemTemplate="{StaticResource Template.InventorySlot}" ItemsPanel="{StaticResource BarterItemsPanelTemplate}" Padding="0,0,-16,0" VirtualizingPanel.ScrollUnit="Pixel" VirtualizingPanel.IsContainerVirtualizable="True" VirtualizingPanel.VirtualizationMode="Recycling" SelectionMode="Single" ItemContainerStyle="{StaticResource BarterListItems}" ls:MultiSelect.IsEnabled="False">
+                        <b:Interaction.Behaviors>
+                            <ls:DragGenericBehavior StartDragCommand="{Binding DataContext.DragInventoryCommand , RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"/>
+                        </b:Interaction.Behaviors>
+                        <ListBox.Template>
+                            <ControlTemplate TargetType="ListBox">
+                                <ScrollViewer Template="{StaticResource ScrollViewerTemplate}"
+                                CanContentScroll="True" Padding="{TemplateBinding Padding}" Focusable="False">
+                                    <b:Interaction.Behaviors>
+                                        <ls:DragScrollingBehavior />
+                                    </b:Interaction.Behaviors>
+                                    <ItemsPresenter />
+                                </ScrollViewer>
+                            </ControlTemplate>
+                        </ListBox.Template>
+                    </ListBox>
+                </Grid>
+                <ControlTemplate.Triggers>
+                    <DataTrigger Binding="{Binding SelectedItems.Count,ElementName=Items,Converter={StaticResource GreaterThanConverter},ConverterParameter=1}" Value="True">
+                        <Setter TargetName="Items" Property="ls:MultiSelect.IsEnabled" Value="True"/>
+                    </DataTrigger>
+                </ControlTemplate.Triggers>
+            </ControlTemplate>
+
+            <!-- Balance Trade Button -->
+            <Style x:Key="BalanceTradeButton" TargetType="{x:Type ls:LSButton}">
+                <Style.Resources>
+                    <ImageSource x:Key="ButtonNormal">pack://application:,,,/GustavNoesisGUI;component/Assets/Trade/balance_btn_d.png</ImageSource>
+                    <ImageSource x:Key="ButtonHighlight">pack://application:,,,/GustavNoesisGUI;component/Assets/Trade/balance_btn_h.png</ImageSource>
+                    <ImageSource x:Key="ButtonPressed">pack://application:,,,/GustavNoesisGUI;component/Assets/Trade/balance_btn_p.png</ImageSource>
+                    <ImageSource x:Key="ButtonDisabled">pack://application:,,,/GustavNoesisGUI;component/Assets/Trade/balance_btn_disabled.png</ImageSource>
+                    <System:Double x:Key="IconWidth">64</System:Double>
+                    <System:Double x:Key="IconHeight">64</System:Double>
+                </Style.Resources>
+                <Setter Property="Template" Value="{StaticResource IconButtonTemplate}"/>
+            </Style>
+
+
+            <!--Active Trade CharacterPortrait Representation -->
+            <DataTemplate x:Key="TradePortraitFront">
+                <Grid VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <Path Stretch="None" VerticalAlignment="Center" HorizontalAlignment="Center" Width="134" Height="200" Fill="{Binding Icon}" RenderTransformOrigin="0.5,0.534">
+                        <Path.Data>
+                            <Geometry >M0,27 A90,90 0 0 1 27,0 H105 A90,90 0 0 1 134,27 V171 A90,90 0 0 1 105,200 H27 A90,90 0 0 1 0,171 V42 Z</Geometry>
+                        </Path.Data>
+                    </Path>
+                    <Image VerticalAlignment="Top" HorizontalAlignment="Center" Stretch="None" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared/character_image_frame.png"/>
+                </Grid>
+            </DataTemplate>
+
+            <ControlTemplate x:Key="GainLossTemplate" TargetType="Control" >
+                <ControlTemplate.Resources>
+                    <BitmapImage x:Key="VectorIcon" UriSource="pack://application:,,,/GustavNoesisGUI;component/Assets/Trade/vector.png"/>
+                </ControlTemplate.Resources>
+                <Canvas Height="1000" Width="88">
+                    <Image x:Name="img" Source="{StaticResource VectorIcon}" Stretch="None" RenderTransformOrigin="0.5, 0.5" Margin="0, 450, 0, 0"  Height="64" Width="88"/>
+                </Canvas>
+                <ControlTemplate.Triggers>
+                    <DataTrigger Binding="{Binding CharacterGain}" Value="False">
+                        <Setter TargetName="img" Property="RenderTransform">
+                            <Setter.Value>
+                                <TransformGroup>
+                                    <RotateTransform Angle="180"/>
+                                </TransformGroup>
+                            </Setter.Value>
+                        </Setter>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding AbsCharacterTradeGoldDifference}" Value="0">
+                        <Setter TargetName="img" Property="Visibility" Value="Hidden"/>
+                    </DataTrigger>
+                </ControlTemplate.Triggers>
+            </ControlTemplate>
+
+            <ControlTemplate x:Key="MainPanelTopContent" TargetType="Control">
+                <ControlTemplate.Resources>
+                    <BitmapImage x:Key="FrameImage" UriSource="pack://application:,,,/GustavNoesisGUI;component/Assets/Trade/frame.png"/>
+                    <BitmapImage x:Key="BarterDecorationImage" UriSource="pack://application:,,,/GustavNoesisGUI;component/Assets/Trade/barterDecoration.png"/>
+                </ControlTemplate.Resources>
+                <Grid>
+                    <ls:LSNineSliceImage VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,108,0,0" ImageSource="{StaticResource FrameImage}" Slices="248" Width="1808" Height="1776"/>
+
+                    <Image x:Name="BarterDecoration"
+                           VerticalAlignment="Top" 
+                           HorizontalAlignment="Center"
+                           Source="{StaticResource BarterDecorationImage}"
+                           Stretch="None"
+                           Margin="0, 116, 0, 0"/>
+
+                    <!-- Trader Icon -->
+                    <ContentControl HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,0,256,0" ContentTemplate="{StaticResource TradePortraitFront}" Content="{Binding Trader}"/>
+
+                    <ContentControl HorizontalAlignment="Left" VerticalAlignment="Top" Margin="256,0,0,0" ContentTemplate="{StaticResource TradePortraitFront}" Content="{Binding CurrentTradingCharacter}"/>
+
+                    <!-- Filter Options -->
+                    <ListBox x:Name="invViewList"
+                                    VerticalAlignment="Top" 
+                                    HorizontalAlignment="Center"
+                                    Margin="0,84,0,0"
+                                    Visibility="Collapsed"
+                                    ItemsSource="{Binding TradeTabList}" 
+                                    SelectedItem="{Binding CurrentInventoryTab}"
+                                    ScrollViewer.HorizontalScrollBarVisibility="Disabled" 
+                                    ScrollViewer.VerticalScrollBarVisibility="Disabled">
+                        <ListBox.ItemContainerStyle>
+                            <Style TargetType="ListBoxItem" BasedOn="{StaticResource InventoryViewTabTradeStyle}">
+                                <Setter Property="IsEnabled" Value="True"/>
+                                <Style.Triggers>
+                                    <MultiDataTrigger>
+                                        <MultiDataTrigger.Conditions>
+                                            <Condition Binding="{Binding EnumId}" Value="BuyBack" />
+                                            <Condition Binding="{Binding DataContext.HasBuyBack, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ls:UIWidget}}}" Value="False" />
+                                        </MultiDataTrigger.Conditions>
+                                        <Setter Property="IsEnabled" Value="False"/>
+                                    </MultiDataTrigger>
+                                    <MultiDataTrigger>
+                                        <MultiDataTrigger.Conditions>
+                                            <Condition Binding="{Binding EnumId}" Value="Wares" />
+                                            <Condition Binding="{Binding DataContext.HasWares, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ls:UIWidget}}}" Value="False" />
+                                        </MultiDataTrigger.Conditions>
+                                        <Setter Property="IsEnabled" Value="False"/>
+                                    </MultiDataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ListBox.ItemContainerStyle>
+                        <ListBox.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel IsItemsHost="True" Orientation="Horizontal" />
+                            </ItemsPanelTemplate>
+                        </ListBox.ItemsPanel>
+                    </ListBox>
+                </Grid>
+                <ControlTemplate.Triggers>
+                    <DataTrigger Binding="{Binding Mode}" Value="Trade">
+                        <Setter TargetName="invViewList" Property="Visibility" Value="Visible"/>
+                        <Setter TargetName="BarterDecoration" Property="Visibility" Value="Collapsed"/>
+                    </DataTrigger>
+                </ControlTemplate.Triggers>
+            </ControlTemplate>
+
+            <ControlTemplate x:Key="TradeMainPanelTemplate" TargetType="ContentControl">
+                <!--Trade Panel -->
+                <Grid x:Name="TradeMainPanel">
+                    <b:Interaction.Behaviors>
+                        <ls:CollectionFilterBehavior x:Name="PlayerInventoryFiltered" ItemsSource="{Binding TradingCharacterInventory.Slots}" Predicate="{Binding TradingCharacterInventory.TabFiltersPredicate}"/>
+                        <ls:CollectionFilterBehavior x:Name="TraderInventoryFiltered" ItemsSource="{Binding TraderInventory.Slots}" Predicate="{Binding TraderInventory.TabFiltersPredicate}"/>
+                        <ls:CollectionSortBehavior x:Name="PlayerInventoryFilteredSorted" ItemsSource="{Binding Path=(b:Interaction.Behaviors)[0].FilteredItems, ElementName=TradeMainPanel}" Comparer="{Binding DataContext.CurrentPlayer.SelectedCharacter.TradeSortComparer, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"/>
+                        <ls:CollectionSortBehavior x:Name="TraderInventoryFilteredSorted" ItemsSource="{Binding Path=(b:Interaction.Behaviors)[1].FilteredItems, ElementName=TradeMainPanel}" Comparer="{Binding DataContext.CurrentPlayer.SelectedCharacter.TradeSortComparer, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"/>
+
+                    </b:Interaction.Behaviors>
+
+                    <Control HorizontalAlignment="Center" VerticalAlignment="Center" Template="{StaticResource MainPanelTopContent}"/>
+
+                        <!-- Trade Inventories -->
+                    <Grid VerticalAlignment="Bottom" Margin="0,0,0,220" >
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="864"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="864"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="60"/>
+                            <RowDefinition Height="1368"/>
+                        </Grid.RowDefinitions>
+
+                        <!-- Player Gold and Gain Text -->
+                        <StackPanel Grid.Column="0" Grid.Row="0" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="312,0,0,6" Orientation="Horizontal" >
+                            <TextBlock Text="{Binding CharacterInventoryGold, StringFormat={}{0:N0}}" Foreground="{DynamicResource LS_PrimaryColor}" FontWeight="Bold"/>
+                            <Image VerticalAlignment="Top" Margin="0,4,4,0" Source="{StaticResource GoldIconImg}"  Stretch="None" />
+
+                            <Control Margin="6,4,0,0">
+                                <Control.Template>
+                                    <ControlTemplate TargetType="Control">
+                                        <StackPanel x:Name="content" Orientation="Horizontal">
+                                            <TextBlock x:Name="prefix" Text="+" FontSize="{DynamicResource MediumFontSize}" Foreground="{DynamicResource LS_PositiveDeltaColor}" FontWeight="Bold"/>
+                                            <TextBlock x:Name="gold" Margin="6,0,0,0" Text="{Binding AbsCharacterTradeGoldDifference, StringFormat={}{0:N0}}" FontSize="{DynamicResource SmallFontSize}" Foreground="{DynamicResource LS_PositiveDeltaColor}" FontWeight="Bold"/>
+                                            <TextBlock x:Name="gain" Margin="6,0,0,0" Text="{Binding Source='h95f2cfd5g8628g4cb5g9002g8ef2e69a49fa', Converter={StaticResource TranslatedStringConverter}}" FontSize="{DynamicResource SmallFontSize}" Foreground="{DynamicResource LS_PositiveDeltaColor}" FontWeight="Bold"/>
+                                        </StackPanel>
+                                        <ControlTemplate.Triggers>
+                                            <DataTrigger Binding="{Binding CharacterGain}" Value="False">
+                                                <Setter TargetName="prefix" Property="Foreground" Value="{DynamicResource LS_NegativeDeltaColor}"/>
+                                                <Setter TargetName="gold" Property="Foreground" Value="{DynamicResource LS_NegativeDeltaColor}"/>
+                                                <Setter TargetName="gain" Property="Foreground" Value="{DynamicResource LS_NegativeDeltaColor}"/>
+                                                <Setter TargetName="prefix" Property="Text" Value="-"/>
+                                                <Setter TargetName="gain" Property="Text" Value="{Binding Source='h59259fb2gc248g400fgb872g53b804b88473', Converter={StaticResource TranslatedStringConverter}}"/>
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding AbsCharacterTradeGoldDifference}" Value="0">
+                                                <Setter TargetName="content" Property="Visibility" Value="Collapsed"/>
+                                            </DataTrigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Control.Template>
+                            </Control>
+                        </StackPanel>
+
+                        <!-- Trader Gold -->
+                        <StackPanel Grid.Column="2" Grid.Row="0" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,260,6" Orientation="Horizontal">
+                            <TextBlock Text="{Binding TraderInventoryGold, StringFormat={}{0:N0}}" Foreground="{DynamicResource LS_PrimaryColor}" FontWeight="Bold"/>
+                            <Image VerticalAlignment="Top" Margin="0,4,4,0" Source="{StaticResource GoldIconImg}" Stretch="None"/>
+                        </StackPanel>
+
+                        <!-- Player Inventory -->
+                        <ListBox x:Name="PlayerTradeInventory" DataContext="{Binding TradingCharacterInventory}" Grid.Column="0" Grid.Row="1" Padding="-16,0,0,0" 
+                                    VirtualizingPanel.ScrollUnit="Pixel" VirtualizingPanel.IsContainerVirtualizable="True" VirtualizingPanel.VirtualizationMode="Recycling" 
+                                    ItemsSource="{Binding Path=(b:Interaction.Behaviors)[2].SortedItems, ElementName=TradeMainPanel}" ItemTemplate="{StaticResource TradeSlotTemplate}"
+                                    VerticalAlignment="Stretch" HorizontalAlignment="Right"  Margin="4,0,30,0" SelectionMode="Single" ls:MultiSelect.IsEnabled="False">
+                            <ListBox.Resources>
+                                <System:UInt32 x:Key="invRows">12</System:UInt32>
+                                <System:UInt32 x:Key="invCols">7</System:UInt32>
+                            </ListBox.Resources>
+                            <ListBox.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <ls:LSGrid x:Name="InvGridPlayer" ContainerData="{Binding }" Background="{StaticResource InventoryCell2x2Brush}"
+                                            VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.VirtualizationMode="Recycling" Columns="{DynamicResource invCols}"
+                                            Rows="{DynamicResource invRows}" CellWidth="{StaticResource InvSlotSize}" CellHeight="{StaticResource InvSlotSize}"
+                                            VerticalSpacing="{StaticResource InvSpacing}" HorizontalSpacing="{StaticResource InvSpacing}" AllowDrop="True" AutoIndex="True" ls:MultiSelect.IsEnabled="False">
+                                        <b:Interaction.Behaviors>
+                                            <ls:DragGameObjectGridBehavior StartDragCommand="{Binding DataContext.DragTradeSlotCommand, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"/>
+                                            <ls:DropOnInventoryGridBehavior DropCommand="{Binding DataContext.DropPlayerInventoryTradeSlotCommand, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"/>
+                                        </b:Interaction.Behaviors>
+                                    </ls:LSGrid>
+                                </ItemsPanelTemplate>
+                            </ListBox.ItemsPanel>
+                            <ListBox.Template>
+                                <ControlTemplate TargetType="ListBox">
+                                    <Border BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}" Background="{TemplateBinding Background}">
+                                        <ScrollViewer Template="{StaticResource FlippedScrollViewerTemplate}"
+                                CanContentScroll="True" Padding="{TemplateBinding Padding}" Focusable="False">
+                                            <b:Interaction.Behaviors>
+                                                <ls:DragScrollingBehavior />
+                                            </b:Interaction.Behaviors>
+                                            <ItemsPresenter />
+                                        </ScrollViewer>
+                                    </Border>
+                                </ControlTemplate>
+                            </ListBox.Template>
+                        </ListBox>
+
+                        <!-- Trader Inventory -->
+                        <ListBox x:Name="TraderTradeInventory" DataContext="{Binding TraderInventory}" Grid.Column="2" Grid.Row="1" Margin="30,0,-16,0"
+                                    VirtualizingPanel.ScrollUnit="Pixel" VirtualizingPanel.IsContainerVirtualizable="True" VirtualizingPanel.VirtualizationMode="Recycling"
+                                    ItemsSource="{Binding Path=(b:Interaction.Behaviors)[3].SortedItems, ElementName=TradeMainPanel}" ItemTemplate="{StaticResource TradeSlotTemplate}"
+                                    VerticalAlignment="Stretch" HorizontalAlignment="Left" SelectionMode="Single" ls:MultiSelect.IsEnabled="False">
+                            <ListBox.Resources>
+                                <System:UInt32 x:Key="invRows">12</System:UInt32>
+                                <System:UInt32 x:Key="invCols">7</System:UInt32>
+                            </ListBox.Resources>
+                            <ListBox.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <ls:LSGrid  x:Name="InvGridTrader"
+                                            VirtualizingPanel.IsVirtualizing="True"
+                                            VirtualizingPanel.VirtualizationMode="Recycling"
+                                            Background="{StaticResource InventoryCell2x2Brush}"
+                                            Columns="{DynamicResource invCols}"
+                                            Rows="{DynamicResource invRows}"
+                                            ContainerData="{Binding }"
+                                            CellWidth="{DynamicResource InvSlotSize}"
+                                            CellHeight="{DynamicResource InvSlotSize}"
+                                            VerticalSpacing="{DynamicResource InvSpacing}"
+                                            HorizontalSpacing="{DynamicResource InvSpacing}"
+                                            AllowDrop="True"
+                                            AutoIndex="True"
+                                            ls:MultiSelect.IsEnabled="False">
+                                        <b:Interaction.Behaviors>
+                                            <ls:DragGameObjectGridBehavior StartDragCommand="{Binding DataContext.DragTradeSlotCommand, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"/>
+                                            <ls:DropOnInventoryGridBehavior DropCommand="{Binding DataContext.DropTraderInventoryTradeSlotCommand, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"/>
+                                        </b:Interaction.Behaviors>
+                                    </ls:LSGrid>
+                                </ItemsPanelTemplate>
+                            </ListBox.ItemsPanel>
+                            <ListBox.Template>
+                                <ControlTemplate TargetType="ListBox">
+                                    <Border BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}" Background="{TemplateBinding Background}">
+                                        <ScrollViewer Template="{StaticResource ScrollViewerTemplate}" CanContentScroll="True" Padding="{TemplateBinding Padding}" Focusable="False">
+                                            <b:Interaction.Behaviors>
+                                                <ls:DragScrollingBehavior />
+                                            </b:Interaction.Behaviors>
+                                            <ItemsPresenter />
+                                        </ScrollViewer>
+                                    </Border>
+                                </ControlTemplate>
+                            </ListBox.Template>
+                        </ListBox>
+
+                        <ls:LSInputBinding BoundEvent="ActionCancel" EatInput="False" IsEnabled="True" PlayerId="{Binding PlayerId, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}">
+                            <b:Interaction.Triggers>
+                                <b:EventTrigger EventName="LSInputBindingPressed">
+                                    <b:ChangePropertyAction TargetName="PlayerTradeInventory" PropertyName="SelectedIndex" Value="-1" />
+                                    <b:ChangePropertyAction TargetName="TraderTradeInventory" PropertyName="SelectedIndex" Value="-1" />
+                                </b:EventTrigger>
+                            </b:Interaction.Triggers>
+                        </ls:LSInputBinding>
+                    </Grid>
+                    <Control VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,360,0,0" Template="{StaticResource GainLossTemplate}"/>
+
+                    <b:Interaction.Triggers>
+                        <b:DataTrigger Binding="{Binding IsKeyboardFocusWithin, ElementName=TraderTradeInventory}" Value="True">
+                            <b:ChangePropertyAction TargetName="PlayerTradeInventory" PropertyName="SelectedIndex" Value="-1" />
+                        </b:DataTrigger>
+                        <b:EventTrigger EventName="MouseRightButtonUp" SourceObject="{Binding RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}">
+                            <b:Interaction.Behaviors>
+                                <b:ConditionBehavior>
+                                    <b:ConditionalExpression>
+                                        <b:ComparisonCondition LeftOperand="{Binding Path=IsMouseOver, ElementName=PlayerTradeInventory}" Operator="Equal" RightOperand="False"/>
+                                    </b:ConditionalExpression>
+                                </b:ConditionBehavior>
+                            </b:Interaction.Behaviors>
+                            <b:ChangePropertyAction TargetName="PlayerTradeInventory" PropertyName="SelectedIndex" Value="-1" />
+                        </b:EventTrigger>
+
+                        <b:DataTrigger Binding="{Binding IsKeyboardFocusWithin, ElementName=PlayerTradeInventory}" Value="True">
+                            <b:ChangePropertyAction TargetName="TraderTradeInventory" PropertyName="SelectedIndex" Value="-1" />
+                        </b:DataTrigger>
+                        <b:EventTrigger EventName="MouseRightButtonUp" SourceObject="{Binding RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}">
+                            <b:Interaction.Behaviors>
+                                <b:ConditionBehavior>
+                                    <b:ConditionalExpression>
+                                        <b:ComparisonCondition LeftOperand="{Binding Path=IsMouseOver, ElementName=TraderTradeInventory}" Operator="Equal" RightOperand="False"/>
+                                    </b:ConditionalExpression>
+                                </b:ConditionBehavior>
+                            </b:Interaction.Behaviors>
+                            <b:ChangePropertyAction TargetName="TraderTradeInventory" PropertyName="SelectedIndex" Value="-1" />
+                        </b:EventTrigger>
+                    </b:Interaction.Triggers>
+                </Grid>
+            </ControlTemplate>
+
+            <ControlTemplate x:Key="BarterMainPanelTemplate" TargetType="ContentControl">
+                <Grid x:Name="BarterMainPanel">
+                    <b:Interaction.Behaviors>
+                        <ls:CollectionFilterBehavior x:Name="PlayerInventoryFiltered" ItemsSource="{Binding TradingCharacterInventory.Slots}" Predicate="{Binding TradingCharacterInventory.TabFiltersPredicate}"/>
+                        <ls:CollectionFilterBehavior x:Name="TraderInventoryFiltered" ItemsSource="{Binding TraderInventory.Slots}" Predicate="{Binding TraderInventory.TabFiltersPredicate}"/>
+                        <ls:CollectionSortBehavior x:Name="PlayerInventoryFilteredSorted" ItemsSource="{Binding Path=(b:Interaction.Behaviors)[0].FilteredItems, ElementName=BarterMainPanel}" Comparer="{Binding DataContext.CurrentPlayer.SelectedCharacter.TradeSortComparer, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"/>
+                        <ls:CollectionSortBehavior x:Name="TraderInventoryFilteredSorted" ItemsSource="{Binding Path=(b:Interaction.Behaviors)[1].FilteredItems, ElementName=BarterMainPanel}" Comparer="{Binding DataContext.CurrentPlayer.SelectedCharacter.TradeSortComparer, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"/>
+                    </b:Interaction.Behaviors>
+
+                    <Control HorizontalAlignment="Center" Template="{StaticResource MainPanelTopContent}"/>
+
+                        <!-- Trade Inventories -->
+                    <Grid VerticalAlignment="Bottom" Margin="0,0,0,220">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="620"/>
+                            <ColumnDefinition Width="270"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="270"/>
+                            <ColumnDefinition Width="620"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="60"/>
+                            <RowDefinition Height="1368"/>
+                        </Grid.RowDefinitions>
+
+                        <StackPanel x:Name="PlayerGold" Grid.Column="0" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="312,0,0,0" Orientation="Horizontal" >
+                            <TextBlock Text="{Binding CharacterInventoryGold, StringFormat={}{0:N0}}" Foreground="{DynamicResource LS_PrimaryColor}" Background="Transparent" FontWeight="Bold"/>
+                            <Image VerticalAlignment="Top" Margin="0,4,4,0" Source="{StaticResource GoldIconImg}"  Stretch="None" />
+                        </StackPanel>
+
+                        <StackPanel x:Name="PlayerOfferGold" Grid.Column="1" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="52,0,0,0" Orientation="Horizontal">
+                            <TextBlock Text="{Binding CharacterOfferGold, StringFormat={}{0:N0}}" Foreground="{DynamicResource LS_PrimaryColor}" Background="Transparent" FontWeight="Bold"/>
+                            <Image VerticalAlignment="Top" Margin="0,4,4,0" Source="{StaticResource GoldIconImg}" Stretch="None" />
+                        </StackPanel>
+
+                        <StackPanel x:Name="TraderOfferGold" Grid.Column="3" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,10,0" Orientation="Horizontal">
+                            <TextBlock Text="{Binding TraderOfferGold, StringFormat={}{0:N0}}" Foreground="{DynamicResource LS_PrimaryColor}" Background="Transparent" FontWeight="Bold"/>
+                            <Image VerticalAlignment="Top" Margin="0,4,4,0" Source="{StaticResource GoldIconImg}" Stretch="None"/>
+                        </StackPanel>
+
+                        <StackPanel x:Name="TraderGold" Grid.Column="4" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Right" Orientation="Horizontal" Margin="0,0,260,0">
+                            <TextBlock Text="{Binding TraderInventoryGold, StringFormat={}{0:N0}}" Foreground="{DynamicResource LS_PrimaryColor}" Background="Transparent" FontWeight="Bold"/>
+                            <Image VerticalAlignment="Top" Margin="0,4,4,0" Source="{StaticResource GoldIconImg}" Stretch="None"/>
+                        </StackPanel>
+
+                        <ContentControl x:Name="PlayerBarterInventory" DataContext="{Binding TradingCharacterInventory}" Content="{Binding Path=(b:Interaction.Behaviors)[2].SortedItems, ElementName=BarterMainPanel}" Template="{StaticResource BarterGridFlipped}" Grid.Column="0" Grid.Row="1" Padding="-16,0,0,0" VerticalAlignment="Stretch" HorizontalAlignment="Right" Margin="0,0,12,0" >
+                            <Control.Resources>
+                                <System:UInt32 x:Key="invRows">12</System:UInt32>
+                                <System:UInt32 x:Key="invCols">5</System:UInt32>
+                            </Control.Resources>
+                        </ContentControl>
+
+                        <ContentControl x:Name="PlayerBarterOffer" DataContext="{Binding CharacterOffer}" Content="{Binding Slots}" Template="{StaticResource BarterGridFlipped}" Grid.Column="1" Grid.Row="1" Padding="-16,0,0,0" VerticalAlignment="Stretch" HorizontalAlignment="Right">
+                            <Control.Resources>
+                                <System:UInt32 x:Key="invRows">12</System:UInt32>
+                                <System:UInt32 x:Key="invCols">2</System:UInt32>
+                            </Control.Resources>
+                        </ContentControl>
+
+                        <ContentControl x:Name="TraderBarterInventory" DataContext="{Binding TraderInventory}" Content="{Binding Path=(b:Interaction.Behaviors)[3].SortedItems, ElementName=BarterMainPanel}" Template="{StaticResource BarterGrid}"  Grid.Column="4" Grid.Row="1" Padding="8,0,0,0" VerticalAlignment="Stretch" HorizontalAlignment="Left"  Margin="14,0,0,0">
+                            <Control.Resources>
+                                <System:UInt32 x:Key="invRows">12</System:UInt32>
+                                <System:UInt32 x:Key="invCols">5</System:UInt32>
+                            </Control.Resources>
+                        </ContentControl>
+
+                        <ContentControl x:Name="TraderBarterOffer" DataContext="{Binding TraderOffer}" Content="{Binding Slots}" Template="{StaticResource BarterGrid}" Grid.Column="3" Grid.Row="1" Padding="2,0,0,0" VerticalAlignment="Stretch" HorizontalAlignment="Left">
+                            <ContentControl.Resources>
+                                <System:UInt32 x:Key="invRows">12</System:UInt32>
+                                <System:UInt32 x:Key="invCols">2</System:UInt32>
+                            </ContentControl.Resources>
+                        </ContentControl>
+                    </Grid>
+
+                    <!-- Balance and Trade Buttons -->
+                    <StackPanel VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="0,0,0,-114">
+                        <ls:LSButton Style="{StaticResource BalanceTradeButton}" Command="{Binding BalanceTrade}" CommandParameter="{Binding ActionCommandParameter}" SoundID="UI_HUD_Trade_Balance" IsEnabled="{Binding TradeButtonsEnabled}"/>
+                        <StackPanel Margin="0,-60,0,0">
+                            <StackPanel Orientation="Horizontal">
+                                <Image Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared/BigBtn_sideDecor.png" Stretch="None"/>
+
+                                <ls:LSButton Style="{StaticResource BigButtonStyle}" Content="{Binding Source='hd4ebf395gca4fg40e5gbc16gf9b31778850a', Converter={StaticResource TranslatedStringConverter}, ConverterParameter='ToUpper'}" Command="{Binding FinishBarter}" VerticalAlignment="Center"
+                                            CommandParameter="{Binding ActionCommandParameter}" Margin="-90,0,-90,0" SoundID="UI_HUD_Barter" IsEnabled="{Binding TradeButtonsEnabled}"/>
+                                <Image Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared/BigBtn_sideDecor.png" Stretch="None">
+                                    <Image.RenderTransform>
+                                        <ScaleTransform ScaleX="-1" CenterX="80"/>
+                                    </Image.RenderTransform>
+                                </Image>
+
+                            </StackPanel>
+                            <Image Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared/BigBtn_bottomDecor.png" Stretch="None" Margin="0,-50,0,0"/>
+                        </StackPanel>
+
+                    </StackPanel>
+                </Grid>
+            </ControlTemplate>
+
+        </ResourceDictionary>
+    </ls:UIWidget.Resources>
+
+    <ls:UIWidget.Style>
+        <Style TargetType="ls:UIWidget">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ls:UIWidget">
+
+                        <ContentControl x:Name="RootTradePanel" Template="{StaticResource StandardFraming}" ls:TooltipExtender.Owner="{Binding CurrentTradingCharacter}">
+                            <Grid>
+                                <StackPanel VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,20,0,0">
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <Image x:Name="img" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Trade/header_trade.png" Stretch="None" VerticalAlignment="Center"/>
+                                        <TextBlock Text="{Binding Source='h4d74c17cg64c1g4bbdgb6dag29a88b29bed2', Converter={StaticResource TranslatedStringConverter}}" FontSize="{StaticResource HugeFontSize}" VerticalAlignment="Bottom" Foreground="{StaticResource LS_InactivePanelFontColor}"/>
+                                    </StackPanel>
+
+                                    <!-- Normal button that visually looks like a toggle because code decides our mode -->
+                                    <ls:LSButton Grid.Column="0" HorizontalAlignment="Center" Command="{Binding SetTradeMode}" SoundID="UI_HUD_Trade_ToggleMode">
+                                        <ls:LSButton.Template>
+                                            <ControlTemplate TargetType="ls:LSButton">
+                                                <Grid HorizontalAlignment="Center">
+                                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                                        <TextBlock x:Name="off" Text="{Binding Source='h4d74c17cg64c1g4bbdgb6dag29a88b29bed2', Converter={StaticResource TranslatedStringConverter}}" VerticalAlignment="Center" Foreground="{DynamicResource LS_ActivePanelFontColor}"/>
+                                                        <Grid>
+                                                            <Image x:Name="bg" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared/toggle_bg.png" Stretch="None"/>
+                                                            <Image x:Name="btn" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared/toggle_nob.png" Stretch="None" HorizontalAlignment="Left" Margin="4,0,0,0"/>
+                                                        </Grid>
+                                                        <TextBlock x:Name="on" Text="{Binding Source='hd4ebf395gca4fg40e5gbc16gf9b31778850a', Converter={StaticResource TranslatedStringConverter}}" VerticalAlignment="Center" Foreground="{DynamicResource LS_InactivePanelFontColor}"/>
+                                                    </StackPanel>
+                                                </Grid>
+                                                <ControlTemplate.Triggers>
+                                                    <DataTrigger Binding="{Binding Mode}" Value="Barter">
+                                                        <Setter Property="Foreground" Value="{DynamicResource LS_ActivePanelFontColor}" TargetName="on"/>
+                                                        <Setter Property="Foreground" Value="{DynamicResource LS_InactivePanelFontColor}" TargetName="off"/>
+                                                        <DataTrigger.EnterActions>
+                                                            <BeginStoryboard>
+                                                                <Storyboard>
+                                                                    <ThicknessAnimation Duration="0:0:0.1" Storyboard.TargetName="btn" Storyboard.TargetProperty="Margin" To="40,0,0,0"/>
+                                                                </Storyboard>
+                                                            </BeginStoryboard>
+                                                        </DataTrigger.EnterActions>
+                                                        <DataTrigger.ExitActions>
+                                                            <BeginStoryboard>
+                                                                <Storyboard>
+                                                                    <ThicknessAnimation Duration="0:0:0.1" Storyboard.TargetName="btn" Storyboard.TargetProperty="Margin" To="4,0,0,0"/>
+                                                                </Storyboard>
+                                                            </BeginStoryboard>
+                                                        </DataTrigger.ExitActions>
+                                                    </DataTrigger>
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </ls:LSButton.Template>
+                                        <b:Interaction.Triggers>
+                                            <b:EventTrigger EventName="Click">
+                                                <!-- Tutorial UI Event - Trade Mode Changed-->
+                                                <b:InvokeCommandAction Command="{Binding TutorialEvent}" CommandParameter="4eff1cb5-03b4-4aec-9774-bf416f43d331"/>
+                                                <ls:LSPlaySound Sound="UI_HUD_Trade_ToggleMode"/>
+                                            </b:EventTrigger>
+                                            <b:EventTrigger EventName="PreviewMouseDown">
+                                                <ls:LSPlaySound Sound="UI_Shared_Secondary_Press"/>
+                                            </b:EventTrigger>
+                                            <b:EventTrigger EventName="MouseEnter">
+                                                <ls:LSPlaySound Sound="UI_Shared_Hover"/>
+                                            </b:EventTrigger>
+                                        </b:Interaction.Triggers>
+                                    </ls:LSButton>
+                                </StackPanel>
+
+                                <!-- Trade Mode Buttons -->
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,10,0,0" Visibility="Collapsed">
+                                    <StackPanel.Resources>
+                                        <Style TargetType="ls:LSRadioButton">
+                                            <Setter Property="SoundID" Value="UI_HUD_Trade_ToggleMode"/>
+                                            <Setter Property="Template">
+                                                <Setter.Value>
+                                                    <ControlTemplate TargetType="RadioButton">
+                                                        <Grid Height="Auto" Width="Auto" Background="Transparent">
+                                                            <Image x:Name="img" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Buttons/topNav_btn_frame.png" Opacity="0.7" Stretch="None" VerticalAlignment="Top" Visibility="Hidden"/>
+                                                            <Image x:Name="icon" Source="{DynamicResource IconNormal}" Stretch="None" VerticalAlignment="Top" Margin="0,10,2,0" />
+                                                            <TextBlock x:Name="label" Text="{Binding Content, RelativeSource={RelativeSource Mode=TemplatedParent}}" Foreground="{DynamicResource LS_PanelButtonTextColor}" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,7"/>
+                                                        </Grid>
+                                                        <ControlTemplate.Triggers>
+                                                            <Trigger Property="IsMouseOver" Value="True">
+                                                                <Setter Property="Visibility" Value="Visible" TargetName="img"/>
+                                                            </Trigger>
+                                                            <Trigger Property="IsPressed" Value="True">
+                                                                <Setter Property="Margin" Value="0,12,2,0" TargetName="icon"></Setter>
+                                                                <Setter Property="Margin" Value="0,0,0,5" TargetName="label"></Setter>
+                                                            </Trigger>
+                                                            <Trigger Property="IsChecked" Value="True">
+                                                                <Setter Property="Visibility" Value="Visible" TargetName="img"/>
+                                                                <Setter Property="Opacity" Value="1" TargetName="img"/>
+                                                                <Setter Property="Source" Value="{DynamicResource IconHighlite}" TargetName="icon"/>
+                                                                <Setter Property="Foreground" Value="{DynamicResource LS_PrimaryColor}" TargetName="label"/>
+                                                            </Trigger>
+                                                        </ControlTemplate.Triggers>
+                                                    </ControlTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Style>
+                                    </StackPanel.Resources>
+                                    <ls:LSRadioButton Command="{Binding SetTradeMode}" GroupName = "TradeMode" Content="{Binding Source='h4d74c17cg64c1g4bbdgb6dag29a88b29bed2', Converter={StaticResource TranslatedStringConverter}, ConverterParameter='ToUpper'}" Margin="0,0,52,0">
+                                        <ls:LSRadioButton.Resources>
+                                            <ImageSource x:Key="IconNormal">pack://application:,,,/GustavNoesisGUI;component/Assets/Trade/ico_trade_d.png</ImageSource>
+                                            <ImageSource x:Key="IconHighlite">pack://application:,,,/GustavNoesisGUI;component/Assets/Trade/ico_trade_h.png</ImageSource>
+                                        </ls:LSRadioButton.Resources>
+                                    </ls:LSRadioButton>
+                                    <ls:LSRadioButton Command="{Binding SetBarterMode}" IsChecked="True" GroupName = "TradeMode" Content="{Binding Source='hd4ebf395gca4fg40e5gbc16gf9b31778850a', Converter={StaticResource TranslatedStringConverter}, ConverterParameter='ToUpper'}" Margin="52,0,0,0">
+                                        <ls:LSRadioButton.Resources>
+                                            <ImageSource x:Key="IconNormal">pack://application:,,,/GustavNoesisGUI;component/Assets/Trade/ico_barter_d.png</ImageSource>
+                                            <ImageSource x:Key="IconHighlite">pack://application:,,,/GustavNoesisGUI;component/Assets/Trade/ico_barter_h.png</ImageSource>
+                                        </ls:LSRadioButton.Resources>
+                                    </ls:LSRadioButton>
+                                </StackPanel>
+
+                                <Grid HorizontalAlignment="Center" VerticalAlignment="Center" >
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="1820"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <!-- Left Character Panel -->
+                                    <Control x:Name="CharacterPanel" Grid.Column="0" Margin="0,-44,0,0" DataContext="{Binding CurrentTradingCharacter}">
+                                        <Control.Resources>
+                                            <System:Double x:Key="TitleAlpha">1</System:Double>
+                                        </Control.Resources>
+
+                                        <b:Interaction.Behaviors>
+                                            <ls:DropToUnequipBehavior />
+                                        </b:Interaction.Behaviors>
+
+                                        <Control.Template>
+                                            <ControlTemplate>
+                                                <Grid x:Name="EquipmentPanel">
+                                                    <Grid>
+                                                        <b:Interaction.Triggers>
+                                                            <b:EventTrigger EventName="Loaded">
+                                                                <b:ControlStoryboardAction Storyboard="{StaticResource AnimReset}"/>
+                                                                <b:InvokeCommandAction Command="{Binding DataContext.HideAvailableEquipmentCommand, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" CommandParameter="{Binding Equipment}"/>
+                                                            </b:EventTrigger>
+                                                            <b:TimerTrigger EventName="Loaded" MillisecondsPerTick="{Binding (ItemsControl.AlternationIndex), RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContentControl}, AncestorLevel=2}, Converter={StaticResource MultiplierConverter}, ConverterParameter=100}" TotalTicks="1">
+                                                                <b:ControlStoryboardAction Storyboard="{StaticResource FadeContentIn}"/>
+                                                            </b:TimerTrigger>
+
+                                                            <b:TimerTrigger  x:Name="TimeTrigger" EventName="Loaded" MillisecondsPerTick="{Binding (ItemsControl.AlternationIndex), RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListBoxItem}}, Converter={StaticResource MultiplierConverter}, ConverterParameter=300}" TotalTicks="1">
+                                                                <b:ControlStoryboardAction Storyboard="{StaticResource SingleBasicPanelGlowAnim}"/>
+                                                            </b:TimerTrigger>
+                                                        </b:Interaction.Triggers>
+
+                                                        <!-- Backgorund fill gradient -->
+                                                        <Path Width="750" Data="M 0,1750 L 8,330 L 6,200 S 6,72 160,72 H 250 S 370,-10 490,72 H 600 S 740,72 740,220 V 330 L 748,1750 Z" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,20,0,0">
+                                                            <Path.Fill>
+                                                                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                                                    <GradientStop Color="Black" Offset="0.88" />
+                                                                    <GradientStop Color="#00000000" Offset="1.0" />
+                                                                </LinearGradientBrush>
+                                                            </Path.Fill>
+                                                        </Path>
+
+                                                        <!-- Paperdoll render frame -->
+                                                        <ls:LSPaperdoll EntityRef="{Binding EntityHandle}" Width="730" Height="1340" UseCombatPose="True" VerticalAlignment="Top" Zoom="0.22" Margin="0,100,0,0"  RenderScale="{Binding DataContext.Data.RenderScale, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"/>
+
+                                                        <!-- Show a different background image when the equipment selection grid is open -->
+                                                        <Image Stretch="None" IsHitTestVisible="False" VerticalAlignment="Top" Margin="0,48,0,0" >
+                                                            <Image.Style>
+                                                                <Style TargetType="Image">
+                                                                    <Setter Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Equipment/characterArch_state1.png"/>
+                                                                    <Style.Triggers>
+                                                                        <DataTrigger Binding="{Binding IsSelectedCharacter}" Value="True">
+                                                                            <Setter Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Equipment/characterArch_state1_selected.png"/>
+                                                                        </DataTrigger>
+                                                                    </Style.Triggers>
+                                                                </Style>
+                                                            </Image.Style>
+                                                        </Image>
+
+                                                        <Path x:Name="SBPFrameStroke" Style="{StaticResource ArcFrameGlow}" VerticalAlignment="Top" Margin="0,48,0,0" >
+                                                            <Path.Stroke>
+                                                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1" >
+                                                                    <GradientStop Color="{StaticResource PanelGlowAnimColour}" Offset="{StaticResource SBPGlowAnimVal1a}"/>
+                                                                    <GradientStop Color="{StaticResource PanelGlowAnimColourC}" Offset="{StaticResource SBPGlowAnimVal2a}"/>
+                                                                    <GradientStop Color="{StaticResource PanelGlowAnimColour}" Offset="{StaticResource SBPGlowAnimVal3a}"/>
+                                                                </LinearGradientBrush>
+                                                            </Path.Stroke>
+                                                        </Path>
+
+                                                        <Grid x:Name="EquipmentInvHolder" Visibility="{Binding Equipment.ShowAvailableEquipment, Converter={StaticResource BoolToVisibleConverter}}">
+                                                            <Image Stretch="None" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Equipment/characterArch_state2.png" VerticalAlignment="Top" Margin="0,200,0,0"/>
+                                                            <ScrollViewer x:Name="EquipmentInv" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="154,254,0,0" Height="1020" Padding="0,20,0,20" Template="{DynamicResource ScrollViewerTemplate}">
+                                                                <ScrollViewer.RenderTransform>
+                                                                    <TransformGroup>
+                                                                        <ScaleTransform/>
+                                                                        <SkewTransform/>
+                                                                        <RotateTransform/>
+                                                                        <TranslateTransform/>
+                                                                    </TransformGroup>
+                                                                </ScrollViewer.RenderTransform>
+                                                                <!-- Available Equipment -->
+                                                                <ItemsControl Template="{StaticResource AvailableEquipmentGrid}">
+                                                                    <ItemsControl.Resources>
+                                                                        <System:UInt32 x:Key="invRows">9</System:UInt32>
+                                                                        <System:UInt32 x:Key="invCols">5</System:UInt32>
+                                                                    </ItemsControl.Resources>
+                                                                </ItemsControl>
+                                                            </ScrollViewer>
+
+                                                            <ls:LSButton x:Name="EquipmentInvBtn" Style="{DynamicResource CloseButton}" Margin="0,110,110,0" VerticalAlignment="Top" HorizontalAlignment="Right" Command="{Binding DataContext.HideAvailableEquipmentCommand, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" CommandParameter="{Binding Equipment}"/>
+                                                            <ls:LSButton x:Name="UnequipBtn" Style="{DynamicResource UneQuipButton}" Margin="110,110,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Command="{Binding DataContext.UnequipItemCommand, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" CommandParameter="{Binding }" ToolTipService.Placement="Top">
+                                                                <ls:LSButton.ToolTip>
+                                                                    <ls:LSTooltip Content="{Binding Source='h669dddd8ge59eg4316gb986gd45ca6560581', Converter={StaticResource TranslatedStringConverter}, ConverterParameter='Loca'}"/>
+                                                                </ls:LSButton.ToolTip>
+                                                            </ls:LSButton>
+                                                        </Grid>
+
+                                                        <Canvas Margin="-433,325,433,0" VerticalAlignment="Top" HorizontalAlignment="Center" Height="802" DataContext="{Binding DataContext.TradingCharacterEquipment, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}">
+                                                            <Control Style="{StaticResource EquipmentSlotVisibilityStyle}" Canvas.Left="14" Canvas.Top="0" DataContext="{Binding Helmet}"/>
+                                                            <Control Style="{StaticResource EquipmentSlotStyle}" Canvas.Left="14" Canvas.Top="114" DataContext="{Binding Breast}"/>
+                                                            <Control Style="{StaticResource EquipmentSlotStyle}" Canvas.Left="14" Canvas.Top="228" DataContext="{Binding Gloves}"/>
+                                                            <Control Style="{StaticResource EquipmentSlotStyle}" Canvas.Left="14" Canvas.Top="342" DataContext="{Binding Underwear}"/>
+                                                            <Control Style="{StaticResource EquipmentSlotStyle}" Canvas.Left="14" Canvas.Top="456" DataContext="{Binding Boots}"/>
+
+                                                            <Control Style="{StaticResource EquipmentSlotStyle}" Canvas.Left="14" Canvas.Top="582" DataContext="{Binding MeleeMainHand}"/>
+                                                            <Control Style="{StaticResource EquipmentSlotStyle}" Canvas.Left="14" Canvas.Top="696" DataContext="{Binding MeleeOffHand}"/>
+
+                                                            <Control Style="{StaticResource EquipmentSlotStyle}" Canvas.Left="746" Canvas.Top="0" DataContext="{Binding Cloak}"/>
+                                                            <Control Style="{StaticResource EquipmentSlotStyle}" Canvas.Left="746" Canvas.Top="114" DataContext="{Binding Amulet}"/>
+                                                            <Control Style="{StaticResource EquipmentSlotStyle}" Canvas.Left="746" Canvas.Top="228" DataContext="{Binding Ring}"/>
+                                                            <Control Style="{StaticResource EquipmentSlotStyle}" Canvas.Left="746" Canvas.Top="342" DataContext="{Binding Ring2}"/>
+                                                            <Control Style="{StaticResource EquipmentSlotStyle}" Canvas.Left="746" Canvas.Top="456" DataContext="{Binding MusicalInstrument}"/>
+
+                                                            <Control Style="{StaticResource EquipmentSlotStyle}" Canvas.Left="746" Canvas.Top="582" DataContext="{Binding RangedMainHand}"/>
+                                                            <Control Style="{StaticResource EquipmentSlotStyle}" Canvas.Left="746" Canvas.Top="696" DataContext="{Binding RangedOffHand}"/>
+                                                        </Canvas>
+
+                                                        <!-- Statuses -->
+                                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="0,0,0,500">
+                                                            <StackPanel.Resources>
+                                                                <System:Int16 x:Key="MaxStatusesOnEquipment">4</System:Int16>
+                                                                <System:Int16 x:Key="StatusIconWidth">80</System:Int16>
+                                                            </StackPanel.Resources>
+
+                                                            <!-- Hide StatusEffects if equipment selection grid is open (they overlap) -->
+                                                            <StackPanel.Style>
+                                                                <Style TargetType="StackPanel">
+                                                                    <Setter Property="Visibility" Value="Visible"/>
+                                                                    <Style.Triggers>
+                                                                        <DataTrigger Binding="{Binding Equipment.ShowAvailableEquipment}" Value="True">
+                                                                            <Setter Property="Visibility" Value="Hidden"/>
+                                                                        </DataTrigger>
+                                                                    </Style.Triggers>
+                                                                </Style>
+                                                            </StackPanel.Style>
+
+                                                            <!-- StatusEffects -->
+                                                            <ItemsControl ItemsSource="{Binding StatusEffects}" ItemTemplate="{DynamicResource StatusTemplate}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Background="Transparent" ScrollViewer.VerticalScrollBarVisibility="Disabled" BorderBrush="Transparent" HorizontalAlignment="Center" MaxWidth="{Binding Source={StaticResource StatusIconWidth}, Converter={StaticResource MultiplierConverter}, ConverterParameter={StaticResource MaxStatusesOnEquipment}}">
+                                                                <ItemsControl.ItemsPanel>
+                                                                    <ItemsPanelTemplate>
+                                                                        <VirtualizingStackPanel IsItemsHost="True" Orientation="Horizontal"/>
+                                                                    </ItemsPanelTemplate>
+                                                                </ItemsControl.ItemsPanel>
+                                                            </ItemsControl>
+
+                                                            <Image Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared/ico_newItem.png" Stretch="None" Visibility="{Binding StatusEffects.Count, Converter={StaticResource CountToVisibilityConverter}, ConverterParameter={StaticResource MaxStatusesOnEquipment}}"/>
+                                                        </StackPanel>
+
+                                                        <!-- Row of icons with values -->
+                                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="0,0,0,100">
+                                                            <StackPanel.Resources>
+                                                                <Style TargetType="TextBlock">
+                                                                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                                                                    <Setter Property="FontSize" Value="{StaticResource LargeFontSize}"/>
+                                                                    <Setter Property="Foreground" Value="{StaticResource LS_PrimaryColor}"/>
+                                                                </Style>
+                                                                <Style TargetType="Image">
+                                                                    <Setter Property="Stretch" Value="None"/>
+                                                                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                                                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                                                </Style>
+                                                                <ControlTemplate x:Key="StatSelector" TargetType="ContentControl">
+                                                                    <Grid >
+                                                                        <ContentPresenter/>
+                                                                        <Image x:Name="Img" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Equipment/frame_box_EQstat.png" Stretch="None"/>
+                                                                    </Grid>
+                                                                    <ControlTemplate.Triggers>
+                                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                                            <Setter TargetName="Img" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Equipment/selector_box_EQstat.png"/>
+                                                                        </Trigger>
+                                                                    </ControlTemplate.Triggers>
+                                                                </ControlTemplate>
+                                                            </StackPanel.Resources>
+
+                                                            <ContentControl Template="{StaticResource StatSelector}" Margin="0,0,-2,0" ToolTipService.Placement="Top">
+                                                                <ContentControl.ToolTip>
+                                                                    <ls:LSTooltip Content="{Binding Path=DataContext.Stats.MeleeAttackDamageTypeString , ElementName=EquipmentPanel}"/>
+                                                                </ContentControl.ToolTip>
+                                                                <ContentControl Template="{StaticResource MeleeDamageDisplay}"/>
+                                                                <ContentControl.Style>
+                                                                    <Style TargetType="ContentControl">
+                                                                        <Setter Property="ToolTipService.IsEnabled" Value="True"/>
+                                                                        <Style.Triggers>
+                                                                            <DataTrigger Binding="{Binding Stats.MeleeAttackDamageTypeString, Converter={StaticResource NullToBoolTrueConverter}, ConverterParameter='EmptyString'}" Value="True">
+                                                                                <Setter Property="ToolTip" Value="{x:Null}"/>
+                                                                                <Setter Property="ToolTipService.IsEnabled" Value="False"/>
+                                                                            </DataTrigger>
+                                                                        </Style.Triggers>
+                                                                    </Style>
+                                                                </ContentControl.Style>
+                                                            </ContentControl>
+
+                                                            <ContentControl Template="{StaticResource StatSelector}" Margin="0,0,-2,0" ToolTipService.Placement="Top">
+                                                                <ContentControl.ToolTip>
+                                                                    <ls:LSTooltip Content="{Binding Path=DataContext.Stats.RangedAttackDamageTypeString, ElementName=EquipmentPanel}"/>
+                                                                </ContentControl.ToolTip>
+                                                                <ContentControl.Style>
+                                                                    <Style TargetType="ContentControl">
+                                                                        <Setter Property="ToolTipService.IsEnabled" Value="True"/>
+                                                                        <Style.Triggers>
+                                                                            <DataTrigger Binding="{Binding Stats.RangedAttackDamageTypeString, Converter={StaticResource NullToBoolTrueConverter}, ConverterParameter='EmptyString'}" Value="True">
+                                                                                <Setter Property="ToolTip" Value="{x:Null}"/>
+                                                                                <Setter Property="ToolTipService.IsEnabled" Value="False"/>
+                                                                            </DataTrigger>
+                                                                        </Style.Triggers>
+                                                                    </Style>
+                                                                </ContentControl.Style>
+                                                                <ContentControl Template="{StaticResource RangedDamageDisplay}"/>
+                                                            </ContentControl>
+                                                            <ContentControl Template="{StaticResource StatSelector}" Margin="0,0,-2,0" DataContext="{Binding Stats.ArmorClass}" ToolTipService.Placement="Top" ToolTip="{StaticResource ManagedTooltip}">
+                                                                <ContentControl Template="{StaticResource ArmorClassDisplay}" DataContext="{Binding ElementName=EquipmentPanel, Path=DataContext}"/>
+                                                            </ContentControl>
+
+                                                            <ContentControl Template="{StaticResource StatSelector}" Margin="0,0,-2,0" DataContext="{Binding Stats.Health}" ToolTipService.Placement="Top" ToolTip="{StaticResource ManagedTooltip}">
+                                                                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                                                                    <Image VerticalAlignment="Top" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared/ico_health.png" Stretch="None"/>
+                                                                    <TextBlock HorizontalAlignment="Center" Foreground="{StaticResource LS_PrimaryColor}">
+                                                        <Run Text="{Binding Value}"/><Run
+                                                        Text="{Binding Max, StringFormat='/{0}'}"/>
+                                                                    </TextBlock>
+                                                                </StackPanel>
+                                                            </ContentControl>
+
+                                                            <ContentControl Template="{StaticResource StatSelector}" Margin="0,0,-2,0" DataContext="{Binding Stats.MovementResource}" ToolTipService.Placement="Top" ToolTip="{StaticResource ManagedTooltip}">
+                                                                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" >
+                                                                    <Image Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared/ico_speed.png"/>
+                                                                    <TextBlock Text="{Binding MaxValue, Converter={StaticResource UnitConverter}, ConverterParameter='Distance Short'}" HorizontalAlignment="Center" Foreground="{StaticResource LS_PrimaryColor}"/>
+                                                                </StackPanel>
+                                                            </ContentControl>
+                                                        </StackPanel>
+                                                    </Grid>
+
+                                                    <!-- Character gold -->
+                                                    <Control x:Name="GoldLabel" Template="{StaticResource CharacterPanelGold}" HorizontalAlignment="Right" 
+                                             Foreground="{StaticResource LS_InactivePanelFontColor}" VerticalAlignment="Top" Width="250" Margin="0,44,38,0"  
+                                             DataContext="{Binding Inventory.Gold, Mode=OneWay, StringFormat={}{0:N0}}"/>
+
+                                                    <Control x:Name="NameLabel" Margin="0,120,0,0" Template="{DynamicResource NameAndDescriptionTemplate}" Opacity="{DynamicResource TitleAlpha}"/>
+
+                                                    <Grid.Triggers>
+                                                        <EventTrigger RoutedEvent="FrameworkElement.Loaded">
+                                                            <BeginStoryboard >
+                                                                <Storyboard TargetName="GoldLabel">
+                                                                    <Storyboard.Children>
+                                                                        <Storyboard Children="{StaticResource FadeInSecElements}"  />
+                                                                    </Storyboard.Children>
+                                                                </Storyboard>
+                                                            </BeginStoryboard>
+                                                            <BeginStoryboard >
+                                                                <Storyboard TargetName="NameLabel" >
+                                                                    <Storyboard.Children>
+                                                                        <Storyboard Children="{StaticResource FadeInTertElements}"  />
+                                                                    </Storyboard.Children>
+                                                                </Storyboard>
+                                                            </BeginStoryboard>
+                                                        </EventTrigger>
+                                                    </Grid.Triggers>
+                                                </Grid>
+
+                                                <ControlTemplate.Triggers>
+                                                    <DataTrigger Binding="{Binding CurrentTradingCharacter.Equipment.ShowAvailableEquipment, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}, Converter={StaticResource BoolToVisibleConverter}}" Value="True">
+                                                        <DataTrigger.EnterActions>
+                                                            <StopStoryboard BeginStoryboardName="EqFadeOutBS"/>
+                                                            <BeginStoryboard x:Name="EqFadeInBS">
+                                                                <Storyboard >
+                                                                    <ObjectAnimationUsingKeyFrames Storyboard.TargetName="EquipmentInvHolder"  Storyboard.TargetProperty="(UIElement.Visibility)">
+                                                                        <DiscreteObjectKeyFrame KeyTime="00:00:00" Value="{x:Static Visibility.Visible}"/>
+                                                                    </ObjectAnimationUsingKeyFrames>
+
+                                                                    <DoubleAnimationUsingKeyFrames Storyboard.TargetName="EquipmentInv" Storyboard.TargetProperty="Opacity">
+                                                                        <EasingDoubleKeyFrame KeyTime="0" Value="0.1"/>
+                                                                        <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="1"/>
+                                                                    </DoubleAnimationUsingKeyFrames>
+
+                                                                    <DoubleAnimationUsingKeyFrames Storyboard.TargetName="EquipmentInvBtn" Storyboard.TargetProperty="Opacity">
+                                                                        <EasingDoubleKeyFrame KeyTime="0" Value="0.0"/>
+                                                                        <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="0.1"/>
+                                                                        <EasingDoubleKeyFrame KeyTime="0:0:0.4" Value="1"/>
+                                                                    </DoubleAnimationUsingKeyFrames>
+
+                                                                    <DoubleAnimationUsingKeyFrames Storyboard.TargetName="EquipmentInv" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.Y)">
+                                                                        <EasingDoubleKeyFrame KeyTime="0" Value="180"/>
+                                                                        <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="0">
+                                                                            <EasingDoubleKeyFrame.EasingFunction>
+                                                                                <CubicEase EasingMode="EaseOut"/>
+                                                                            </EasingDoubleKeyFrame.EasingFunction>
+                                                                        </EasingDoubleKeyFrame>
+                                                                    </DoubleAnimationUsingKeyFrames>
+                                                                </Storyboard>
+                                                            </BeginStoryboard>
+                                                        </DataTrigger.EnterActions>
+                                                        <DataTrigger.ExitActions>
+                                                            <StopStoryboard BeginStoryboardName="EqFadeInBS" />
+                                                            <BeginStoryboard x:Name="EqFadeOutBS">
+                                                                <Storyboard >
+                                                                    <ObjectAnimationUsingKeyFrames Storyboard.TargetName="EquipmentInvHolder"  Storyboard.TargetProperty="(UIElement.Visibility)">
+                                                                        <DiscreteObjectKeyFrame KeyTime="00:00:0.3" Value="{x:Static Visibility.Hidden}"/>
+                                                                    </ObjectAnimationUsingKeyFrames>
+
+                                                                    <DoubleAnimationUsingKeyFrames Storyboard.TargetName="EquipmentInvHolder"  Storyboard.TargetProperty="Opacity">
+                                                                        <EasingDoubleKeyFrame KeyTime="0" Value="1"/>
+                                                                        <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="1"/>
+                                                                        <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="0"/>
+                                                                    </DoubleAnimationUsingKeyFrames>
+
+                                                                    <DoubleAnimationUsingKeyFrames Storyboard.TargetName="EquipmentInv" Storyboard.TargetProperty="Opacity">
+                                                                        <EasingDoubleKeyFrame KeyTime="0" Value="1"/>
+                                                                        <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="0"/>
+                                                                    </DoubleAnimationUsingKeyFrames>
+
+                                                                    <DoubleAnimationUsingKeyFrames Storyboard.TargetName="EquipmentInvBtn" Storyboard.TargetProperty="Opacity">
+                                                                        <EasingDoubleKeyFrame KeyTime="0" Value="1"/>
+                                                                        <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="0.0"/>
+                                                                    </DoubleAnimationUsingKeyFrames>
+
+                                                                    <DoubleAnimationUsingKeyFrames Storyboard.TargetName="EquipmentInv" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.Y)">
+                                                                        <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                                                                        <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="180">
+                                                                            <EasingDoubleKeyFrame.EasingFunction>
+                                                                                <CubicEase EasingMode="EaseOut"/>
+                                                                            </EasingDoubleKeyFrame.EasingFunction>
+                                                                        </EasingDoubleKeyFrame>
+                                                                    </DoubleAnimationUsingKeyFrames>
+                                                                </Storyboard>
+                                                            </BeginStoryboard>
+                                                        </DataTrigger.ExitActions>
+                                                    </DataTrigger>
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </Control.Template>
+                                    </Control>
+
+                                    <!-- Trade/Barter Main Panel -->
+                                    <ContentControl x:Name="TradeBarterHolder"  Grid.Column="1" ls:AttachedProperties.InheritedCharacter="{Binding CurrentTradingCharacter}">
+                                        <ContentControl.Style>
+                                            <Style TargetType="ContentControl">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding Mode}" Value="Trade">
+                                                        <Setter Property="Template" Value="{StaticResource TradeMainPanelTemplate}"/>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding Mode}" Value="Barter">
+                                                        <Setter Property="Template" Value="{StaticResource BarterMainPanelTemplate}"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </ContentControl.Style>
+                                    </ContentControl>
+
+                                    <ls:LSButton Grid.Column="1" x:Name="ButtonSellWares" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,-19" Width="520" Style="{StaticResource BrownButtonTextAndIconStyle}" 
+                                     Content="{Binding Source='hcb2f0ae8g4b71g475bgbf9bgb026d2d5cdcb', Converter={StaticResource TranslatedStringConverter}}"
+                                     IsEnabled="{Binding DataContext.HasWares, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"
+                                     Command="{Binding DataContext.SellWares, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}">
+                                        <ls:LSButton.Resources>
+                                            <ImageBrush x:Key="IconNormal" ImageSource="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared/ico_tab_wares.png" Stretch="Fill"/>
+                                            <ImageBrush x:Key="IconPressed" ImageSource="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared/ico_tab_wares.png" Stretch="Fill"/>
+                                            <ImageBrush x:Key="IconHighlight" ImageSource="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared/ico_tab_wares_active.png" Stretch="Fill"/>
+                                            <ImageBrush x:Key="IconDisabled" ImageSource="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared/ico_tab_wares.png" Stretch="Fill"/>
+                                            <System:Double x:Key="IconWidth">88</System:Double>
+                                            <System:Double x:Key="IconHeight">88</System:Double>
+                                        </ls:LSButton.Resources>
+                                    </ls:LSButton>
+
+                                    <!-- Right Character Panel -->
+
+                                    <Grid x:Name="TraderCharacter" Grid.Column="2">
+                                        <!-- Backgorund fill gradient -->
+                                        <Path Width="750" Data="M 8,1750 L 8,330 L 6,200 S 6,72 160,72 H 250 S 370,-10 490,72 H 600 S 740,72 740,220 V 330 L 740,1750 Z" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="4,-24,0,0">
+                                            <Path.Fill>
+                                                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                                    <GradientStop Color="Black" Offset="0.88" />
+                                                    <GradientStop Color="#00000000" Offset="1.0" />
+                                                </LinearGradientBrush>
+                                            </Path.Fill>
+                                        </Path>
+
+                                        <ls:LSPaperdoll EntityRef="{Binding Trader.EntityHandle}" Width="730" Height="1340" UseCombatPose="True" Zoom="0.22" VerticalAlignment="Top" Margin="0,78,0,0"  RenderScale="{Binding DataContext.Data.RenderScale, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" />
+
+                                        <Image Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Trade/doodad.png" VerticalAlignment="Bottom" Stretch="None" Margin="0,0,0,-100"/>
+
+                                        <Image Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Trade/trade_characterFrame.png" VerticalAlignment="Top" Stretch="None"/>
+                                        <StackPanel VerticalAlignment="Top" Margin="0,100,0,0" >
+                                            <TextBlock HorizontalAlignment="Center" Text="{Binding Trader.Name}" Foreground="{StaticResource LS_PrimaryColor}" FontSize="{StaticResource TitleFontSize}" FontWeight="Medium" TextWrapping="Wrap" Width="640" TextAlignment="Center"/>
+
+                                            <TextBlock Visibility="{Binding Trader.HasVisibleClassAndLevel, Converter={StaticResource BoolToVisibleConverter}}" Margin="8,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Top" Foreground="{StaticResource LS_PrimaryColor}" FontSize="{StaticResource ScaledDefaultFontSize}">
+                                                <TextBlock.Text>
+                                                    <MultiBinding Converter="{StaticResource ParameterizedTranslatedStringConverter}">
+                                                        <Binding Source="h5df00b79ga6acg4d9fgb8dag23340151fba7"/>
+                                                        <Binding Path="Trader.Stats.Level.Value"/>
+                                                        <Binding Path="Trader.Stats.Race.DisplayName"/>
+                                                    </MultiBinding>
+                                                </TextBlock.Text>
+                                            </TextBlock>
+                                        </StackPanel>
+
+                                        <Control Template="{StaticResource CharacterPanelGold}" HorizontalAlignment="Right" Foreground="{StaticResource LS_InactivePanelFontColor}" VerticalAlignment="Top" Width="250" DataContext="{Binding Trader.Inventory.Gold, Mode=OneWay, StringFormat={}{0:N0}}"/>
+
+                                        <TextBlock x:Name="TraderFeedbackText" Text="{Binding Source='h0a066f3dg76d7g4939gac2eg692872bc8d82', Converter={StaticResource TranslatedStringConverter}}" TextWrapping="Wrap" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Bottom"  Margin="0,0,0,280"  Width="600" Foreground="{StaticResource LS_PrimaryColor}" FontSize="{StaticResource ScaledDefaultFontSize}" Visibility="Collapsed"/>
+
+                                        <ls:LSProgressBar Minimum="-100" Maximum="100" Value="{Binding Trader.Attitude,Mode=OneWay}"  VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="0,0,0,180">
+                                            <ls:LSProgressBar.Template>
+                                                <ControlTemplate TargetType="ls:LSProgressBar">
+                                                    <ControlTemplate.Resources>
+                                                        <BitmapImage x:Key="AttitudeBarImage" UriSource="pack://application:,,,/GustavNoesisGUI;component/Assets/Trade/vendorBart.png"/>
+                                                        <BitmapImage x:Key="DefaultAttitudeImage" UriSource="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared/vendorAttitude_02.png"/>
+                                                    </ControlTemplate.Resources>
+                                                    <Grid x:Name="TemplateRoot" MinHeight="4">
+                                                        <Border x:Name="PART_Track" BorderBrush="Transparent" BorderThickness="0">
+                                                            <Grid>
+                                                                <Image Source="{StaticResource AttitudeBarImage}" VerticalAlignment="Bottom" Stretch="None" Margin="-2,0,-2,0"/>
+                                                                <Border x:Name="PART_Indicator" HorizontalAlignment="Left">
+                                                                    <StackPanel ClipToBounds="False" HorizontalAlignment="Right" Margin="0,0,-10,10" VerticalAlignment="Bottom">
+                                                                        <Image x:Name="AttitudeIcon" Source="{StaticResource DefaultAttitudeImage}" Stretch="None" HorizontalAlignment="Center" />
+                                                                        <Path x:Name="ArrowPath" Width="32" Data="M 0 0 L 16 16 L 32 0 Z" HorizontalAlignment="Center" Fill="{StaticResource Trade.NeutralAttitude}"/>
+                                                                    </StackPanel>
+                                                                </Border>
+                                                            </Grid>
+                                                        </Border>
+                                                    </Grid>
+                                                    <ControlTemplate.Triggers>
+                                                        <DataTrigger Binding="{Binding Trader.Attitude, Converter={StaticResource LessThanConverter}, ConverterParameter=-29}" Value="True">
+                                                            <Setter TargetName="ArrowPath" Property="Fill" Value="{StaticResource Trade.LowAttitude}" />
+                                                            <Setter TargetName="AttitudeIcon" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared/vendorAttitude_01.png" />
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding Trader.Attitude, Converter={StaticResource LessThanConverter}, ConverterParameter=25}" Value="False">
+                                                            <Setter TargetName="ArrowPath" Property="Fill" Value="{StaticResource Trade.HighAttitude}" />
+                                                            <Setter TargetName="AttitudeIcon" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared/vendorAttitude_03.png" />
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding Trader.Attitude, Converter={StaticResource GreaterThanConverter}, ConverterParameter=69}" Value="True">
+                                                            <Setter TargetName="ArrowPath" Property="Fill" Value="{StaticResource Trade.VeryHighAttitude}" />
+                                                            <Setter TargetName="AttitudeIcon" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared/vendorAttitude_04.png" />
+                                                        </DataTrigger>
+                                                    </ControlTemplate.Triggers>
+                                                </ControlTemplate>
+                                            </ls:LSProgressBar.Template>
+                                            <ls:LSProgressBar.ToolTip>
+                                                <ls:LSTooltip>
+                                                    <TextBlock Style="{DynamicResource TooltipBaseTextStyle}">
+                                                        <ls:TextBlockFormatter.SourceText>
+                                                            <MultiBinding StringFormat="{}{0}: {1}">
+                                                                <Binding Source="h04a565d3g3f77g47bbgba12gaa1823313087" Converter="{StaticResource TranslatedStringConverter}"/>
+                                                                <Binding Path="DataContext.Trader.Attitude" ElementName="TraderCharacter"/>
+                                                            </MultiBinding>
+                                                        </ls:TextBlockFormatter.SourceText>
+                                                    </TextBlock>
+                                                </ls:LSTooltip>
+                                            </ls:LSProgressBar.ToolTip>
+                                        </ls:LSProgressBar>
+                                    </Grid>
+                                </Grid>
+
+                                <ItemsControl x:Name="CharactersList" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="20,0,0,0" ItemsSource="{Binding Data.Players}" IsEnabled="{Binding IsWaitingForInventoriesCreation, Converter={StaticResource InvertBoolConverter}, FallbackValue=True}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <StackPanel Orientation="Horizontal"/>
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate DataType="{x:Type ls:Player}">
+                                            <ItemsControl ItemsSource="{Binding PartyGroups}">
+                                                <ItemsControl.ItemsPanel>
+                                                    <ItemsPanelTemplate>
+                                                        <StackPanel Orientation="Horizontal"/>
+                                                    </ItemsPanelTemplate>
+                                                </ItemsControl.ItemsPanel>
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <ItemsControl ItemsSource="{Binding}">
+                                                            <ItemsControl.ItemsPanel>
+                                                                <ItemsPanelTemplate>
+                                                                    <StackPanel Orientation="Horizontal"/>
+                                                                </ItemsPanelTemplate>
+                                                            </ItemsControl.ItemsPanel>
+                                                            <ItemsControl.ItemTemplate>
+                                                                <DataTemplate DataType="{x:Type ls:Character}">
+                                                                    <Grid x:Name="baseGrid">
+
+                                                                        <ls:LSInputBinding PlayerId="{Binding DataContext.CurrentPlayer.PlayerId, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" Command="{Binding DataContext.SelectCharacter,RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"  CommandParameter="{Binding}">
+                                                                            <!--LSPortraitListItem-->
+                                                                            <ls:LSInputBinding.Style>
+                                                                                <Style TargetType="ls:LSInputBinding">
+                                                                                    <Setter Property="IsEnabled" Value ="False"/>
+                                                                                    <Setter Property="BoundEvent" Value =""/>
+                                                                                    <Style.Triggers>
+                                                                                        <DataTrigger Binding="{Binding ElementName=CameraResetInput , Path=IsEnabled}" Value="False">
+                                                                                            <Setter Property="IsEnabled" Value ="True"/>
+                                                                                        </DataTrigger>
+                                                                                    </Style.Triggers>
+                                                                                </Style>
+                                                                            </ls:LSInputBinding.Style>
+                                                                        </ls:LSInputBinding>
+
+                                                                        <ls:LSInputBinding x:Name="CameraResetInput" PlayerId="{Binding DataContext.CurrentPlayer.PlayerId, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" Command="{Binding DataContext.SetCameraOnGameObject,RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"  CommandParameter="{Binding}" >
+                                                                            <!--LSPortraitListItem-->
+                                                                            <ls:LSInputBinding.Style>
+                                                                                <Style TargetType="ls:LSInputBinding">
+                                                                                    <Setter Property="IsEnabled" Value ="True"/>
+                                                                                    <Setter Property="BoundEvent" Value =""/>
+                                                                                    <Style.Triggers>
+
+                                                                                        <DataTrigger Binding="{Binding IsSelectedCharacter}" Value="False">
+                                                                                            <Setter Property="IsEnabled" Value ="False"/>
+                                                                                        </DataTrigger>
+                                                                                        <DataTrigger Binding="{Binding CharacterMode}" Value="InTrade">
+                                                                                            <Setter Property="IsEnabled" Value ="False"/>
+                                                                                        </DataTrigger>
+                                                                                        <DataTrigger Binding="{Binding CharacterMode}" Value="InDialogue">
+                                                                                            <Setter Property="IsEnabled" Value ="False"/>
+                                                                                        </DataTrigger>
+
+                                                                                    </Style.Triggers>
+                                                                                </Style>
+                                                                            </ls:LSInputBinding.Style>
+                                                                        </ls:LSInputBinding>
+
+                                                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom">
+
+                                                                            <ContentControl>
+                                                                                <b:Interaction.Triggers>
+                                                                                    <b:EventTrigger EventName="MouseLeftButtonUp">
+                                                                                        <b:InvokeCommandAction IsEnabled="{Binding DataContext.CurrentPlayer.SelectedCharacter.IsCasting, Converter={StaticResource InvertBoolConverter}, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" 
+                                                               Command="{Binding DataContext.SelectCharacter,RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" CommandParameter="{Binding}" />
+                                                                                        <b:InvokeCommandAction Command="{Binding DataContext.TargetGameobjectCommand, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" CommandParameter="{Binding}"/>
+                                                                                        <ls:LSPlaySound Sound="UI_HUD_SelectCharacter"/>
+                                                                                    </b:EventTrigger>
+
+                                                                                    <b:EventTrigger EventName="MouseDoubleClick" >
+                                                                                        <b:InvokeCommandAction Command="{Binding DataContext.SetCameraOnGameObject,RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" CommandParameter="{Binding}" />
+                                                                                    </b:EventTrigger>
+                                                                                    <b:EventTrigger EventName="MouseEnter">
+                                                                                        <b:InvokeCommandAction Command="{Binding DataContext.HighlightGameobject, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" CommandParameter="{Binding}"/>
+                                                                                        <ls:LSPlaySound Sound="UI_Shared_Hover"/>
+                                                                                        <b:ChangePropertyAction TargetName="highlite" PropertyName="Visibility" Value="Visible" />
+                                                                                    </b:EventTrigger>
+                                                                                    <b:EventTrigger EventName="MouseLeave">
+                                                                                        <b:InvokeCommandAction Command="{Binding DataContext.ClearHighlightGameobject, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" CommandParameter="{Binding}"/>
+                                                                                        <b:ChangePropertyAction TargetName="highlite" PropertyName="Visibility" Value="Collapsed" />
+                                                                                    </b:EventTrigger>
+                                                                                </b:Interaction.Triggers>
+
+                                                                                <Grid Style="{StaticResource PortraitGridStyle}">
+                                                                                    <ls:LSEntityObject EntityRef="{Binding EntityHandle}" Background="Transparent" Margin="0,-3,0,-3" Opacity="1">
+                                                                                        <Grid IsHitTestVisible="False">
+                                                                                            <Rectangle Margin="0,0,0,0" VerticalAlignment="Center" Width="128" Height="198" Fill="{Binding Icon}"/>
+                                                                                            <ProgressBar Template="{DynamicResource DefaultProgressBar}" VerticalAlignment="Center" HorizontalAlignment="Center" Width="132" Height="196" Style="{StaticResource CharacterPortraitBarStyle}"/>
+                                                                                            <Image Stretch="None">
+                                                                                                <Image.Style>
+                                                                                                    <Style TargetType="Image">
+                                                                                                        <Setter Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/PlayerPortraits/portrait_frame_inactive_d.png"/>
+                                                                                                        <Style.Triggers>
+                                                                                                            <DataTrigger Binding="{Binding IsCurrentTurn}" Value="True">
+                                                                                                                <Setter Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/PlayerPortraits/portrait_frame_active_inTurn_d.png"/>
+                                                                                                            </DataTrigger>
+                                                                                                            <DataTrigger Binding="{Binding CharacterMode}" Value="InTrade">
+                                                                                                                <Setter Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/PlayerPortraits/portrait_frame_active_d.png"/>
+                                                                                                            </DataTrigger>
+                                                                                                            <DataTrigger Binding="{Binding Path=Tag, ElementName=ParentControl}" Value="False">
+                                                                                                                <Setter Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/PlayerPortraits/remote_portrait_frame_d.png"/>
+                                                                                                            </DataTrigger>
+                                                                                                        </Style.Triggers>
+                                                                                                    </Style>
+                                                                                                </Image.Style>
+                                                                                            </Image>
+                                                                                            <Image x:Name="highlite" Stretch="None" Visibility="Hidden">
+                                                                                                <Image.Style>
+                                                                                                    <Style TargetType="Image">
+                                                                                                        <Setter Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/PlayerPortraits/portrait_frame_inactive_h.png"/>
+                                                                                                        <Style.Triggers>
+                                                                                                            <DataTrigger Binding="{Binding IsCurrentTurn}" Value="True">
+                                                                                                                <Setter Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/PlayerPortraits/portrait_frame_active_inTurn_h.png"/>
+                                                                                                            </DataTrigger>
+                                                                                                            <DataTrigger Binding="{Binding CharacterMode}" Value="InTrade">
+                                                                                                                <Setter Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/PlayerPortraits/portrait_frame_active_h.png"/>
+                                                                                                            </DataTrigger>
+                                                                                                            <DataTrigger Binding="{Binding Path=Tag, ElementName=ParentControl}" Value="False">
+                                                                                                                <Setter Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/PlayerPortraits/remote_portrait_frame_h.png"/>
+                                                                                                            </DataTrigger>
+                                                                                                        </Style.Triggers>
+                                                                                                    </Style>
+                                                                                                </Image.Style>
+                                                                                            </Image>
+                                                                                        </Grid>
+                                                                                    </ls:LSEntityObject>
+                                                                                </Grid>
+                                                                            </ContentControl>
+                                                                        </StackPanel>
+                                                                    </Grid>
+                                                                </DataTemplate>
+                                                            </ItemsControl.ItemTemplate>
+                                                        </ItemsControl>
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </Grid>
+                        </ContentControl>
+
+
+                        <ControlTemplate.Triggers>
+                            <DataTrigger Value="True">
+                                <DataTrigger.Binding>
+                                    <MultiBinding Converter="{StaticResource LessThanOrEqualMultiConverter}">
+                                        <Binding Path="TraderOfferGold"/>
+                                        <Binding Path="CharacterOfferGold"/>
+                                    </MultiBinding>
+                                </DataTrigger.Binding>
+                                <Setter TargetName="TraderFeedbackText" Property="Text" Value="{Binding Source='ha669035bgb2b8g43d2g96ccgd1e9f19b35cc', Converter={StaticResource TranslatedStringConverter}}"/>
+                            </DataTrigger>
+
+                            <DataTrigger Binding="{Binding TradeDeclined}" Value="True">
+                                <Setter TargetName="TraderFeedbackText" Property="Text" Value="{Binding Source='hcafd581bgb97eg4eecgb2fag0552bb2def60', Converter={StaticResource TranslatedStringConverter}}"/>
+                                <Setter TargetName="TraderFeedbackText" Property="Foreground" Value="{StaticResource LS_alertTxtColor}"/>
+                            </DataTrigger>
+
+                            <DataTrigger Binding="{Binding TraderOfferGold, Converter={StaticResource GreaterThanConverter}, ConverterParameter=0}" Value="True">
+                                <Setter TargetName="TraderFeedbackText" Property="Visibility" Value="Visible"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding CharacterOfferGold, Converter={StaticResource GreaterThanConverter}, ConverterParameter=0}" Value="True">
+                                <Setter TargetName="TraderFeedbackText" Property="Visibility" Value="Visible"/>
+                            </DataTrigger>
+
+                            <DataTrigger Binding="{Binding Mode}" Value="Barter">
+                                <Setter Property="Visibility" Value="Collapsed" TargetName="ButtonSellWares"/>
+                                <Setter Property="Visibility" Value="Visible" TargetName="RootTradePanel"/>
+                            </DataTrigger>
+
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+
+                </Setter.Value>
+            </Setter>
+
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Mode}" Value="Donate">
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="ls:UIWidget">
+                                <Border Background="{StaticResource LS_PopUpBackgroundColor}" x:Name="RootDonatePanel">
+                                    <ls:LSNineSliceImage IconWidth="480" Slices="48 40 48 100" MaxHeight="2000" VerticalAlignment="Center" HorizontalAlignment="Center" ImageSource="pack://application:,,,/GustavNoesisGUI;component/Assets/Container/container_background.png">
+                                        <ls:LSNineSliceImage.Resources>
+                                            <System:Double x:Key="InventoryMinH">342</System:Double>
+                                        </ls:LSNineSliceImage.Resources>
+
+                                        <Grid Margin="0,24,0,136" Background="Transparent" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="*"/>
+                                                <RowDefinition Height="Auto"/>
+                                            </Grid.RowDefinitions>
+
+                                            <ListBox Name="InventoryContainer" ItemsSource="{Binding PartyCharacterInventories}" Height="600" Background="Transparent">
+                                                <ListBox.ItemsPanel>
+                                                    <ItemsPanelTemplate>
+                                                        <VirtualizingStackPanel Background="Transparent"/>
+                                                    </ItemsPanelTemplate>
+                                                </ListBox.ItemsPanel>
+                                                <ListBox.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <StackPanel x:Name="rootElement">
+                                                            <b:Interaction.Behaviors>
+                                                                <ls:InventoriesMergerBehavior x:Name="PlayerInventoriesMerged" Inventories="{Binding TradeInventories}"/>
+                                                                <ls:CollectionFilterBehavior x:Name="PlayerInventoryFiltered" ItemsSource="{Binding InventoriesSlots, ElementName=PlayerInventoriesMerged}" Predicate="{Binding TradeInventories[0].TabFiltersPredicate}"/>
+                                                                <ls:CollectionSortBehavior x:Name="PlayerInventoryFilteredSorted" ItemsSource="{Binding FilteredItems, ElementName=PlayerInventoryFiltered}" Comparer="{Binding DataContext.CurrentPlayer.SelectedCharacter.TradeSortComparer, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"/>
+                                                            </b:Interaction.Behaviors>
+                                                            <TextBlock Text="{Binding Character.Name}" HorizontalAlignment="Center" FontSize="{StaticResource ScaledBigFontSize}" Margin="0,20,0,-20"/>
+                                                            <ListBox Name="Inventory" Grid.Row="0" ItemsSource="{Binding Path=(b:Interaction.Behaviors)[2].SortedItems, ElementName=rootElement}" SelectionMode="Single" HorizontalAlignment="Left" Grid.ColumnSpan="2" 
+                                                                                Margin="50,20,50,0" MinWidth="598" Background="Transparent" ItemTemplate="{StaticResource Template.ContainerCell}" ItemContainerStyle="{StaticResource InvContainerListBoxItemStyle}" Template="{StaticResource MinimalItemsControlTemplate}">
+                                                                <ListBox.ItemsPanel>
+                                                                    <ItemsPanelTemplate>
+                                                                        <ls:LSGrid x:Name="ContainerGrid" Columns="5" Rows="2" Width="568" ContainerData="{Binding LootInventory}" noesis:Element.PPAAMode="Disabled"
+                                                                                                SnapsToDevicePixels="True" ScrollAmount="114" CellWidth="{DynamicResource ScaledNewSlotSize}" CellHeight="{DynamicResource ScaledNewSlotSize}"
+                                                                                                VerticalSpacing="{DynamicResource ContInvSpacing}" DisableScrolling="True" AutoIndex="True"
+                                                                                                HorizontalSpacing="{DynamicResource ContInvSpacing}" Background="{StaticResource ContInventoryCell2x2Brush}"/>
+                                                                    </ItemsPanelTemplate>
+                                                                </ListBox.ItemsPanel>
+                                                                <b:Interaction.Triggers>
+                                                                    <b:EventTrigger EventName="SelectionChanged">
+                                                                        <b:ChangePropertyAction TargetName="InventoryContainer" PropertyName="Tag" Value="{Binding SelectedItems, ElementName=Inventory}"/>
+                                                                    </b:EventTrigger>
+                                                                </b:Interaction.Triggers>
+                                                            </ListBox>
+                                                        </StackPanel>
+                                                    </DataTemplate>
+                                                </ListBox.ItemTemplate>
+                                                <ListBox.ItemContainerStyle>
+                                                    <Style TargetType="ListBoxItem" BasedOn="{StaticResource {x:Type ListBoxItem}}">
+                                                        <Setter Property="Visibility" Value="Visible"/>
+                                                    </Style>
+                                                </ListBox.ItemContainerStyle>
+                                            </ListBox>
+
+                                            <ls:LSButton Style="{StaticResource PopUpCloseButton}" x:Name="CloseBtn" Grid.Row="0" Command="{Binding CustomEvent}" CommandParameter="CloseWidget" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,-14,8,0"/>
+
+                                            <ls:LSButton Grid.Row="1" FontFamily="{StaticResource DefaultFont}" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,-90" Style="{StaticResource BigBlueButtonStyle}" Command="{Binding DonateItemsCommand}" CommandParameter="{Binding Tag, ElementName=InventoryContainer}" IsEnabled="{Binding Tag.Count, ElementName=InventoryContainer, Converter={StaticResource GreaterThanConverter}, ConverterParameter='0', FallbackValue=False}"
+                                                         Content="{Binding Source='h613a8245g0881g470bgb9a1ga060c50db2ed', Converter={StaticResource TranslatedStringConverter}}"/>
+                                        </Grid>
+                                    </ls:LSNineSliceImage>
+                                </Border>
+
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </ls:UIWidget.Style>
+
+    <b:Interaction.Triggers>
+        <b:EventTrigger EventName="Loaded">
+            <ls:LSPlaySound Sound="UI_HUD_Trade_Open"/>
+        </b:EventTrigger>
+        <b:EventTrigger EventName="Unloaded">
+            <ls:LSPlaySound Sound="UI_HUD_Trade_Close"/>
+        </b:EventTrigger>
+    </b:Interaction.Triggers>
+</ls:UIWidget>

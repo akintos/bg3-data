@@ -1,0 +1,140 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<save>
+	<version major="4" minor="0" revision="9" build="325" />
+	<region id="Templates">
+		<node id="Templates">
+			<children>
+				<node id="GameObjects">
+					<attribute id="MapKey" type="22" value="f743e5af-700e-44d6-a5bd-c4de7112f8ed" />
+					<attribute id="Name" type="23" value="PUZ_Trap_Gortash_FocusedIncinerator" />
+					<attribute id="LevelName" type="22" value="" />
+					<attribute id="Type" type="22" value="item" />
+					<attribute id="ParentTemplateId" type="22" value="c23b88d3-e029-4658-8498-a69c783568cf" />
+					<attribute id="VisualTemplate" type="22" value="546ac9ae-7dd4-f8a4-a5cb-e9f85b54c530" />
+					<attribute id="PhysicsTemplate" type="22" value="2a562ddf-6c18-92bc-9abd-d4155094916c" />
+					<attribute id="Scale" type="6" value="0.8" />
+					<attribute id="DisplayName" type="28" handle="h8fc610feg0b57g4f77ga145g3a39841c05b6" version="3" />
+					<attribute id="Icon" type="22" value="Portrait_PUZ_Trap_Gortash_FocusedIncinerator" />
+					<attribute id="Stats" type="22" value="WYR_Gortash_FocusedIncinerator" />
+					<attribute id="Hostile" type="19" value="True" />
+					<attribute id="IsInspector" type="19" value="True" />
+					<attribute id="CanFight" type="19" value="False" />
+					<attribute id="CanJoinCombat" type="19" value="False" />
+					<children>
+						<node id="Tags">
+							<children>
+								<node id="Tag">
+									<attribute id="Object" type="31" value="6d60bed7-10cc-4b52-b78f-a7ba815149cd" />
+								</node>
+								<node id="Tag">
+									<attribute id="Object" type="31" value="abadcad5-9229-4999-7a8c-55cdf27f5cc9" />
+								</node>
+							</children>
+						</node>
+						<node id="Bounds">
+							<children>
+								<node id="Bound">
+									<attribute id="Type" type="1" value="1" />
+									<attribute id="Shape" type="1" value="1" />
+									<attribute id="Min" type="12" value="-0.4996577 -0.2343926 -0.03925538" />
+									<attribute id="Max" type="12" value="0.499668 2.164646 1.256814" />
+									<attribute id="Radius" type="6" value="0.2411631" />
+									<attribute id="Height" type="6" value="0.7827213" />
+								</node>
+								<node id="Bound">
+									<attribute id="Type" type="1" value="2" />
+									<attribute id="Shape" type="1" value="1" />
+									<attribute id="Min" type="12" value="-0.4996577 -0.2343926 -0.03925538" />
+									<attribute id="Max" type="12" value="0.499668 2.164646 1.256814" />
+									<attribute id="Radius" type="6" value="0.2411631" />
+									<attribute id="Height" type="6" value="0.7827213" />
+								</node>
+							</children>
+						</node>
+						<node id="OnDestroyActions">
+							<children>
+								<node id="Action">
+									<attribute id="ActionType" type="4" value="26" />
+									<children>
+										<node id="Attributes">
+											<attribute id="Animation" type="22" value="" />
+											<attribute id="Conditions" type="23" value="" />
+											<attribute id="ActivateSoundEvent" type="22" value="3ea82655-5140-4287-9ab8-794559f182d3" />
+											<attribute id="PlayOnHUD" type="19" value="False" />
+										</node>
+									</children>
+								</node>
+								<node id="Action">
+									<attribute id="ActionType" type="4" value="5" />
+									<children>
+										<node id="Attributes">
+											<attribute id="Animation" type="22" value="" />
+											<attribute id="Conditions" type="23" value="" />
+											<attribute id="TargetItemState" type="1" value="0" />
+											<attribute id="SnapToGround" type="19" value="True" />
+											<attribute id="ExplodeFX" type="22" value="15362651-9b96-579a-86f5-829e53325d8b" />
+											<attribute id="visualDestruction" type="22" value="" />
+											<attribute id="VisualWithDynamicPhysics" type="22" value="d27bb0f4-e909-c1ca-8061-1512d16a99e0" />
+											<attribute id="FadeOutDelay" type="6" value="0" />
+											<attribute id="FadeOutFX" type="22" value="" />
+											<attribute id="templateAfterDestruction" type="22" value="67585948-6c63-4448-aac7-b24f58e51acb" />
+										</node>
+									</children>
+								</node>
+							</children>
+						</node>
+						<node id="Scripts">
+							<children>
+								<node id="Script">
+									<attribute id="UUID" type="22" value="ae52b4fd-6fe2-627f-ac6f-436567755b18" />
+									<children>
+										<node id="Parameters">
+											<children>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="DestroyOnDisarm" />
+													<attribute id="Type" type="4" value="1" />
+													<attribute id="Value" type="23" value="1" />
+												</node>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="HardcoreOnly" />
+													<attribute id="Type" type="4" value="1" />
+													<attribute id="Value" type="23" value="0" />
+												</node>
+											</children>
+										</node>
+									</children>
+								</node>
+								<node id="Script">
+									<attribute id="UUID" type="22" value="91327f5f-966b-fabe-15fd-07d7a7dcc7b5" />
+									<children>
+										<node id="Parameters">
+											<children>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="HardcoreOnly" />
+													<attribute id="Type" type="4" value="1" />
+													<attribute id="Value" type="23" value="0" />
+												</node>
+												<node id="Parameter">
+													<attribute id="MapKey" type="22" value="ProjectileSpell" />
+													<attribute id="Type" type="4" value="9" />
+													<attribute id="Value" type="23" value="Projectile_WYR_Explosion_Trap_Gortash" />
+												</node>
+											</children>
+										</node>
+									</children>
+								</node>
+							</children>
+						</node>
+						<node id="StatusList">
+							<children>
+								<node id="Status">
+									<attribute id="Object" type="22" value="DEBRIS_THRESHOLD_LESSER" />
+								</node>
+							</children>
+						</node>
+					</children>
+				</node>
+			</children>
+		</node>
+	</region>
+</save>
