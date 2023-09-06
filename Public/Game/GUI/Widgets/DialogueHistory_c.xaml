@@ -84,16 +84,16 @@
                     </ls:LSScrollViewer>
 
                     <!-- Controller hints -->
-                    <StackPanel VerticalAlignment="Bottom" HorizontalAlignment="Center" Orientation="Horizontal" Visibility="{Binding ShowAnswers, Mode=OneWay, Converter={StaticResource BoolToVisibleConverter}}" Margin="0,0,0,50">
-                        <ls:LSButton Style="{StaticResource ControllerButton}" VerticalAlignment="Center" Margin="25,0" 
+                    <StackPanel VerticalAlignment="Bottom" HorizontalAlignment="Center" Orientation="Horizontal" Visibility="{Binding ShowAnswers, Mode=OneWay, Converter={StaticResource BoolToVisibleConverter}}" Margin="0,0,0,56">
+                        <ls:LSButton Style="{StaticResource ControllerButton}" 
+                                DataContext = "{Binding DataContext.CurrentPlayer.UIData.InputEvents, ElementName=DialogueHistory, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIScroll'}" Content="{Binding Source='hab065f9dg3babg4815g8ad4gb071b2c29e25',Converter={StaticResource TranslatedStringConverter}}"
+                                Command="{Binding DataContext.CustomEvent, ElementName=Dialogue}"  CommandParameter="OpenDialogueHistory"
+                                IsEnabled="True"/>
+                        
+                        <ls:LSButton Style="{StaticResource ControllerButton}"
                                 DataContext = "{Binding DataContext.CurrentPlayer.UIData.InputEvents, ElementName=DialogueHistory, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UICancel'}" Content="{Binding Source='h6fefa28bg2149g4cacga071gd95b236b2d0b',Converter={StaticResource TranslatedStringConverter}}"
                                 Command="{Binding DataContext.CustomEvent, ElementName=DialogueHistory}" CommandParameter="CloseDialogueHistory"
                                 SoundID="UI_Shared_Cancel"
-                                IsEnabled="True"/>
-
-                        <ls:LSButton Style="{StaticResource ControllerButton}" VerticalAlignment="Center" Margin="25,0" 
-                                DataContext = "{Binding DataContext.CurrentPlayer.UIData.InputEvents, ElementName=DialogueHistory, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIScroll'}" Content="{Binding Source='hab065f9dg3babg4815g8ad4gb071b2c29e25',Converter={StaticResource TranslatedStringConverter}}"
-                                Command="{Binding DataContext.CustomEvent, ElementName=Dialogue}"  CommandParameter="OpenDialogueHistory"
                                 IsEnabled="True"/>
                     </StackPanel>
 

@@ -7,7 +7,7 @@
              xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
 			 mc:Ignorable="d"
              ls:UIWidget.ContextName="JournalQuests" d:DataContext="{d:DesignInstance {x:Type ls:DCJournalQuests}, IsDesignTimeCreatable=True}"
-             FocusDown="UIDown" FocusLeft="UILeft" FocusRight="UIRight" FocusUp="UIUp"
+             FocusDown="UIDown" FocusUp="UIUp"
              d:DesignHeight="2160" d:DesignWidth="3840">
 
     <ls:UIWidget.Template>
@@ -20,9 +20,14 @@
 
                     <HierarchicalDataTemplate DataType="{x:Type ls:QuestCategoryContainer}" ItemsSource="{Binding QuestViews}">
                         <ls:LSToggleButton x:Name="ExpanderButton" IsChecked="{Binding IsExpanded, Mode=TwoWay, RelativeSource={RelativeSource AncestorType={x:Type TreeViewItem}}}" ls:MoveFocus.Focusable="True" Template="{StaticResource Journal.ListItemTemplate}" BoundEvent="">
+                            <b:Interaction.Triggers>
+                                <b:EventTrigger EventName="Click">
+                                    <b:InvokeCommandAction Command="{Binding DataContext.ToggleJournalExpander, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" CommandParameter="{Binding .}"/>
+                                </b:EventTrigger>
+                            </b:Interaction.Triggers>
                             <StackPanel Orientation="Horizontal" Margin="20,0">
                                 <Image x:Name="Arrow" Source="{StaticResource ListArrowCollapsed}" Stretch="None" Margin="-18,-18,-8,-18"/>
-                                <TextBlock x:Name="Title" Text="{Binding QuestCategory.Description}" HorizontalAlignment="Left" VerticalAlignment="Center" Style="{StaticResource Journal.BaseTextStyle}" Foreground="{StaticResource LS_accent100TxtColor}"/>
+                                <TextBlock x:Name="Title" ls:TextBlockFormatter.SourceText="{Binding QuestCategory.Description}" HorizontalAlignment="Left" VerticalAlignment="Center" Style="{StaticResource Journal.BaseTextStyle}" Foreground="{StaticResource LS_accent100TxtColor}"/>
                             </StackPanel>
                         </ls:LSToggleButton>
                         <HierarchicalDataTemplate.Triggers>
@@ -64,11 +69,16 @@
                             <BitmapImage x:Key="CompletedIcon" UriSource="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared_c/c_ico_bigTick.png"/>
                         </HierarchicalDataTemplate.Resources>
                         <ls:LSToggleButton x:Name="ExpanderButton" IsChecked="{Binding IsExpanded, Mode=TwoWay, RelativeSource={RelativeSource AncestorType={x:Type TreeViewItem}}}" ls:MoveFocus.Focusable="True" Template="{StaticResource Journal.ListItemTemplate}" BoundEvent="">
+                            <b:Interaction.Triggers>
+                                <b:EventTrigger EventName="Click">
+                                    <b:InvokeCommandAction Command="{Binding DataContext.ToggleJournalExpander, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" CommandParameter="{Binding .}"/>
+                                </b:EventTrigger>
+                            </b:Interaction.Triggers>
                             <DockPanel Margin="20,0">
                                 <Image x:Name="Arrow" Source="{StaticResource ListArrowCollapsed}" Stretch="None" Margin="-18,-12,-8,-18" DockPanel.Dock="Left" VerticalAlignment="Top"/>
                                 <Image x:Name="UpdateIcon" Source="{StaticResource UpdateIcon}" Stretch="None" DockPanel.Dock="Right" Visibility="Collapsed" Margin="0,-20"/>
                                 <Image x:Name="CompleteIcon" Source="{StaticResource CompletedIcon}" Stretch="None" DockPanel.Dock="Right" Visibility="Collapsed" Margin="0,-20"/>
-                                <TextBlock x:Name="Title" Text="{Binding Quest.Title}" Style="{StaticResource Journal.BaseTextStyle}" VerticalAlignment="Center"/>
+                                <TextBlock x:Name="Title" ls:TextBlockFormatter.SourceText="{Binding Quest.Title}" Style="{StaticResource Journal.BaseTextStyle}" VerticalAlignment="Center"/>
                             </DockPanel>
                         </ls:LSToggleButton>
                         <HierarchicalDataTemplate.Triggers>
@@ -142,7 +152,7 @@
                 </ResourceDictionary>
             </ControlTemplate.Resources>
 
-            <Grid ls:TooltipExtender.Owner="{Binding CurrentPlayer.SelectedCharacter}"  ClipToBounds="True">
+            <Grid x:Name="root" ls:TooltipExtender.Owner="{Binding CurrentPlayer.SelectedCharacter}" ClipToBounds="True" Tag="SplitScreen">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition x:Name="ColumnDef0" Width="1*"/>
                     <ColumnDefinition x:Name="ColumnDef1" Width="3*"/>
@@ -162,6 +172,11 @@
 
                 <Image Grid.Column="0" Grid.ColumnSpan="7" Grid.Row="0" Grid.RowSpan="4" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Source="{StaticResource CharacterSheetBackground}" Stretch="UniformToFill"/>
 
+                <Grid Grid.Row="0" Grid.ColumnSpan="7" Width="auto" Height="164" VerticalAlignment="Top">
+                    <Control Template="{StaticResource TopCarouselBackground}" />
+                </Grid>
+                <Control  Grid.Row="0" Grid.ColumnSpan="7" x:Name="c_PartyGold" Visibility="Collapsed" Style="{StaticResource PartyGoldStyle}" />
+                
                 <Control Grid.Row="0" Grid.ColumnSpan="7" x:Name="Navigation" HorizontalAlignment="Center" VerticalAlignment="Top" Style="{StaticResource Journal.NavigationStyle}"/>
 
                 <Grid x:Name="MainPanel" Grid.Column="3" Grid.Row="1" Grid.RowSpan="2" KeyboardNavigation.DirectionalNavigation="Contained" IsEnabled="True">
@@ -175,7 +190,7 @@
                     <TreeView x:Name="QuestsTreeView" Grid.Row="1" ItemsSource="{Binding CurrentPlayer.JournalItemContainers}" BorderBrush="Transparent" ls:MoveFocus.IsMoveFocusScope="True">
                         <TreeView.ItemContainerStyle>
                             <Style TargetType="{x:Type TreeViewItem}">
-                                <Setter Property="IsExpanded" Value="True"/>
+                                <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}"/>
                                 <Setter Property="BorderBrush" Value="Transparent" />
                                 <Setter Property="Background" Value="Transparent" />
                                 <Setter Property="Padding" Value="0" />
@@ -236,7 +251,7 @@
                         </TreeView.ItemContainerStyle>
                         <TreeView.Template>
                             <ControlTemplate>
-                                <ScrollViewer x:Name="ScrollViewer" Template="{StaticResource StretchingScrollViewerTemplate}" VerticalScrollBarVisibility="Visible">
+                                <ls:LSScrollViewer x:Name="ScrollViewer" Template="{StaticResource StretchingScrollViewerTemplate}" VerticalScrollBarVisibility="Visible" ls:ScrollViewerHelper.VerticalScrollOffsetMargin="400">
                                     <ScrollViewer.Resources>
                                         <Style TargetType="ScrollBar" BasedOn="{StaticResource MinimalGoldScrollbar}"/>
                                         <GridLength x:Key="Left">0</GridLength>
@@ -251,13 +266,13 @@
                                             </MultiBinding>
                                         </ItemsPresenter.Width>
                                     </ItemsPresenter>
-                                </ScrollViewer>
+                                </ls:LSScrollViewer>
                             </ControlTemplate>
                         </TreeView.Template>
                     </TreeView>
                 </Grid>
 
-                <Grid x:Name="SidePanel" Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="1" Grid.RowSpan="2" Visibility="Collapsed" DataContext="{Binding Path=(ls:MoveFocus.ScopeMoveFocusedElement).DataContext.Quest, ElementName=QuestsTreeView}" KeyboardNavigation.DirectionalNavigation="Contained" IsEnabled="True">
+                <Grid x:Name="SidePanel" Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="1" Grid.RowSpan="2" Visibility="Collapsed" DataContext="{Binding Path=(ls:MoveFocus.ScopeMoveFocusedElement).DataContext.Quest, ElementName=QuestsTreeView}" KeyboardNavigation.DirectionalNavigation="Contained" IsEnabled="False">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="3*"/>
                         <RowDefinition Height="17*"/>
@@ -268,7 +283,7 @@
                             <TextBlock x:Name="NavCategory" Text="{Binding Source='h01e85b06g85bdg4626g83ccgb35104b04cd1', Converter={StaticResource TranslatedStringConverter}}" Style="{StaticResource Journal.BookmarkStyle}"/>
                             <TextBlock Text=">" Style="{StaticResource Journal.BookmarkStyle}" Margin="12,0"/>
                         </StackPanel>
-                        <TextBlock x:Name="Title" Text="{Binding Title}" DockPanel.Dock="Left" Style="{StaticResource Journal.TitleStyle}" Foreground="{StaticResource LS_accent100TxtColor}" VerticalAlignment="Top"/>
+                        <TextBlock x:Name="Title" ls:TextBlockFormatter.SourceText="{Binding Title}" DockPanel.Dock="Left" Style="{StaticResource Journal.TitleStyle}" Foreground="{StaticResource LS_accent100TxtColor}" VerticalAlignment="Top"/>
                     </DockPanel>
 
                     <DockPanel Grid.Row="1" Margin="0,16,0,0">
@@ -277,7 +292,7 @@
                         <TextBlock x:Name="CompletionText" DockPanel.Dock="Top" ls:TextBlockFormatter.SourceText="" Style="{StaticResource Journal.BaseTextStyle}" Foreground="{StaticResource LS_specialTxtColor}" Visibility="Collapsed" Margin="0,0,0,60"/>
 
                         <TextBlock x:Name="ObjectivesTitle" DockPanel.Dock="Top" Text="{Binding Source='h1cceab54gb53bg4b3bgb43agc1d0a40a9a30', Converter={StaticResource TranslatedStringConverter}}" Style="{StaticResource Journal.BaseTextStyle}" Foreground="{StaticResource LS_accent100TxtColor}" HorizontalAlignment="Left" Margin="0,0,0,20"/>
-                        <ListBox x:Name="ObjectivesList" DockPanel.Dock="Bottom" ItemsSource="{Binding Objectives}" AlternationCount="{Binding Objectives.Count}">
+                        <ListBox x:Name="ObjectivesList" ItemsSource="{Binding Objectives}" AlternationCount="{Binding Objectives.Count}">
                             <ListBox.Resources>
                                 <Storyboard x:Key="HideEquipmentFilterAnimation">
                                     <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="EquipmentFilter">
@@ -338,14 +353,14 @@
                                 </Style>
                             </ListBox.ItemContainerStyle>
 
-                            <ItemsControl.ItemTemplate>
+                            <ListBox.ItemTemplate>
                                 <DataTemplate DataType="{x:Type ls:QuestObjective}">
                                     <DataTemplate.Resources>
                                         <BitmapImage x:Key="ActiveObjectiveIcon" UriSource="pack://application:,,,/GustavNoesisGUI;component/Assets/Map/mapSelector_quest.png"/>
                                         <BitmapImage x:Key="CompletedObjectiveIcon" UriSource="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared_c/c_bullet_big.png"/>
                                     </DataTemplate.Resources>
                                     <StackPanel>
-                                        <ls:LSToggleButton x:Name="ExpanderButton" IsChecked="False" BoundEvent="">
+                                        <ls:LSToggleButton x:Name="ExpanderButton" IsChecked="False" BoundEvent="" Margin="0,0,32,0">
                                             <ls:LSToggleButton.Template>
                                                 <ControlTemplate>
                                                     <Grid>
@@ -391,10 +406,10 @@
                                                 </ControlTemplate>
                                             </ls:LSToggleButton.Template>
 
-                                            <StackPanel x:Name="Container" Orientation="Horizontal">
-                                                <Image x:Name="Bullet" Source="{StaticResource CompletedObjectiveIcon}" Stretch="Uniform" Margin="50,0,12,0" VerticalAlignment="Center" HorizontalAlignment="Right"/>
-                                                <TextBlock x:Name="Description" Text="{Binding Description}" VerticalAlignment="Center" Style="{StaticResource Journal.BaseTextStyle}" Foreground="{StaticResource LS_accent00TxtColor}"/>
-                                            </StackPanel>
+                                            <DockPanel x:Name="Container">
+                                                <Image DockPanel.Dock="Left" x:Name="Bullet" Source="{StaticResource CompletedObjectiveIcon}" Stretch="None" Margin="50,20,12,0" VerticalAlignment="Top"/>
+                                                <TextBlock x:Name="Description" ls:TextBlockFormatter.SourceText="{Binding Description}" VerticalAlignment="Center" Style="{StaticResource Journal.BaseTextStyle}" Foreground="{StaticResource LS_accent00TxtColor}"/>
+                                            </DockPanel>
 
                                             <b:Interaction.Triggers>
                                                 <!-- In split screen, when the side panel becomes active, focus the first objective -->
@@ -442,15 +457,15 @@
                                                 </Style>
                                             </ListBox.ItemContainerStyle>
 
-                                            <ItemsControl.ItemTemplate>
+                                            <ListBox.ItemTemplate>
                                                 <DataTemplate DataType="{x:Type ls:QuestStep}">
                                                     <DataTemplate.Resources>
                                                         <BitmapImage x:Key="BulletIcon" UriSource="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared_c/c_bullet_small.png"/>
                                                     </DataTemplate.Resources>
 
                                                     <StackPanel x:Name="Container" Orientation="Horizontal" Width="{Binding Path=ActualWidth, RelativeSource={RelativeSource AncestorType={x:Type ContentPresenter}}}">
-                                                        <Image x:Name="Bullet" Source="{StaticResource BulletIcon}" Stretch="None" VerticalAlignment="Center" Margin="0,0,20,0"/>
-                                                        <TextBlock x:Name="Description" Text="{Binding Description}" VerticalAlignment="Center" Style="{StaticResource Journal.ObjectiveStepStyle}" Foreground="{StaticResource LS_accent75TxtColor}" Margin="0,12">
+                                                        <Image x:Name="Bullet" Source="{StaticResource BulletIcon}" Stretch="None" VerticalAlignment="Top" Margin="0,32,20,0"/>
+                                                        <TextBlock x:Name="Description" ls:TextBlockFormatter.SourceText="{Binding Description}" VerticalAlignment="Center" Style="{StaticResource Journal.ObjectiveStepStyle}" Foreground="{StaticResource LS_accent75TxtColor}" Margin="0,12">
                                                             <TextBlock.Width>
                                                                 <!-- Stretched content doesn't property shrink when shrinking a viewscroller -->
                                                                 <MultiBinding Converter="{StaticResource SubtractionMultipleConverter}">
@@ -468,7 +483,7 @@
                                                         </DataTrigger>
                                                     </DataTemplate.Triggers>
                                                 </DataTemplate>
-                                            </ItemsControl.ItemTemplate>
+                                            </ListBox.ItemTemplate>
                                         </ListBox>
                                     </StackPanel>
 
@@ -480,6 +495,7 @@
                                         <DataTrigger Binding="{Binding Path=(ItemsControl.AlternationIndex), RelativeSource={RelativeSource AncestorType={x:Type ListBoxItem}}}" Value="0">
                                             <Setter TargetName="Bullet" Property="Source" Value="{StaticResource ActiveObjectiveIcon}"/>
                                             <Setter TargetName="Bullet" Property="Height" Value="68"/>
+                                            <Setter TargetName="Bullet" Property="Margin" Value="50,36,12,0"/>
                                             <Setter TargetName="Description" Property="Foreground" Value="{StaticResource LS_extraspecialTxtColor}"/>
                                             <Setter TargetName="Description" Property="FontSize" Value="{StaticResource ScaledBigFontSize}"/>
                                             <Setter TargetName="Description" Property="Margin" Value="0,26"/>
@@ -501,7 +517,7 @@
 
                                     </DataTemplate.Triggers>
                                 </DataTemplate>
-                            </ItemsControl.ItemTemplate>
+                            </ListBox.ItemTemplate>
                         </ListBox>
                     </DockPanel>
                 </Grid>
@@ -518,46 +534,26 @@
                         <!-- Disabled until code for quest tracking is done -->
                         <!--<ls:LSButton x:Name="TrackBtn" ls:LSButton.BoundEvent="UISort" ContentTemplate="{StaticResource ControllerButtonHint}" Content="{Binding CurrentPlayer.UIData.InputEvents, ConverterParameter=UISort, Converter={StaticResource FindInputEventConverter}}" Tag="{Binding Source='h96519a3dg3102g441dg8336g0c0e10f4c388', Converter={StaticResource TranslatedStringConverter}}" Visibility="Collapsed" ls:LSButton.EatInput="False" ls:LSButton.SoundID=""/>-->
                         <ls:LSButton x:Name="ShowOnMapBtn" ls:LSButton.BoundEvent="UIDelete" ContentTemplate="{StaticResource ControllerButtonHint}" Content="{Binding CurrentPlayer.UIData.InputEvents, ConverterParameter=UIDelete, Converter={StaticResource FindInputEventConverter}}" Tag="{Binding Source='ha14c2ef4gbeffg4617g8b3cg77e7a637f94b', Converter={StaticResource TranslatedStringConverter}}" Command="{Binding ShowQuestOnMap}" CommandParameter="{Binding Path=(ls:MoveFocus.ScopeMoveFocusedElement).DataContext, ElementName=QuestsTreeView}" Visibility="Collapsed"/>
-                        <ls:LSButton x:Name="SelectBtn" ls:LSButton.BoundEvent="UIAccept" ContentTemplate="{StaticResource ControllerButtonHint}" Content="{Binding CurrentPlayer.UIData.InputEvents, ConverterParameter=UIAccept, Converter={StaticResource FindInputEventConverter}}" Tag="{Binding Source='h04f38549g65b8g4b72g834eg87ee8863fdc5', Converter={StaticResource TranslatedStringConverter}}" Visibility="Collapsed">
-                            <b:Interaction.Triggers>
-                                <b:EventTrigger EventName="LSButtonPressed">
-                                    <b:ChangePropertyAction TargetName="MainPanel" PropertyName="IsEnabled" Value="False"/>
-                                    <b:ChangePropertyAction TargetName="SidePanel" PropertyName="IsEnabled" Value="True"/>
-                                    <b:ControlStoryboardAction ControlStoryboardOption="Stop" Storyboard="{StaticResource Journal.FadeOutSidePanelAnim}"/>
-                                    <b:ControlStoryboardAction ControlStoryboardOption="Play" Storyboard="{StaticResource Journal.FadeInSidePanelAnim}"/>
-                                </b:EventTrigger>
-                            </b:Interaction.Triggers>
-                        </ls:LSButton>
+
+                        <ls:LSToggleButton x:Name="SelectBtn" BoundEvent="UIAccept" ContentTemplate="{StaticResource ControllerButtonHint}" Content="{Binding CurrentPlayer.UIData.InputEvents, ConverterParameter=UIAccept, Converter={StaticResource FindInputEventConverter}}" Tag="{Binding Source='h04f38549g65b8g4b72g834eg87ee8863fdc5', Converter={StaticResource TranslatedStringConverter}}" Visibility="Collapsed" IsChecked="False"/>
+
                         <ls:LSToggleButton x:Name="CompletedBtn" BoundEvent="UIShowInfo" Tag="{Binding Source='hf05f9babg150cg4276gbb9eg80c1e1639989', Converter={StaticResource TranslatedStringConverter}}"
                                    ContentTemplate="{StaticResource ControllerButtonHint}" Content="{Binding CurrentPlayer.UIData.InputEvents, ConverterParameter=UIShowInfo, Converter={StaticResource FindInputEventConverter}}"
                                    Visibility="{Binding Visibility, ElementName=SidePanel, Converter={StaticResource InvertVisibilityConverter}}" IsChecked="{Binding CurrentPlayer.HideCompletedQuestsInCurrentList}"
                                    Command="{Binding ToggleHideCompletedQuests}"/>
+
                         <ls:LSButton x:Name="CloseBtn" ls:LSButton.BoundEvent="UICancel" ContentTemplate="{StaticResource ControllerButtonHint}" Content="{Binding CurrentPlayer.UIData.InputEvents, ConverterParameter=UICancel, Converter={StaticResource FindInputEventConverter}}" Tag="{Binding Source='h6fefa28bg2149g4cacga071gd95b236b2d0b', Converter={StaticResource TranslatedStringConverter}}" Visibility="{Binding Path=Visibility, ElementName=BackBtn, Converter={StaticResource InvertVisibilityConverter}}"
                                      Command="{Binding CustomEvent}" CommandParameter="CloseWidget"/>
                         <ls:LSButton x:Name="BackBtn" ls:LSButton.BoundEvent="UICancel" ContentTemplate="{StaticResource ControllerButtonHint}" Content="{Binding CurrentPlayer.UIData.InputEvents, ConverterParameter=UICancel, Converter={StaticResource FindInputEventConverter}}" Tag="{Binding Source='hfe928c0dgb014g4eb2g8c52g6ed43b026e20', Converter={StaticResource TranslatedStringConverter}}" Visibility="{Binding Path=Visibility, ElementName=SidePanel}">
                             <b:Interaction.Triggers>
                                 <b:EventTrigger EventName="LSButtonPressed">
-                                    <b:ChangePropertyAction TargetName="MainPanel" PropertyName="IsEnabled" Value="True"/>
-                                    <b:ChangePropertyAction TargetName="SidePanel" PropertyName="IsEnabled" Value="False"/>
-                                    <b:ControlStoryboardAction ControlStoryboardOption="Stop" Storyboard="{StaticResource Journal.FadeInSidePanelAnim}"/>
-                                    <b:ControlStoryboardAction ControlStoryboardOption="Play" Storyboard="{StaticResource Journal.FadeOutSidePanelAnim}"/>
+                                    <b:ChangePropertyAction TargetName="SelectBtn" PropertyName="IsChecked" Value="False"/>
                                 </b:EventTrigger>
                             </b:Interaction.Triggers>
                         </ls:LSButton>
 
                         <ls:LSInputBinding x:Name="MoveToLeftBinding" BoundEvent="UILeft">
                             <b:Interaction.Triggers>
-                                <b:EventTrigger EventName="LSInputBindingPressed">
-                                    <b:Interaction.Behaviors>
-                                        <b:ConditionBehavior>
-                                            <b:ConditionalExpression>
-                                                <b:ComparisonCondition LeftOperand="{Binding Path=(ls:MoveFocus.IsKeyboardFocusWithin), ElementName=MainPanel}" Operator="Equal" RightOperand="True"/>
-                                            </b:ConditionalExpression>
-                                        </b:ConditionBehavior>
-                                    </b:Interaction.Behaviors>
-                                    <ls:SetMoveFocusAction TargetName="JournalQuests_c" FocusElement="{Binding ElementName=Navigation}"/>
-                                </b:EventTrigger>
-
                                 <b:EventTrigger EventName="LSInputBindingPressed">
                                     <b:Interaction.Behaviors>
                                         <b:ConditionBehavior>
@@ -586,17 +582,6 @@
                                     </b:Interaction.Behaviors>
                                     <ls:SetMoveFocusAction TargetName="JournalQuests_c" FocusElement="{Binding ElementName=ObjectivesList}"/>
                                 </b:EventTrigger>
-                                <b:EventTrigger EventName="LSInputBindingPressed">
-                                    <b:Interaction.Behaviors>
-                                        <b:ConditionBehavior>
-                                            <b:ConditionalExpression>
-                                                <b:ComparisonCondition LeftOperand="{Binding Path=(ls:MoveFocus.IsKeyboardFocusWithin), ElementName=Navigation}" Operator="Equal" RightOperand="True"/>
-                                                <b:ComparisonCondition LeftOperand="{Binding DataContext.Layout, ElementName=JournalQuests_c}" Operator="Equal" RightOperand="Common"/>
-                                            </b:ConditionalExpression>
-                                        </b:ConditionBehavior>
-                                    </b:Interaction.Behaviors>
-                                    <ls:SetMoveFocusAction TargetName="JournalQuests_c" FocusElement="{Binding ElementName=QuestsTreeView}"/>
-                                </b:EventTrigger>
                             </b:Interaction.Triggers>
                         </ls:LSInputBinding>
                     </WrapPanel>
@@ -610,6 +595,11 @@
                         <b:InvokeCommandAction  Command="{Binding DataContext.CurrentPlayer.QuestJournalUnloaded.ActionCommand, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"/>
                     </b:EventTrigger>
 
+                    <b:PropertyChangedTrigger Binding="{Binding Layout}">
+                        <b:ChangePropertyAction TargetName="SelectBtn" PropertyName="IsChecked" Value="False"/>
+                        <ls:SetMoveFocusAction TargetName="JournalQuests_c" FocusElement="{Binding ElementName=QuestsTreeView}"/>
+                    </b:PropertyChangedTrigger>
+                    
                     <b:PropertyChangedTrigger Binding="{Binding FocusedElement.DataContext, ElementName=JournalQuests_c}">
                         <b:InvokeCommandAction Command="{Binding CurrentPlayer.QuestsTreeViewSelectionChanged.ActionCommand}" CommandParameter="{Binding FocusedElement.DataContext, ElementName=JournalQuests_c}"/>
                     </b:PropertyChangedTrigger>
@@ -672,7 +662,40 @@
                     <Setter TargetName="SelectBtn" Property="Visibility" Value="Collapsed"/>
                 </DataTrigger>
 
+                <MultiDataTrigger>
+                    <MultiDataTrigger.Conditions>
+                        <Condition Binding="{Binding IsChecked, ElementName=SelectBtn}" Value="True"/>
+                        <Condition Binding="{Binding Tag, ElementName=root}" Value="SplitScreen"/>
+                    </MultiDataTrigger.Conditions>
+
+                    <MultiDataTrigger.EnterActions>
+                        <StopStoryboard BeginStoryboardName="HideSidePanelStoryboard"/>
+                        <BeginStoryboard x:Name="ShowSidePanelStoryboard" Storyboard="{StaticResource Journal.FadeInSidePanelAnim}"/>
+                    </MultiDataTrigger.EnterActions>
+                    <MultiDataTrigger.ExitActions>
+                        <StopStoryboard BeginStoryboardName="ShowSidePanelStoryboard"/>
+                        <BeginStoryboard x:Name="HideSidePanelStoryboard" Storyboard="{StaticResource Journal.FadeOutSidePanelAnim}"/>
+                    </MultiDataTrigger.ExitActions>
+
+                    <Setter TargetName="MainPanel" Property="IsEnabled" Value="False"/>
+                    <Setter TargetName="MainPanel" Property="Margin" Value="-200,0,200,0"/>
+                    <Setter TargetName="MainPanel" Property="Opacity" Value="0"/>
+                    <Setter TargetName="MainPanel" Property="Visibility" Value="Collapsed"/>
+
+                    <Setter TargetName="SidePanel" Property="IsEnabled" Value="True"/>
+                    <Setter TargetName="SidePanel" Property="Margin" Value="0"/>
+                    <Setter TargetName="MainPanel" Property="Opacity" Value="1"/>
+                    <Setter TargetName="SidePanel" Property="Visibility" Value="Visible"/>
+                </MultiDataTrigger>
+                
                 <DataTrigger Binding="{Binding Layout}" Value="Common">
+                    <DataTrigger.EnterActions>
+                        <StopStoryboard BeginStoryboardName="HideSidePanelStoryboard"/>
+                        <StopStoryboard BeginStoryboardName="ShowSidePanelStoryboard"/>
+                    </DataTrigger.EnterActions>
+
+                    <Setter TargetName="root" Property="Tag" Value="Common"/>
+
                     <Setter TargetName="ColumnDef0" Property="Width" Value="1*"/>
                     <Setter TargetName="ColumnDef1" Property="Width" Value="4*"/>
                     <Setter TargetName="ColumnDef2" Property="Width" Value="13*"/>
@@ -680,13 +703,13 @@
                     <Setter TargetName="ColumnDef4" Property="Width" Value="18*"/>
                     <Setter TargetName="ColumnDef5" Property="Width" Value="2*"/>
                     <Setter TargetName="ColumnDef6" Property="Width" Value="1*"/>
-
+                    <Setter TargetName="c_PartyGold" Property="Visibility" Value="Visible" />
                     <Setter TargetName="Navigation" Property="Grid.ColumnSpan" Value="5"/>
                     <Setter TargetName="MainPanel" Property="Grid.Column" Value="2"/>
                     <Setter TargetName="MainPanel" Property="Grid.Column" Value="2"/>
                     <Setter TargetName="SidePanel" Property="Grid.Column" Value="4"/>
                     <Setter TargetName="SidePanel" Property="Grid.ColumnSpan" Value="1"/>
-                    <Setter TargetName="ButtonHints" Property="Style" Value="{StaticResource ButtonHint.Container.Center}"/>
+                    <Setter TargetName="SidePanel" Property="IsEnabled" Value="True"/>
                     <Setter TargetName="CompletedBtn" Property="Visibility" Value="Visible"/>
                     <Setter TargetName="BackBtn" Property="Visibility" Value="Collapsed"/>
                     <Setter TargetName="SelectBtn" Property="Visibility" Value="Collapsed"/>
@@ -702,19 +725,7 @@
                 <DataTrigger Binding="{Binding CurrentPlayer.UIData.UnifiedTutorials.Count, Converter={StaticResource GreaterThanConverter}, ConverterParameter=0}" Value="True">
                     <Setter TargetName="QuestsTreeView" Property="IsEnabled" Value="False"/>
                 </DataTrigger>
-
-                <DataTrigger Binding="{Binding Path=(ls:MoveFocus.IsKeyboardFocusWithin), ElementName=MainPanel}" Value="False">
-                    <Setter TargetName="MoveToRightBinding" Property="IsEnabled" Value="False"/>
-                </DataTrigger>
-
-                <MultiDataTrigger>
-                    <MultiDataTrigger.Conditions>
-                        <Condition Binding="{Binding Path=(ls:MoveFocus.IsKeyboardFocusWithin), ElementName=MainPanel}" Value="False"/>
-                        <Condition Binding="{Binding Path=(ls:MoveFocus.IsKeyboardFocusWithin), ElementName=SidePanel}" Value="False"/>
-                    </MultiDataTrigger.Conditions>
-                    <Setter TargetName="MoveToLeftBinding" Property="IsEnabled" Value="False"/>
-                </MultiDataTrigger>
-
+                
                 <MultiDataTrigger>
                     <MultiDataTrigger.Conditions>
                         <Condition Binding="{Binding Path=(ls:MoveFocus.ScopeMoveFocusedElement).DataContext.Quest, ElementName=QuestsTreeView, Converter={StaticResource TypeConverter}}" Value="ls.Quest"/>

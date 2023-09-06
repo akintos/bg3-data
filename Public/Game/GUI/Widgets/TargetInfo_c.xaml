@@ -29,17 +29,6 @@
                     <Setter Property="Template" Value="{StaticResource ControllerButton.ImageSwitcher}"/>
                 </Style>
 
-                <Style x:Key="CycleArrowStyle" TargetType="Path">
-                    <Setter Property="Width" Value="{Binding Source=30, Converter={StaticResource MultiplierConverter}, ConverterParameter={StaticResource CurrentScaleFactor}}"/>
-                    <Setter Property="Height" Value="{Binding Source=30, Converter={StaticResource MultiplierConverter}, ConverterParameter={StaticResource CurrentScaleFactor}}"/>
-                    <Setter Property="Data" Value="M 7 0 L 21 14 L 7 28 Z"/>
-                    <Setter Property="Fill" Value="{StaticResource LS_PrimaryColor}"/>
-                    <Setter Property="Opacity" Value="0.7"/>
-                    <Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
-                    <Setter Property="VerticalAlignment" Value="Center"/>
-                    <Setter Property="Visibility" Value="Hidden"/>
-                </Style>
-
                 <Storyboard x:Key="CastBarAppearAnim" FillBehavior="Stop">
                     <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="Opacity">
                         <EasingDoubleKeyFrame KeyTime="0:0:0.0" Value="0"/>
@@ -105,10 +94,10 @@
             </DataTemplate.Resources>
 
             <Grid x:Name="Root">
-                <StackPanel x:Name="MainContainer" HorizontalAlignment="Center" Margin="0,270,0,0" DataContext="{Binding CurrentPlayer}" VerticalAlignment="Top" Visibility="{Binding CurrentRegularOrCombatTurnTarget, Converter={StaticResource NullToHiddenConverter}}">
+                <StackPanel x:Name="MainContainer" HorizontalAlignment="Center" Margin="0,270,0,0" VerticalAlignment="Top" Visibility="{Binding CurrentPlayer.CurrentRegularOrCombatTurnTarget, Converter={StaticResource NullToHiddenConverter}}">
                     <b:Interaction.Behaviors>
-                        <ls:CollectionFilterBehavior x:Name="PositiveModifierBehavior" ItemsSource="{Binding UIData.HitChanceDesc.Modifiers}" Predicate="{Binding UIData.HitChanceDesc.PositiveModifierPredicate}"/>
-                        <ls:CollectionFilterBehavior x:Name="NegativeModifierBehavior" ItemsSource="{Binding UIData.HitChanceDesc.Modifiers}" Predicate="{Binding UIData.HitChanceDesc.NegativeModifierPredicate}"/>
+                        <ls:CollectionFilterBehavior x:Name="PositiveModifierBehavior" ItemsSource="{Binding CurrentPlayer.UIData.HitChanceDesc.Modifiers}" Predicate="{Binding Data.PositiveModifierPredicate}"/>
+                        <ls:CollectionFilterBehavior x:Name="NegativeModifierBehavior" ItemsSource="{Binding CurrentPlayer.UIData.HitChanceDesc.Modifiers}" Predicate="{Binding Data.NegativeModifierPredicate}"/>
                     </b:Interaction.Behaviors>
 
                     <!-- Header -->
@@ -118,38 +107,27 @@
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
-                        <StackPanel Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Right">
-                        <Path x:Name="ArrowLeft" Style="{StaticResource CycleArrowStyle}" >
-                            <Path.RenderTransform>
-                                <ScaleTransform ScaleX="{Binding Source=-1, Converter={StaticResource MultiplierConverter}, ConverterParameter={StaticResource CurrentScaleFactor}}" ScaleY="{StaticResource CurrentScaleFactor}"/>
-                            </Path.RenderTransform>
-                        </Path>
-                            <ls:LSButton x:Name="SelectPrevious" TapTime="{StaticResource HoldTimeShortcuts}" Style="{StaticResource CycleButtonStyle}" DataContext="{Binding UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='PrevObject'}" VerticalAlignment="Center" Margin="-12,0,-12,0"/>
-                        <Path x:Name="ArrowRight" Style="{StaticResource CycleArrowStyle}">
-                            <Path.RenderTransform>
-                                <ScaleTransform ScaleX="{StaticResource CurrentScaleFactor}" ScaleY="{StaticResource CurrentScaleFactor}"/>
-                            </Path.RenderTransform>
-                        </Path>
-                        </StackPanel>
 
-                        <TextBlock x:Name="Name" Grid.Column="1" Margin="22,0,12,0" Text="{Binding CurrentRegularOrCombatTurnTarget.Name}" FontSize="{StaticResource ScaledBigFontSize}"  VerticalAlignment="Center" HorizontalAlignment="Center" TextAlignment="Center" Style="{StaticResource HUD.DefaultTextStyle}" FontWeight="SemiBold" Foreground="{StaticResource LS_PrimaryColor}" TextWrapping="Wrap"/>
+                        <ContentControl x:Name="SelectPrevious" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="-20" Template="{StaticResource ButtonHint}" Tag="DpadLeftRight" Visibility="Collapsed"/>
+
+                        <TextBlock x:Name="Name" Grid.Column="1" Margin="22,0,12,0" Text="{Binding CurrentPlayer.CurrentRegularOrCombatTurnTarget.Name}" FontSize="{StaticResource ScaledBigFontSize}"  VerticalAlignment="Center" HorizontalAlignment="Center" TextAlignment="Center" Style="{StaticResource HUD.DefaultTextStyle}" FontWeight="SemiBold" Foreground="{StaticResource LS_PrimaryColor}" TextWrapping="Wrap"/>
                         <TextBlock x:Name="LevelText" Grid.Column="2" FontSize="{StaticResource ScaledSmallishFontSize }" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,12,0,0" Style="{StaticResource HUD.DefaultTextStyle}" FontWeight="SemiBold" Foreground="{StaticResource LS_PrimaryColor}" TextWrapping="Wrap" Visibility="Hidden">
                         <TextBlock.Text> 
                             <MultiBinding Converter="{StaticResource ParameterizedTranslatedStringConverter}">
                                 <Binding Source="hb5a0afd6g0041g45eagb4ecg2af0b5d00d53"/>
-                                    <Binding Path="CurrentRegularOrCombatTurnTarget.Stats.Level.Value"/>
+                                    <Binding Path="CurrentPlayer.CurrentRegularOrCombatTurnTarget.Stats.Level.Value"/>
                             </MultiBinding>
                         </TextBlock.Text>
                         </TextBlock>
 
-                        <ls:LSButton x:Name="SelectNext" TapTime="{StaticResource HoldTimeShortcuts}" DataContext="{Binding UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='NextObject'}" VerticalAlignment="Center"/>
+                        <ls:LSButton x:Name="SelectNext" TapTime="{StaticResource HoldTimeShortcuts}" DataContext="{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='NextObject'}" VerticalAlignment="Center"/>
                     </Grid>
 
                     <!-- Health bar -->
-                    <Control x:Name="HPBarContainer" HorizontalAlignment="Center" Margin="0,-12,0,4"  DataContext="{Binding CurrentRegularOrCombatTurnTarget}" Template="{StaticResource TargetHealthBarTemplate}"/>
+                    <Control x:Name="HPBarContainer" HorizontalAlignment="Center" Margin="0,-12,0,4"  DataContext="{Binding CurrentPlayer.CurrentRegularOrCombatTurnTarget}" Template="{StaticResource TargetHealthBarTemplate}"/>
 
                     <!-- Status Effects -->
-                    <ls:AlignableWrapPanel x:Name="StatusHolderHolder" MaxWidth="{Binding ActualWidth, ElementName=Root, Converter={StaticResource AddConverter}, ConverterParameter=-1380}" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Margin="0,0,0,0" >
+                    <ls:AlignableWrapPanel x:Name="StatusHolderHolder" Width="{Binding ActualWidth, ElementName=Root, Converter={StaticResource AddConverter}, ConverterParameter=-1000}" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Margin="0,0,0,0" >
                         <ls:AlignableWrapPanel.OpacityMask>
                             <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
                                 <LinearGradientBrush.GradientStops>
@@ -159,9 +137,9 @@
                             </LinearGradientBrush>
                         </ls:AlignableWrapPanel.OpacityMask>
                         <!-- Concentration shows at start in single line -->
-                        <ContentPresenter Content="{Binding CurrentRegularOrCombatTurnTarget}" ContentTemplate="{StaticResource DefaultConcentrationTemplate}" />
+                        <ContentPresenter Content="{Binding CurrentPlayer.CurrentRegularOrCombatTurnTarget}" ContentTemplate="{StaticResource DefaultConcentrationTemplate}" />
                         <!-- Statuses -->
-                        <ItemsControl x:Name="StatusList" ItemsSource="{Binding CurrentRegularOrCombatTurnTarget.StatusEffects}" Visibility="{Binding CurrentRegularOrCombatTurnTarget.StatusEffects.Count, Converter={StaticResource CountToVisibilityConverter}}" ScrollViewer.VerticalScrollBarVisibility="Disabled" BorderBrush="Transparent" Background="Transparent" HorizontalAlignment="Center" ScrollViewer.HorizontalScrollBarVisibility="Disabled" AlternationCount="{Binding CurrentRegularOrCombatTurnTarget.StatusEffects.Count}" ItemTemplate="{StaticResource NamedStatusTemplate}">
+                        <ItemsControl x:Name="StatusList" ItemsSource="{Binding CurrentPlayer.CurrentRegularOrCombatTurnTarget.StatusEffects}" Visibility="{Binding CurrentPlayer.CurrentRegularOrCombatTurnTarget.StatusEffects.Count, Converter={StaticResource CountToVisibilityConverter}}" ScrollViewer.VerticalScrollBarVisibility="Disabled" BorderBrush="Transparent" Background="Transparent" HorizontalAlignment="Center" ScrollViewer.HorizontalScrollBarVisibility="Disabled" AlternationCount="{Binding CurrentPlayer.CurrentRegularOrCombatTurnTarget.StatusEffects.Count}" ItemTemplate="{StaticResource NamedStatusTemplate}">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
                                     <ls:AlignableWrapPanel x:Name="StatusWrap" IsItemsHost="True" HorizontalContentAlignment="Center" RenderTransformOrigin="0.5,0.5">
@@ -191,11 +169,11 @@
                                 </Style>
                             </ItemsControl.ItemContainerStyle>
                         </ItemsControl>
-                        <TextBlock x:Name="OverflowText" Text="{Binding CurrentRegularOrCombatTurnTarget.StatusEffects.Count, Converter={StaticResource AddConverter}, ConverterParameter={StaticResource InverseTargetMaxDisplayedStatuses}, StringFormat={}+{0}}" Style="{StaticResource TargetInfoTextStyle}" Margin="6,0,0,0" Visibility="{Binding CurrentRegularOrCombatTurnTarget.StatusEffects.Count, Converter={StaticResource CountToVisibilityConverter}, ConverterParameter={StaticResource TargetMaxDisplayedStatuses}}" VerticalAlignment="Center"/>
+                        <TextBlock x:Name="OverflowText" Text="{Binding CurrentPlayer.CurrentRegularOrCombatTurnTarget.StatusEffects.Count, Converter={StaticResource AddConverter}, ConverterParameter={StaticResource InverseTargetMaxDisplayedStatuses}, StringFormat={}+{0}}" Style="{StaticResource TargetInfoTextStyle}" Margin="6,0,0,0" Visibility="{Binding CurrentPlayer.CurrentRegularOrCombatTurnTarget.StatusEffects.Count, Converter={StaticResource CountToVisibilityConverter}, ConverterParameter={StaticResource TargetMaxDisplayedStatuses}}" VerticalAlignment="Center"/>
                     </ls:AlignableWrapPanel>
 
                     <!-- Modifiers -->
-                    <Border x:Name="ModifiersPresenter" Visibility="Collapsed" DataContext="{Binding UIData.HitChanceDesc}">
+                    <Border x:Name="ModifiersPresenter" Visibility="Collapsed" DataContext="{Binding CurrentPlayer.UIData.HitChanceDesc}" >
                         <Border.Resources>
                             <SolidColorBrush x:Key="NegativeModiferColour" Color="{StaticResource alertColor}" Opacity="0.6"/>
                         </Border.Resources>
@@ -240,7 +218,7 @@
                                     <SolidColorBrush Color="{StaticResource bonusColor}" Opacity="0.6"/>
                                 </Border.Background>
                                 <StackPanel Orientation="Horizontal" Margin="8,0">
-                                    <Image Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared/ico_advantage.png" Stretch="None" VerticalAlignment="Center"/>
+                                    <Image Source="{StaticResource IconAdvantage}" Stretch="None" VerticalAlignment="Center"/>
                                     <!-- Temporarily hidden as a test -->
                                     <!--<TextBlock Style="{StaticResource ModifierTextBlock}" Text="{Binding Source='h986f906agb172g4956g9567g5cbd32150349', Converter={StaticResource TranslatedStringConverter}, StringFormat='\ {0}:'}" VerticalAlignment="Center" Margin="0,4"/> -->
                                     <ItemsControl ItemsSource="{Binding Advantages}" AlternationCount="{Binding Advantages.Count}" ItemTemplate="{StaticResource AdvantageItemTemplate}" ItemContainerStyle="{StaticResource AdvantageItemStyle}" VerticalAlignment="Center">
@@ -275,7 +253,7 @@
                             <!-- Disadvantages -->
                             <Border x:Name="DisadvantagesListHolder" Style="{StaticResource ModifierBorder}" Visibility="{Binding Disadvantages.Count, Converter={StaticResource CountToVisibilityConverter}}"  Background="{StaticResource NegativeModiferColour}">
                                 <StackPanel Orientation="Horizontal" Margin="8,0">
-                                    <Image Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared/ico_disadvantage.png" Stretch="None" VerticalAlignment="Center"/>
+                                    <Image Source="{StaticResource IconDisadvantage}" Stretch="None" VerticalAlignment="Center"/>
                                     <!-- Temporarily hidden as a test -->
                                     <!--<TextBlock Style="{StaticResource ModifierTextBlock}" Text="{Binding Source='h34944186g018cg474dg96d8gd56417c3e086', Converter={StaticResource TranslatedStringConverter}, StringFormat='\ {0}:'}" VerticalAlignment="Center"/> -->
                                     <ItemsControl ItemsSource="{Binding Disadvantages}" AlternationCount="{Binding Disadvantages.Count}" ItemTemplate="{StaticResource AdvantageItemTemplate}" ItemContainerStyle="{StaticResource AdvantageItemStyle}" VerticalAlignment="Center">
@@ -294,9 +272,9 @@
                     <StackPanel x:Name="StatusHolderHolderHidden" HorizontalAlignment="Center" Orientation="Horizontal" Margin="0,0,0,0" Visibility="Hidden">
 
                         <!-- Concentration shows at start in single line -->
-                        <ContentPresenter Content="{Binding CurrentRegularOrCombatTurnTarget}" ContentTemplate="{StaticResource DefaultConcentrationTemplate}" />
+                        <ContentPresenter Content="{Binding CurrentPlayer.CurrentRegularOrCombatTurnTarget}" ContentTemplate="{StaticResource DefaultConcentrationTemplate}" />
                         <!-- Statuses -->
-                        <ItemsControl x:Name="StatusListHidden" ItemsSource="{Binding CurrentRegularOrCombatTurnTarget.StatusEffects}" Visibility="{Binding CurrentRegularOrCombatTurnTarget.StatusEffects.Count, Converter={StaticResource CountToVisibilityConverter}}" ScrollViewer.VerticalScrollBarVisibility="Disabled" BorderBrush="Transparent" Background="Transparent" HorizontalAlignment="Center" ScrollViewer.HorizontalScrollBarVisibility="Disabled" AlternationCount="{Binding CurrentRegularOrCombatTurnTarget.StatusEffects.Count}" ItemTemplate="{StaticResource HiddenNamedStatusTemplate}">
+                        <ItemsControl x:Name="StatusListHidden" ItemsSource="{Binding CurrentPlayer.CurrentRegularOrCombatTurnTarget.StatusEffects}" Visibility="{Binding CurrentPlayer.CurrentRegularOrCombatTurnTarget.StatusEffects.Count, Converter={StaticResource CountToVisibilityConverter}}" ScrollViewer.VerticalScrollBarVisibility="Disabled" BorderBrush="Transparent" Background="Transparent" HorizontalAlignment="Center" ScrollViewer.HorizontalScrollBarVisibility="Disabled" AlternationCount="{Binding CurrentPlayer.CurrentRegularOrCombatTurnTarget.StatusEffects.Count}" ItemTemplate="{StaticResource HiddenNamedStatusTemplate}">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
                                     <StackPanel IsItemsHost="True" Orientation="Horizontal" >
@@ -490,8 +468,6 @@
                     <Setter TargetName="SelectNext" Property="Visibility" Value="Visible"/>
                     <Setter TargetName="SelectPrevious" Property="IsEnabled" Value="True"/>
                     <Setter TargetName="SelectNext" Property="IsEnabled" Value="True"/>
-                    <Setter TargetName="ArrowLeft" Property="Visibility" Value="Visible"/>
-                    <Setter TargetName="ArrowRight" Property="Visibility" Value="Visible"/>
                 </MultiDataTrigger>
 
                 <DataTrigger Binding="{Binding CurrentPlayer.CurrentRegularOrCombatTurnTarget.Type}" Value="Character">
@@ -513,8 +489,6 @@
                     <Setter TargetName="SelectNext" Property="IsEnabled" Value="False"/>
                     <Setter TargetName="SelectPrevious" Property="Visibility" Value="Collapsed" />
                     <Setter TargetName="SelectNext" Property="Visibility" Value="Collapsed"/>
-                    <Setter TargetName="ArrowLeft" Property="Visibility" Value="Collapsed"/>
-                    <Setter TargetName="ArrowRight" Property="Visibility" Value="Collapsed"/>
                     <Setter TargetName="LevelText" Property="Visibility" Value="Collapsed"/>
                     <Setter TargetName="HPBarContainer" Property="Visibility" Value="Collapsed"/>
                     <Setter TargetName="StatusHolderHolder" Property="Visibility" Value="Collapsed"/>
@@ -532,8 +506,6 @@
                     <Setter TargetName="MainContainer" Property="Visibility" Value="Visible"/>
                     <Setter TargetName="Name" Property="Text" Value="{Binding Source='h7e1d36d1g5905g4d88ga9b2g3842755f5834', Converter={StaticResource TranslatedStringConverter}}"/>
                     <Setter TargetName="Name" Property="Opacity" Value="0.7"/>
-                    <Setter TargetName="ArrowLeft" Property="Visibility" Value="Visible"/>
-                    <Setter TargetName="ArrowRight" Property="Visibility" Value="Visible"/>
                     <Setter TargetName="SelectPrevious" Property="Visibility" Value="Visible"/>
                     <Setter TargetName="SelectNext" Property="Visibility" Value="Visible"/>
                     <Setter TargetName="SelectPrevious" Property="IsEnabled" Value="True"/>
@@ -541,8 +513,6 @@
                 </MultiDataTrigger>
 
                 <DataTrigger Binding="{Binding CurrentPlayer.UIData.InteractableObjects.Count, Converter={StaticResource GreaterThanConverter}, ConverterParameter=0}" Value="True">
-                    <Setter TargetName="ArrowLeft" Property="Visibility" Value="Visible"/>
-                    <Setter TargetName="ArrowRight" Property="Visibility" Value="Visible"/>
                     <Setter TargetName="SelectPrevious" Property="Visibility" Value="Visible"/>
                     <Setter TargetName="SelectNext" Property="Visibility" Value="Visible"/>
                     <Setter TargetName="SelectPrevious" Property="IsEnabled" Value="True"/>

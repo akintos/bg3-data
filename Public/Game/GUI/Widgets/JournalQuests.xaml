@@ -34,7 +34,7 @@
                     <ControlTemplate x:Key="ItemTitleTextblock">
                         <Border Background="Transparent" x:Name="ActiveQuestTitleBorder">
                             <TextBlock x:Name="ActiveQuestTitle" d:DataContext="{d:DesignInstance {x:Type ls:JournalItem}, IsDesignTimeCreatable=True}"
-                                       Text="{Binding Title}" Foreground="{StaticResource LS_baseTxtColor}" Style="{StaticResource TopTreeviewNodesTextBlockStyle}"/>
+                                       ls:TextBlockFormatter.SourceText="{Binding Title}" Foreground="{StaticResource LS_baseTxtColor}" Style="{StaticResource TopTreeviewNodesTextBlockStyle}"/>
                         </Border>
 
                         <ControlTemplate.Triggers>
@@ -62,7 +62,13 @@
                         <Border Background="Transparent" x:Name="DisabledQuestTitleBorder">
                             <TextBlock x:Name="DisabledQuestTitle" d:DataContext="{d:DesignInstance {x:Type ls:JournalItem}, IsDesignTimeCreatable=True}"
                                        Foreground="{StaticResource LS_accent00TxtColor}" Style="{StaticResource TopTreeviewNodesTextBlockStyle}">
-                                <Run Text="{Binding Title}"/><Run Text=" ("/><Run Text="{Binding Source='h4e934f08g52c2g4645g9b8dg61882aecfce9',Converter={StaticResource TranslatedStringConverter}}"/><Run Text=")"/>
+                                <ls:TextBlockFormatter.SourceText>
+                                    <MultiBinding Converter="{StaticResource ParameterizedTranslatedStringConverter}">
+                                        <Binding Source="hcdb797e5g5989g48e8g87d1gd25ba5d9e57f"/>
+                                        <Binding Path="Title"/>
+                                        <Binding Source="h4e934f08g52c2g4645g9b8dg61882aecfce9" Converter="{StaticResource TranslatedStringConverter}"/>
+                                    </MultiBinding>
+                                </ls:TextBlockFormatter.SourceText>
                             </TextBlock>
                         </Border>
 
@@ -95,10 +101,16 @@
                                 <ColumnDefinition/>
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
-                           
+
                             <ToggleButton Grid.Column="0" x:Name="Expander" ClickMode="Press" Style="{StaticResource ExpandCollapseToggleStyle}"
                                           Visibility="{Binding HasItems, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=TreeViewItem}, Converter={StaticResource BoolToVisibleConverter}}"
-                                          IsChecked="{Binding IsExpanded, Mode=TwoWay, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=TreeViewItem}}"/>
+                                          IsChecked="{Binding IsExpanded, Mode=TwoWay, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=TreeViewItem}}">
+                                <b:Interaction.Triggers>
+                                    <b:EventTrigger EventName="Click">
+                                        <b:InvokeCommandAction Command="{Binding DataContext.ToggleJournalExpander, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" CommandParameter="{Binding .}"/>
+                                    </b:EventTrigger>
+                                </b:Interaction.Triggers>
+                            </ToggleButton>
 
                             <Control Grid.Column="1" x:Name="JournalItemTitle" DataContext="{Binding Item}" Template="{StaticResource ItemTitleTextblock}"/>
 
@@ -127,7 +139,13 @@
                             </Grid.ColumnDefinitions>
 
                             <ToggleButton Grid.Column="0" x:Name="TopLoreExpander" ClickMode="Press" Style="{StaticResource ExpandCollapseToggleStyle}"
-                                          IsChecked="{Binding IsExpanded, Mode=TwoWay, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=TreeViewItem}}"/>
+                                          IsChecked="{Binding IsExpanded, Mode=TwoWay, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=TreeViewItem}}">
+                                <b:Interaction.Triggers>
+                                    <b:EventTrigger EventName="Click">
+                                        <b:InvokeCommandAction Command="{Binding DataContext.ToggleJournalExpander, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" CommandParameter="{Binding .}"/>
+                                    </b:EventTrigger>
+                                </b:Interaction.Triggers>
+                            </ToggleButton>
                             <TextBlock Grid.Column="1" x:Name="TopLoreEntryTitle" Style="{StaticResource TopTreeviewNodesTextBlockStyle}"
                                        Text="{Binding Source='hba465cc6g2dfag489dga0deg8e6f044b81d2',Converter={StaticResource TranslatedStringConverter}, ConverterParameter='ToUpper'}"/>
                         </Grid>
@@ -147,7 +165,13 @@
                             </Grid.ColumnDefinitions>
 
                             <ToggleButton Grid.Column="0" x:Name="QuestCategoryExpander" ClickMode="Press" Style="{StaticResource ExpandCollapseToggleStyle}"
-                                          IsChecked="{Binding IsExpanded, Mode=TwoWay, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=TreeViewItem}}"/>
+                                          IsChecked="{Binding IsExpanded, Mode=TwoWay, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=TreeViewItem}}">
+                                <b:Interaction.Triggers>
+                                    <b:EventTrigger EventName="Click">
+                                        <b:InvokeCommandAction Command="{Binding DataContext.ToggleJournalExpander, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" CommandParameter="{Binding .}"/>
+                                    </b:EventTrigger>
+                                </b:Interaction.Triggers>
+                            </ToggleButton>
                             <TextBlock Grid.Column="1" x:Name="QuestCategoryTitle" Text="{Binding QuestCategory.Description}"
                                        Style="{StaticResource TopTreeviewNodesTextBlockStyle}"/>
                         </Grid>
@@ -296,7 +320,7 @@
                             </Grid.RowDefinitions>
                             
                             <TextBlock Grid.Row="0" x:Name="QuestTitle" 
-                                       Text="{Binding CurrentPlayer.SelectedJournalItemView.Item.Title}" 
+                                       ls:TextBlockFormatter.SourceText="{Binding CurrentPlayer.SelectedJournalItemView.Item.Title}" 
                                        Foreground="{StaticResource LS_extraspecialTxtColor}"
                                        FontSize="{StaticResource ScaledMassiveFontSize}"
                                        HorizontalAlignment="Left" VerticalAlignment="Top"/>
@@ -314,7 +338,7 @@
                             <ItemsControl Grid.Row="2" Margin="0,20,100,0" HorizontalAlignment="Stretch">
                                 <ItemsControl.Resources>
                                     <DataTemplate DataType="{x:Type ls:MysteryStep}">
-                                        <TextBlock Margin="0,5,0,0" Text="{Binding Description}" TextWrapping="Wrap" Padding="0,0,0,30" />
+                                        <TextBlock Margin="0,5,0,0" ls:TextBlockFormatter.SourceText="{Binding Description}" TextWrapping="Wrap" Padding="0,0,0,30" />
                                     </DataTemplate>
 
                                     <DataTemplate DataType="{x:Type ls:QuestObjective}">
@@ -334,7 +358,7 @@
                                                 <Image Grid.Column="0" x:Name="Bullet" Source="{StaticResource ActiveObjectiveIcon}" HorizontalAlignment="Right" Stretch="None" Margin="0,0,12,0"/>
 
                                                 <TextBlock Grid.Column="1" x:Name="QuestObjectiveTitle" 
-                                                           Text="{Binding Description}" 
+                                                           ls:TextBlockFormatter.SourceText="{Binding Description}" 
                                                            Foreground="{StaticResource LS_accent100TxtColor}" FontSize="{StaticResource ScaledTitleFontSize}"
                                                            HorizontalAlignment="Stretch" VerticalAlignment="Center" TextWrapping="Wrap"/>
 
@@ -350,7 +374,7 @@
                                                             
                                                             <Image x:Name="BulletStep" Grid.Column="0" Source="{StaticResource BulletIcon}" Stretch="None" VerticalAlignment="Top" Margin="0,16,16,0"/>
 
-                                                            <TextBlock Grid.Column="1" x:Name="DescriptionStep"  Text="{Binding Description}" Foreground="{StaticResource LS_accent100TxtColor}" FontSize="{StaticResource ScaledDefaultFontSize}"
+                                                            <TextBlock Grid.Column="1" x:Name="DescriptionStep"  ls:TextBlockFormatter.SourceText="{Binding Description}" Foreground="{StaticResource LS_accent100TxtColor}" FontSize="{StaticResource ScaledDefaultFontSize}"
                                                                        HorizontalAlignment="Stretch" VerticalAlignment="Top" TextWrapping="Wrap" Margin="0,0,0,0"/>
                                                         </Grid>
                                                         <DataTemplate.Triggers>

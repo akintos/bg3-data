@@ -49,7 +49,7 @@
                 <Grid.Background>
                     <ImageBrush ImageSource="{StaticResource Tadpoles.Background}" Stretch="Fill"/>
                 </Grid.Background>
-                <ls:PanZoomContentControl x:Name="Brain" Background="Transparent" PanSpeed="500" DefaultZoom="0.75" RenderTransformOrigin="0.5,0.5" DefaultOffset="0,110" >
+                <ls:PanZoomContentControl x:Name="Brain" Background="Transparent" PanSpeed="500" DefaultZoom="0.75" RenderTransformOrigin="0.5,0.5" DefaultOffset="0,110" PanLeft="UIMapRight" PanRight="UIMapLeft" PanUp="UIMapDown" PanDown="UIMapUp">
                     <b:Interaction.Triggers>
                         <b:PropertyChangedTrigger Binding="{Binding Path=CurrentPlayer.SelectedCharacter}">
                             <b:Interaction.Behaviors>
@@ -262,7 +262,7 @@
                         <Control HorizontalAlignment="Center" Template="{StaticResource TadpoleCountTemplate}" />
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                             <ls:LSToggleButton x:Name="EntryButton" IsChecked="False" ls:LSToggleButton.BoundEvent="UIAccept" ContentTemplate="{StaticResource ControllerButtonHintImageOnly}" Content="{Binding CurrentPlayer.UIData.InputEvents, ConverterParameter=UIAccept, Converter={StaticResource FindInputEventConverter}}" IsEnabled="{Binding IsChecked, RelativeSource={RelativeSource Mode=Self}, Converter={StaticResource InvertBoolConverter}}"/>
-                            <TextBlock x:Name="EntryButtonLabel" Style="{StaticResource BtnHint.TextStyle}" Text="Manage Powers" Margin="0,0,30,0"/>
+                            <TextBlock x:Name="EntryButtonLabel" Style="{StaticResource BtnHint.TextStyle}" Text="{Binding Source='he4188fdagc753g4e54g85efg2f435f8cb0cd', Converter={StaticResource TranslatedStringConverter}}" Margin="0,0,30,0"/>
                         </StackPanel>
                     </StackPanel>
                 </Grid>
@@ -339,7 +339,7 @@
                                 <b:InvokeCommandAction Command="{Binding EnableTooltipOnUIElement}" CommandParameter="{Binding ElementName=Cursor}"/>
                             </b:StoryboardCompletedTrigger>
                         </b:Interaction.Triggers>
-                        
+
                     </ls:LSButton>
 
                     <ls:LSButton x:Name="CloseButton" ls:LSButton.BoundEvent="UICancel" ContentTemplate="{StaticResource ControllerButtonHint}" Content="{Binding CurrentPlayer.UIData.InputEvents, ConverterParameter=UICancel, Converter={StaticResource FindInputEventConverter}}" Tag="{Binding Source='h6fefa28bg2149g4cacga071gd95b236b2d0b', Converter={StaticResource TranslatedStringConverter}}" Visibility="{Binding Visibility, ElementName=BackButton, Converter={StaticResource InvertVisibilityConverter}}"
@@ -388,6 +388,10 @@
                     <b:EventTrigger EventName="UnLoaded">
                         <b:InvokeCommandAction Command="{Binding HideTooltipOnUIElement}" CommandParameter="{Binding ElementName=Cursor}"/>
                     </b:EventTrigger>
+
+                    <b:DataTrigger Binding="{Binding HasInputEnabled, ElementName=TadpolePowersTree_c}" Value="True">
+                        <b:InvokeCommandAction Command="{Binding ShowTooltipOnUIElement}" CommandParameter="{Binding ElementName=Cursor}"/>
+                    </b:DataTrigger>
                 </b:Interaction.Triggers>
             </Grid>
 
@@ -408,18 +412,6 @@
                     <Setter TargetName="UnlockButton" Property="Visibility" Value="Visible"/>
                     <Setter TargetName="Cursor" Property="Visibility" Value="Visible"/>
                     <Setter TargetName="Tadpoles" Property="Visibility" Value="Visible"/>
-                </MultiDataTrigger>
-
-                <MultiDataTrigger>
-                    <MultiDataTrigger.Conditions>
-                        <Condition Binding="{Binding IsVisible, ElementName=EntryOverlay}" Value="False"/>
-                        <Condition Binding="{Binding IsVisible, ElementName=Blocker}" Value="False"/>
-                        <Condition Binding="{Binding CurrentPlayer.UIData.IsCharacterSelectOpen}" Value="False"/>
-                    </MultiDataTrigger.Conditions>
-                    <Setter TargetName="Brain" Property="PanLeft" Value="UIMapRight"/>
-                    <Setter TargetName="Brain" Property="PanRight" Value="UIMapLeft"/>
-                    <Setter TargetName="Brain" Property="PanUp" Value="UIMapDown"/>
-                    <Setter TargetName="Brain" Property="PanDown" Value="UIMapUp"/>
                 </MultiDataTrigger>
 
                 <DataTrigger Binding="{Binding IsVisible, ElementName=EntryOverlay}" Value="False">

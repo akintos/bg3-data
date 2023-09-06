@@ -1,11 +1,10 @@
 {
    "save" : {
       "header" : {
-         "version" : "4.0.9.304"
+         "version" : "4.0.10.302"
       },
       "regions" : {
          "dialog" : {
-            "AllowDeadSpeakers" : {"type" : "bool", "value" : false},
             "DefaultAddressedSpeakers" : [
                {
                   "Object" : [
@@ -16,16 +15,9 @@
                   ]
                }
             ],
-            "DefaultSpeakerIndex" : {"type" : "int32", "value" : -1},
-            "IsAllowingJoinCombat" : {"type" : "bool", "value" : false},
-            "IsBehaviour" : {"type" : "bool", "value" : false},
-            "IsSubbedDialog" : {"type" : "bool", "value" : false},
-            "IsWorld" : {"type" : "bool", "value" : false},
             "TimelineId" : {"type" : "FixedString", "value" : "7e396433-4545-137f-c822-48603143befe"},
             "UUID" : {"type" : "FixedString", "value" : "0321fa02-c0d3-8b05-7bc7-a1c23ebc4874"},
-            "automated" : {"type" : "bool", "value" : false},
             "category" : {"type" : "LSString", "value" : "Generic NPC Dialog"},
-            "issfxdialog" : {"type" : "bool", "value" : false},
             "nodes" : [
                {
                   "RootNodes" : [
@@ -44,23 +36,15 @@
                   ],
                   "node" : [
                      {
-                        "AllowGrouping" : {"type" : "bool", "value" : true},
                         "GameData" : [
                            {
                               "AiPersonalities" : [ {} ],
-                              "CameraTarget" : {"type" : "int32", "value" : -1},
-                              "CustomMovie" : {"type" : "LSString", "value" : ""},
-                              "ExtraWaitTime" : {"type" : "int32", "value" : 0},
                               "MusicInstrumentSounds" : [ {} ],
-                              "OriginSound" : [ {} ],
-                              "SoundEvent" : {"type" : "LSString", "value" : ""}
+                              "OriginSound" : [ {} ]
                            }
                         ],
-                        "Greeting" : {"type" : "bool", "value" : false},
-                        "GroupID" : {"type" : "FixedString", "value" : ""},
-                        "GroupIndex" : {"type" : "int32", "value" : -1},
-                        "Root" : {"type" : "bool", "value" : false},
-                        "ShowOnce" : {"type" : "bool", "value" : false},
+                        "GroupID" : {"type" : "FixedString", "value" : "c3fef212-ca0c-464e-ac24-67bed600aeba"},
+                        "GroupIndex" : {"type" : "int32", "value" : 1},
                         "TaggedTexts" : [
                            {
                               "TaggedText" : [
@@ -93,7 +77,6 @@
                         ],
                         "Tags" : [ {} ],
                         "UUID" : {"type" : "FixedString", "value" : "1112df00-5905-9998-524b-17989ef1a5fb"},
-                        "addressedspeaker" : {"type" : "int32", "value" : -1},
                         "checkflags" : [ {} ],
                         "children" : [ {} ],
                         "constructor" : {"type" : "FixedString", "value" : "TagAnswer"},
@@ -204,34 +187,18 @@
                            }
                         ],
                         "endnode" : {"type" : "bool", "value" : true},
-                        "exclusive" : {"type" : "bool", "value" : false},
-                        "gameplaynode" : {"type" : "bool", "value" : false},
-                        "optional" : {"type" : "bool", "value" : false},
                         "setflags" : [ {} ],
-                        "speaker" : {"type" : "int32", "value" : 0},
-                        "stub" : {"type" : "bool", "value" : true},
-                        "suppresssubtitle" : {"type" : "bool", "value" : false},
-                        "transitionmode" : {"type" : "uint8", "value" : 0},
-                        "waittime" : {"type" : "float", "value" : -1.0}
+                        "speaker" : {"type" : "int32", "value" : 0}
                      },
                      {
-                        "AllowGrouping" : {"type" : "bool", "value" : true},
                         "GameData" : [
                            {
                               "AiPersonalities" : [ {} ],
-                              "CameraTarget" : {"type" : "int32", "value" : -1},
-                              "CustomMovie" : {"type" : "LSString", "value" : ""},
-                              "ExtraWaitTime" : {"type" : "int32", "value" : 0},
                               "MusicInstrumentSounds" : [ {} ],
-                              "OriginSound" : [ {} ],
-                              "SoundEvent" : {"type" : "LSString", "value" : ""}
+                              "OriginSound" : [ {} ]
                            }
                         ],
-                        "Greeting" : {"type" : "bool", "value" : false},
-                        "GroupID" : {"type" : "FixedString", "value" : ""},
-                        "GroupIndex" : {"type" : "int32", "value" : -1},
                         "Root" : {"type" : "bool", "value" : true},
-                        "ShowOnce" : {"type" : "bool", "value" : false},
                         "TaggedTexts" : [
                            {
                               "TaggedText" : [
@@ -264,7 +231,6 @@
                         ],
                         "Tags" : [ {} ],
                         "UUID" : {"type" : "FixedString", "value" : "14943957-638e-617b-6945-8cc97437314b"},
-                        "addressedspeaker" : {"type" : "int32", "value" : -1},
                         "checkflags" : [
                            {
                               "flaggroup" : [
@@ -385,34 +351,18 @@
                            }
                         ],
                         "endnode" : {"type" : "bool", "value" : true},
-                        "exclusive" : {"type" : "bool", "value" : false},
-                        "gameplaynode" : {"type" : "bool", "value" : false},
-                        "optional" : {"type" : "bool", "value" : false},
                         "setflags" : [ {} ],
-                        "speaker" : {"type" : "int32", "value" : 0},
-                        "stub" : {"type" : "bool", "value" : true},
-                        "suppresssubtitle" : {"type" : "bool", "value" : false},
-                        "transitionmode" : {"type" : "uint8", "value" : 0},
-                        "waittime" : {"type" : "float", "value" : -1.0}
+                        "speaker" : {"type" : "int32", "value" : 0}
                      },
                      {
-                        "AllowGrouping" : {"type" : "bool", "value" : true},
                         "GameData" : [
                            {
                               "AiPersonalities" : [ {} ],
-                              "CameraTarget" : {"type" : "int32", "value" : -1},
-                              "CustomMovie" : {"type" : "LSString", "value" : ""},
-                              "ExtraWaitTime" : {"type" : "int32", "value" : 0},
                               "MusicInstrumentSounds" : [ {} ],
-                              "OriginSound" : [ {} ],
-                              "SoundEvent" : {"type" : "LSString", "value" : ""}
+                              "OriginSound" : [ {} ]
                            }
                         ],
-                        "Greeting" : {"type" : "bool", "value" : false},
-                        "GroupID" : {"type" : "FixedString", "value" : ""},
-                        "GroupIndex" : {"type" : "int32", "value" : -1},
                         "Root" : {"type" : "bool", "value" : true},
-                        "ShowOnce" : {"type" : "bool", "value" : false},
                         "TaggedTexts" : [
                            {
                               "TaggedText" : [
@@ -445,7 +395,6 @@
                         ],
                         "Tags" : [ {} ],
                         "UUID" : {"type" : "FixedString", "value" : "24af057c-1cd9-2fdc-223f-775e0ffac443"},
-                        "addressedspeaker" : {"type" : "int32", "value" : -1},
                         "checkflags" : [
                            {
                               "flaggroup" : [
@@ -566,34 +515,20 @@
                            }
                         ],
                         "endnode" : {"type" : "bool", "value" : true},
-                        "exclusive" : {"type" : "bool", "value" : false},
-                        "gameplaynode" : {"type" : "bool", "value" : false},
-                        "optional" : {"type" : "bool", "value" : false},
                         "setflags" : [ {} ],
-                        "speaker" : {"type" : "int32", "value" : 0},
-                        "stub" : {"type" : "bool", "value" : true},
-                        "suppresssubtitle" : {"type" : "bool", "value" : false},
-                        "transitionmode" : {"type" : "uint8", "value" : 0},
-                        "waittime" : {"type" : "float", "value" : -1.0}
+                        "speaker" : {"type" : "int32", "value" : 0}
                      },
                      {
-                        "AllowGrouping" : {"type" : "bool", "value" : true},
                         "GameData" : [
                            {
                               "AiPersonalities" : [ {} ],
-                              "CameraTarget" : {"type" : "int32", "value" : -1},
-                              "CustomMovie" : {"type" : "LSString", "value" : ""},
-                              "ExtraWaitTime" : {"type" : "int32", "value" : 0},
                               "MusicInstrumentSounds" : [ {} ],
-                              "OriginSound" : [ {} ],
-                              "SoundEvent" : {"type" : "LSString", "value" : ""}
+                              "OriginSound" : [ {} ]
                            }
                         ],
-                        "Greeting" : {"type" : "bool", "value" : false},
-                        "GroupID" : {"type" : "FixedString", "value" : ""},
-                        "GroupIndex" : {"type" : "int32", "value" : -1},
+                        "GroupID" : {"type" : "FixedString", "value" : "c3fef212-ca0c-464e-ac24-67bed600aeba"},
+                        "GroupIndex" : {"type" : "int32", "value" : 0},
                         "Root" : {"type" : "bool", "value" : true},
-                        "ShowOnce" : {"type" : "bool", "value" : false},
                         "TaggedTexts" : [
                            {
                               "TaggedText" : [
@@ -626,7 +561,6 @@
                         ],
                         "Tags" : [ {} ],
                         "UUID" : {"type" : "FixedString", "value" : "c3fef212-ca0c-464e-ac24-67bed600aeba"},
-                        "addressedspeaker" : {"type" : "int32", "value" : -1},
                         "checkflags" : [ {} ],
                         "children" : [
                            {
@@ -744,10 +678,6 @@
                               ]
                            }
                         ],
-                        "endnode" : {"type" : "bool", "value" : false},
-                        "exclusive" : {"type" : "bool", "value" : false},
-                        "gameplaynode" : {"type" : "bool", "value" : false},
-                        "optional" : {"type" : "bool", "value" : false},
                         "setflags" : [
                            {
                               "flaggroup" : [
@@ -762,30 +692,17 @@
                               ]
                            }
                         ],
-                        "speaker" : {"type" : "int32", "value" : -666},
-                        "stub" : {"type" : "bool", "value" : true},
-                        "suppresssubtitle" : {"type" : "bool", "value" : false},
-                        "transitionmode" : {"type" : "uint8", "value" : 0},
-                        "waittime" : {"type" : "float", "value" : -1.0}
+                        "speaker" : {"type" : "int32", "value" : -666}
                      },
                      {
-                        "AllowGrouping" : {"type" : "bool", "value" : true},
                         "GameData" : [
                            {
                               "AiPersonalities" : [ {} ],
-                              "CameraTarget" : {"type" : "int32", "value" : -1},
-                              "CustomMovie" : {"type" : "LSString", "value" : ""},
-                              "ExtraWaitTime" : {"type" : "int32", "value" : 0},
                               "MusicInstrumentSounds" : [ {} ],
-                              "OriginSound" : [ {} ],
-                              "SoundEvent" : {"type" : "LSString", "value" : ""}
+                              "OriginSound" : [ {} ]
                            }
                         ],
-                        "Greeting" : {"type" : "bool", "value" : false},
-                        "GroupID" : {"type" : "FixedString", "value" : ""},
-                        "GroupIndex" : {"type" : "int32", "value" : -1},
                         "Root" : {"type" : "bool", "value" : true},
-                        "ShowOnce" : {"type" : "bool", "value" : false},
                         "TaggedTexts" : [
                            {
                               "TaggedText" : [
@@ -818,7 +735,6 @@
                         ],
                         "Tags" : [ {} ],
                         "UUID" : {"type" : "FixedString", "value" : "ccf9dbb9-acaf-4259-b41b-70d37647eead"},
-                        "addressedspeaker" : {"type" : "int32", "value" : -1},
                         "checkflags" : [
                            {
                               "flaggroup" : [
@@ -942,15 +858,8 @@
                            }
                         ],
                         "endnode" : {"type" : "bool", "value" : true},
-                        "exclusive" : {"type" : "bool", "value" : false},
-                        "gameplaynode" : {"type" : "bool", "value" : false},
-                        "optional" : {"type" : "bool", "value" : false},
                         "setflags" : [ {} ],
-                        "speaker" : {"type" : "int32", "value" : 0},
-                        "stub" : {"type" : "bool", "value" : true},
-                        "suppresssubtitle" : {"type" : "bool", "value" : false},
-                        "transitionmode" : {"type" : "uint8", "value" : 0},
-                        "waittime" : {"type" : "float", "value" : -1.0}
+                        "speaker" : {"type" : "int32", "value" : 0}
                      }
                   ]
                }
@@ -959,16 +868,12 @@
                {
                   "speaker" : [
                      {
-                        "IsPeanutSpeaker" : {"type" : "bool", "value" : false},
                         "SpeakerMappingId" : {"type" : "guid", "value" : "05bbc26f-3c4d-4a8d-977b-c668b69677e6"},
-                        "SpeakerTagsIndex" : {"type" : "LSString", "value" : ""},
                         "index" : {"type" : "FixedString", "value" : "0"},
                         "list" : {"type" : "LSString", "value" : "8d5fb663-c039-4330-b832-5c6e584cb11b"}
                      },
                      {
-                        "IsPeanutSpeaker" : {"type" : "bool", "value" : false},
                         "SpeakerMappingId" : {"type" : "guid", "value" : "a317be07-ab85-4aa5-a161-4cbd835ea553"},
-                        "SpeakerTagsIndex" : {"type" : "LSString", "value" : ""},
                         "index" : {"type" : "FixedString", "value" : "1"},
                         "list" : {"type" : "LSString", "value" : "e0d1ff71-04a8-4340-ae64-9684d846eb83"}
                      }

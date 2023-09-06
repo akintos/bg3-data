@@ -161,6 +161,9 @@
                                             <b:EventTrigger EventName="LocalFocusChanged">
                                                 <b:InvokeCommandAction Command="{Binding DataContext.ShowTooltipOnUIElement, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" CommandParameter="{Binding Path=LocalFocus, ElementName=Inventory}"/>
                                             </b:EventTrigger>
+                                            <b:DataTrigger Binding="{Binding HasInputEnabled, ElementName=Insert_c}" Value="True">
+                                                <b:InvokeCommandAction Command="{Binding ShowTooltipOnUIElement}" CommandParameter="{Binding Path=LocalFocus, ElementName=Inventory}"/>
+                                            </b:DataTrigger>
                                         </b:Interaction.Triggers>
 
                                         <ls:LSListBox.ItemContainerStyle>
@@ -274,7 +277,7 @@
                     <ls:LSButton x:Name="TooltipBtn" BoundEvent="UIShowInfo" 
                                         ContentTemplate="{StaticResource ControllerButtonHint}" 
                                         Content="{Binding CurrentPlayer.UIData.InputEvents, ConverterParameter=UIShowInfo, Converter={StaticResource FindInputEventConverter}}" 
-                                        Tag="{Binding Source='hdb3826d2gfc2bg4cc3gb654gf80410859c3f',Converter={StaticResource TranslatedStringConverter}}" 
+                                        Tag="{Binding Source='hf8dd4c2fg97e0g4ccdgac1ag3cd1fe5060ef',Converter={StaticResource TranslatedStringConverter}}" 
                                         Command="{Binding ToggleTooltipOnUIElement}" 
                                         CommandParameter="{Binding Path=LocalFocus, ElementName=Inventory}"
                                         IsEnabled="{Binding ElementName=Inventory, Path=LocalFocus, Converter={StaticResource NullToBoolFalseConverter}}"/>
@@ -303,6 +306,9 @@
                 </DataTrigger>
                 <DataTrigger Binding="{Binding LocalFocus.DataContext.Object.IsSelected, ElementName=Inventory}" Value="True">
                     <Setter TargetName="AddRemoveBtn" Property="Tag" Value="{Binding Source='h66f5f06ag1874g4161g950dg86f429b26401', Converter={StaticResource TranslatedStringConverter}}"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding ShowUIElementTooltip}" Value="True">
+                    <Setter TargetName="TooltipBtn" Property="Tag" Value="{Binding Source='hb33ec471gd611g4ee3gbbffg699af8f79167', Converter={StaticResource TranslatedStringConverter}}"/>
                 </DataTrigger>
 
                 <!-- No more adding when all slots are filled -->

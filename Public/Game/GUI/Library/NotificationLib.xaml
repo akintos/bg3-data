@@ -760,7 +760,7 @@
 
     <!-- Template for Combat Started Notification -->
     <ControlTemplate x:Key="CombatTurnTemplate" TargetType="ContentControl">
-        <Border Width="1520" Height="312" Padding="0,44,0,130" Background="{DynamicResource TurnBg}" RenderTransformOrigin="0.5,0.5" >
+        <Border Width="1520" Height="312" Padding="0,44,0,130" Background="{DynamicResource TurnBg}" RenderTransformOrigin="0.5,0.5" DataContext="{Binding DataContext, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}">
             <Border.RenderTransform>
                 <ScaleTransform/>
             </Border.RenderTransform>
@@ -830,7 +830,7 @@
                 </BooleanAnimationUsingKeyFrames>
             </Storyboard>
         </ControlTemplate.Resources>
-        <Grid x:Name="LabelBorder" Width="460" Height="120" Background="{StaticResource TurnBg}" >
+        <Grid x:Name="LabelBorder" MinWidth="460" Height="120" Background="{StaticResource TurnBg}" >
             <Grid.Triggers>
                 <EventTrigger RoutedEvent="FrameWorkElement.Loaded">
                     <BeginStoryboard x:Name="FadeIn">
@@ -844,7 +844,7 @@
                 </EventTrigger>
             </Grid.Triggers>
 
-            <TextBlock Text="{Binding Source='h454f2809gcc4ag4ab6gac72gccec15c0dda3',Converter={StaticResource TranslatedStringConverter}}" Foreground="{StaticResource LS_PrimaryColor}" FontSize="{StaticResource ScaledLargeFontSize}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            <TextBlock Text="{Binding Source='h454f2809gcc4ag4ab6gac72gccec15c0dda3',Converter={StaticResource TranslatedStringConverter}}" Foreground="{StaticResource LS_PrimaryColor}" FontSize="{StaticResource ScaledLargeFontSize}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="36,0"/>
             <ls:LSInputBinding x:Name="SkipNotificationBinding" EatInput="False" AnyKey="True" AnyClick="True" PlayerId="{Binding PlayerId, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}">
                 <ls:LSInputBinding.Triggers>
                     <EventTrigger RoutedEvent="ls:LSInputBinding.LSInputBindingPressed">
@@ -873,9 +873,45 @@
         <ControlTemplate.Resources>
             <ImageBrush x:Key="TurnBg" ImageSource="pack://application:,,,/GustavNoesisGUI;component/Assets/Notification/turnNotice_ally.png" />
         </ControlTemplate.Resources>
-        <ContentControl Template="{StaticResource CombatTurnTemplate}" DataContext="{Binding DataContext, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" Margin="0,42,0,0">
-            <TextBlock Text="{Binding Source='h454f2809gcc4ag4ab6gac72gccec15c0dda3',Converter={StaticResource TranslatedStringConverter}}" Foreground="{StaticResource LS_PrimaryColor}" FontSize="{StaticResource TitleFontSize}" />
+        <ContentControl Template="{StaticResource CombatTurnTemplate}" Margin="0,42,0,0">
+            <StackPanel>
+                <TextBlock Text="{Binding Source='h454f2809gcc4ag4ab6gac72gccec15c0dda3',Converter={StaticResource TranslatedStringConverter}}" Foreground="{StaticResource LS_PrimaryColor}" FontSize="{StaticResource TitleFontSize}" HorizontalAlignment="Center" Margin="0,-8,0,0" />
+                <ItemsControl x:Name="TurnActiveCharacterList" ItemsSource="{Binding Path=DataContext.CurrentPlayer.UIData.CurrentPartyCharactersInTurn, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" HorizontalAlignment="Center">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border Margin="4,4" x:Name="CharacterLabel" Background="{StaticResource LS_textStrokeColor}" CornerRadius="8">
+                                <TextBlock x:Name="CharacterNameText" Text="{Binding Name}" Foreground="{StaticResource LS_accent100TxtColor}" FontSize="{StaticResource DefaultFontSize}" Margin="20,0" />
+                            </Border>
+                            <DataTemplate.Triggers>
+                                <DataTrigger Value="False">
+                                    <DataTrigger.Binding>
+                                        <MultiBinding Converter="{StaticResource EqualConverter}">
+                                            <Binding RelativeSource="{RelativeSource AncestorType={x:Type ls:UIWidget}}" Path="DataContext.CurrentPlayer.UserId"/>
+                                            <Binding Path="OwnerUserID"/>
+                                        </MultiBinding>
+                                    </DataTrigger.Binding>
+                                    <Setter TargetName="CharacterLabel" Property="Visibility" Value="Collapsed"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding DataContext.Data.UIInputMethod, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" Value="Controller">
+                                    <Setter TargetName="CharacterNameText" Property="FontSize" Value="{StaticResource MediumFontSize}"/>
+                                </DataTrigger>
+                            </DataTemplate.Triggers>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
         </ContentControl>
+
+        <ControlTemplate.Triggers>
+            <DataTrigger Binding="{Binding DataContext.Data.UIInputMethod, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" Value="Controller">
+                <Setter TargetName="TurnActiveCharacterList" Property="Margin" Value="0,-8,0,0"/>
+            </DataTrigger>
+        </ControlTemplate.Triggers>
     </ControlTemplate>
 
     <!-- Template for Enemy Combat Turn Notification -->
@@ -883,7 +919,7 @@
         <ControlTemplate.Resources>
             <ImageBrush x:Key="TurnBg" ImageSource="pack://application:,,,/GustavNoesisGUI;component/Assets/Notification/turnNotice_enemy.png" />
         </ControlTemplate.Resources>
-        <ContentControl Template="{StaticResource CombatTurnTemplate}" DataContext="{Binding DataContext, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" Margin="0,42,0,0">
+        <ContentControl Template="{StaticResource CombatTurnTemplate}" Margin="0,42,0,0">
             <TextBlock Text="{Binding Source='h513cbe16g465bg420eg95cagf5fe78981bba',Converter={StaticResource TranslatedStringConverter}}" Foreground="{StaticResource LS_PrimaryColor}" FontSize="{StaticResource TitleFontSize}" />
         </ContentControl>
     </ControlTemplate>
@@ -893,7 +929,7 @@
         <ControlTemplate.Resources>
             <ImageBrush x:Key="TurnBg" ImageSource="pack://application:,,,/GustavNoesisGUI;component/Assets/Notification/turnNotice_neutral.png" />
         </ControlTemplate.Resources>
-        <ContentControl Template="{StaticResource CombatTurnTemplate}" DataContext="{Binding DataContext, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" Margin="0,42,0,0">
+        <ContentControl Template="{StaticResource CombatTurnTemplate}" Margin="0,42,0,0">
             <TextBlock Text="{Binding Source='hfbb0dc14gba0dg4fbegbd3cg30c73c5da56c',Converter={StaticResource TranslatedStringConverter}}" Foreground="{StaticResource LS_PrimaryColor}" FontSize="{StaticResource TitleFontSize}" />
         </ContentControl>
     </ControlTemplate>
@@ -903,8 +939,8 @@
         <ControlTemplate.Resources>
             <ImageBrush x:Key="TurnBg" ImageSource="pack://application:,,,/GustavNoesisGUI;component/Assets/Notification/turnNotice_friendly.png" />
         </ControlTemplate.Resources>
-        <ContentControl Template="{StaticResource CombatTurnTemplate}" DataContext="{Binding DataContext, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" Margin="0,42,0,0">
-			<TextBlock Text="{Binding Message.Text}" Foreground="{StaticResource LS_PrimaryColor}" FontSize="{StaticResource TitleFontSize}" DataContext="{Binding CurrentPlayer.UIData.Notification}" />
+        <ContentControl Template="{StaticResource CombatTurnTemplate}" Margin="0,42,0,0">
+            <TextBlock Text="{Binding Message.Text}" Foreground="{StaticResource LS_PrimaryColor}" FontSize="{StaticResource TitleFontSize}" DataContext="{Binding DataContext.CurrentPlayer.UIData.Notification, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" HorizontalAlignment="Center" />
         </ContentControl>
     </ControlTemplate>
 
@@ -1675,14 +1711,14 @@
     <!-- Unified tutorials -->
 
     <Duration x:Key="SideTutorialStoryboardDuration">0:0:0.5</Duration>
-    <System:Double x:Key="SideTutorialLeftMargin">-1000</System:Double>
-    <System:Double x:Key="SideTutorialRightMargin">1000</System:Double>
-
+    <System:Double x:Key="SideTutorialLeftMargin">-150</System:Double>
+    <System:Double x:Key="SideTutorialRightMargin">150</System:Double>
+ 
     <Storyboard x:Key="SideTutorialLeftIn">
         <DoubleAnimation Storyboard.TargetProperty="Opacity" From="0" To="1" Duration="{StaticResource SideTutorialStoryboardDuration}"/>
         <DoubleAnimation Storyboard.TargetProperty="RenderTransform.(TranslateTransform.X)" From="{StaticResource SideTutorialLeftMargin}" To="0" Duration="{StaticResource SideTutorialStoryboardDuration}">
             <DoubleAnimation.EasingFunction>
-                <CubicEase EasingMode="EaseOut"/>
+                <QuarticEase EasingMode="EaseOut"/>
             </DoubleAnimation.EasingFunction>
         </DoubleAnimation>
     </Storyboard>
@@ -1690,7 +1726,7 @@
         <DoubleAnimation Storyboard.TargetProperty="Opacity" From="0" To="1" Duration="{StaticResource SideTutorialStoryboardDuration}"/>
         <DoubleAnimation Storyboard.TargetProperty="RenderTransform.(TranslateTransform.X)" From="{StaticResource SideTutorialRightMargin}" To="0" Duration="{StaticResource SideTutorialStoryboardDuration}">
             <DoubleAnimation.EasingFunction>
-                <CubicEase EasingMode="EaseOut"/>
+                <QuarticEase EasingMode="EaseOut"/>
             </DoubleAnimation.EasingFunction>
         </DoubleAnimation>
     </Storyboard>
@@ -1699,7 +1735,7 @@
         <DoubleAnimation Storyboard.TargetProperty="Opacity" From="1" To="0" Duration="{StaticResource SideTutorialStoryboardDuration}"/>
         <DoubleAnimation Storyboard.TargetProperty="RenderTransform.(TranslateTransform.X)" From="0" To="{StaticResource SideTutorialLeftMargin}" Duration="{StaticResource SideTutorialStoryboardDuration}">
             <DoubleAnimation.EasingFunction>
-                <CubicEase EasingMode="EaseIn"/>
+                <QuarticEase EasingMode="EaseIn"/>
             </DoubleAnimation.EasingFunction>
         </DoubleAnimation>
     </Storyboard>
@@ -1707,10 +1743,11 @@
         <DoubleAnimation Storyboard.TargetProperty="Opacity" From="1" To="0" Duration="{StaticResource SideTutorialStoryboardDuration}"/>
         <DoubleAnimation Storyboard.TargetProperty="RenderTransform.(TranslateTransform.X)" From="0" To="{StaticResource SideTutorialRightMargin}" Duration="{StaticResource SideTutorialStoryboardDuration}">
             <DoubleAnimation.EasingFunction>
-                <CubicEase EasingMode="EaseIn"/>
+                <QuarticEase EasingMode="EaseIn"/>
             </DoubleAnimation.EasingFunction>
         </DoubleAnimation>
     </Storyboard>
+
 
     <Style x:Key="SideTutorialsBackgroundPADStyle" TargetType="ls:LSNineSliceImage" BasedOn="{StaticResource {x:Type ls:LSNineSliceImage}}">
         <Setter Property="ImageSource" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared_c/c_tutorial_notice_bg.png" />
@@ -1722,6 +1759,15 @@
         <!-- Compensate the big shadow surrounding the image -->
         <Setter Property="Margin" Value="-20" />
     </Style>
+    
+    <Style x:Key="SideTutorialsFramePADStyle" TargetType="ls:LSNineSliceImage" BasedOn="{StaticResource {x:Type ls:LSNineSliceImage}}">
+        <Setter Property="ImageSource" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared_c/c_tutorial_notice_frameshape.png" />
+        <Setter Property="Slices" Value="80,144,80,102" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="Opacity" Value="1" />
+        <Setter Property="Visibility" Value="Collapsed"/>
+
+    </Style>
 
     <Style x:Key="SideTutorialsBackgroundKBMStyle" TargetType="ls:LSNineSliceImage" BasedOn="{StaticResource {x:Type ls:LSNineSliceImage}}">
         <Setter Property="ImageSource" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Tutorial/tutorial_notice_bg.png" />
@@ -1732,6 +1778,13 @@
         <Setter Property="Focusable" Value="False" />
         <!-- Compensate the big shadow surrounding the image -->
         <Setter Property="Margin" Value="-12" />
+    </Style>
+
+    <Style x:Key="ParamContentControllerStyle" TargetType="ContentControl">
+        <Setter Property="Margin" Value="{StaticResource ScaledInlineControllerHintMargin}" />
+        <Setter Property="Template" Value="{StaticResource ControllerButton.ImageSwitcher}"/>
+        <Setter Property="Width" Value="{StaticResource ScaledControllerHintSize}"/>
+        <Setter Property="Height" Value="{StaticResource ScaledControllerHintSize}"/>
     </Style>
 
     <Style x:Key="SideTutorialsStyle" TargetType="ItemsControl">
@@ -1768,12 +1821,6 @@
                                 </Setter.Value>
                             </Setter>
                         </Style>
-                        <Style x:Key="ParamContentControllerStyle" TargetType="ContentControl">
-                            <Setter Property="Margin" Value="{StaticResource ScaledInlineControllerHintMargin}" />
-                            <Setter Property="Template" Value="{StaticResource ControllerButton.ImageSwitcher}"/>
-                            <Setter Property="Width" Value="{StaticResource ScaledControllerHintSize}"/>
-                            <Setter Property="Height" Value="{StaticResource ScaledControllerHintSize}"/>
-                        </Style>
 
                         <Style x:Key="padHintButtonStyle" TargetType="ls:LSButton">
                             <Setter Property="Visibility" Value="Hidden"/>
@@ -1796,6 +1843,7 @@
                         <BitmapImage x:Key="IconTutorial" UriSource="pack://application:,,,/GustavNoesisGUI;component/Assets/Tutorial/ico_tutorial_notice.png" />
                         <BitmapImage x:Key="HintsSeparatorImage" UriSource="pack://application:,,,/GustavNoesisGUI;component/Assets/Tutorial/tutorial_notice_divider.png" />
                     </DataTemplate.Resources>
+
 
                     <ls:LSNineSliceImage x:Name="SideTutorialRoot" Style="{StaticResource SideTutorialsBackgroundKBMStyle}" Width="828" HorizontalAlignment="Left">
                         <b:Interaction.Triggers>
@@ -1870,7 +1918,50 @@
                             </MultiBinding>
                         </ls:LSNineSliceImage.Margin>
 
+                        
+                        
                         <Grid ls:TooltipExtender.Owner="{Binding DataContext.CurrentPlayer.SelectedCharacter, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ls:UIWidget}}}">
+
+                            <Grid Margin="-80,-52,-60,-52">
+                            <Grid.OpacityMask>
+                                <LinearGradientBrush x:Name="highlightImageMask" StartPoint="0,0" EndPoint="1,1" >
+                                        <LinearGradientBrush.RelativeTransform>
+                                            <TransformGroup>
+                                                <ScaleTransform ScaleX="1.0" ScaleY="1.0" />
+                                                <RotateTransform Angle="0" CenterX="0.5" CenterY="0.5"  />
+                                                <TranslateTransform X="0.0" Y="0.0" />
+                                            </TransformGroup>
+                                        </LinearGradientBrush.RelativeTransform>
+                                        <GradientStop Offset="0" Color="#00ffffff"/>
+                                        <GradientStop Offset="0.1" Color="#00ffffff"/>
+                                        <GradientStop Offset="0.5" Color="#ffffff"/>
+                                        <GradientStop Offset="0.9" Color="#00ffffff"/>
+                                        <GradientStop Offset="1" Color="#00ffffff"/>
+                                </LinearGradientBrush>
+                            </Grid.OpacityMask>
+                            <Grid.Triggers>
+                                <EventTrigger RoutedEvent="FrameworkElement.Loaded">
+                                        <BeginStoryboard Name="Rotatorr">
+                                            <!-- the variables here set up a repeat of the animation -->
+                                            <Storyboard AutoReverse="False" RepeatBehavior="Forever" Duration="0:0:6">
+                                                <DoubleAnimation Storyboard.TargetName="highlightImageMask" Storyboard.TargetProperty="(LinearGradientBrush.RelativeTransform).(TransformGroup.Children)[2].(TranslateTransform.Y)" From="-3.0" To="3.0" Duration="0:0:3">
+                                                    <DoubleAnimation.EasingFunction>
+                                                        <QuarticEase EasingMode="EaseInOut" />
+                                                    </DoubleAnimation.EasingFunction>
+                                                </DoubleAnimation>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                </EventTrigger>
+                                <EventTrigger RoutedEvent="FrameworkElement.Unloaded">
+                                        <StopStoryboard BeginStoryboardName="Rotatorr"/>
+                                </EventTrigger>
+                            </Grid.Triggers>
+
+                                <ls:LSNineSliceImage x:Name="SideTutorialFrame" Style="{StaticResource SideTutorialsFramePADStyle}" Height="{Binding ElementName=SideTutorialRoot, Path=ActualHeight}"/>
+
+                            </Grid>
+
+
                             <Grid x:Name="TutorialIconHolder" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="-116,-8,0,0">
                                 <Image Stretch="None" Source="{StaticResource BackgroundIconTutorial}"/>
                                 <Image Stretch="None" HorizontalAlignment="Center" VerticalAlignment="Top" Source="{StaticResource IconTutorial}" Margin="0,8,0,0"/>
@@ -1918,7 +2009,10 @@
                                 </StackPanel>
 
                             </StackPanel>
+                            
                         </Grid>
+                        
+                        
                     </ls:LSNineSliceImage>
 
                     <DataTemplate.Triggers>
@@ -1947,7 +2041,9 @@
                             <Setter TargetName="KBMDismissButton" Property="Visibility" Value="Collapsed"/>
                             <Setter TargetName="KBDescription" Property="Visibility" Value="Collapsed"/>
                             <Setter TargetName="PadDescription" Property="Visibility" Value="Visible"/>
+                            <Setter TargetName="SideTutorialFrame" Property="Visibility" Value="Visible"/>
                             <Setter TargetName="SideTutorialRoot" Property="Style" Value="{StaticResource SideTutorialsBackgroundPADStyle}"/>
+                            <Setter TargetName="SideTutorialFrame" Property="Style" Value="{StaticResource SideTutorialsFramePADStyle}"/>
                             <Setter TargetName="SkipTutorialPADInput" Property="IsEnabled" Value="True"/>
                             <Setter TargetName="padDismissPrompt" Property="Visibility" Value="Visible"/>
                             <Setter TargetName="TitleDescription" Property="MinHeight" Value="110"/>
@@ -1962,6 +2058,7 @@
                                 <Condition Binding="{Binding PadInputHints, Converter={StaticResource NullToBoolFalseConverter}, ConverterParameter='EmptyString'}" Value="True"/>
                             </MultiDataTrigger.Conditions>
                             <MultiDataTrigger.Setters>
+                                <Setter TargetName="SideTutorialFrame" Property="Visibility" Value="Collapsed" />
                                 <Setter TargetName="HintsSeparator" Property="Visibility" Value="Visible"/>
                                 <Setter TargetName="KBHints" Property="Visibility" Value="Visible"/>
                             </MultiDataTrigger.Setters>

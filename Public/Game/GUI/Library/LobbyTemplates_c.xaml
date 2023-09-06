@@ -39,14 +39,14 @@
             </Grid>
             <TextBlock Name="Index"  HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0 6 0 0" Foreground="{StaticResource LS_accent75TxtColor}"
                        Text="{Binding SlotIndex, Converter={StaticResource DecimalToRomanConverter}, ConverterParameter=true}"/>
-            <ContentControl x:Name="CharBtn" Style="{DynamicResource FocusableContentControlStyle}" HorizontalAlignment="Center" Focusable="False" ls:MoveFocus.Focusable="False" ls:MoveFocus.IsFocused="True">
+            <ContentControl x:Name="CharBtn" Style="{DynamicResource FocusableContentControlStyle}" HorizontalAlignment="Center" Focusable="False" ls:MoveFocus.Focusable="False" ls:MoveFocus.IsFocused="True" Width="200">
                 <ls:LSNineSliceImage x:Name="IconContainer" HorizontalAlignment="Center"
                                      ImageSource="{StaticResource LobbyPortraitFrameSelected}" Slices="24,24,24,24" Width="200" Height="200">
                     <Rectangle x:Name="Icon" Fill="{Binding Player.CommunityIcon}" Height="152" Width="152"/>
                 </ls:LSNineSliceImage>
             </ContentControl>
             <TextBlock x:Name="Name" HorizontalAlignment="Center" Margin="10 20 10 0" TextWrapping="Wrap" Text="{Binding Player.Name}"
-                       FontSize="{StaticResource ScaledLargeFontSize}" Foreground="{StaticResource LS_tint100}"/>
+                       FontSize="{StaticResource ScaledLargeFontSize}" Foreground="{StaticResource LS_tint100}" MaxHeight="160" TextTrimming="CharacterEllipsis"/>
             <TextBlock x:Name="Description" HorizontalAlignment="Center" Margin="0 20 0 0"
                        Text="{Binding Source='h336a8d4cga78dg439dg91d8g19932bdac7cb', Converter={StaticResource TranslatedStringConverter}}" 
                        Visibility="{Binding IsHost, Converter={StaticResource BoolToVisibleConverter}, ConverterParameter={StaticResource TrueValue}}"

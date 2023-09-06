@@ -204,9 +204,9 @@
                                                                         </b:EventTrigger>
                                                                     </b:Interaction.Triggers>
 
-                                                                    <ContentPresenter Margin="52"/>
+                                                                    <ContentPresenter Margin="52" HorizontalAlignment="Left" />
 
-                                                                    <Control x:Name="Frame" Template="{StaticResource FocusableBorderTemplate}" Visibility="{Binding (ls:MoveFocus.IsFocused), RelativeSource={RelativeSource AncestorType={x:Type ContentControl}}, Converter={StaticResource BoolToVisibleConverter}}" Margin="46" />
+                                                                    <Control x:Name="Frame" Template="{StaticResource FocusableBorderTemplate}" Visibility="{Binding (ls:MoveFocus.IsFocused), RelativeSource={RelativeSource AncestorType={x:Type ContentControl}}, Converter={StaticResource BoolToVisibleConverter}}" Margin="46" HorizontalAlignment="Left" />
 
                                                                     <Grid.Triggers>
                                                                         <EventTrigger RoutedEvent="Loaded">

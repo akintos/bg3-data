@@ -1,7 +1,7 @@
 {
    "save" : {
       "header" : {
-         "version" : "4.0.9.330"
+         "version" : "4.0.10.300"
       },
       "regions" : {
          "dialog" : {
@@ -935,7 +935,25 @@
                            }
                         ],
                         "endnode" : {"type" : "bool", "value" : true},
-                        "setflags" : [ {} ],
+                        "setflags" : [
+                           {
+                              "flaggroup" : [
+                                 {
+                                    "flag" : [
+                                       {
+                                          "UUID" : {"type" : "FixedString", "value" : "d235c01f-ab02-4f84-beda-d261bb301279"},"value" : {"type" : "bool", "value" : false}}
+                                    ],"type" : {"type" : "FixedString", "value" : "Local"}},
+                                 {
+                                    "flag" : [
+                                       {
+                                          "UUID" : {"type" : "FixedString", "value" : "cdc93794-08f8-4563-b721-c00872170dbf"},
+                                          "paramval" : {"type" : "int32", "value" : 1},
+                                          "value" : {"type" : "bool", "value" : true}
+                                       }
+                                    ],"type" : {"type" : "FixedString", "value" : "Object"}}
+                              ]
+                           }
+                        ],
                         "speaker" : {"type" : "int32", "value" : -1}
                      },
                      {
@@ -1210,8 +1228,13 @@
                                  {
                                     "flag" : [
                                        {
-                                          "UUID" : {"type" : "FixedString", "value" : "c7b9e1bd-b623-3d2a-c952-4a210a1740dc"},
-                                          "paramval" : {"type" : "int32", "value" : 0},
+                                          "UUID" : {"type" : "FixedString", "value" : "d235c01f-ab02-4f84-beda-d261bb301279"},"value" : {"type" : "bool", "value" : false}}
+                                    ],"type" : {"type" : "FixedString", "value" : "Local"}},
+                                 {
+                                    "flag" : [
+                                       {
+                                          "UUID" : {"type" : "FixedString", "value" : "cdc93794-08f8-4563-b721-c00872170dbf"},
+                                          "paramval" : {"type" : "int32", "value" : 1},
                                           "value" : {"type" : "bool", "value" : true}
                                        },
                                        {
@@ -2710,7 +2733,7 @@
                                  },
                                  {
                                     "key" : {"type" : "FixedString", "value" : "CustomCineArtKeysPresent"},
-                                    "val" : {"type" : "LSString", "value" : "False"}
+                                    "val" : {"type" : "LSString", "value" : "True"}
                                  },
                                  {
                                     "key" : {"type" : "FixedString", "value" : "CustomLightingPresent"},

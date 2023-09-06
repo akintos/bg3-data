@@ -336,7 +336,7 @@
                                      CommandParameter="{Binding FocusedElement.CommandParameter, ElementName=ReactionDecisionPopup_c}"/>
                         <ls:LSButton x:Name="ToggleTooltips" Focusable="False" BoundEvent="UIShowInfo" Margin="{StaticResource ButtonHint.Margin}" VerticalAlignment="Bottom"
                                      Content="{Binding CurrentPlayer.UIData.InputEvents, ConverterParameter=UIShowInfo, Converter={StaticResource FindInputEventConverter}}"
-                                     Tag="{Binding Source='h2a8cab0cgbfb8g4890gbfbdg5a9426e29457', Converter={StaticResource TranslatedStringConverter}}"
+                                     Tag="{Binding Source='hf8dd4c2fg97e0g4ccdgac1ag3cd1fe5060ef', Converter={StaticResource TranslatedStringConverter}}"
                                      ContentTemplate="{StaticResource ControllerButtonHint}"
                                      Command="{Binding ToggleTooltipOnUIElement}"
                                      CommandParameter="{Binding FocusedElement, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"/>
@@ -399,6 +399,9 @@
                     <Setter TargetName="PanelSelectInputBinding" Property="IsEnabled" Value="False"/>
                     <Setter TargetName="PartyManagementInputBinding" Property="IsEnabled" Value="False"/>
                 </DataTrigger>
+                <DataTrigger Binding="{Binding ShowUIElementTooltip}" Value="True">
+                    <Setter TargetName="ToggleTooltips" Property="Tag" Value="{Binding Source='hb33ec471gd611g4ee3gbbffg699af8f79167', Converter={StaticResource TranslatedStringConverter}}"/>
+                </DataTrigger>
             </ControlTemplate.Triggers>
         </ControlTemplate>
     </ls:UIWidget.Template>
@@ -406,6 +409,9 @@
         <b:EventTrigger EventName="FocusChanged">
             <b:InvokeCommandAction Command="{Binding ShowTooltipOnUIElement}" CommandParameter="{Binding Path=FocusedElement, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"/>
         </b:EventTrigger>
+        <b:DataTrigger Binding="{Binding HasInputEnabled, ElementName=ReactionDecisionPopup_c}" Value="True">
+            <b:InvokeCommandAction Command="{Binding ShowTooltipOnUIElement}" CommandParameter="{Binding Path=FocusedElement, ElementName=ReactionDecisionPopup_c}"/>
+        </b:DataTrigger>
 
         <b:EventTrigger EventName="MoveFocusUp">
             <ls:LSPlaySound Sound="UI_Shared_Hover" />

@@ -266,7 +266,7 @@
             
                         </TextBlock>
                         <Control HorizontalAlignment="Center" Template="{StaticResource TadpoleCountTemplate}" />
-                        <ls:LSButton Style="{StaticResource BigBlueButtonStyle}" Content="Manage Experiences" Command="{Binding Path=DataContext.CustomEvent, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ls:UIWidget}}}" CommandParameter="OpenTadpoleTree" SoundID="UI_HUD_EscapeMenu" ls:TutorialProperties.TargetID="TUT_TadpoleTree" ls:TutorialProperties.ModalType="TopRight"/>
+                        <ls:LSButton Style="{StaticResource BigBlueButtonStyle}" Content="{Binding Source=h1f318f39g2d8eg46ccga7cag187950e70bbd, Converter={StaticResource TranslatedStringConverter}}" Command="{Binding Path=DataContext.CustomEvent, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ls:UIWidget}}}" CommandParameter="OpenTadpoleTree" SoundID="UI_HUD_EscapeMenu" ls:TutorialProperties.TargetID="TUT_TadpoleTree" ls:TutorialProperties.ModalType="TopRight"/>
                     </StackPanel>
                 </Grid>
 

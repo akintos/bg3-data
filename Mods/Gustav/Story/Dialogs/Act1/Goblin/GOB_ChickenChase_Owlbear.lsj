@@ -1,7 +1,7 @@
 {
    "save" : {
       "header" : {
-         "version" : "4.0.9.331"
+         "version" : "4.1.0.0"
       },
       "regions" : {
          "dialog" : {
@@ -10607,11 +10607,13 @@
                         "list" : {"type" : "LSString", "value" : "e0d1ff71-04a8-4340-ae64-9684d846eb83"}
                      },
                      {
+                        "IsPeanutSpeaker" : {"type" : "bool", "value" : true},
                         "SpeakerMappingId" : {"type" : "guid", "value" : "4246c432-ff16-7f72-39fe-e85e088a78fa"},
                         "index" : {"type" : "FixedString", "value" : "2"},
                         "list" : {"type" : "LSString", "value" : "0de603c5-42e2-4811-9dad-f652de080eba"}
                      },
                      {
+                        "IsPeanutSpeaker" : {"type" : "bool", "value" : true},
                         "SpeakerMappingId" : {"type" : "guid", "value" : "bbfd1a18-d357-7c5a-d051-2a042e7140a5"},
                         "index" : {"type" : "FixedString", "value" : "3"},
                         "list" : {"type" : "LSString", "value" : "c7c13742-bacd-460a-8f65-f864fe41f255"}
@@ -10683,8 +10685,7 @@
                   ]
                }
             ],
-            "isImportantForStagings" : [ {} ],
-            "isPeanuts" : [
+            "isImportantForStagings" : [
                {
                   "data" : [
                      {
@@ -10698,9 +10699,36 @@
                   ]
                }
             ],
+            "isPeanuts" : [
+               {
+                  "data" : [
+                     {
+                        "key" : {"type" : "FixedString", "value" : "2"},
+                        "val" : {"type" : "LSString", "value" : "True"}
+                     },
+                     {
+                        "key" : {"type" : "FixedString", "value" : "3"},
+                        "val" : {"type" : "LSString", "value" : "True"}
+                     }
+                  ]
+               }
+            ],
             "needLayout" : {"type" : "bool", "value" : false},
             "nextNodeId" : {"type" : "uint32", "value" : 345},
-            "speakerSlotDescription" : [ {} ],
+            "speakerSlotDescription" : [
+               {
+                  "data" : [
+                     {
+                        "key" : {"type" : "FixedString", "value" : "2"},
+                        "val" : {"type" : "LSString", "value" : ""}
+                     },
+                     {
+                        "key" : {"type" : "FixedString", "value" : "3"},
+                        "val" : {"type" : "LSString", "value" : ""}
+                     }
+                  ]
+               }
+            ],
             "synopsis" : {"type" : "LSString", "value" : "This owlbear has been captured by the goblins. It is a cub and has been tormented by the goblins. In this dialog the player can reassure it, guide it to safety, or encourage it to attack the goblins. If the player has convinced his captors to release him, they can invite him to their camp. The owlbear refuses - but will show up later on his own."}
          }
       }

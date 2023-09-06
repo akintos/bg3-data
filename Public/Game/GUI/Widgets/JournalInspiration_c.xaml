@@ -44,7 +44,7 @@
                 </ResourceDictionary>
             </ControlTemplate.Resources>
 
-            <Grid ls:TooltipExtender.Owner="{Binding CurrentPlayer.SelectedCharacter}" ClipToBounds="True">
+            <Grid x:Name="root" ls:TooltipExtender.Owner="{Binding CurrentPlayer.SelectedCharacter}" ClipToBounds="True" Tag="SplitScreen">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition x:Name="ColumnDef0" Width="1*"/>
                     <ColumnDefinition x:Name="ColumnDef1" Width="3*"/>
@@ -64,6 +64,11 @@
 
                 <Image Grid.Column="0" Grid.ColumnSpan="7" Grid.Row="0" Grid.RowSpan="4" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Source="{StaticResource CharacterSheetBackground}" Stretch="UniformToFill"/>
 
+                <Grid Grid.Row="0" Grid.ColumnSpan="7" Width="auto" Height="164" VerticalAlignment="Top">
+                    <Control Template="{StaticResource TopCarouselBackground}" />
+                </Grid>
+                <Control  Grid.Row="0" Grid.ColumnSpan="7" x:Name="c_PartyGold" Visibility="Collapsed" Style="{StaticResource PartyGoldStyle}" />
+                
                 <Control Grid.Row="0" Grid.ColumnSpan="7" x:Name="Navigation" HorizontalAlignment="Center" VerticalAlignment="Top" Style="{StaticResource Journal.NavigationStyle}"/>
 
                 <Grid x:Name="MainPanel" Grid.Column="3" Grid.Row="1" Grid.RowSpan="2" Visibility="{Binding Path=Visibility, ElementName=SidePanel, Converter={StaticResource InvertVisibilityConverter}}">
@@ -254,26 +259,24 @@
                     </ls:LSScrollViewer>
                 </Grid>
 
-                <StackPanel x:Name="ButtonHints" Grid.Column="0" Grid.ColumnSpan="7" Grid.Row="3" Style="{StaticResource ButtonHint.Container.Right}">
-                    <ls:LSButton x:Name="SelectBtn" ls:LSButton.BoundEvent="UIAccept" ContentTemplate="{StaticResource ControllerButtonHint}" Content="{Binding CurrentPlayer.UIData.InputEvents, ConverterParameter=UIAccept, Converter={StaticResource FindInputEventConverter}}" Tag="{Binding Source='h04f38549g65b8g4b72g834eg87ee8863fdc5', Converter={StaticResource TranslatedStringConverter}}" Visibility="Collapsed">
-                        <b:Interaction.Triggers>
-                            <b:EventTrigger EventName="LSButtonPressed">
-                                <b:ControlStoryboardAction ControlStoryboardOption="Stop" Storyboard="{StaticResource Journal.FadeOutSidePanelAnim}"/>
-                                <b:ControlStoryboardAction ControlStoryboardOption="Play" Storyboard="{StaticResource Journal.FadeInSidePanelAnim}"/>
-                            </b:EventTrigger>
-                        </b:Interaction.Triggers>
-                    </ls:LSButton>
+                <StackPanel x:Name="ButtonHints" Grid.Column="0" Grid.ColumnSpan="7" Grid.Row="3" Style="{StaticResource ButtonHint.Container.Center}">
+                    <ls:LSToggleButton x:Name="SelectBtn" BoundEvent="UIAccept" ContentTemplate="{StaticResource ControllerButtonHint}" Content="{Binding CurrentPlayer.UIData.InputEvents, ConverterParameter=UIAccept, Converter={StaticResource FindInputEventConverter}}" Tag="{Binding Source='h04f38549g65b8g4b72g834eg87ee8863fdc5', Converter={StaticResource TranslatedStringConverter}}" Visibility="Collapsed" IsChecked="False"/>
                     <ls:LSButton x:Name="CloseBtn" ls:LSButton.BoundEvent="UICancel" ContentTemplate="{StaticResource ControllerButtonHint}" Content="{Binding CurrentPlayer.UIData.InputEvents, ConverterParameter=UICancel, Converter={StaticResource FindInputEventConverter}}" Tag="{Binding Source='h6fefa28bg2149g4cacga071gd95b236b2d0b', Converter={StaticResource TranslatedStringConverter}}" Visibility="{Binding Path=Visibility, ElementName=BackBtn, Converter={StaticResource InvertVisibilityConverter}}"
                                  Command="{Binding CustomEvent}" CommandParameter="CloseWidget"/>
                     <ls:LSButton x:Name="BackBtn" ls:LSButton.BoundEvent="UICancel" ContentTemplate="{StaticResource ControllerButtonHint}" Content="{Binding CurrentPlayer.UIData.InputEvents, ConverterParameter=UICancel, Converter={StaticResource FindInputEventConverter}}" Tag="{Binding Source='hfe928c0dgb014g4eb2g8c52g6ed43b026e20', Converter={StaticResource TranslatedStringConverter}}" Visibility="{Binding Path=Visibility, ElementName=SidePanel}">
                         <b:Interaction.Triggers>
                             <b:EventTrigger EventName="LSButtonPressed">
-                                <b:ControlStoryboardAction ControlStoryboardOption="Stop" Storyboard="{StaticResource Journal.FadeInSidePanelAnim}"/>
-                                <b:ControlStoryboardAction ControlStoryboardOption="Play" Storyboard="{StaticResource Journal.FadeOutSidePanelAnim}"/>
+                                <b:ChangePropertyAction TargetName="SelectBtn" PropertyName="IsChecked" Value="False"/>
                             </b:EventTrigger>
                         </b:Interaction.Triggers>
                     </ls:LSButton>
                 </StackPanel>
+
+                <b:Interaction.Triggers>
+                    <b:PropertyChangedTrigger Binding="{Binding Layout}">
+                        <b:ChangePropertyAction TargetName="SelectBtn" PropertyName="IsChecked" Value="False"/>
+                    </b:PropertyChangedTrigger>
+                </b:Interaction.Triggers>
             </Grid>
 
             <ControlTemplate.Triggers>
@@ -287,7 +290,40 @@
                     <Setter TargetName="SelectBtn" Property="Visibility" Value="Collapsed"/>
                 </DataTrigger>
 
+                <MultiDataTrigger>
+                    <MultiDataTrigger.Conditions>
+                        <Condition Binding="{Binding IsChecked, ElementName=SelectBtn}" Value="True"/>
+                        <Condition Binding="{Binding Tag, ElementName=root}" Value="SplitScreen"/>
+                    </MultiDataTrigger.Conditions>
+
+                    <MultiDataTrigger.EnterActions>
+                        <StopStoryboard BeginStoryboardName="HideSidePanelStoryboard"/>
+                        <BeginStoryboard x:Name="ShowSidePanelStoryboard" Storyboard="{StaticResource Journal.FadeInSidePanelAnim}"/>
+                    </MultiDataTrigger.EnterActions>
+                    <MultiDataTrigger.ExitActions>
+                        <StopStoryboard BeginStoryboardName="ShowSidePanelStoryboard"/>
+                        <BeginStoryboard x:Name="HideSidePanelStoryboard" Storyboard="{StaticResource Journal.FadeOutSidePanelAnim}"/>
+                    </MultiDataTrigger.ExitActions>
+
+                    <Setter TargetName="MainPanel" Property="IsEnabled" Value="False"/>
+                    <Setter TargetName="MainPanel" Property="Margin" Value="-200,0,200,0"/>
+                    <Setter TargetName="MainPanel" Property="Opacity" Value="0"/>
+                    <Setter TargetName="MainPanel" Property="Visibility" Value="Collapsed"/>
+
+                    <Setter TargetName="SidePanel" Property="IsEnabled" Value="True"/>
+                    <Setter TargetName="SidePanel" Property="Margin" Value="0"/>
+                    <Setter TargetName="MainPanel" Property="Opacity" Value="1"/>
+                    <Setter TargetName="SidePanel" Property="Visibility" Value="Visible"/>
+                </MultiDataTrigger>
+                
                 <DataTrigger Binding="{Binding Layout}" Value="Common">
+                    <DataTrigger.EnterActions>
+                        <StopStoryboard BeginStoryboardName="HideSidePanelStoryboard"/>
+                        <StopStoryboard BeginStoryboardName="ShowSidePanelStoryboard"/>
+                    </DataTrigger.EnterActions>
+
+                    <Setter TargetName="root" Property="Tag" Value="Common"/>
+
                     <Setter TargetName="ColumnDef0" Property="Width" Value="1*"/>
                     <Setter TargetName="ColumnDef1" Property="Width" Value="4*"/>
                     <Setter TargetName="ColumnDef2" Property="Width" Value="13*"/>
@@ -295,13 +331,12 @@
                     <Setter TargetName="ColumnDef4" Property="Width" Value="18*"/>
                     <Setter TargetName="ColumnDef5" Property="Width" Value="2*"/>
                     <Setter TargetName="ColumnDef6" Property="Width" Value="1*"/>
-
+                    <Setter TargetName="c_PartyGold" Property="Visibility" Value="Visible" />
                     <Setter TargetName="Navigation" Property="Grid.ColumnSpan" Value="5"/>
                     <Setter TargetName="MainPanel" Property="Visibility" Value="Visible"/>
                     <Setter TargetName="MainPanel" Property="Grid.Column" Value="2"/>
                     <Setter TargetName="SidePanel" Property="Grid.Column" Value="4"/>
                     <Setter TargetName="SidePanel" Property="Grid.ColumnSpan" Value="1"/>
-                    <Setter TargetName="ButtonHints" Property="Style" Value="{StaticResource ButtonHint.Container.Center}"/>
                     <Setter TargetName="BackBtn" Property="Visibility" Value="Collapsed"/>
                     <Setter TargetName="SelectBtn" Property="Visibility" Value="Collapsed"/>
                     <Setter TargetName="Navigation" Property="IsEnabled" Value="True"/>

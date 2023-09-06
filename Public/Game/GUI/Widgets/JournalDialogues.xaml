@@ -51,7 +51,7 @@
                 <Setter Property="ItemsPanel">
                     <Setter.Value>
                         <ItemsPanelTemplate>
-                            <StackPanel Orientation="Horizontal"/>
+                            <WrapPanel Orientation="Horizontal"/>
                         </ItemsPanelTemplate>
                     </Setter.Value>
                 </Setter>
@@ -115,7 +115,7 @@
                     </b:Interaction.Behaviors>
                     <Image Source="{StaticResource IconDialogue}" Stretch="None" Margin="0,0,0,10"/>
                     <ItemsControl x:Name="Names" ItemsSource="{Binding FilteredItems, ElementName=NoNarratorParticipants}" AlternationCount="{Binding FilteredItems.Count, ElementName=NoNarratorParticipants}" Style="{StaticResource ParticipantsNamesStyle}"
-                                      MaxHeight="138" Margin="16,0,0,0">
+                                      MaxHeight="138" Margin="16,0,0,0" MaxWidth="1700">
                         <ItemsControl.Resources>
                             <Style x:Key="ParticipantsTextStyle" TargetType="TextBlock">
                                 <Setter Property="Foreground" Value="{StaticResource LS_extraspecialTxtColor}"/>
@@ -136,7 +136,7 @@
             <ControlTemplate x:Key="JournalDialogueGroupedByMapTemplate">
                 <ItemsControl x:Name="Names" d:DataContext="{d:DesignInstance {x:Type ls:JournalDialogue}, IsDesignTimeCreatable=True}"
                               ItemsSource="{Binding FilteredItems, ElementName=NoNarratorParticipants}" AlternationCount="{Binding FilteredItems.Count, ElementName=NoNarratorParticipants}" HorizontalAlignment="Stretch"
-                              Style="{StaticResource ParticipantsNamesStyle}">
+                              Style="{StaticResource ParticipantsNamesStyle}" Margin="0,0,0,20">
                     <ItemsControl.Resources>
                         <Style x:Key="ParticipantsTextStyle" TargetType="TextBlock" BasedOn="{StaticResource DialogueTimeHighlightTextStyle}"/>
                     </ItemsControl.Resources>
@@ -154,14 +154,14 @@
 
             <!-- Dialogue treeview node in the day group -->
             <ControlTemplate x:Key="JournalDialogueGroupedByDateTemplate">
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" Margin="0,0,80,10"
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" Margin="0,0,0,10"
                             d:DataContext="{d:DesignInstance {x:Type ls:JournalDialogue}, IsDesignTimeCreatable=True}">
                     <b:Interaction.Behaviors>
                         <ls:CollectionFilterBehavior x:Name="NoNarratorParticipants" ItemsSource="{Binding Participants}" Predicate="{Binding DataContext.Data.DialogueParticipantNoNarratorPredicate, ElementName=JournalDialogues}"/>
                     </b:Interaction.Behaviors>
-                    <TextBlock VerticalAlignment="Center" Text="{Binding TimeInDay, StringFormat='{}{0} - '}" Style="{StaticResource DialogueTimeHighlightTextStyle}"/>
+                    <TextBlock VerticalAlignment="Top" Text="{Binding TimeInDay, StringFormat='{}{0} - '}" Style="{StaticResource DialogueTimeHighlightTextStyle}"/>
                     <ItemsControl x:Name="Names" ItemsSource="{Binding FilteredItems, ElementName=NoNarratorParticipants}" AlternationCount="{Binding FilteredItems.Count, ElementName=NoNarratorParticipants}" HorizontalAlignment="Stretch"
-                                  Style="{StaticResource ParticipantsNamesStyle}">
+                                  Style="{StaticResource ParticipantsNamesStyle}" MaxWidth="1000">
                         <ItemsControl.Resources>
                             <Style x:Key="ParticipantsTextStyle" TargetType="TextBlock" BasedOn="{StaticResource DialogueTimeHighlightTextStyle}"/>
                         </ItemsControl.Resources>

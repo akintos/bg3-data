@@ -22,7 +22,7 @@
             <System:Double x:Key="CSInnerHeight">1480</System:Double>
             <System:Double x:Key="EXDollWidth">1400</System:Double>
             <System:Double x:Key="CSInfoHeight">1600</System:Double>
-            <System:Double x:Key="CSInfoWidth">800</System:Double>
+            <System:Double x:Key="CSInfoWidth">700</System:Double>
 
             <!--Forces the row height to set the cursor selector-->
             <System:Double x:Key="GenericRowHeight">72</System:Double>
@@ -178,18 +178,21 @@
                     <Style x:Key="HighlightedText" TargetType="{x:Type TextBlock}">
                         <Setter Property="Foreground" Value="{StaticResource LS_tint100}"/>
                     </Style>
+                    <Style TargetType="{x:Type DockPanel}">
+                        <Setter Property="MinWidth" Value="{StaticResource CSInfoWidth}"/>
+                    </Style>
                 </ControlTemplate.Resources>
-                <ls:LSNineSliceImage x:Name="Bg" ImageSource="{StaticResource ButtonBg}" Slices="24,40,24,24">
-                    <Grid x:Name="Content" IsEnabled="True">
-                        <ContentPresenter/>
-                        <Control x:Name="Frame" Visibility="Hidden" Margin="-18" Template="{StaticResource ExamineFocusableBorderTemplate}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
+                <ls:LSNineSliceImage x:Name="Bg" ImageSource="{StaticResource ButtonBg}" Slices="24,40,24,24" MinHeight="72">
+                    <Grid x:Name="Content" IsEnabled="True" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                        <ContentPresenter x:Name="Presenter" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                        <Control x:Name="Frame" Margin="-18" Height="{Binding ActualHeight, ElementName=Presenter, Converter={StaticResource AddConverter}, ConverterParameter=36}"/>
                     </Grid>
                 </ls:LSNineSliceImage>
                 <ControlTemplate.Triggers>
                     <Trigger Property="ls:MoveFocus.IsFocused" Value="True">
                         <Setter TargetName="Bg" Property="ImageSource" Value="{StaticResource ButtonBg_h}"/>
                         <Setter TargetName="Content" Property="IsEnabled" Value="False"/>
-                        <Setter TargetName="Frame" Property="Visibility" Value="Visible"/>
+                        <Setter TargetName="Frame" Property="Template" Value="{StaticResource ExamineFocusableBorderTemplate}"/>
                     </Trigger>
                 </ControlTemplate.Triggers>
             </ControlTemplate>
@@ -243,11 +246,15 @@
                 <ls:LSButton x:Name="EntryRoot" Width="90" ToolTip="{StaticResource ManagedTooltip}" ToolTipService.Placement="Right" ToolTipService.HorizontalOffset="{Binding Tag, RelativeSource={RelativeSource Mode=TemplatedParent}}" ToolTipService.VerticalOffset="0"
 								 Style="{StaticResource FocusableButtonStyleMinimal}">
                     <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                        <Control x:Name="attrName" Template="{StaticResource AbilityShortDisplayName}"  Foreground="{StaticResource LS_baseTxtColor}" FontWeight="Bold"  FontSize="{StaticResource ScaledMediumFontSize}" HorizontalAlignment="Center" Margin="0,0,0,0"/>
-                        <TextBlock Text="{Binding Value}" FontSize="{StaticResource ScaledDefaultFontSize}" HorizontalAlignment="Center" Margin="0,-20,0,0" TextTrimming="CharacterEllipsis"/>
+                        <Control x:Name="attrName" Template="{StaticResource AbilityShortDisplayName}"  Foreground="{StaticResource LS_baseTxtColor}" FontWeight="Bold"  FontSize="{StaticResource ScaledMiniFontSize}" HorizontalAlignment="Center" Margin="0,0,0,0"/>
+                        <TextBlock Text="{Binding Value}" FontSize="{StaticResource ScaledDefaultFontSize}" HorizontalAlignment="Center" Margin="0,-20,0,0"/>
                     </StackPanel>
                 </ls:LSButton>
             </DataTemplate>
+
+
+
+
 
             <!-- ===== CONDITIONS LIST TEMPLATE =====-->
             <DataTemplate x:Key="StatusListItemTemplate" DataType="{x:Type ls:VMStatus}">
@@ -339,10 +346,20 @@
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
                                     <ContentControl x:Name="ResistanceRow" Template="{StaticResource DetailedEntry}" ls:MoveFocus.Focusable="True" Focusable="True" ToolTip="{StaticResource ManagedTooltip}">
-                                        <ContentControl Template="{StaticResource ResistanceLineTemplate}" Margin="10,4">
+                                        <ContentControl Template="{StaticResource ResistanceLineTemplate}" Margin="10,4" Width="{StaticResource CSInfoWidth}">
                                             <TextBlock x:Name="Name" DockPanel.Dock="Left" Style="{StaticResource DetailedListText_c}" HorizontalAlignment="Left" VerticalAlignment="Center" TextAlignment="Left" Margin="28,0,0,0" Text="{Binding DamageTypeValue, Converter={StaticResource EnumTranslatedStringConverter}, ConverterParameter='hc3cd9b4eg4ea4g4438gbfbbg493c0abb6dd7'}" />
                                         </ContentControl>
                                     </ContentControl>
+                                    <DataTemplate.Triggers>
+                                        <MultiDataTrigger>
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding Full}" Value="None"/>
+                                                <Condition Binding="{Binding NonMagical}" Value="None"/>
+                                                <Condition Binding="{Binding Magical}" Value="None"/>
+                                            </MultiDataTrigger.Conditions>
+                                            <Setter TargetName="ResistanceRow" Property="Visibility" Value="Collapsed"/>
+                                        </MultiDataTrigger>
+                                    </DataTemplate.Triggers>
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
 
@@ -423,7 +440,7 @@
         <ControlTemplate>
             <Grid x:Name="bgFade">
                 <Grid x:Name="Panel" HorizontalAlignment="Center" VerticalAlignment="Top" 
-              DataContext="{Binding CurrentPlayer.UIData.ExamineTarget}"  RenderTransformOrigin="0.5,0.5" Margin="0,220,0,0" Style="{StaticResource SplitScreenOverride}">
+              DataContext="{Binding CurrentPlayer.UIData.ExamineTarget}"  RenderTransformOrigin="0.5,0.5" Margin="0,120,0,0" Style="{StaticResource SplitScreenOverride}">
                     <Grid.RenderTransform>
                         <TransformGroup>
                             <ScaleTransform/>
@@ -434,6 +451,10 @@
                     </Grid.RenderTransform>
                     <ls:LSNineSliceImage x:Name="BGpanel" Style="{StaticResource Generic9SliceBG}">
                         <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="8,0,0,0" ClipToBounds="True">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
                             <!--PAPERDOLL-->
                             <Grid x:Name="ExaminePaperdollHolder" HorizontalAlignment="Left" Style="{StaticResource SplitScreenOverrideDoll}">
                                 <ls:LSPaperdoll x:Name="ExaminePaperdoll" EntityRef="{Binding EntityHandle}" Width="{StaticResource EXDollWidth}" Height="{StaticResource CSInfoHeight}" UseCombatPose="True"/>
@@ -507,7 +528,7 @@
                                 </Grid.RowDefinitions>
                                 
                                 <!--NAME & DESCRIPTION-->
-                                <ContentControl Grid.Row="0" x:Name="NameTitles" Template="{StaticResource DetailedEntry}">
+                                <ContentControl Grid.Row="0" x:Name="NameTitles" Template="{StaticResource DetailedEntry}" Width="{StaticResource CSInfoWidth}">
                                     <StackPanel Margin="0,0,0,12">
                                         <TextBlock Text="{Binding Name}" HorizontalAlignment="Center" FontSize="{StaticResource ScaledBigFontSize}" TextAlignment="Center" TextWrapping="Wrap"/>
                                         <TextBlock Text="{Binding Title}" Style="{StaticResource DetailedListText_c}" HorizontalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center" Visibility="{Binding Title, Converter={StaticResource NullToCollapsedConverter}, ConverterParameter='EmptyString'}"/>
@@ -573,7 +594,7 @@
                                         <!--FOR NPC-->
                                         <StackPanel Visibility="{Binding IsPlayableCharacter, Converter={StaticResource BoolToCollapsedConverter}}" DataContext="{Binding}">
 
-                                            <ContentControl x:Name="RaceTypeInfo" Template="{StaticResource DetailedEntry}" ls:MoveFocus.Focusable="True" Focusable="True" Height="{StaticResource GenericIconHeight}" DataContext="{Binding}">
+                                            <ContentControl x:Name="RaceTypeInfo" Template="{StaticResource DetailedEntry}" ls:MoveFocus.Focusable="True" Focusable="True" Height="{StaticResource GenericRowHeight}" DataContext="{Binding}">
                                                 <TextBlock x:Name="NPCType" Text="{Binding Stats.Race.Type}" Style="{StaticResource DetailedListText_c}" TextAlignment="Center" TextWrapping="Wrap"/>
                                             </ContentControl>
 
@@ -717,11 +738,30 @@
                             </Grid>
 
                             <!--FOR ITEMS-->
-                            <Grid x:Name="ItemViewer" Visibility="Collapsed" Style="{StaticResource SplitScreenOverrideColumn}">
-                                <ls:LSScrollViewer Template="{StaticResource ScrollViewerTemplate}" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Visible" VerticalAlignment="Top" Height="{StaticResource CSInfoHeight}" BoundScrollUpEvent="UIScrollUp" BoundScrollDownEvent="UIScrollDown">
-                                    <StackPanel>
-                                        <ContentPresenter ls:TooltipExtender.Owner="{Binding DataContext.CurrentPlayer.SelectedCharacter, ElementName=Examine_c}" Content="{Binding .}" DataContext="{Binding .}" ContentTemplate="{StaticResource ItemsTooltip}" ls:TooltipExtender.IsOpen="True" ls:TooltipExtender.Content="{Binding .}" Margin="80,80,180,80"/>
-                                        <StackPanel MaxWidth="{StaticResource CSInfoWidth}" MaxHeight="{StaticResource CSInnerHeight}">
+                            <Grid x:Name="ItemViewer" Visibility="Collapsed" Style="{StaticResource SplitScreenOverrideColumn}" Margin="0,16,-40,0">
+                                <ls:LSScrollViewer Template="{StaticResource ScrollViewerTemplate}" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Visible" VerticalAlignment="Top" Height="{StaticResource CSInnerHeight}" BoundScrollUpEvent="UIScrollUp" BoundScrollDownEvent="UIScrollDown">
+                                    <StackPanel MaxWidth="960">
+                                        <Grid>
+                                            <ContentControl x:Name="ItemTooltip"
+                                                            ls:TooltipExtender.Owner="{Binding DataContext.CurrentPlayer.SelectedCharacter, ElementName=Examine_c}" 
+                                                            Content="{Binding .}" 
+                                                            DataContext="{Binding .}" 
+                                                            Template="{StaticResource BaseTooltipTemplate}" 
+                                                            ls:TooltipExtender.IsOpen="True" ls:TooltipExtender.Content="{Binding .}"
+                                                            ls:MoveFocus.Focusable="True" Focusable="True">
+                                                <ContentControl.ToolTip>
+                                                    <!-- To be able to pin tooltips, you need to have a tooltip open.
+                                                         The found workaround was to have a "hidden" tooltip. -->
+                                                    <ls:LSTooltip Content="{Binding Path=PlacementTarget.DataContext ,RelativeSource={RelativeSource Mode=Self}}" Visibility="Hidden"/>
+                                                </ContentControl.ToolTip>
+                                            </ContentControl>
+                                            <Control x:Name="HLTooltip"
+                                                     Width="{Binding ActualWidth, ElementName=ItemTooltip}"
+                                                     Height="{Binding ActualHeight, ElementName=ItemTooltip}"
+                                                     Style="{StaticResource FocusableBorderStyle}"
+                                                     Visibility="{Binding (ls:MoveFocus.IsFocused), ElementName=ItemTooltip, Converter={StaticResource BoolToVisibleConverter}}"/>
+                                        </Grid>
+                                        <StackPanel MaxWidth="{StaticResource CSInfoWidth}">
                                             <!-- Health Bar -->
                                             <ContentPresenter x:Name="Health" ContentTemplate="{StaticResource StatsValueEntryTemplate}" Content="{Binding Stats.Health}" Tag="max" Visibility="{Binding IsValid, Converter={StaticResource BoolToVisibleConverter}}"/>
                                             <!-- RESISTANCES -->
@@ -729,6 +769,7 @@
                                                 <ls:LSNineSliceImage x:Name="ResistancesTitleItems" Style="{StaticResource ListTitleBgStyle}" Margin="0,0,0,8" Focusable="False">
                                                     <TextBlock Text="{Binding Source='h98a4ccfbg20f4g4294g9bf7g624c95711539', Converter={StaticResource TranslatedStringConverter}}"/>
                                                 </ls:LSNineSliceImage>
+
                                                 <Control x:Name="ResistanceContainerItems" HorizontalAlignment="Center" Template="{StaticResource ResistanceListTemplate}"/>
                                             </StackPanel>
       
@@ -736,26 +777,49 @@
                                      </StackPanel>
                                 </ls:LSScrollViewer>
                             </Grid>
+
+                <!--BUTTON PROMPTS-->
+                            <StackPanel VerticalAlignment="Bottom" HorizontalAlignment="Center" Orientation="Horizontal" Grid.Row="1" Margin="0,0,0,20">
+
+                                <ls:LSButton Content="{Binding DataContext.CurrentPlayer.UIData.InputEvents, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIScroll'}" 
+                                     ContentTemplate="{StaticResource ControllerButtonHint}"                                          
+                                     Tag="{Binding Source='h29f2b927gf6feg48e8g8bc9gdc391427b51c', Converter={StaticResource TranslatedStringConverter}}" 
+                                     BoundEvent="UIScroll"
+                                     VerticalAlignment="Center"
+                                     EatInput="False"/>
+
+                                <ls:LSButton x:Name="ToggleTooltips" 
+                                             ContentTemplate="{StaticResource ControllerButtonHint}"  
+                                             VerticalAlignment="Center"
+                                             Content="{Binding DataContext.CurrentPlayer.UIData.InputEvents, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIShowInfo'}"
+                                             BoundEvent="UIShowInfo"
+                                             Tag="{Binding Source='hf8dd4c2fg97e0g4ccdgac1ag3cd1fe5060ef', Converter={StaticResource TranslatedStringConverter}}"
+                         Command="{Binding DataContext.ToggleTooltipOnUIElement, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" 
+                         CommandParameter="{Binding FocusedElement, ElementName=Examine_c}"/>
+
+                                <ls:LSButton x:Name="MoreInfoPrompt"
+                                             ContentTemplate="{StaticResource ControllerButtonHint}"  
+                                             VerticalAlignment="Center"
+                                             Content="{Binding DataContext.CurrentPlayer.UIData.InputEvents, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIAccept'}"
+                                             BoundEvent="UIAccept"
+                                             Tag="{Binding Source='h68d43243g2754g4fc7gb67cg8f02910c8009', Converter={StaticResource TranslatedStringConverter}}"
+                                             Command="{Binding DataContext.PinTooltipCommand, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"
+                                             Visibility="{Binding (ls:MoveFocus.IsFocused), ElementName=ItemTooltip, Converter={StaticResource BoolToVisibleConverter}}"/>
+
+                                <ls:LSButton ContentTemplate="{StaticResource ControllerButtonHint}" 
+                                             VerticalAlignment="Center" 
+                                             Content="{Binding DataContext.CurrentPlayer.UIData.InputEvents, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UICancel'}"
+                                             BoundEvent="UICancel"
+                                             Tag="{Binding Source='h6fefa28bg2149g4cacga071gd95b236b2d0b', Converter={StaticResource TranslatedStringConverter}}"
+                         Command="{Binding DataContext.CustomEvent, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" 
+                         CommandParameter="CloseWidget"/>
+                            </StackPanel>
                         </Grid>
                     </ls:LSNineSliceImage>
 
                 </Grid>
+                
 
-                <!--BUTTON PROMTPS-->
-                <StackPanel VerticalAlignment="Bottom" HorizontalAlignment="Center" Orientation="Horizontal">
-
-                    <ls:LSButton Style="{StaticResource ControllerButtonWBG}" VerticalAlignment="Center"
-                         DataContext = "{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIShowInfo'}"
-                         Content="{Binding Source='h557ee2acgaaf4g4b85g9a67g29f53570c4f0', Converter={StaticResource TranslatedStringConverter}}"
-                         Command="{Binding DataContext.ToggleTooltipOnUIElement, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" 
-                         CommandParameter="{Binding FocusedElement, ElementName=Examine_c}"/>
-
-                    <ls:LSButton Style="{StaticResource ControllerButtonWBG}" VerticalAlignment="Center" 
-                         DataContext="{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UICancel'}"
-                         Content="{Binding Source='h6fefa28bg2149g4cacga071gd95b236b2d0b', Converter={StaticResource TranslatedStringConverter}}"
-                         Command="{Binding DataContext.CustomEvent, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" 
-                         CommandParameter="CloseWidget"/>
-                </StackPanel>
                 <Grid.Triggers>
                     <EventTrigger RoutedEvent="FrameworkElement.Loaded">
                         <BeginStoryboard Storyboard="{StaticResource OpenPanelAnim}" />
@@ -771,6 +835,9 @@
                 <DataTrigger Binding="{Binding CurrentPlayer.UIData.ExamineTarget.Type}" Value="Character">
                     <Setter TargetName="CharacterViewer" Property="Visibility" Value="Visible"/>
                 </DataTrigger>
+                <DataTrigger Binding="{Binding ShowUIElementTooltip}" Value="True">
+                    <Setter TargetName="ToggleTooltips" Property="Tag" Value="{Binding Source='hb33ec471gd611g4ee3gbbffg699af8f79167', Converter={StaticResource TranslatedStringConverter}}"/>
+                </DataTrigger>
             </ControlTemplate.Triggers>
         </ControlTemplate>
 
@@ -781,9 +848,13 @@
             <b:InvokeCommandAction Command="{Binding ShowTooltipOnUIElement}" CommandParameter="{Binding Path=FocusedElement, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"/>
             <ls:LSPlaySound Sound="UI_Shared_Hover"/>
         </b:EventTrigger>
+        <b:DataTrigger Binding="{Binding HasInputEnabled, ElementName=Examine_c}" Value="True">
+            <b:InvokeCommandAction Command="{Binding ShowTooltipOnUIElement}" CommandParameter="{Binding FocusedElement, ElementName=Examine_c}"/>
+        </b:DataTrigger>
         <b:EventTrigger EventName="Loaded">
             <ls:LSPlaySound Sound="UI_HUD_Examine_Open"/>
             <b:InvokeCommandAction Command="{Binding EnableTooltipOnUIElement}"/>
+            <ls:SetMoveFocusAction TargetName="Examine_c"/>
         </b:EventTrigger>
     </b:Interaction.Triggers>
 </ls:UIWidget>

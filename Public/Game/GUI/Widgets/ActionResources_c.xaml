@@ -18,16 +18,10 @@
                 <ImageSource x:Key="callAlliesIconSwirl">pack://application:,,,/GustavNoesisGUI;component/Assets/HUD_c/c_callAllies_swirl.png</ImageSource>
                 
                 <Storyboard x:Key="HideResourceBarStoryboard" FillBehavior="Stop">
-                    <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="Opacity" Storyboard.TargetName="Root">
-                        <EasingDoubleKeyFrame KeyTime="0:0:0.0" Value="1"/>
-                        <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="0"/>
-                    </DoubleAnimationUsingKeyFrames>
+                    <DoubleAnimation Storyboard.TargetProperty="Opacity" Duration="0:0:0.3" From="1" To="0" Storyboard.TargetName="Root"/>
                 </Storyboard>
                 <Storyboard x:Key="ShowResourceBarStoryboard" FillBehavior="Stop">
-                    <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="Opacity" Storyboard.TargetName="Root">
-                        <EasingDoubleKeyFrame KeyTime="0:0:0.0" Value="0"/>
-                        <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="1"/>
-                    </DoubleAnimationUsingKeyFrames>
+                    <DoubleAnimation Storyboard.TargetProperty="Opacity" Duration="0:0:0.3" From="0" To="1" Storyboard.TargetName="Root"/>
                 </Storyboard>
                 <Storyboard x:Key="GlowEndTurnButton" FillBehavior="Stop" RepeatBehavior="Forever">
 
@@ -45,9 +39,7 @@
                     </DoubleAnimationUsingKeyFrames>
                 </Storyboard>
             </ControlTemplate.Resources>
-                
-                
-            <Grid x:Name="Root" VerticalAlignment="Bottom"  d:DataContext="{StaticResource {x:Type ls:Widget}}">
+            <Grid x:Name="Root" VerticalAlignment="Bottom" IsEnabled="False" Opacity="0" d:DataContext="{StaticResource {x:Type ls:Widget}}">
                 <b:Interaction.Behaviors>
                     <ls:NeighboringUpcastsBehavior x:Name="UpcastBehavior" UpcastList="{Binding CurrentPlayer.UIData.ActiveTask.RootCastSpell.SpellUpcast}" CurrentUpcast="{Binding CurrentPlayer.UIData.ActiveTask.Upcast}"/>
                 </b:Interaction.Behaviors>
@@ -56,10 +48,12 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition x:Name="resourceBarRightPadding" Width="600"/>
                 </Grid.ColumnDefinitions>
- 
-                <StackPanel x:Name="ResourceContainer" Grid.Column="1" Orientation="Vertical" HorizontalAlignment="Stretch"  VerticalAlignment="Bottom" Margin="0,0,0,46" Visibility="Collapsed" >
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,14"  >
-                        <Grid x:Name="EndTurnButtonHolder" VerticalAlignment="Bottom">
+
+                <StackPanel x:Name="ResourceContainer" Grid.Column="1" Orientation="Vertical" HorizontalAlignment="Stretch"  VerticalAlignment="Bottom" Margin="0,0,0,46"  >
+
+
+                    <StackPanel x:Name="ResourceContainerPrompts" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,14" Style="{StaticResource ButtonHint.Container.BaseStyle}">
+                        <Grid x:Name="EndTurnButtonHolder" VerticalAlignment="Bottom" Visibility="{Binding DataContext.CurrentPlayer.SelectedCharacter.CanEndTurn, Converter={StaticResource BoolToVisibleConverter}, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ls:UIWidget}}}" >
 
                             <ls:LSNineSliceImage x:Name="glowBG" ImageSource="{StaticResource endTurnHighlight}" Height="264"  HorizontalAlignment="Stretch" Slices="140,0,40,0" Margin="-42,-86,-100,-100" Opacity="0">
                                 <ls:LSNineSliceImage.OpacityMask>
@@ -75,7 +69,7 @@
 
                             </ls:LSNineSliceImage>
                           
-                                <ls:LSButton x:Name="EndTurnButton" BoundEvent="UIEndTurn" Visibility="{Binding DataContext.CurrentPlayer.SelectedCharacter.CanEndTurn, Converter={StaticResource BoolToVisibleConverter}, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ls:UIWidget}}}" Tag="{Binding Source='h917f2b48g8735g4f9fgb529ga520b53eb2ed', Converter={StaticResource TranslatedStringConverter}}" VerticalAlignment="Center" HorizontalAlignment="Center"
+                                <ls:LSButton x:Name="EndTurnButton" BoundEvent="UIEndTurn" Tag="{Binding Source='h917f2b48g8735g4f9fgb529ga520b53eb2ed', Converter={StaticResource TranslatedStringConverter}}" VerticalAlignment="Center" HorizontalAlignment="Center"
                                  ContentTemplate="{StaticResource ControllerButtonHint}" Content="{Binding CurrentPlayer.UIData.InputEvents, ConverterParameter=UIEndTurn, Converter={StaticResource FindInputEventConverter}}" FlowDirection="LeftToRight" Command="{Binding Path=DataContext.EndTurn, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ls:UIWidget}}}" 
                              CommandParameter="ActionSelect">
                                         <ls:LSButton.Effect>
@@ -93,18 +87,18 @@
                             <TextBlock x:Name="UpcastLabel" Text="{Binding Source='h0f8acaadgd1f6g4a7ega71ageda041426536', Converter={StaticResource TranslatedStringConverter}}" Margin="-6,0,0,0" VerticalAlignment="Center" Style="{StaticResource BtnHint.StrokedTextStyle}"/>
                         </StackPanel>
 
-                        <ls:LSButton x:Name="ForceCastButton" Margin="6,16,0,-16" Style="{StaticResource ControllerHoldButtonStyle}" DataContext="{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIAccept'}" Command="{Binding DataContext.ForceCastCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ls:UIWidget}}}" Tag="{Binding Source='h2bb01606gdea8g4ae9gbab7ge50b79a088dc', Converter={StaticResource TranslatedStringConverter}}" VerticalAlignment="Bottom" Visibility="Collapsed" ls:LSButton.EatInput="False"/>
+                        <ls:LSButton x:Name="ForceCastButton" Margin="3,16,3,-16" Style="{StaticResource ControllerHoldButtonStyle}" DataContext="{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIAccept'}" Command="{Binding DataContext.ForceCastCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ls:UIWidget}}}" Tag="{Binding Source='h2bb01606gdea8g4ae9gbab7ge50b79a088dc', Converter={StaticResource TranslatedStringConverter}}" VerticalAlignment="Bottom" Visibility="Collapsed" ls:LSButton.EatInput="False"/>
 
                         <!-- Swap back to a character who actually has a turn-->
-                        <ls:LSButton x:Name="BackToPlayableCombatantButton" Margin="6,0,0,0"  BoundEvent="UIAccept" Command="{Binding SelectActiveCharacterCombatant}" Tag="{Binding Source='ha369beabgfe8ag40d5g8effgb31135fe3e6a', Converter={StaticResource TranslatedStringConverter}}" VerticalAlignment="Bottom" HorizontalAlignment="Center" Visibility="Collapsed"
+                        <ls:LSButton x:Name="BackToPlayableCombatantButton" Margin="3,0,3,0"  BoundEvent="UIAccept" Command="{Binding SelectActiveCharacterCombatant}" Tag="{Binding Source='ha369beabgfe8ag40d5g8effgb31135fe3e6a', Converter={StaticResource TranslatedStringConverter}}" VerticalAlignment="Bottom" HorizontalAlignment="Center" Visibility="Collapsed"
                                  ContentTemplate="{StaticResource ControllerButtonHint}" Content="{Binding CurrentPlayer.UIData.InputEvents, ConverterParameter=UIAccept, Converter={StaticResource FindInputEventConverter}}" FlowDirection="LeftToRight"/>
 
                         <!-- Cancel End Turn -->
-                        <ls:LSButton x:Name="CancelEndTurnButton" Margin="6,0,0,0"  BoundEvent="UIEndTurn" Command="{Binding Path=DataContext.CancelEndTurn, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ls:UIWidget}}}" Tag="{Binding Source='h22faeb36g83adg4a12g97d5g2dfe7deb4b35', Converter={StaticResource TranslatedStringConverter}}" Visibility="Collapsed" VerticalAlignment="Bottom" HorizontalAlignment="Center"
+                        <ls:LSButton x:Name="CancelEndTurnButton" Margin="3,0,3,0"  BoundEvent="UIEndTurn" Command="{Binding Path=DataContext.CancelEndTurn, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ls:UIWidget}}}" Tag="{Binding Source='h22faeb36g83adg4a12g97d5g2dfe7deb4b35', Converter={StaticResource TranslatedStringConverter}}" Visibility="Collapsed" VerticalAlignment="Bottom" HorizontalAlignment="Center"
                                  ContentTemplate="{StaticResource ControllerButtonHint}" Content="{Binding CurrentPlayer.UIData.InputEvents, ConverterParameter=UIEndTurn, Converter={StaticResource FindInputEventConverter}}" FlowDirection="LeftToRight" SoundID="UI_HUD_Hotbar_EndTurn"/>
 
                         <!-- Action Wheel Prompt -->
-                        <ls:LSButton x:Name="ActionWheelButton" Margin="6,0,0,0"  Visibility="Collapsed" Tag="{Binding Source='h1988a9a5g8b63g4d67gb237ga5ec8f73f748', Converter={StaticResource TranslatedStringConverter}}" VerticalAlignment="Center" HorizontalAlignment="Center"
+                        <ls:LSButton x:Name="ActionWheelButton" Margin="3,0,3,0"  Visibility="Collapsed" Tag="{Binding Source='h1988a9a5g8b63g4d67gb237ga5ec8f73f748', Converter={StaticResource TranslatedStringConverter}}" VerticalAlignment="Center" HorizontalAlignment="Center"
                                  ContentTemplate="{StaticResource ControllerButtonHint}" Content="{Binding CurrentPlayer.UIData.InputEvents, ConverterParameter=UITabNext, Converter={StaticResource FindInputEventConverter}}" FlowDirection="LeftToRight" />
 
                         <!-- Call Allies -->
@@ -136,8 +130,158 @@
                             </Grid>
                         </StackPanel>
                     </StackPanel>
+                    <!--EXTRA STATUS NOTIFICATIONS-->
+                    <!--As per CursorText - however differnt strings, differnt location-->
+                    <ItemsControl x:Name="CapabilitiesErrors" ItemsSource="{Binding CurrentPlayer.SelectedCharacter.ModifiedCapabilities}" AlternationCount="{Binding ItemsSource.Count, RelativeSource={RelativeSource Self}}" VerticalAlignment="Bottom" HorizontalAlignment="Center" Height="{Binding Path=ActualHeight, ElementName=Message}">
+                        <b:Interaction.Behaviors>
+                            <ls:CapabilityListSelectorBehavior x:Name="CapabilityListSelectorBehavior" 
+                                                                       CapabilitiesCollection="{Binding CurrentPlayer.SelectedCharacter.ModifiedCapabilities}"
+                                                                       CharacterIsInTurnBasedMode="{Binding CurrentPlayer.SelectedCharacter.InTurnBasedMode}"
+                                                                       CharacterIsShapeshifted="{Binding CurrentPlayer.SelectedCharacter.IsShapeShifted}"
+                                                                       PlayerCurrentTaskType="{Binding CurrentPlayer.UIData.ActiveTask.PreviewType}"/>
+                        </b:Interaction.Behaviors>
+
+                        <ItemsControl.ItemContainerStyle>
+                            <Style TargetType="ContentPresenter">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                                <Style.Triggers>
+                                    <!-- Show only the first one -->
+                                    <DataTrigger Value="True">
+                                        <DataTrigger.Binding>
+                                            <MultiBinding Converter="{StaticResource EqualConverter}">
+                                                <Binding Path="."/>
+                                                <Binding Path="FirstVisibleElement" ElementName="CapabilityListSelectorBehavior"/>
+                                            </MultiBinding>
+                                        </DataTrigger.Binding>
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ItemsControl.ItemContainerStyle>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate DataType="{x:Type ls:VMCapabilityModifier}">
+                                <DataTemplate.Resources>
+                                    <BitmapImage x:Key="CastBarBackground" UriSource="pack://application:,,,/GustavNoesisGUI;component/Assets/TargetInfo/target_bar_cast.png"/>
+                                    <Style x:Key="CursorErrorTextStyle" TargetType="TextBlock">
+                                        <Setter Property="Foreground" Value="{StaticResource LS_tint100}"/>
+                                        <Setter Property="FontSize" Value="{StaticResource DefaultFontSize}"/>
+                                        <Setter Property="noesis:Text.StrokeThickness" Value="6"/>
+                                        <Setter Property="noesis:Text.Stroke" Value="{StaticResource LS_TextOutlineColor}"/>
+                                    </Style>
+                                </DataTemplate.Resources>
+
+                                <ls:LSNineSliceImage x:Name="MessageBlock" HorizontalAlignment="Center" Width="{Binding ActualWidth, ElementName=Message, Converter={StaticResource AddConverter}, ConverterParameter=140}" MinWidth="720"
+                                         Style="{StaticResource ResourceBar9Slice}" IconWidth="500" Visibility="Collapsed">
+
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Effect="{StaticResource HUD.DropShadow}" Margin="0,0,0,6">
+                                        <TextBlock x:Name="Message" Style="{StaticResource CursorErrorTextStyle}"/>
+                                        <TextBlock x:Name="Cause" Style="{StaticResource CursorErrorTextStyle}" Visibility="{Binding Cause, Converter={StaticResource NullToCollapsedConverter}, ConverterParameter='EmptyString'}">
+                                            <TextBlock.Text>
+                                                <MultiBinding Converter="{StaticResource ParameterizedTranslatedStringConverter}">
+                                                    <Binding Source="hb19f530dgfeb2g4d13g8d64ga8216f364f67"/>
+                                                    <Binding  Path="Cause"/>
+                                                </MultiBinding>
+                                            </TextBlock.Text>
+                                        </TextBlock>
+                                    </StackPanel>
+
+                                </ls:LSNineSliceImage>
+
+                                <DataTemplate.Triggers>
+
+                                    <DataTrigger Binding="{Binding Type}" Value="LostControl">
+                                        <Setter TargetName="MessageBlock" Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+
+                                    <DataTrigger Binding="{Binding Type}" Value="ActionsBlocked">
+                                        <Setter TargetName="Message" Property="Text" Value="{Binding Source='hc26b3ee1g8586g4fc5gbc1dg14711bc21a4b', Converter={StaticResource TranslatedStringConverter}}"/>
+                                        <Setter TargetName="MessageBlock" Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Type}" Value="BonusActionsBlocked">
+                                        <Setter TargetName="Message" Property="Text" Value="{Binding Source='hc9c9197cg997fg4dcagad83g7fd70e8c645e', Converter={StaticResource TranslatedStringConverter}}"/>
+                                        <Setter TargetName="MessageBlock" Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+
+                                    <DataTrigger Binding="{Binding Type}" Value="SpellcastingBlocked">
+                                        <Setter TargetName="Message" Property="Text" Value="{Binding Source='h016d4e05g4042g42c9g8e4cg351088deddf5', Converter={StaticResource TranslatedStringConverter}}"/>
+                                        <Setter TargetName="MessageBlock" Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+
+                                    <DataTrigger Binding="{Binding Type}" Value="MovementBlocked">
+                                        <Setter TargetName="Message" Property="Text" Value="{Binding Source='h7760a99cg8a58g4555gb0f1g0e3e2b872f66', Converter={StaticResource TranslatedStringConverter}}"/>
+                                        <Setter TargetName="MessageBlock" Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+
+                                    <MultiDataTrigger>
+                                        <MultiDataTrigger.Conditions>
+                                            <Condition Binding="{Binding Type}" Value="LostControl"/>
+                                            <Condition Binding="{Binding Value}" Value="Incapacitated"/>
+                                        </MultiDataTrigger.Conditions>
+                                        <Setter TargetName="Message" Property="Text" Value="{Binding Source='h5f3c3defgdf33g4bbbgafc5g487ca817cda4', Converter={StaticResource TranslatedStringConverter}}"/>
+                                    </MultiDataTrigger>
+
+                                    <MultiDataTrigger>
+                                        <MultiDataTrigger.Conditions>
+                                            <Condition Binding="{Binding Type}" Value="LostControl"/>
+                                            <Condition Binding="{Binding Value}" Value="KnockedDown"/>
+                                        </MultiDataTrigger.Conditions>
+                                        <Setter TargetName="Message" Property="Text" Value="{Binding Source='h296f3937g9cdcg4613ga574g5e9f11dbd095', Converter={StaticResource TranslatedStringConverter}}"/>
+                                    </MultiDataTrigger>
+
+                                    <MultiDataTrigger>
+                                        <MultiDataTrigger.Conditions>
+                                            <Condition Binding="{Binding Type}" Value="LostControl"/>
+                                            <Condition Binding="{Binding Value}" Value="Downed"/>
+                                        </MultiDataTrigger.Conditions>
+                                        <Setter TargetName="Message" Property="Text" Value="{Binding Source='hbf29ef1cg54b7g4c65g9879g2a15e7090487', Converter={StaticResource TranslatedStringConverter}}"/>
+                                    </MultiDataTrigger>
+
+                                    <MultiDataTrigger>
+                                        <MultiDataTrigger.Conditions>
+                                            <Condition Binding="{Binding Type}" Value="LostControl"/>
+                                            <Condition Binding="{Binding Value}" Value="Dying"/>
+                                        </MultiDataTrigger.Conditions>
+                                        <Setter TargetName="Message" Property="Text" Value="{Binding Source='hbadf852cgd385g4b95g9ae5ga4af93905815', Converter={StaticResource TranslatedStringConverter}}"/>
+                                    </MultiDataTrigger>
+
+                                    <MultiDataTrigger>
+                                        <MultiDataTrigger.Conditions>
+                                            <Condition Binding="{Binding Type}" Value="LostControl"/>
+                                            <Condition Binding="{Binding Value}" Value="StoryFrozen"/>
+                                        </MultiDataTrigger.Conditions>
+                                        <Setter TargetName="Message" Property="Text" Value="{Binding Source='hbd5803f1g480cg4eb4g820fg242124c08ea9', Converter={StaticResource TranslatedStringConverter}}"/>
+                                    </MultiDataTrigger>
+
+                                    <MultiDataTrigger>
+                                        <MultiDataTrigger.Conditions>
+                                            <Condition Binding="{Binding Type}" Value="LostControl"/>
+                                            <Condition Binding="{Binding Value}" Value="LostControl"/>
+                                        </MultiDataTrigger.Conditions>
+                                        <Setter TargetName="Message" Property="Text" Value="{Binding Source='hd870788dg1d5dg42f3ga261g8580eec92784', Converter={StaticResource TranslatedStringConverter}}"/>
+                                    </MultiDataTrigger>
+
+                                    <DataTrigger Binding="{Binding Type}" Value="ReactionsBlocked">
+                                        <Setter TargetName="Message" Property="Text" Value="{Binding Source='hae26bac2g2e14g4cccg8c47gd19467e488c6', Converter={StaticResource TranslatedStringConverter}}"/>
+                                        <Setter TargetName="MessageBlock" Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+
+                                    <DataTrigger Binding="{Binding Type}" Value="ResurrectedInThisTurn">
+                                        <Setter TargetName="Message" Property="Text" Value="{Binding Source='h1ac301b7gce0ag4693gbba2gb912e5abe10e', Converter={StaticResource TranslatedStringConverter}}"/>
+                                        <Setter TargetName="MessageBlock" Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+
+                                    <DataTrigger Binding="{Binding Type}" Value="DisarmedInThisTurn">
+                                        <Setter TargetName="Message" Property="Text" Value="{Binding Source='he4c05e4ag7e4eg46edgbc22g77fab2bddc2d', Converter={StaticResource TranslatedStringConverter}}"/>
+                                        <Setter TargetName="MessageBlock" Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+
+                                </DataTemplate.Triggers>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+
                     <!-- Movement Bar -->
-                    <Grid x:Name="MovementBar" Height="40" Margin="0,0,0,-17" DataContext="{Binding CurrentPlayer.UIData.MovementResourceCostPreview}" VerticalAlignment="Bottom" HorizontalAlignment="Center" Panel.ZIndex="2" >
+                    <Grid x:Name="MovementBar" Height="40" Margin="0,0,0,-16" DataContext="{Binding CurrentPlayer.UIData.MovementResourceCostPreview}" VerticalAlignment="Bottom" HorizontalAlignment="Center" Panel.ZIndex="2" Visibility="Collapsed" >
 
                         <ls:LSProgressBar Value="{Binding ActionResource.Value, Mode=OneWay}" Maximum="{Binding ActionResource.MaxValue}"
                                                                                       Minimum="0" Background="#E0000000"
@@ -180,9 +324,9 @@
                         <Image Source="pack://application:,,,/GustavNoesisGUI;component/Assets/ActionResources_c/c_movementBar.png" Stretch="None" />
                     </Grid>
                     <!-- Action Resources -->
-                    <ls:LSNineSliceImage Style="{StaticResource ResourceBar9Slice}" HorizontalAlignment="Center" Panel.ZIndex="1" >
+                    <ls:LSNineSliceImage x:Name="ActionResourceBar" Style="{StaticResource ResourceBar9Slice}" HorizontalAlignment="Center" Panel.ZIndex="1" >
                         <Grid VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,-4,0,0" >
-                            <Rectangle Height="Auto" VerticalAlignment="Stretch" Opacity="0.7" Margin="-30,-4,-30,-4" Panel.ZIndex="0">
+                            <Rectangle x:Name="ResourceBarBG" Height="Auto" VerticalAlignment="Stretch" Opacity="0.7" Margin="-30,-4,-30,-4" Panel.ZIndex="0">
                                 <Rectangle.Fill>
                                     <LinearGradientBrush StartPoint="0,1" EndPoint="1,0">
                                         <GradientStop Offset="0" Color="#00000000" />
@@ -195,22 +339,46 @@
                             <Control x:Name="actionResourceBar" Template="{StaticResource ActionResourcesTemplate}" DataContext="{Binding CurrentPlayer.UIData.ActionResourcesCostPreview}" Width="Auto" VerticalAlignment="Bottom" IsEnabled="False" />
                         </Grid>
                     </ls:LSNineSliceImage>
-
                 </StackPanel>
                 
+                <b:Interaction.Triggers>
+                    <b:EventTrigger EventName="Loaded">
+                        <b:ControlStoryboardAction ControlStoryboardOption="Stop" Storyboard="{StaticResource HideResourceBarStoryboard}"/>
+                    </b:EventTrigger>
+                </b:Interaction.Triggers>
             </Grid>
 
             <ControlTemplate.Triggers>
-                <DataTrigger Binding="{Binding CurrentPlayer.SelectedCharacter.InTurnBasedMode}" Value="True">
-                    <Setter TargetName="ResourceContainer" Property="Visibility" Value="Visible"/>
-                </DataTrigger>
+                <MultiDataTrigger>
+                    <MultiDataTrigger.Conditions>
+                        <Condition Binding="{Binding CurrentPlayer.SelectedCharacter.InTurnBasedMode}" Value="True"/>
+                        <Condition Binding="{Binding CurrentPlayer.IsCurrentTurn}" Value="True"/>
+                    </MultiDataTrigger.Conditions>
+                    <Setter TargetName="MovementBar" Property="Visibility" Value="Visible"/>
+                </MultiDataTrigger>
+
+                <MultiDataTrigger>
+                    <MultiDataTrigger.Conditions>
+                        <Condition Binding="{Binding CurrentPlayer.SelectedCharacter.InTurnBasedMode}" Value="True"/>
+                        <Condition Binding="{Binding CurrentPlayer.SelectedCharacter.IsCurrentTurn}" Value="True"/>
+                    </MultiDataTrigger.Conditions>
+                    <Setter TargetName="Root" Property="IsEnabled" Value="True" />
+                </MultiDataTrigger>
+
+                <MultiDataTrigger>
+                    <MultiDataTrigger.Conditions>
+                        <Condition Binding="{Binding CurrentPlayer.SelectedCharacter.InTurnBasedMode}" Value="True"/>
+                        <Condition Binding="{Binding CurrentPlayer.IsCurrentTurn}" Value="False"/>
+                    </MultiDataTrigger.Conditions>
+                    <Setter TargetName="CapabilitiesErrors" Property="Visibility" Value="Collapsed"/>
+                </MultiDataTrigger>
 
                 <MultiDataTrigger>
                     <MultiDataTrigger.Conditions>
                         <Condition Binding="{Binding CurrentPlayer.SelectedCharacter.InTurnBasedMode}" Value="False"/>
                         <Condition Binding="{Binding CurrentPlayer.UIData.ActiveTask.RootCastSpell, Converter={StaticResource NullToBoolFalseConverter}, FallbackValue=False}" Value="True"/>
                     </MultiDataTrigger.Conditions>
-                    <Setter TargetName="ResourceContainer" Property="Visibility" Value="Visible"/>
+                    <Setter TargetName="Root" Property="IsEnabled" Value="True"/>
                     <Setter TargetName="EndTurnButtonHolder" Property="Visibility" Value="Collapsed"/>
                     <Setter TargetName="MovementBar" Property="Visibility" Value="Hidden"/>
                 </MultiDataTrigger>
@@ -296,8 +464,12 @@
                     <Setter TargetName="ForceCastButton" Property="Visibility" Value="Collapsed"/>
                     <Setter TargetName="ActionWheelButton" Property="Visibility" Value="Collapsed"/>
                     <Setter TargetName="callForthAllies" Property="Visibility" Value="Collapsed"/>
-
+                    <Setter TargetName="CapabilitiesErrors" Property="Visibility" Value="Collapsed"/>
+                    <Setter TargetName="MovementBar" Property="Visibility" Value="Visible"/>
+                    <Setter TargetName="Root" Property="IsEnabled" Value="True" />
+                    <Setter TargetName="actionResourceBar" Property="DataContext" Value="{Binding CurrentPlayer.UIData.ActionResourcesHoverCostPreview}"/>
                 </DataTrigger>
+
                 <DataTrigger Binding="{Binding CurrentPlayer.SelectedCharacter.EndTurnRequested}" Value="True">
                     <Setter TargetName="EndTurnButton" Property="IsEnabled" Value="False"/>
                     <Setter TargetName="EndTurnButton" Property="EatInput" Value="True"/>
@@ -314,27 +486,26 @@
                     <Setter TargetName="UpcastContainer" Property="Grid.Column" Value="1"/>
                 </Trigger>
 
-                
-                <DataTrigger Binding="{Binding CurrentPlayer.UIData.IsCharacterSelectOpen}" Value="True">
-                    <DataTrigger.EnterActions>
-                        <StopStoryboard BeginStoryboardName="ShowResourceBarBeginStoryboard" />
-                        <BeginStoryboard x:Name="HideResourceBarBeginStoryboard" Storyboard="{StaticResource HideResourceBarStoryboard}"/>
-                    </DataTrigger.EnterActions>
-                    <DataTrigger.ExitActions>
-                        <StopStoryboard BeginStoryboardName="HideResourceBarBeginStoryboard" />
-                        <BeginStoryboard x:Name="ShowResourceBarBeginStoryboard" Storyboard="{StaticResource ShowResourceBarStoryboard}"/>
-                    </DataTrigger.ExitActions>
-                    <Setter TargetName="EndTurnButton" Property="IsEnabled" Value="False"/>
-                    <Setter TargetName="Root" Property="Opacity" Value="0" />
-                    <Setter TargetName="LaunchCallAlliesBtn" Property="IsEnabled" Value="False"/>
-                </DataTrigger>
-
                 <DataTrigger Binding="{Binding HasInputEnabled, ElementName=ActionResources_c}" Value="False">
                     <Setter TargetName="UpcastContainer" Property="Visibility" Value="Collapsed"/>
                     <Setter TargetName="EndTurnButtonHolder" Property="Visibility" Value="Collapsed"/>
                     <Setter TargetName="ActionWheelButton" Property="Visibility" Value="Collapsed"/>
                     <Setter TargetName="callForthAllies" Property="Visibility" Value="Collapsed"/>
+                    <Setter TargetName="EndTurnButton" Property="IsEnabled" Value="False"/>
+                    <Setter TargetName="LaunchCallAlliesBtn" Property="IsEnabled" Value="False"/>
                 </DataTrigger>
+
+                <Trigger SourceName="Root" Property="IsEnabled" Value="True">
+                    <Setter TargetName="Root" Property="Opacity" Value="1"/>
+                    <Trigger.ExitActions>
+                        <StopStoryboard BeginStoryboardName="ShowResourceBarBeginStoryboard" />
+                        <BeginStoryboard x:Name="HideResourceBarBeginStoryboard" Storyboard="{StaticResource HideResourceBarStoryboard}"/>
+                    </Trigger.ExitActions>
+                    <Trigger.EnterActions>
+                        <StopStoryboard BeginStoryboardName="HideResourceBarBeginStoryboard" />
+                        <BeginStoryboard x:Name="ShowResourceBarBeginStoryboard" Storyboard="{StaticResource ShowResourceBarStoryboard}"/>
+                    </Trigger.EnterActions>
+                </Trigger>
 
                 <DataTrigger Binding="{Binding CurrentPlayer.SelectedCharacter.InTurnBasedMode}" Value="True">
                     <Setter TargetName="ActionWheelButton" Property="Visibility" Value="Collapsed"/>
@@ -365,9 +536,6 @@
                         <StopStoryboard BeginStoryboardName="callAlliesAnimation"/>
                     </DataTrigger.ExitActions>
                 </DataTrigger>
-
-
-
             </ControlTemplate.Triggers>
         </ControlTemplate>
     </ls:UIWidget.Template>

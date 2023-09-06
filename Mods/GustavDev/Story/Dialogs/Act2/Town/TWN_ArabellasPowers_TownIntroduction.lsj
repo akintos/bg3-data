@@ -25489,7 +25489,7 @@
             ]
          },
          "editorData" : {
-            "HowToTrigger" : {"type" : "LSString", "value" : "- Load SCL_Main\r\n- Debug book - act 2 set up - Teifling path\r\n- give QUEST_SCL_Moonlantern_000  (so we don't die of shadowcurse)\r\n- goto -150; 31; 18\r\n- Talk to Arabella\r\n\r\n(Approach (-150; 31; 18) in shadow-cursed town)"},
+            "HowToTrigger" : {"type" : "LSString", "value" : "ReCon (commands must be done in this order):\n\r\n- SetGlobalOsirisFlag DEN_ShadowDruid_State_SnakeCourtStarted\nloadlevel SCL_Main_A\n\r\n- addTag ACT2_SHADOW_CURSE_IMMUNE:b47643e0-583c-4808-b108-f6d3b605b0a9  (so we don't die of shadowcurse)\r\n\n- goto -150; 31; 18\r\n\n\nThen talk to Arabella"},
             "defaultAttitudes" : [
                {
                   "data" : [

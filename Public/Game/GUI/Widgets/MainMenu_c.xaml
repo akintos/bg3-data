@@ -32,8 +32,8 @@
         <ControlTemplate TargetType="{x:Type ls:UIWidget}">
             <ControlTemplate.Resources>
                 <ResourceDictionary>
-                    <!-- Message box to ensure user wants to activate cross save -->
-                    <ls:LSMessageBoxData x:Key="MessageBoxCrossSaveCheck"
+                    <!-- Message box to ensure user wants to activate cross save - Hidden for now - See GUS-304340 -->
+                    <!--<ls:LSMessageBoxData x:Key="MessageBoxCrossSaveCheck"
                                  Text="{Binding Source='hd2483c4eg1d05g4a56gae35g86f1ddad520e', Converter={StaticResource TranslatedStringConverter}}"
                                  Title="{Binding Source='h38a2b4efg958eg46baga570ge044a8985709', Converter={StaticResource TranslatedStringConverter}}"
                                  UUID="UUID" CheckBox="True" CheckBoxValue="False">
@@ -42,7 +42,7 @@
                                               Command="{Binding DataContext.CheckCrossSaveCommand, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"
                                               BoundInput="{Binding DataContext.CurrentPlayer.UIData.InputEvents, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIAccept'}"/>
                         </ls:LSMessageBoxData.Actions>
-                    </ls:LSMessageBoxData>
+                    </ls:LSMessageBoxData>-->
 
                     <Thickness x:Key="MainButtonSpacing">0,-4,0,0</Thickness>
                     <Thickness x:Key="MainButtonLargeSpacing">0,24,0,0</Thickness>
@@ -94,7 +94,6 @@
             <Grid x:Name="MainMenu">
                 <b:Interaction.Triggers>
                     <b:EventTrigger EventName="Loaded">
-                        <b:InvokeCommandAction Command="{Binding OpenCrossSaveMsgCommand}" CommandParameter="{StaticResource MessageBoxCrossSaveCheck}"/>
                         <b:InvokeCommandAction Command="{Binding CheckFirstTimeSetupValueCommand}"/>
                         <b:InvokeCommandAction Command="{Binding TryOpenGammaCalibrationCommand}"/>
                         <b:InvokeCommandAction Command="{Binding TryOpenHDRCommand}"/>

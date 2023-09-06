@@ -165,49 +165,51 @@
                                         <ListBox x:Name="ContainerListBox" Grid.Row="1" DataContext="{Binding Container.Inventory}" ItemsSource="{Binding Path=(b:Interaction.Behaviors)[0].FilteredItems, ElementName=Inventory}"
                                                  VerticalAlignment="Top" HorizontalAlignment="Left" Background="Transparent" BorderThickness="0" ScrollViewer.VerticalScrollBarVisibility="Visible"
                                                  ScrollViewer.HorizontalScrollBarVisibility="Disabled">
-                                            <ListBox.Resources>
-                                                <Style TargetType="ScrollBar" BasedOn="{StaticResource DecorativeScrollBar}"/>
-                                            </ListBox.Resources>
-                                            <ListBox.ItemTemplate>
-                                                <DataTemplate>
-                                                    <Grid x:Name="SlotRoot" Focusable="True" ls:MoveFocus.Focusable="True" ToolTipService.Placement="Right" ToolTipService.HorizontalOffset="20" ToolTipService.VerticalOffset="130">
-                                                        <Grid.ToolTip>
-                                                            <ls:LSTooltip Content="{Binding DataContext.Object, ElementName=SlotRoot}"/>
-                                                        </Grid.ToolTip>
-                                                        <ls:LSEntityObject EntityRef="{Binding Object.EntityHandle}"
+                                                <ListBox.Resources>
+                                                    <Style TargetType="ScrollBar" BasedOn="{StaticResource DecorativeScrollBar}"/>
+                                                </ListBox.Resources>
+                                                <ListBox.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <Grid x:Name="SlotRoot" Focusable="True" ls:MoveFocus.Focusable="True" ToolTipService.Placement="Right" ToolTipService.HorizontalOffset="20" ToolTipService.VerticalOffset="130">
+                                                            <Grid.ToolTip>
+                                                                <ls:LSTooltip Content="{Binding DataContext.Object, ElementName=SlotRoot}"/>
+                                                            </Grid.ToolTip>
+                                                            <ls:LSEntityObject EntityRef="{Binding Object.EntityHandle}"
                                                                        Context="{Binding DataContext.ContainerContext,RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"
                                                                        Background="Transparent">
-                                                            <ContentPresenter Content="{Binding Object}" ContentTemplate="{StaticResource Template.GameObject}" />
-                                                        </ls:LSEntityObject>
-                                                        <ContentPresenter ContentTemplate="{StaticResource EquippedTorchIcon}" Content="{Binding .}" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,10,10,0"/>
-                                                    </Grid>
-                                                </DataTemplate>
-                                            </ListBox.ItemTemplate>
-                                            <ListBox.Template>
-                                                <ControlTemplate TargetType="ListBox">
-                                                    <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="14,0,0,0" HorizontalAlignment="Left" Template="{StaticResource FlippedScrollViewerTemplate}" HorizontalScrollBarVisibility="Disabled" CanContentScroll="True">
-                                                        <ScrollViewer.Resources>
-                                                            <Style TargetType="ScrollBar" BasedOn="{StaticResource GoldScrollBar}"/>
-                                                        </ScrollViewer.Resources>
-                                                        <ItemsPresenter  />
-                                                    </ScrollViewer>
-                                                </ControlTemplate>
-                                            </ListBox.Template>
-                                            <b:Interaction.Triggers>
-                                                <b:EventTrigger EventName="FocusChanged">
-                                                    <b:InvokeCommandAction Command="{Binding DataContext.SelectItemCommand, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" 
+                                                                <ContentPresenter Content="{Binding Object}" ContentTemplate="{StaticResource Template.GameObject}" />
+                                                            </ls:LSEntityObject>
+                                                        </Grid>
+                                                    </DataTemplate>
+                                                </ListBox.ItemTemplate>
+                                                <ListBox.Template>
+                                                    <ControlTemplate TargetType="ListBox">
+                                                        <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="14,0,0,0" HorizontalAlignment="Left" Template="{StaticResource FlippedScrollViewerTemplate}" HorizontalScrollBarVisibility="Disabled" CanContentScroll="True">
+                                                            <ScrollViewer.Resources>
+                                                                <Style TargetType="ScrollBar" BasedOn="{StaticResource GoldScrollBar}"/>
+                                                            </ScrollViewer.Resources>
+                                                            <ItemsPresenter  />
+                                                        </ScrollViewer>
+                                                    </ControlTemplate>
+                                                </ListBox.Template>
+                                                <b:Interaction.Triggers>
+                                                    <b:EventTrigger EventName="FocusChanged">
+                                                        <b:InvokeCommandAction Command="{Binding DataContext.SelectItemCommand, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" 
                                                                        CommandParameter="{Binding FocusedElement.DataContext, ElementName=Pickpocket_c}"/>
-                                                    <b:ControlStoryboardAction Storyboard="{StaticResource AnimatePie}" />
-                                                    <b:InvokeCommandAction Command="{Binding DataContext.ShowTooltipOnUIElement, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" 
+                                                        <b:ControlStoryboardAction Storyboard="{StaticResource AnimatePie}" />
+                                                        <b:InvokeCommandAction Command="{Binding DataContext.ShowTooltipOnUIElement, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" 
                                                                        CommandParameter="{Binding FocusedElement, ElementName=Pickpocket_c}"/>
-                                                </b:EventTrigger>
-                                                <b:EventTrigger EventName="Loaded">
-                                                    <ls:SetMoveFocusAction TargetName="Pickpocket_c"/>
-                                                </b:EventTrigger>
-                                                <b:PropertyChangedTrigger Binding="{Binding ElementName=PlayerInvToggle,Path=IsChecked}">
-                                                    <ls:SetMoveFocusAction TargetName="Pickpocket_c"/>
-                                                </b:PropertyChangedTrigger>
-                                            </b:Interaction.Triggers>
+                                                    </b:EventTrigger>
+                                                    <b:DataTrigger Binding="{Binding HasInputEnabled, ElementName=Pickpocket_c}" Value="True">
+                                                        <b:InvokeCommandAction Command="{Binding DataContext.ShowTooltipOnUIElement, ElementName=Pickpocket_c}" CommandParameter="{Binding FocusedElement, ElementName=Pickpocket_c}"/>
+                                                    </b:DataTrigger>
+                                                    <b:EventTrigger EventName="Loaded">
+                                                        <ls:SetMoveFocusAction TargetName="Pickpocket_c"/>
+                                                    </b:EventTrigger>
+                                                    <b:PropertyChangedTrigger Binding="{Binding ElementName=PlayerInvToggle,Path=IsChecked}">
+                                                        <ls:SetMoveFocusAction TargetName="Pickpocket_c"/>
+                                                    </b:PropertyChangedTrigger>
+                                                </b:Interaction.Triggers>
                                         </ListBox>
                                     </Grid>
 
@@ -628,8 +630,9 @@
                                      BoundEvent="ContextMenu"
                                      IsEnabled="{Binding FocusedElement.DataContext.CanSteal, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"/>
 
-                    <ls:LSButton Content = "{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIShowInfo'}"
-                                     Tag="{Binding Source='h07aaca85g63dbg4e60g88a2g0590077ea7e2',Converter={StaticResource TranslatedStringConverter}}" 
+                        <ls:LSButton x:Name="ToggleTooltips"
+                                     Content = "{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIShowInfo'}"
+                                     Tag="{Binding Source='hf8dd4c2fg97e0g4ccdgac1ag3cd1fe5060ef',Converter={StaticResource TranslatedStringConverter}}" 
                                      Command="{Binding ToggleTooltipOnUIElement}" 
                                      BoundEvent="UIShowInfo"
                                      CommandParameter="{Binding Path=FocusedElement, ElementName=Pickpocket_c}"
@@ -654,6 +657,10 @@
 
                 <DataTrigger Binding="{Binding Layout}" Value="Common">
                     <Setter TargetName="rolltargetTooltip" Property="Margin" Value="1060,200,0,-60"/>
+                </DataTrigger>
+
+                <DataTrigger Binding="{Binding ShowUIElementTooltip}" Value="True">
+                    <Setter TargetName="ToggleTooltips" Property="Tag" Value="{Binding Source='hb33ec471gd611g4ee3gbbffg699af8f79167', Converter={StaticResource TranslatedStringConverter}}"/>
                 </DataTrigger>
 
                 <MultiDataTrigger>

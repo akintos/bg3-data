@@ -158,10 +158,9 @@
     </ControlTemplate>
 
     <DataTemplate x:Key="WaypointErrorMessage">
-        <ls:LSNineSliceImage Slices="35,85,80,35"  Padding="0,80,0,50" Width="491" MinHeight="344" ImageSource="pack://application:,,,/GustavNoesisGUI;component/Assets/Map/waypoint_warningBoxBg.png" >
-
+        <ls:LSNineSliceImage Slices="35,85,80,35"  Padding="0,80,0,50" Width="491" MinHeight="344" ImageSource="pack://application:,,,/GustavNoesisGUI;component/Assets/Map/waypoint_warningBoxBg.png" HorizontalAlignment="Center" VerticalAlignment="Center">
             <ls:LSNineSliceImage.Content>
-                <TextBlock x:Name="waypointMessage" Foreground="{StaticResource LS_alertTxtColor}" HorizontalAlignment="Center" VerticalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center" Width="300">
+                <TextBlock x:Name="waypointMessage" Foreground="{StaticResource LS_alertTxtColor}" HorizontalAlignment="Center" VerticalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center" Width="300" Effect="{StaticResource HUD.DropShadow}">
                     <TextBlock.Style>
                         <Style TargetType="TextBlock">
                             <Style.Triggers>

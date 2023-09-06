@@ -23,6 +23,8 @@
                 <System:Double x:Key="RaceIconSize">300</System:Double>
                 
                 <Thickness x:Key="DefaultSideMargin">40,0</Thickness>
+                <Thickness x:Key="PaperDollZoomIn">-400,-100,0,0</Thickness>
+                <Thickness x:Key="PaperDollZoomOut">-400,0,0,0</Thickness>
                 <Thickness x:Key="SrollViewSideMargin">0,0,-20,0</Thickness>
                 <Thickness x:Key="SpellFilterAnimationRightMargin">500,0,-500,0</Thickness>
                 <Thickness x:Key="SpellFilterAnimationMargin">0,0,0,0</Thickness>
@@ -81,6 +83,32 @@
                         <SplineThicknessKeyFrame KeyTime="{StaticResource SpellFilterAnimationDuration}" Value="{StaticResource SpellFilterAnimationLeftMargin}" />
                     </ThicknessAnimationUsingKeyFrames>
                 </ParallelTimeline>
+
+                <Storyboard x:Key="ZoomCharacterIn" FillBehavior="Stop">
+                    <ThicknessAnimation Storyboard.TargetName="PaperDoll" Storyboard.TargetProperty="Margin" Duration="0:0:0.44" To="{StaticResource PaperDollZoomIn}">
+                        <ThicknessAnimation.EasingFunction>
+                            <SineEase EasingMode="EaseInOut"/>
+                        </ThicknessAnimation.EasingFunction>
+                    </ThicknessAnimation>
+                    <DoubleAnimation Duration="0:0:0.5" To="1.2" Storyboard.TargetProperty="Zoom" Storyboard.TargetName="PaperDoll">
+                        <DoubleAnimation.EasingFunction>
+                            <SineEase EasingMode="EaseInOut"/>
+                        </DoubleAnimation.EasingFunction>
+                    </DoubleAnimation>
+                </Storyboard>
+
+                <Storyboard x:Key="ZoomCharacterOut" FillBehavior="Stop">
+                    <DoubleAnimation Duration="0:0:0.5" To="0.2" Storyboard.TargetProperty="Zoom" Storyboard.TargetName="PaperDoll">
+                        <DoubleAnimation.EasingFunction>
+                            <SineEase EasingMode="EaseInOut"/>
+                        </DoubleAnimation.EasingFunction>
+                    </DoubleAnimation>
+                    <ThicknessAnimation Storyboard.TargetName="PaperDoll" Storyboard.TargetProperty="Margin" Duration="0:0:0.5" To="{StaticResource PaperDollZoomOut}" >
+                        <ThicknessAnimation.EasingFunction>
+                            <SineEase EasingMode="EaseInOut"/>
+                        </ThicknessAnimation.EasingFunction>
+                    </ThicknessAnimation>
+                </Storyboard>
 
                 <Storyboard x:Key="ShowMainFilterPanel" Storyboard.TargetName="EnumPopup" Children="{StaticResource EnterFromRightFilterPanelAnimation}" />
                 <Storyboard x:Key="HideMainFilterPanel" Storyboard.TargetName="EnumPopup" Children="{StaticResource ExitToRightFilterPanelAnimation}" />
@@ -295,13 +323,12 @@
                         <BitmapImage x:Key="PrepareHighlight" UriSource="pack://application:,,,/GustavNoesisGUI;component/Assets/CharacterPanel_c/c_gridSquareHighlighted.png" />
                         <BitmapImage x:Key="Preparecheck" UriSource="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared_c/c_ico_bigTick.png" />
                     </DataTemplate.Resources>
-                    <ContentControl x:Name="EntryRoot" Focusable="True" ls:MoveFocus.Focusable="True" Style="{StaticResource FocusableContentControlStyle}" Width="{StaticResource GenericSlotSizeSpellBook}" Height="{StaticResource GenericSlotSizeSpellBook}" Margin="{StaticResource spellBookIconOffSet}" ToolTipService.Placement="Right"  ToolTipService.HorizontalOffset="6" ToolTipService.VerticalOffset="120" Opacity="0.4">
+                    <ContentControl x:Name="EntryRoot" Focusable="True" ls:MoveFocus.Focusable="True" Style="{StaticResource FocusableContentControlStyle}" Width="{StaticResource GenericSlotSizeSpellBook}" Height="{StaticResource GenericSlotSizeSpellBook}" Margin="{StaticResource spellBookIconOffSet}" ToolTipService.Placement="Right"  ToolTipService.HorizontalOffset="6" ToolTipService.VerticalOffset="120" Opacity="0.6">
                         <ContentControl.ToolTip>
                             <ls:LSTooltip Content="{TemplateBinding DataContext}"/>
                         </ContentControl.ToolTip>
                         <Grid>
-                                <Rectangle x:Name="Icon" Fill="{Binding Icon}" Width="{StaticResource SpellSlotContentSize}" Height="{StaticResource SpellSlotContentSize}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                <Rectangle x:Name="IconCover" Fill="{StaticResource LS_accent00TxtColor}" Width="{StaticResource SpellSlotContentSize}" Height="{StaticResource SpellSlotContentSize}" HorizontalAlignment="Center" VerticalAlignment="Center" Opacity="0.5"/>
+                            <Rectangle x:Name="Icon" Fill="{Binding Icon}" Width="{StaticResource SpellSlotContentSize}" Height="{StaticResource SpellSlotContentSize}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                             <Grid x:Name="IsPreparedMark" Visibility="Collapsed" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0">
                                 <Image x:Name="IsPreparedMarkBg" Stretch="Fill" Width="{StaticResource GenericSlotContentSize}" Height="{StaticResource GenericSlotContentSize}" Source="{StaticResource PrepareHighlight}" Margin="0,0" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
                                 <Image x:Name="IsPreparedMarkIcon" Stretch="None" Source="{StaticResource Preparecheck}" Margin="0,14,0,-14" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
@@ -316,11 +343,11 @@
 
                         <DataTrigger Binding="{Binding Path=(ls:MoveFocus.IsFocused), ElementName=EntryRoot}" Value="True">
                             <Setter Property="Panel.ZIndex" Value="1"/>
+                            <Setter TargetName="EntryRoot" Property="Opacity" Value="1"/>
                         </DataTrigger>
 
                         <DataTrigger Binding="{Binding Activated}" Value="True">
                             <Setter TargetName="IsPreparedMark" Property="Visibility" Value="Visible"/>
-                            <Setter TargetName="IconCover" Property="Visibility" Value="Collapsed"/>
                             <Setter TargetName="EntryRoot" Property="Opacity" Value="1"/>
                         </DataTrigger>
 
@@ -331,8 +358,7 @@
                             </MultiDataTrigger.Conditions>
                             <Setter TargetName="IsPreparedMarkBg" Property="Visibility" Value="Hidden"/>
                         </MultiDataTrigger>
-
-                        
+                      
                         
                     </DataTemplate.Triggers>
                 </DataTemplate>
@@ -357,6 +383,9 @@
                     <b:EventTrigger EventName="GotKeyboardFocus">
                         <b:InvokeCommandAction Command="{Binding ShowTooltipOnUIElement}" CommandParameter="{Binding Path=FocusedElement, ElementName=SpellBook_c}"/>
                     </b:EventTrigger>
+                    <b:DataTrigger Binding="{Binding HasInputEnabled, ElementName=SpellBook_c}" Value="True">
+                        <b:InvokeCommandAction Command="{Binding ShowTooltipOnUIElement}" CommandParameter="{Binding Path=FocusedElement, ElementName=SpellBook_c}"/>
+                    </b:DataTrigger>
 
                     <b:EventTrigger EventName="Loaded">
                         <ls:LSPlaySound Sound="UI_HUD_SpellBook_Open"/>
@@ -408,19 +437,20 @@
                     </Grid.RowDefinitions>
 
                     <!-- Paperdoll - First so it goes behind everything else -->
-                    <ls:LSPaperdoll x:Name="PaperDoll" Grid.Column="2" Grid.ColumnSpan="3" Grid.Row="0" Grid.RowSpan="3" Margin="-400,0,0,0" noesis:Element.BlendingMode="Additive" EntityRef="{Binding CurrentPlayer.SelectedCharacter.EntityHandle}" Width="1520" Height="2060" HorizontalAlignment="Left" UseCombatPose="True" Zoom="0.2" RenderScale="{Binding DataContext.Data.RenderScale, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" />
+                    <Grid x:Name="PaperDollGrid" Grid.Column="2" Grid.ColumnSpan="3" Grid.Row="0" Grid.RowSpan="3" Margin="0,60,0,0" >
+                        <ls:LSPaperdoll x:Name="PaperDoll" Margin="{StaticResource PaperDollZoomOut}" noesis:Element.BlendingMode="Additive" EntityRef="{Binding CurrentPlayer.SelectedCharacter.EntityHandle}" Width="1520" Height="2060" HorizontalAlignment="Left" UseCombatPose="True" Zoom="0.2" RenderScale="{Binding DataContext.Data.RenderScale, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" />
+                    </Grid>
 
-                    <Control x:Name="Gold" Grid.Column="3" Grid.Row="0" Template="{StaticResource GoldPanel}" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,56,96,0"
-                         DataContext="{Binding CurrentPlayer.SelectedCharacter.Inventory.Gold, Mode=OneWay, StringFormat={}{0:N0}}"/>
+                    <Control  Grid.Row="0" Grid.ColumnSpan="7" x:Name="c_PartyGold" Style="{StaticResource PartyGoldStyle}" />
 
                     <!-- Carousel Background -->
                     <Control Template="{StaticResource TopCarouselBackground}" HorizontalAlignment="Center"  Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="5" Margin="0,0,0,2"/>
-                    
+
                     <!-- Page navigation -->
                     <DockPanel x:Name="Header" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="4" HorizontalAlignment="Center" VerticalAlignment="Top" MinHeight="164">
-                        <ls:LSButton x:Name="NavigationLeftButton" BoundEvent="UITabPrev" DockPanel.Dock="Left" ContentTemplate="{StaticResource ControllerButtonHint}" Content="{Binding CurrentPlayer.UIData.InputEvents, ConverterParameter=UITabPrev, Converter={StaticResource FindInputEventConverter}}" Width="{StaticResource ScaledControllerHintSize}" Height="{StaticResource ScaledControllerHintSize}" ls:LSButton.EatInput="False" VerticalAlignment="Center" IsEnabled="False" Visibility="Collapsed" Margin="0,0,40,0"/>
+                        <ls:LSButton x:Name="NavigationLeftButton" BoundEvent="UITabPrev" DockPanel.Dock="Left" ContentTemplate="{StaticResource ControllerButtonHint}" Content="{Binding CurrentPlayer.UIData.InputEvents, ConverterParameter=UITabPrev, Converter={StaticResource FindInputEventConverter}}" Width="{StaticResource ScaledControllerHintSize}" Height="{StaticResource ScaledControllerHintSize}" ls:LSButton.EatInput="False" VerticalAlignment="Center" Margin="0,0,40,0"/>
 
-                        <ls:LSButton x:Name="NavigationRightButton" BoundEvent="UITabNext" DockPanel.Dock="Right" ContentTemplate="{StaticResource ControllerButtonHint}" Content="{Binding CurrentPlayer.UIData.InputEvents, ConverterParameter=UITabNext, Converter={StaticResource FindInputEventConverter}}" Width="{StaticResource ScaledControllerHintSize}" Height="{StaticResource ScaledControllerHintSize}" ls:LSButton.EatInput="False" VerticalAlignment="Center" IsEnabled="False" Visibility="Collapsed" Margin="20,0,0,0"/>
+                        <ls:LSButton x:Name="NavigationRightButton" BoundEvent="UITabNext" DockPanel.Dock="Right" ContentTemplate="{StaticResource ControllerButtonHint}" Content="{Binding CurrentPlayer.UIData.InputEvents, ConverterParameter=UITabNext, Converter={StaticResource FindInputEventConverter}}" Width="{StaticResource ScaledControllerHintSize}" Height="{StaticResource ScaledControllerHintSize}" ls:LSButton.EatInput="False" VerticalAlignment="Center" Margin="20,0,0,0"/>
 
                         <ls:LSListBox x:Name="Navigation" ItemsSource="{Binding SortedItems, ElementName=SpellbooksSortBehavior}" HorizontalAlignment="Center" ActionPrevEvent="UITabPrev" ActionNextEvent="UITabNext" SelectedIndex="{StaticResource InitialTab}" VerticalAlignment="Bottom" PlayerId="{Binding CurrentPlayer.PlayerId}">
                             <b:Interaction.Triggers>
@@ -457,7 +487,7 @@
                                     <ControlTemplate.Triggers>
                                         <DataTrigger Binding="{Binding SelectedItem.SpellBookType, ElementName=Navigation}" Value="Base">
                                             <Setter TargetName="Label" Property="Text" Value="{Binding Source='haf48b625gb2f0g449egb3aegfddfa1be81c2', Converter={StaticResource TranslatedStringConverter}}"/>
-                                        </DataTrigger> 
+                                        </DataTrigger>
                                         <DataTrigger Binding="{Binding SelectedItem.SpellBookType, ElementName=Navigation}" Value="Class">
                                             <Setter TargetName="Label" Property="Text" Value="{Binding SelectedItem.Class.ClassDisplayName, ElementName=Navigation}"/>
                                         </DataTrigger>
@@ -509,19 +539,19 @@
                             </ls:LSListBox.ItemTemplate>
                         </ls:LSListBox>
                     </DockPanel>
-                    
+
                     <TextBlock x:Name="CharacterNameSplitScreen" Grid.Column="1" Grid.ColumnSpan="1" Grid.Row="1" Text="{Binding CurrentPlayer.SelectedCharacter.Name}" Style="{StaticResource NameTextStyle}" Margin="0,80,0,0" HorizontalAlignment="Left" Visibility="Visible" />
 
                     <!-- Learn Spell Button Full Screen -->
                     <Grid x:Name="LearnSpellsButtonFullScreen" Grid.Column="1" Grid.ColumnSpan="1" Grid.Row="1" Visibility="Collapsed">
-                        <ContentControl Template="{StaticResource PrimaryButtonTemplateWrapper}" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,0,-140" >
+                        <ContentControl Template="{StaticResource PrimaryButtonTemplateWrapper}" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,60,-120" >
                             <ls:LSButton
 								     Command="{Binding OpenLearnSpellsCommand}"
 								     ls:LSButton.BoundEvent="UIDelete"
 								     ContentTemplate="{StaticResource ControllerButtonHint}"
 								     Content="{Binding CurrentPlayer.UIData.InputEvents, ConverterParameter=UIDelete, Converter={StaticResource FindInputEventConverter}}"
 								     Tag="{Binding Source='h9784a948g9d80g41d8gbb18ga9c838b90edd', Converter={StaticResource TranslatedStringConverter}}"
-								     VerticalAlignment="Center" >
+								     VerticalAlignment="Center">
                                 <ls:LSButton.CommandParameter>
                                     <MultiBinding Converter="{StaticResource PassThroughConverter}">
                                         <Binding Path="DataContext.CurrentPlayer.SelectedCharacter" ElementName="SpellBook_c"/>
@@ -542,22 +572,22 @@
 
 
                         <!-- UI Title Area -->
-                        <StackPanel HorizontalAlignment="Left" Orientation="Horizontal" DockPanel.Dock="Top" Width="Auto">
-                            <TextBlock x:Name="PanelTitle" Text="{Binding Source='haf48b625gb2f0g449egb3aegfddfa1be81c2', Converter={StaticResource TranslatedStringConverter}}" Style="{StaticResource PanelTitleStyle}" HorizontalAlignment="Left" />
-                            <TextBlock x:Name="PanelSubTitle" Text="{Binding Source='h1988a9a5g8b63g4d67gb237ga5ec8f73f748', Converter={StaticResource TranslatedStringConverter}}" Style="{StaticResource PanelTitleStyle}" HorizontalAlignment="Left" Margin="14,0,0,28"/>
-                        </StackPanel>
+                        <TextBlock x:Name="PanelTitle" DockPanel.Dock="Top" Width="Auto" Text="{Binding Source='hb4d6c027ge6c2g4ebag8d04g6d5f7febd91d', Converter={StaticResource TranslatedStringConverter}}" Style="{StaticResource PanelTitleStyle}" Margin="0,0,0,40" HorizontalAlignment="Left" />
+
+                        <TextBlock x:Name="ReplaceableSpellsNote" ls:TextBlockFormatter.SourceText="{Binding Source=hdefb242eg8d0bg4680gb37cg763784a9fdfe, Converter={StaticResource TranslatedStringConverter}}" DockPanel.Dock="Top" Style="{StaticResource BaseTextStyle}" FontSize="{StaticResource ScaledMediumFontSize}"  Foreground="{StaticResource LS_accent75TxtColor}" FontWeight="DemiBold" FontStyle="italic" HorizontalAlignment="Left" Visibility="Collapsed" Margin="0 0 0 28" />
 
                         <!-- Spell Preperation Area -->
+                        
                         <Grid x:Name="PrepareSpellsHeader" HorizontalAlignment="Stretch" Width="auto" MinHeight="240" DockPanel.Dock="Top" Visibility="Collapsed" Background="#9914242f" Margin="-40,0,-10,0">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="*" />
 
                             </Grid.ColumnDefinitions>
-                            <ContentControl x:Name="SplitScreenPrepareToggle" Grid.Column="0" Template="{StaticResource PrimaryButtonTemplateWrapper}" Margin="0,0,-30,0" VerticalAlignment="Center">
+                            <ContentControl x:Name="SplitScreenPrepareToggle" Grid.Column="0" Template="{StaticResource PrimaryButtonTemplateWrapper}" Margin="30,0,0,0" VerticalAlignment="Center">
                                 <ls:LSToggleButton x:Name="ShowPreparedSpellsButton" VerticalAlignment="Center" ls:LSToggleButton.BoundEvent="UICreate" ContentTemplate="{StaticResource ControllerButtonHint}" Content="{Binding CurrentPlayer.UIData.InputEvents, ConverterParameter=UICreate, Converter={StaticResource FindInputEventConverter}}" Tag="{Binding Source='hdbaa56a0gc5e6g4968gb3eag9d5fbcef225e', Converter={StaticResource TranslatedStringConverter}}"/>
                             </ContentControl>
-                            <TextBlock x:Name="PrepareSpellsInfo" Grid.Column="1" Margin="40,20,100,20" HorizontalAlignment="Stretch" VerticalAlignment="Center" Width="auto" Text="{Binding Source='h1d8ce1dfg83e3g4930g87eag6caa149c8f57', Converter={StaticResource TranslatedStringConverter}}" Style="{StaticResource BaseTextStyle}" FontSize="{StaticResource ScaledMediumFontSize}"  Foreground="{StaticResource LS_accent75TxtColor}" FontWeight="DemiBold" FontStyle="italic" Visibility="Collapsed"/>
+                            <TextBlock x:Name="PrepareSpellsInfo" Grid.Column="1" Margin="40,20,100,20" HorizontalAlignment="Stretch" VerticalAlignment="Center" Width="auto" Text="{Binding Source='h14945827gcacag416ag866dgc7f12f96a705', Converter={StaticResource TranslatedStringConverter}}" Style="{StaticResource BaseTextStyle}" FontSize="{StaticResource ScaledMediumFontSize}"  Foreground="{StaticResource LS_accent75TxtColor}" FontWeight="DemiBold" FontStyle="italic" Visibility="Collapsed"/>
 
                             <TextBlock x:Name="PrepareSpellsNumbers" Style="{StaticResource SectionTextStyle}" Grid.Column="0" Margin="0,20,80,20" TextAlignment="Center" VerticalAlignment="Center" Foreground="{StaticResource LS_accent75TxtColor}" FontWeight="DemiBold" Opacity="0">
                                 <Run Text="{Binding Source='h231bab7cg6576g4ff8g8b1bg6dd26756c296', Converter={StaticResource TranslatedStringConverter}}" FontSize="{StaticResource ScaledMediumFontSize}" />
@@ -738,7 +768,7 @@
                         <StackPanel.Resources>
                             <Style TargetType="TextBlock">
                                 <Setter Property="HorizontalAlignment" Value="Center"/>
-								<Setter Property="Foreground" Value="{StaticResource LS_tint100}"/>
+                                <Setter Property="Foreground" Value="{StaticResource LS_tint100}"/>
                             </Style>
                         </StackPanel.Resources>
 
@@ -766,15 +796,15 @@
                                     <Image x:Name="CastAbilityIcon" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/CharacterPanel/ico_proficient.png" Stretch="Fill" VerticalAlignment="Center" Margin="-12,0,0,0" Width="100" Height="100"/>
                                     <Control x:Name="CastAbility" Template="{StaticResource AbilityShortDisplayName}" DataContext="{Binding SelectedItem.Class.SpellCastAbility, ElementName=Navigation}" VerticalAlignment="Center"  >
                                         <Control.Resources>
-                                          <Style TargetType="TextBlock"  BasedOn="{StaticResource BaseTextStyle}" ></Style>
-                                      </Control.Resources>
+                                            <Style TargetType="TextBlock"  BasedOn="{StaticResource BaseTextStyle}" ></Style>
+                                        </Control.Resources>
                                     </Control>
                                 </StackPanel>
                             </ContentControl>
 
                             <ContentControl x:Name="SpellDCContainer" Style="{StaticResource FocusableContentControlStyleMinimal}" ls:MoveFocus.Focusable="True" Focusable="True"  Width="300" Margin="0,21,0,0">
                                 <ContentControl.ToolTip>
-                                    <ls:LSTooltip Content="{Binding Path=(ls:TooltipExtender.Owner).Stats.SpellDifficultyCheck, RelativeSource={RelativeSource Mode=Self}}" ToolTipService.Placement="Left" />
+                                    <ls:LSTooltip Content="{Binding Path=SelectedItem.Class.SpellDifficultyCheck, ElementName=Navigation}" ToolTipService.Placement="Left" />
                                 </ContentControl.ToolTip>
                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                                     <Image x:Name="SpellDCIcon"  Source="pack://application:,,,/GustavNoesisGUI;component/Assets/SpellBook/ico_spellSaveDC.png" Stretch="Fill" VerticalAlignment="Center" Margin="-8,0,0,0" Width="100" Height="100"/>
@@ -827,23 +857,23 @@
                                     <GradientStop Offset="0.0" Color="#9914242f"/>
                                 </LinearGradientBrush>
                             </Grid.Background>
-                            
+
                             <Grid Margin="100,0,100,100" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" >
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto" />
                                     <RowDefinition Height="*"  />
                                     <RowDefinition Height="100"  />
-                                    
+
                                 </Grid.RowDefinitions>
-                            
 
-                            <!-- Prepare Overlay Title Area -->
-                            <StackPanel HorizontalAlignment="Center" Grid.Row="0" Orientation="Vertical" VerticalAlignment="Top" Width="Auto" Margin="0,80,0,0">
-                                <TextBlock Text="{Binding Source='h23ac2ed9g60c8g4d02gaedag5f37282cd1a5', Converter={StaticResource TranslatedStringConverter}}" Style="{StaticResource PanelTitleStyle}" HorizontalAlignment="Center" TextAlignment="Center" Margin="0,0,0,20"/>
-                                    <TextBlock Text="{Binding Source='h1d8ce1dfg83e3g4930g87eag6caa149c8f57', Converter={StaticResource TranslatedStringConverter}}" Style="{StaticResource BaseTextStyle}" FontSize="{StaticResource ScaledMediumFontSize}"  Foreground="{StaticResource LS_accent75TxtColor}" FontWeight="DemiBold" FontStyle="italic" HorizontalAlignment="Center" TextAlignment="Center" Margin="0,0,0,40"/>
-                            
 
-                            <!-- Manually prepared -->
+                                <!-- Prepare Overlay Title Area -->
+                                <StackPanel HorizontalAlignment="Center" Grid.Row="0" Orientation="Vertical" VerticalAlignment="Top" Width="Auto" Margin="0,80,0,0">
+                                    <TextBlock Text="{Binding Source='h23ac2ed9g60c8g4d02gaedag5f37282cd1a5', Converter={StaticResource TranslatedStringConverter}}" Style="{StaticResource PanelTitleStyle}" HorizontalAlignment="Center" TextAlignment="Center" Margin="0,0,0,20"/>
+                                    <TextBlock Text="{Binding Source='h14945827gcacag416ag866dgc7f12f96a705', Converter={StaticResource TranslatedStringConverter}}" Style="{StaticResource BaseTextStyle}" FontSize="{StaticResource ScaledMediumFontSize}"  Foreground="{StaticResource LS_accent75TxtColor}" FontWeight="DemiBold" FontStyle="italic" HorizontalAlignment="Center" TextAlignment="Center" Margin="0,0,0,40"/>
+
+
+                                    <!-- Manually prepared -->
                                     <TextBlock Style="{StaticResource PanelSubTitleStyle}" HorizontalAlignment="Center" TextAlignment="Center" Margin="0,0,0,40">
                                         <Run Text="{Binding Source='h9d690e3fg8baag4917ga818gf127b3da7b93', Converter={StaticResource TranslatedStringConverter}}" />
                                         <Run Foreground="{StaticResource LS_accent100TxtColor}">
@@ -858,49 +888,49 @@
 
 
                                     <Border BorderThickness="4" BorderBrush="{StaticResource LS_InventoryGridSurround}">
-                                    <ItemsControl ItemsSource="{Binding SelectedItem.ManuallyPreparedActions, ElementName=Navigation}" ItemTemplate="{StaticResource ManuallyPreparedSlotTemplate}" >
-                                        <ItemsControl.ItemsPanel>
-                                            <ItemsPanelTemplate>
-                                                <ls:LSGrid Style="{StaticResource SpellGridStyle}">
-                                                    <ls:LSGrid.Columns>
-                                                        <MultiBinding Converter="{StaticResource DivideMultiConverter}">
-                                                            <Binding Path="ActualWidth" RelativeSource="{RelativeSource AncestorType={x:Type StackPanel}}"/>
-                                                            <Binding Source="{StaticResource GenericSlotSizeSpellBook}"/>
-                                                        </MultiBinding>
-                                                    </ls:LSGrid.Columns>
-                                                </ls:LSGrid>
-                                            </ItemsPanelTemplate>
-                                        </ItemsControl.ItemsPanel>
-                                    </ItemsControl>
-                                </Border>
-                            
-                            
+                                        <ItemsControl ItemsSource="{Binding SelectedItem.ManuallyPreparedActions, ElementName=Navigation}" ItemTemplate="{StaticResource ManuallyPreparedSlotTemplate}" >
+                                            <ItemsControl.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <ls:LSGrid Style="{StaticResource SpellGridStyle}">
+                                                        <ls:LSGrid.Columns>
+                                                            <MultiBinding Converter="{StaticResource DivideMultiConverter}">
+                                                                <Binding Path="ActualWidth" RelativeSource="{RelativeSource AncestorType={x:Type StackPanel}}"/>
+                                                                <Binding Source="{StaticResource GenericSlotSizeSpellBook}"/>
+                                                            </MultiBinding>
+                                                        </ls:LSGrid.Columns>
+                                                    </ls:LSGrid>
+                                                </ItemsPanelTemplate>
+                                            </ItemsControl.ItemsPanel>
+                                        </ItemsControl>
+                                    </Border>
 
-                            <!-- Preparable Spells Section -->
 
-                            <TextBlock Text="{Binding Source='h60d9fcd7g33e4g4606g8fe9g8f5f25e03847', Converter={StaticResource TranslatedStringConverter}}" Style="{StaticResource PanelSubTitleStyle}" HorizontalAlignment="Center" TextAlignment="Center" Margin="0,40,0,40"/>
-                             </StackPanel>
+
+                                    <!-- Preparable Spells Section -->
+
+                                    <TextBlock Text="{Binding Source='h60d9fcd7g33e4g4606g8fe9g8f5f25e03847', Converter={StaticResource TranslatedStringConverter}}" Style="{StaticResource PanelSubTitleStyle}" HorizontalAlignment="Center" TextAlignment="Center" Margin="0,40,0,40"/>
+                                </StackPanel>
 
                                 <ScrollViewer HorizontalScrollBarVisibility="Disabled" Grid.Row="1" VerticalScrollBarVisibility="Auto" VerticalAlignment="Stretch" >
 
-                                <ItemsControl x:Name="PreparableSpellGroups" ItemsSource="{Binding FilteredItems, ElementName=SpellLevelsGroupFilter}" HorizontalAlignment="Center" Style="{StaticResource GerneralItemsControlStyle}" Margin="0,0,0,0">
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate>
-                                            <StackPanel Visibility="{Binding Actions.Count, Converter={StaticResource CountToVisibilityConverter}}">
-                                                <Expander x:Name="ExpanderButtonFeatures" IsExpanded="True" Template="{StaticResource ExpanderButtonTemplateSpellBook}" Header="{Binding Name}" Margin="0,0,0,12" >
-                                                    <ItemsControl x:Name="ActionsControl" ItemsSource="{Binding Actions}" AlternationCount="{Binding Actions.Count}" Style="{StaticResource CharacterActionItemsControlStyle}" ItemTemplate="{StaticResource PreparableActionSlotTemplate}" Visibility="{Binding Actions.Count, Converter={StaticResource CountToVisibilityConverter}}"/>
-                                                </Expander>
-                                            </StackPanel>
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl>
-                            </ScrollViewer>
+                                    <ItemsControl x:Name="PreparableSpellGroups" ItemsSource="{Binding FilteredItems, ElementName=SpellLevelsGroupFilter}" HorizontalAlignment="Center" Style="{StaticResource GerneralItemsControlStyle}" Margin="0,0,0,0">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <StackPanel Visibility="{Binding Actions.Count, Converter={StaticResource CountToVisibilityConverter}}">
+                                                    <Expander x:Name="ExpanderButtonFeatures" IsExpanded="True" Template="{StaticResource ExpanderButtonTemplateSpellBook}" Header="{Binding Name}" Margin="0,0,0,12" >
+                                                        <ItemsControl x:Name="ActionsControl" ItemsSource="{Binding Actions}" AlternationCount="{Binding Actions.Count}" Style="{StaticResource CharacterActionItemsControlStyle}" ItemTemplate="{StaticResource PreparableActionSlotTemplate}" Visibility="{Binding Actions.Count, Converter={StaticResource CountToVisibilityConverter}}"/>
+                                                    </Expander>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </ScrollViewer>
 
-                           
 
-                        </Grid>
-                            <ContentControl Template="{StaticResource PrimaryButtonTemplateWrapper}" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,0" >
-                                <ls:LSButton VerticalAlignment="Center" Margin="10,0" ls:LSButton.BoundEvent="UIMessageBoxY" ContentTemplate="{StaticResource ControllerButtonHint}" Content="{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIMessageBoxY'}" Tag="{Binding Source='h31d65d36gfe5fg4f9bg9184g9f8ceee5f3ed',Converter={StaticResource TranslatedStringConverter}}">
+
+                            </Grid>
+                            <ContentControl Template="{StaticResource PrimaryButtonTemplateWrapper}" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,20" >
+                                <ls:LSButton VerticalAlignment="Center" ls:LSButton.BoundEvent="UIMessageBoxY" ContentTemplate="{StaticResource ControllerButtonHint}" Content="{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIMessageBoxY'}" Tag="{Binding Source='h31d65d36gfe5fg4f9bg9184g9f8ceee5f3ed',Converter={StaticResource TranslatedStringConverter}}">
                                     <b:Interaction.Triggers>
                                         <b:EventTrigger EventName="LSButtonPressed">
                                             <b:ChangePropertyAction TargetName="ShowPreparedSpellsButton" PropertyName="IsChecked" Value="False"/>
@@ -912,24 +942,43 @@
                     </Grid>
 
                     <!-- Button hints -->
-                    <StackPanel x:Name="ButtonHints" Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="4" Height="250" IsEnabled="False" Style="{StaticResource ButtonHint.Container.Center}">
+                    <StackPanel x:Name="ButtonHints" Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="4" Height="250" Style="{StaticResource ButtonHint.Container.Center}">
 
-                        <ls:LSButton x:Name="ToggleTooltips" VerticalAlignment="Bottom" Margin="10,0" EatInput="False" 
+                        <ls:LSButton x:Name="ToggleTooltips" VerticalAlignment="Bottom" EatInput="False" 
                                  Command="{Binding ToggleTooltipOnUIElement}"
                                  CommandParameter="{Binding FocusedElement, ElementName=SpellBook_c}"
                                  ls:LSButton.BoundEvent="UIShowInfo"
                                  ContentTemplate="{StaticResource ControllerButtonHint}"
                                  Content="{Binding CurrentPlayer.UIData.InputEvents, ConverterParameter=UIShowInfo, Converter={StaticResource FindInputEventConverter}}"
-                                 Tag="{Binding Source='h2a8cab0cgbfb8g4890gbfbdg5a9426e29457', Converter={StaticResource TranslatedStringConverter}}" TapTime="{StaticResource DefaultButtonTapTime}"/>
+                                 Tag="{Binding Source='hf8dd4c2fg97e0g4ccdgac1ag3cd1fe5060ef', Converter={StaticResource TranslatedStringConverter}}" TapTime="{StaticResource DefaultButtonTapTime}"/>
 
                         <ls:LSInputBinding x:Name="PinTooltipBinding" Style="{StaticResource PinTooltipBindingStyle}"/>
 
                         <!-- Add or remove prepared spell -->
-                        <ls:LSButton x:Name="PrepareButton" VerticalAlignment="Bottom" Margin="10,0" Command="{Binding ToggleCharacterAction}" CommandParameter="{Binding FocusedElement.DataContext, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" ls:LSButton.BoundEvent="UIAccept" ContentTemplate="{StaticResource ControllerButtonHint}" Content="{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIAccept'}" Tag="{Binding Source='hc5326054gad2cg4afeg8a50g54d4a4a456b6', Converter={StaticResource TranslatedStringConverter}}" Visibility="Collapsed" IsEnabled="False"/>
+                        <ls:LSButton x:Name="PrepareButton" VerticalAlignment="Bottom" 
+                                     Command="{Binding ToggleCharacterAction}" 
+                                     CommandParameter="{Binding FocusedElement.DataContext, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" 
+                                     ls:LSButton.BoundEvent="UIAccept" 
+                                     ContentTemplate="{StaticResource ControllerButtonHint}" 
+                                     Content="{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIAccept'}" 
+                                     Tag="{Binding Source='hc5326054gad2cg4afeg8a50g54d4a4a456b6', Converter={StaticResource TranslatedStringConverter}}" 
+                                     Visibility="Collapsed" IsEnabled="False"/>
 
-                        <ls:LSButton x:Name="CloseButton" VerticalAlignment="Bottom" Margin="10,0" Command="{Binding CustomEvent}" CommandParameter="CloseWidget" ls:LSButton.BoundEvent="UICancel" ContentTemplate="{StaticResource ControllerButtonHint}" Content="{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UICancel'}" Tag="{Binding Source='h6fefa28bg2149g4cacga071gd95b236b2d0b',Converter={StaticResource TranslatedStringConverter}}" Visibility="{Binding Visibility, ElementName=BackButton, Converter={StaticResource InvertVisibilityConverter}}"/>
+                        <ls:LSButton x:Name="CloseButton" VerticalAlignment="Bottom" 
+                                     Command="{Binding CustomEvent}" 
+                                     CommandParameter="CloseWidget" 
+                                     ls:LSButton.BoundEvent="UICancel" 
+                                     ContentTemplate="{StaticResource ControllerButtonHint}" 
+                                     Content="{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UICancel'}" 
+                                     Tag="{Binding Source='h6fefa28bg2149g4cacga071gd95b236b2d0b',Converter={StaticResource TranslatedStringConverter}}" 
+                                     Visibility="{Binding Visibility, ElementName=BackButton, Converter={StaticResource InvertVisibilityConverter}}"/>
 
-                        <ls:LSButton x:Name="BackButton" VerticalAlignment="Bottom" Margin="10,0" ls:LSButton.BoundEvent="UICancel" ContentTemplate="{StaticResource ControllerButtonHint}" Content="{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UICancel'}" Tag="{Binding Source='hfe928c0dgb014g4eb2g8c52g6ed43b026e20',Converter={StaticResource TranslatedStringConverter}}" Visibility="Collapsed">
+                        <ls:LSButton x:Name="BackButton" VerticalAlignment="Bottom" 
+                                     ls:LSButton.BoundEvent="UICancel" 
+                                     ContentTemplate="{StaticResource ControllerButtonHint}" 
+                                     Content="{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UICancel'}" 
+                                     Tag="{Binding Source='hfe928c0dgb014g4eb2g8c52g6ed43b026e20',Converter={StaticResource TranslatedStringConverter}}" 
+                                     Visibility="Collapsed">
                             <b:Interaction.Triggers>
                                 <b:EventTrigger EventName="LSButtonPressed">
                                     <b:ChangePropertyAction TargetName="ShowPreparedSpellsButton" PropertyName="IsChecked" Value="False"/>
@@ -941,7 +990,7 @@
                     <ls:LSButton VerticalAlignment="Center" BoundEvent="CharacterCreationRotateLeft">
                         <b:Interaction.Triggers>
                             <b:EventTrigger EventName="LSButtonPressed">
-                                <b:ChangePropertyAction PropertyName="RotationSpeed" Value="1.2" TargetName="PaperDoll"/>
+                                <b:ChangePropertyAction PropertyName="RotationSpeed" Value="1.8" TargetName="PaperDoll"/>
                             </b:EventTrigger>
                             <b:EventTrigger EventName="LSButtonReleased" >
                                 <b:ChangePropertyAction PropertyName="RotationSpeed" Value="0" TargetName="PaperDoll"/>
@@ -951,10 +1000,32 @@
                     <ls:LSButton VerticalAlignment="Center"  BoundEvent="CharacterCreationRotateRight">
                         <b:Interaction.Triggers>
                             <b:EventTrigger EventName="LSButtonPressed">
-                                <b:ChangePropertyAction PropertyName="RotationSpeed" Value="-1.2" TargetName="PaperDoll"/>
+                                <b:ChangePropertyAction PropertyName="RotationSpeed" Value="-1.8" TargetName="PaperDoll"/>
                             </b:EventTrigger>
                             <b:EventTrigger EventName="LSButtonReleased" >
                                 <b:ChangePropertyAction PropertyName="RotationSpeed" Value="0" TargetName="PaperDoll"/>
+                            </b:EventTrigger>
+                        </b:Interaction.Triggers>
+                    </ls:LSButton>
+                    <ls:LSButton VerticalAlignment="Center" BoundEvent="CameraZoomIn">
+                        <b:Interaction.Triggers>
+                            <b:EventTrigger EventName="LSButtonPressed">
+
+                                <b:ControlStoryboardAction Storyboard="{StaticResource ZoomCharacterIn}"/>
+
+                                <b:ChangePropertyAction TargetName="PaperDoll" PropertyName="Margin" Value="{StaticResource PaperDollZoomIn}" />
+                                <b:ChangePropertyAction TargetName="PaperDoll" PropertyName="Zoom" Value="1.2" />
+
+                            </b:EventTrigger>
+                        </b:Interaction.Triggers>
+                    </ls:LSButton>
+                    <ls:LSButton VerticalAlignment="Center" BoundEvent="CameraZoomOut">
+                        <b:Interaction.Triggers>
+                            <b:EventTrigger EventName="LSButtonPressed">
+                                <b:ControlStoryboardAction Storyboard="{StaticResource ZoomCharacterOut}"/>
+
+                                <b:ChangePropertyAction TargetName="PaperDoll" PropertyName="Margin" Value="{StaticResource PaperDollZoomOut}" />
+                                <b:ChangePropertyAction TargetName="PaperDoll" PropertyName="Zoom" Value="0.2" />
                             </b:EventTrigger>
                         </b:Interaction.Triggers>
                     </ls:LSButton>
@@ -963,10 +1034,12 @@
             </Grid>
 
             <ControlTemplate.Triggers>
+                <DataTrigger Binding="{Binding ShowUIElementTooltip}" Value="True">
+                    <Setter TargetName="ToggleTooltips" Property="Tag" Value="{Binding Source='hb33ec471gd611g4ee3gbbffg699af8f79167', Converter={StaticResource TranslatedStringConverter}}"/>
+                </DataTrigger>
                
                 <MultiDataTrigger>
                     <MultiDataTrigger.Conditions>
-                        <Condition Binding="{Binding SelectedItem.Class, ElementName=Navigation, Converter={StaticResource NullToBoolTrueConverter}}" Value="False"/>
                         <Condition Binding="{Binding SelectedItem.Class.MustPrepareSpells, ElementName=Navigation}" Value="True"/>
                         <Condition Binding="{Binding FilteredItems.Count, ElementName=SpellLevelsGroupFilter, Converter={StaticResource GreaterThanConverter},ConverterParameter=0}" Value="True"/>
                     </MultiDataTrigger.Conditions>
@@ -977,7 +1050,6 @@
 
                 <MultiDataTrigger>
                     <MultiDataTrigger.Conditions>
-                        <Condition Binding="{Binding SelectedItem.Class, ElementName=Navigation, Converter={StaticResource NullToBoolTrueConverter}}" Value="False"/>
                         <Condition Binding="{Binding SelectedItem.Class.MustPrepareSpells, ElementName=Navigation}" Value="True"/>
                         <Condition Binding="{Binding IsChecked, ElementName=ShowPreparedSpellsButton}" Value="False"/>
                         <Condition Binding="{Binding CurrentPlayer.UIData.ActiveState}" Value="SpellBook"/>
@@ -988,7 +1060,6 @@
 
                 <MultiDataTrigger>
                     <MultiDataTrigger.Conditions>
-                        <Condition Binding="{Binding SelectedItem.Class, ElementName=Navigation, Converter={StaticResource NullToBoolTrueConverter}}" Value="False"/>
                         <Condition Binding="{Binding SelectedItem.Class.MustPrepareSpells, ElementName=Navigation}" Value="True"/>
                         <Condition Binding="{Binding FilteredItems.Count, ElementName=AllwaysPreparedActionsFilter, Converter={StaticResource GreaterThanConverter}, ConverterParameter=0}" Value="True"/>
                     </MultiDataTrigger.Conditions>
@@ -996,17 +1067,12 @@
                     <Setter TargetName="AlwaysPreparedList" Property="Visibility" Value="Visible"/>
                 </MultiDataTrigger>
 
-                <MultiDataTrigger>
-                    <MultiDataTrigger.Conditions>
-                        <Condition Binding="{Binding SelectedItem.Class, ElementName=Navigation, Converter={StaticResource NullToBoolTrueConverter}}" Value="False"/>
-                        <Condition Binding="{Binding SelectedItem.Class.CanLearnSpells, ElementName=Navigation}" Value="True"/>
-                    </MultiDataTrigger.Conditions>
+                <DataTrigger Binding="{Binding SelectedItem.Class.CanLearnSpells, ElementName=Navigation}" Value="True">
                     <Setter TargetName="LearnSpellsButton" Property="Visibility" Value="Visible"/>
-                </MultiDataTrigger>
+                </DataTrigger>
 
                 <MultiDataTrigger>
                     <MultiDataTrigger.Conditions>
-                        <Condition Binding="{Binding SelectedItem.Class, ElementName=Navigation, Converter={StaticResource NullToBoolTrueConverter}}" Value="False"/>
                         <Condition Binding="{Binding SelectedItem.Class.CanLearnSpells, ElementName=Navigation}" Value="True"/>
                         <Condition Binding="{Binding Layout}" Value="Common"/>
                         <Condition Binding="{Binding Data.AspectRatio, Converter={StaticResource LessThanConverter}, ConverterParameter=0.75}" Value="True"/>
@@ -1017,8 +1083,7 @@
 
                 <DataTrigger Binding="{Binding SelectedItem.Class, ElementName=Navigation, Converter={StaticResource NullToBoolTrueConverter}}" Value="False">
                     <Setter TargetName="CastInfo" Property="Visibility" Value="Visible"/>
-                    <Setter TargetName="PanelTitle" Property="Text" Value="{Binding SelectedItem.Class.ClassDisplayName, ElementName=Navigation}"/>
-                    <Setter TargetName="PanelSubTitle" Property="Text" Value="{Binding Source='h15329947gc691g4323gac0fge3fbcecb92d9', Converter={StaticResource TranslatedStringConverter}}"/>
+                    <Setter TargetName="PanelTitle" Property="Text" Value="{Binding Source='h15329947gc691g4323gac0fge3fbcecb92d9', Converter={StaticResource TranslatedStringConverter}}"/>
                     <Setter TargetName="PageIcon" Property="DataContext" Value="{Binding SelectedItem.Class, ElementName=Navigation}"/>
                     <Setter TargetName="PageIcon" Property="Style" Value="{DynamicResource ClassIconStyle}"/>
                     <Setter TargetName="RaceName" Property="Text">
@@ -1039,8 +1104,45 @@
                 <DataTrigger Binding="{Binding SelectedItem.SpellBookType, ElementName=Navigation}" Value="Tadpole">
                     <Setter TargetName="RaceName" Property="Text" Value="{Binding Source='h2d773583g5f0dg4737g93d5g324f4bcfe2ac', Converter={StaticResource TranslatedStringConverter}}"/>
                     <Setter TargetName="PanelTitle" Property="Text" Value="{Binding Source='h2d773583g5f0dg4737g93d5g324f4bcfe2ac', Converter={StaticResource TranslatedStringConverter}}"/>
-                    <Setter TargetName="PanelSubTitle" Property="Visibility" Value="Collapsed"/>
                     <Setter TargetName="PageIcon" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/PanelSelect_c/c_ico_illithidPowers_d.png"/>
+                </DataTrigger>
+
+                <!-- Spellbook Localized Titles -->
+                <DataTrigger Binding="{Binding SelectedItem.Class.IDString, ElementName=Navigation}" Value="Barbarian">
+                    <Setter TargetName="PanelTitle" Property="Text" Value="{Binding Source='he2b64912g09dfg401egad86g268f04a1a4a8', Converter={StaticResource TranslatedStringConverter}}"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding SelectedItem.Class.IDString, ElementName=Navigation}" Value="Bard">
+                    <Setter TargetName="PanelTitle" Property="Text" Value="{Binding Source='h74e37ee4g9d93g4c51gae38g8bb1105706c4', Converter={StaticResource TranslatedStringConverter}}"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding SelectedItem.Class.IDString, ElementName=Navigation}" Value="Cleric">
+                    <Setter TargetName="PanelTitle" Property="Text" Value="{Binding Source='hea496245g66feg46edga5d3g67412f3348a3', Converter={StaticResource TranslatedStringConverter}}"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding SelectedItem.Class.IDString, ElementName=Navigation}" Value="Druid">
+                    <Setter TargetName="PanelTitle" Property="Text" Value="{Binding Source='hb22cd9e3g4591g4370gb6dagdbed08ca6e2a', Converter={StaticResource TranslatedStringConverter}}"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding SelectedItem.Class.IDString, ElementName=Navigation}" Value="Fighter">
+                    <Setter TargetName="PanelTitle" Property="Text" Value="{Binding Source='h50ae50aeg387cg4183g8907g4af0fb97b1b1', Converter={StaticResource TranslatedStringConverter}}"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding SelectedItem.Class.IDString, ElementName=Navigation}" Value="Monk">
+                    <Setter TargetName="PanelTitle" Property="Text" Value="{Binding Source='he5201ce2g0a0dg4e30ga732g7e40d27d0c35', Converter={StaticResource TranslatedStringConverter}}"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding SelectedItem.Class.IDString, ElementName=Navigation}" Value="Paladin">
+                    <Setter TargetName="PanelTitle" Property="Text" Value="{Binding Source='h128c0875g0ce6g4935ga0ccgea9df4a6a94e', Converter={StaticResource TranslatedStringConverter}}"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding SelectedItem.Class.IDString, ElementName=Navigation}" Value="Ranger">
+                    <Setter TargetName="PanelTitle" Property="Text" Value="{Binding Source='he32bbb6eg9a05g42c6gaae4g969456c69447', Converter={StaticResource TranslatedStringConverter}}"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding SelectedItem.Class.IDString, ElementName=Navigation}" Value="Rogue">
+                    <Setter TargetName="PanelTitle" Property="Text" Value="{Binding Source='hdd92d50ag5cb0g4fc3ga80fga2366d3f4e16', Converter={StaticResource TranslatedStringConverter}}"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding SelectedItem.Class.IDString, ElementName=Navigation}" Value="Sorcerer">
+                    <Setter TargetName="PanelTitle" Property="Text" Value="{Binding Source='h13627d4cg4844g4a44gab42gb3c03d37b64a', Converter={StaticResource TranslatedStringConverter}}"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding SelectedItem.Class.IDString, ElementName=Navigation}" Value="Warlock">
+                    <Setter TargetName="PanelTitle" Property="Text" Value="{Binding Source='h4272f859g339ag4b31gb8fbgaf6ec7a8c53e', Converter={StaticResource TranslatedStringConverter}}"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding SelectedItem.Class.IDString, ElementName=Navigation}" Value="Wizard">
+                    <Setter TargetName="PanelTitle" Property="Text" Value="{Binding Source='h73638aaeg60ffg43d5gbb11g2237736ce715', Converter={StaticResource TranslatedStringConverter}}"/>
                 </DataTrigger>
 
                 <Trigger Property="SelectedIndex" SourceName="Navigation" Value="-1">
@@ -1053,6 +1155,21 @@
 
                 <DataTrigger Binding="{Binding Path=FocusedElement.DataContext, ElementName=SpellBook_c, Converter={StaticResource TypeConverter}}" Value="ls.VMCharacterAction">
                     <Setter TargetName="PrepareButton" Property="IsEnabled" Value="True"/>
+                </DataTrigger>
+
+                <!-- Replaceable spells message -->
+                <DataTrigger Binding="{Binding SelectedItem.Class.IDString, ElementName=Navigation}" Value="Bard">
+                    <Setter TargetName="ReplaceableSpellsNote" Property="Visibility" Value="Visible"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding SelectedItem.Class.IDString, ElementName=Navigation}" Value="Warlock">
+                    <Setter TargetName="ReplaceableSpellsNote" Property="Visibility" Value="Visible"/>
+                    <Setter TargetName="ReplaceableSpellsNote" Property="ls:TextBlockFormatter.SourceText" Value="{Binding Source=he5c71af9g2194g4b47g9613g79eeef5ccbea, Converter={StaticResource TranslatedStringConverter}}"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding SelectedItem.Class.IDString, ElementName=Navigation}" Value="Ranger">
+                    <Setter TargetName="ReplaceableSpellsNote" Property="Visibility" Value="Visible"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding SelectedItem.Class.IDString, ElementName=Navigation}" Value="Sorcerer">
+                    <Setter TargetName="ReplaceableSpellsNote" Property="Visibility" Value="Visible"/>
                 </DataTrigger>
 
                 <MultiDataTrigger>
@@ -1121,7 +1238,6 @@
 
                 <MultiDataTrigger>
                     <MultiDataTrigger.Conditions>
-                        <Condition Binding="{Binding SelectedItem.Class, ElementName=Navigation, Converter={StaticResource NullToBoolTrueConverter}}" Value="False"/>
                         <Condition Binding="{Binding SelectedItem.Class.MustPrepareSpells, ElementName=Navigation}" Value="True"/>
                         <Condition Binding="{Binding FilteredItems.Count, ElementName=SpellLevelsGroupFilter, Converter={StaticResource GreaterThanConverter},ConverterParameter=0}" Value="True"/>
                     </MultiDataTrigger.Conditions>
@@ -1149,7 +1265,7 @@
                     <Setter TargetName="InfoPanel" Property="Margin" Value="0,0,56,0"/>
                     <Setter TargetName="InfoPanel" Property="Width" Value="800"/>
                     <Setter TargetName="LeftColumn" Property="Width" Value="440"/>
-                    <Setter TargetName="PaperDoll" Property="Margin" Value="-100,0,0,0"/>
+                    <Setter TargetName="PaperDollGrid" Property="Margin" Value="300,60,0,0"/>
                     <Setter TargetName="PaperDoll" Property="Height" Value="2200"/>
                     <Setter TargetName="CastInfo" Property="Orientation" Value="Vertical"/>
                     <Setter TargetName="PrepareSpellsInfo" Property="Visibility" Value="Visible"/>
@@ -1248,38 +1364,6 @@
                     <Setter TargetName="LeftColumn" Property="Width" Value="80"/>
                     <Setter TargetName="ButtonHints" Property="Style" Value="{StaticResource ButtonHint.Container.Left}"/>
                 </DataTrigger>
-
-
-                <!-- Only show the button hints if we're the active UI -->
-
-                <DataTrigger Binding="{Binding CurrentPlayer.UIData.ActiveState}" Value="SpellBook">
-                    <Setter TargetName="ButtonHints" Property="Visibility" Value="Visible"/>
-                    <Setter TargetName="ButtonHints" Property="IsEnabled" Value="True"/>
-                    <Setter TargetName="NavigationLeftButton" Property="Visibility" Value="Visible"/>
-                    <Setter TargetName="NavigationLeftButton" Property="IsEnabled" Value="True"/>
-                    <Setter TargetName="NavigationRightButton" Property="Visibility" Value="Visible"/>
-                    <Setter TargetName="NavigationRightButton" Property="IsEnabled" Value="True"/>
-                </DataTrigger>
-
-                <!-- Block Inputs When Party Line is focused -->
-                <DataTrigger Binding="{Binding CurrentPlayer.UIData.IsCharacterSelectOpen}" Value="True">
-                    <Setter TargetName="Root" Property="IsEnabled" Value="False"/>
-                    <DataTrigger.EnterActions>
-                        <BeginStoryboard>
-                            <Storyboard>
-                                <DoubleAnimation Storyboard.TargetName="ButtonHints" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.2"/>
-                            </Storyboard>
-                        </BeginStoryboard>
-                    </DataTrigger.EnterActions>
-                    <DataTrigger.ExitActions>
-                        <BeginStoryboard>
-                            <Storyboard>
-                                <DoubleAnimation Storyboard.TargetName="ButtonHints" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.2"/>
-                            </Storyboard>
-                        </BeginStoryboard>
-                    </DataTrigger.ExitActions>
-                </DataTrigger>
-                
             </ControlTemplate.Triggers>
         </ControlTemplate>
     </ls:UIWidget.Template>

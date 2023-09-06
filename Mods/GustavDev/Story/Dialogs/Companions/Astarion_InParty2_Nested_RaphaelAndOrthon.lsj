@@ -1,7 +1,7 @@
 {
    "save" : {
       "header" : {
-         "version" : "4.0.9.331"
+         "version" : "4.0.10.400"
       },
       "regions" : {
          "dialog" : {
@@ -2852,7 +2852,20 @@
                            }
                         ],
                         "endnode" : {"type" : "bool", "value" : true},
-                        "setflags" : [ {} ],
+                        "setflags" : [
+                           {
+                              "flaggroup" : [
+                                 {
+                                    "flag" : [
+                                       {
+                                          "UUID" : {"type" : "FixedString", "value" : "30819c8d-b39d-42e7-acd1-2a8c2c309994"},
+                                          "paramval" : {"type" : "int32", "value" : 1},
+                                          "value" : {"type" : "bool", "value" : false}
+                                       }
+                                    ],"type" : {"type" : "FixedString", "value" : "Object"}}
+                              ]
+                           }
+                        ],
                         "speaker" : {"type" : "int32", "value" : 0}
                      },
                      {
@@ -19301,7 +19314,7 @@
             ]
          },
          "editorData" : {
-            "HowToTrigger" : {"type" : "LSString", "value" : "Recruit Companion Astarion.\r\nSpeak to companion Astarion."},
+            "HowToTrigger" : {"type" : "LSString", "value" : "Recruit Companion Astarion.\r\nSpeak to companion Astarion.\r\nThat's it."},
             "defaultAttitudes" : [ {} ],
             "defaultEmotions" : [ {} ],
             "isImportantForStagings" : [ {} ],

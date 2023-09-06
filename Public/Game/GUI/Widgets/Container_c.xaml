@@ -26,7 +26,7 @@
                 <BitmapImage x:Key="ContainerDivider" UriSource="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared_c/c_container_divider.png" />
 
                 <ControlTemplate x:Key="Template.InventoryContainer" TargetType="ListBoxItem">
-                    <ls:LSEntityObject x:Name="CellRoot" Context="{Binding (ls:ContextMenuService.Context) , RelativeSource={RelativeSource Mode=TemplatedParent} }" ls:ContextMenuService.GenerateEnabled="False" DataContext="{Binding Object}" EntityRef="{Binding EntityHandle}" Background="{TemplateBinding Background}" ToolTipService.Placement="Right" Focusable="True" ls:MoveFocus.Focusable="True" Tag="">
+                    <ls:LSEntityObject x:Name="CellRoot" Context="{Binding (ls:ContextMenuService.Context) , RelativeSource={RelativeSource Mode=TemplatedParent}}" ls:ContextMenuService.GenerateEnabled="False" DataContext="{Binding Object}" EntityRef="{Binding EntityHandle}" Background="{TemplateBinding Background}" ToolTipService.Placement="Right" ToolTipService.HorizontalOffset="0" ToolTipService.VerticalOffset="110" Focusable="True" ls:MoveFocus.Focusable="True" Tag="">
                         <ls:LSEntityObject.ToolTip>
                             <ls:LSTooltip Content="{Binding DataContext.Object,RelativeSource={RelativeSource Mode=TemplatedParent}}"/>
                         </ls:LSEntityObject.ToolTip>
@@ -70,11 +70,14 @@
                     <b:PropertyChangedTrigger Binding="{Binding FocusedElement, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}">
                         <b:InvokeCommandAction Command="{Binding ShowTooltipOnUIElement}" CommandParameter="{Binding Path=FocusedElement, ElementName=Container_c}"/>
                     </b:PropertyChangedTrigger>
+                    <b:DataTrigger Binding="{Binding HasInputEnabled, ElementName=Container_c}" Value="True">
+                        <b:InvokeCommandAction Command="{Binding ShowTooltipOnUIElement}" CommandParameter="{Binding FocusedElement, ElementName=Container_c}"/>
+                    </b:DataTrigger>
 
-                    <b:DataTrigger Binding="{Binding IsKeyboardFocusWithin, ElementName=ContainerListBox}" Value="False">
+                    <b:DataTrigger Binding="{Binding (ls:MoveFocus.IsKeyboardFocusWithin), ElementName=ContainerListBox}" Value="False">
                         <b:ChangePropertyAction TargetName="ContainerListBox" PropertyName="SelectedIndex" Value="-1" />
                     </b:DataTrigger>
-                    <b:DataTrigger Binding="{Binding IsKeyboardFocusWithin, ElementName=CharacterListBox}" Value="False">
+                    <b:DataTrigger Binding="{Binding (ls:MoveFocus.IsKeyboardFocusWithin), ElementName=CharacterListBox}" Value="False">
                         <b:ChangePropertyAction TargetName="CharacterListBox" PropertyName="SelectedIndex" Value="-1" />
                     </b:DataTrigger>
                 </b:Interaction.Triggers>
@@ -240,7 +243,7 @@
                                                                        VerticalSpacing="{DynamicResource ContInvSpacing}" DisableScrolling="False"  HorizontalSpacing="{DynamicResource ContInvSpacing}"
                                                                        ActionUpEvent="UIUp" ActionDownEvent="UIDown" ActionRightEvent="UIRight" ActionLeftEvent="UILeft"
                                                                        UseWidgetNavigation="True" WidgetChainedNavigation="True"
-                                                                       ls:MoveFocus.InternalFocusable="True">
+                                                                       ls:MoveFocus.InternalFocusable="True"  WidgetNavigationMarkerBrush="{StaticResource NavigableGridMarkerBrush}">
                                                             </ls:LSGrid>
                                                         </ItemsPanelTemplate>
                                                     </Setter.Value>
@@ -342,7 +345,7 @@
                                         <b:Interaction.Triggers>
                                             <b:EventTrigger EventName="Loaded">
                                                 <ls:SetMoveFocusAction TargetName="Container_c" FocusElement="{Binding ElementName=ContainerListBox}"/>
-                                                <b:InvokeCommandAction Command="{Binding EnableTooltipOnUIElement}"/>
+                                               
                                             </b:EventTrigger>
                                             <!--using weightTextHolder cause it gets it's IsEnabled set after the lists so we can be sure the lsgrids are focussable-->
                                             <b:DataTrigger Binding="{Binding ElementName=weightTextHolder, Path=IsEnabled}" Value="True">
@@ -431,7 +434,8 @@
                              Tag="{Binding Source='h1cc89290gfa2eg406cg9e5bg75a612b65633', Converter={StaticResource TranslatedStringConverter}}" 
                              Command="{Binding DataContext.TakeAllAndCloseCommand.ActionCommand, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"
                              BoundEvent="UITakeAll"
-                             HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,452" />
+                             HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,452" 
+                />
 
                 <Grid x:Name="ButtonHolder" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="24,0,0,28" Panel.ZIndex="8" Tag="Main">
                     <Grid.Resources>
@@ -457,6 +461,15 @@
                             </ls:LSButton>
                             <TextBlock x:Name="PickUpButtonText" FontWeight="Bold" Text="{Binding ElementName=ToggleMultiSelectButton,Path=Content.Count,StringFormat={}({0})}" VerticalAlignment="Center" Visibility="Collapsed"/>
                         </StackPanel>
+                        <ls:LSButton x:Name="DropButton" 
+                                     Content = "{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIAccept'}"
+                                     Tag="{Binding Source='h4ca4e695g98ebg48beg96b4g5cbf484e640d', Converter={StaticResource TranslatedStringConverter}}"
+                                     Command="{Binding DropGameObject}"
+                                     CommandParameter="{Binding FocusedElement.DataContext, ElementName=Container_c}"
+                                     BoundEvent="UIAccept"
+                                     Visibility="Collapsed"
+                                     IsEnabled="{Binding (ls:MoveFocus.IsKeyboardFocusWithin),ElementName=ContainerListBox}"
+                                     TapTime="{StaticResource DefaultButtonTapTime}" />
                         <ls:LSButton x:Name="ActionButton" 
 	                                 Content = "{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIAccept'}"
 	                                 Tag="{Binding  FocusedElement.DataContext, ElementName=Container_c, Converter={StaticResource GetUseActionConverter}}" 
@@ -510,13 +523,6 @@
                                      BoundEvent="ContextMenu"
                                      Visibility="{Binding FocusedElement, ElementName=Container_c,Converter={StaticResource NullToCollapsedConverter}}"/>
 
-                        <ls:LSButton Content = "{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIShowInfo'}"
-                                     Tag="{Binding Source='h07aaca85g63dbg4e60g88a2g0590077ea7e2',Converter={StaticResource TranslatedStringConverter}}" 
-                                     Command="{Binding ToggleTooltipOnUIElement}" 
-                                     BoundEvent="UIShowInfo"
-                                     CommandParameter="{Binding Path=FocusedElement, ElementName=Container_c}"
-                                     IsEnabled="{Binding  FocusedElement.DataContext, ElementName=Container_c, Converter={StaticResource NullToBoolFalseConverter}}"/>
-
                         <ls:LSButton Content = "{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UISort'}"
                                      BoundEvent="UISort"
                                      Tag="{Binding Source='hce314911gcae3g4345gbc5ag201bc976a594',Converter={StaticResource TranslatedStringConverter}}"
@@ -527,6 +533,14 @@
                                 </b:EventTrigger>
                             </b:Interaction.Triggers>
                         </ls:LSButton>
+
+                        <ls:LSButton x:Name="ToggleTooltips"
+                                     Content = "{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIShowInfo'}"
+                                     Tag="{Binding Source='hf8dd4c2fg97e0g4ccdgac1ag3cd1fe5060ef',Converter={StaticResource TranslatedStringConverter}}" 
+                                     Command="{Binding ToggleTooltipOnUIElement}" 
+                                     BoundEvent="UIShowInfo"
+                                     CommandParameter="{Binding Path=FocusedElement, ElementName=Container_c}"
+                                     IsEnabled="{Binding  FocusedElement.DataContext, ElementName=Container_c, Converter={StaticResource NullToBoolFalseConverter}}"/>
 
 	                    <ls:LSButton x:Name="CancelMultiSelectButton"
 	                                 BoundEvent="UICancel"
@@ -588,6 +602,10 @@
                 </DataTrigger>
                 <DataTrigger Binding="{Binding SelectedItems.Count,ElementName=ContainerListBox,Converter={StaticResource GreaterThanConverter},ConverterParameter=1}" Value="True">
                     <Setter TargetName="ContainerListBox" Property="ls:MultiSelect.IsEnabled" Value="True"/>
+                </DataTrigger>
+
+                <DataTrigger Binding="{Binding ShowUIElementTooltip}" Value="True">
+                    <Setter TargetName="ToggleTooltips" Property="Tag" Value="{Binding Source='hb33ec471gd611g4ee3gbbffg699af8f79167', Converter={StaticResource TranslatedStringConverter}}"/>
                 </DataTrigger>
 
                 <DataTrigger Binding="{Binding CanMoveToContainer}" Value="False">
@@ -689,7 +707,23 @@
                     <Setter TargetName="ActionButton" Property="Visibility" Value="Visible"/>
                     <Setter TargetName="ActionButton" Property="IsEnabled" Value="True"/>
                 </MultiDataTrigger>
-               
+
+                <DataTrigger Binding="{Binding CurrentPlayer.UIData.CurrentContainer.IsAvatarContainer}" Value="True">
+                    <Setter TargetName="TakeAllBtn" Property="Visibility" Value="Collapsed"/>
+                    <Setter TargetName="PickUpButtonHolder" Property="Visibility" Value="Collapsed"/>
+                    <Setter TargetName="PlayerInvToggle" Property="Visibility" Value="Collapsed"/>
+                    <Setter TargetName="ToggleMultiSelectButton" Property="Visibility" Value="Collapsed"/>
+                    
+                </DataTrigger>
+                <MultiDataTrigger>
+                    <MultiDataTrigger.Conditions>
+                        <Condition Binding="{Binding CurrentPlayer.UIData.CurrentContainer.IsAvatarContainer}" Value="True"/>
+                        <Condition Binding="{Binding (ls:MoveFocus.IsKeyboardFocusWithin), ElementName=ContainerListBox}" Value="True"/>
+                        <Condition Binding="{Binding FocusedElement.DataContext.Type, ElementName=Container_c}" Value="Character"/>
+                    </MultiDataTrigger.Conditions>
+                    <Setter TargetName="DropButton" Property="Visibility" Value="Visible"/>
+                </MultiDataTrigger>
+
                 <!--ButtonHolder Triggers End-->
 
                 <Trigger SourceName="CharacterListBox" Property="ls:MultiSelect.IsEnabled" Value="True">

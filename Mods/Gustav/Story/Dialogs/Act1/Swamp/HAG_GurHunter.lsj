@@ -1,7 +1,7 @@
 {
    "save" : {
       "header" : {
-         "version" : "4.0.9.323"
+         "version" : "4.0.10.400"
       },
       "regions" : {
          "dialog" : {
@@ -6753,7 +6753,7 @@
                                        {
                                           "UUID" : {"type" : "FixedString", "value" : "7c64a986-6bfd-ae42-ba29-b35b7f2cd6cf"},"value" : {"type" : "bool", "value" : true}},
                                        {
-                                          "UUID" : {"type" : "FixedString", "value" : "7dbd9bb9-f0fd-c786-9860-256b9938bb31"},"value" : {"type" : "bool", "value" : true}}
+                                          "UUID" : {"type" : "FixedString", "value" : "90aeb953-d39f-413a-81ba-55df6672d1ca"},"value" : {"type" : "bool", "value" : true}}
                                     ],"type" : {"type" : "FixedString", "value" : "Global"}}
                               ]
                            }
@@ -14269,7 +14269,7 @@
                                        {
                                           "UUID" : {"type" : "FixedString", "value" : "7c64a986-6bfd-ae42-ba29-b35b7f2cd6cf"},"value" : {"type" : "bool", "value" : true}},
                                        {
-                                          "UUID" : {"type" : "FixedString", "value" : "7dbd9bb9-f0fd-c786-9860-256b9938bb31"},"value" : {"type" : "bool", "value" : false}}
+                                          "UUID" : {"type" : "FixedString", "value" : "90aeb953-d39f-413a-81ba-55df6672d1ca"},"value" : {"type" : "bool", "value" : false}}
                                     ],"type" : {"type" : "FixedString", "value" : "Global"}}
                               ]
                            }
@@ -14447,7 +14447,7 @@
                                        {
                                           "UUID" : {"type" : "FixedString", "value" : "7c64a986-6bfd-ae42-ba29-b35b7f2cd6cf"},"value" : {"type" : "bool", "value" : true}},
                                        {
-                                          "UUID" : {"type" : "FixedString", "value" : "7dbd9bb9-f0fd-c786-9860-256b9938bb31"},"value" : {"type" : "bool", "value" : false}}
+                                          "UUID" : {"type" : "FixedString", "value" : "90aeb953-d39f-413a-81ba-55df6672d1ca"},"value" : {"type" : "bool", "value" : false}}
                                     ],"type" : {"type" : "FixedString", "value" : "Global"}}
                               ]
                            }
@@ -16802,16 +16802,10 @@
                                  {
                                     "flag" : [
                                        {
-                                          "UUID" : {"type" : "FixedString", "value" : "04af58ff-c1ea-0e2d-b1c5-925ad1f82a55"},"value" : {"type" : "bool", "value" : true}}
-                                    ],"type" : {"type" : "FixedString", "value" : "Global"}},
-                                 {
-                                    "flag" : [
+                                          "UUID" : {"type" : "FixedString", "value" : "04af58ff-c1ea-0e2d-b1c5-925ad1f82a55"},"value" : {"type" : "bool", "value" : true}},
                                        {
-                                          "UUID" : {"type" : "FixedString", "value" : "a70fe183-6473-40fb-8564-4edf4239069d"},
-                                          "paramval" : {"type" : "int32", "value" : 1},
-                                          "value" : {"type" : "bool", "value" : true}
-                                       }
-                                    ],"type" : {"type" : "FixedString", "value" : "Quest"}}
+                                          "UUID" : {"type" : "FixedString", "value" : "f9d1a178-f643-480f-bc76-86ef1145dc7c"},"value" : {"type" : "bool", "value" : true}}
+                                    ],"type" : {"type" : "FixedString", "value" : "Global"}}
                               ]
                            }
                         ],
@@ -18037,7 +18031,7 @@
                                        {
                                           "UUID" : {"type" : "FixedString", "value" : "7c64a986-6bfd-ae42-ba29-b35b7f2cd6cf"},"value" : {"type" : "bool", "value" : true}},
                                        {
-                                          "UUID" : {"type" : "FixedString", "value" : "7dbd9bb9-f0fd-c786-9860-256b9938bb31"},"value" : {"type" : "bool", "value" : false}}
+                                          "UUID" : {"type" : "FixedString", "value" : "90aeb953-d39f-413a-81ba-55df6672d1ca"},"value" : {"type" : "bool", "value" : false}}
                                     ],"type" : {"type" : "FixedString", "value" : "Global"}}
                               ]
                            }
@@ -28038,6 +28032,7 @@
                            }
                         ],
                         "Tags" : [ {} ],
+                        "TradeMode" : {"type" : "uint8", "value" : 1},
                         "UUID" : {"type" : "FixedString", "value" : "cea1e630-ab87-b7de-3261-ee7582c11272"},
                         "checkflags" : [ {} ],
                         "children" : [
@@ -30127,6 +30122,7 @@
                            }
                         ],
                         "Tags" : [ {} ],
+                        "TradeMode" : {"type" : "uint8", "value" : 1},
                         "UUID" : {"type" : "FixedString", "value" : "e820c0c8-227f-7d9b-006b-3552c954e351"},
                         "checkflags" : [ {} ],
                         "children" : [ {} ],
@@ -32011,7 +32007,7 @@
             ]
          },
          "editorData" : {
-            "HowToTrigger" : {"type" : "LSString", "value" : "Repro steps:\r\n1) To trigger Astarion's branch:\r\n1. Start the game\r\n2. Make sure Astarion's not in party\r\n3. SetGlobalOsirisFlag ORI_Astarion_Knows_Vampireness\r\n- goto -19.11, 1.99, 255.22. The swamp illusion check will trigger.\r\n4. Speak to Gandrel. He will eventually mention he's hunting someone (Astarion). Tell him you don't know who Astarion is. \r\n5. After dialog ends, add Astarion into party\r\n6. Speak to Gandrel again.\r\n7. Astarion will make sarcastic remarks about the creature Gandrel is hunting. Choose to end the dialog peacefully and leave\r\n8. Talk to Gandrel again. This time choose to give up Astarion to him. \r\n\r\n2) Meeting Gandrel after dealing with Hag:\r\n1. Meet the Hag, fight her and spare her life\r\n2. goto -27, 5, 241 \r\n3. Speak to Gandrel"},
+            "HowToTrigger" : {"type" : "LSString", "value" : "Repro steps:\r\n1) To trigger Astarion's branch:\r\n1. Start the game\r\n2. Make sure Astarion's not in party\r\n3. SetGlobalOsirisFlag ORI_Astarion_Knows_Vampireness\r\n- goto -19.11, 1.99, 255.22. The swamp illusion check will trigger.\r\n4. Speak to Gandrel. He will eventually mention he's hunting someone (Astarion). Tell him you don't know who Astarion is. \r\n5. After dialog ends, add Astarion into party\r\n6. Speak to Gandrel again.\r\n7. Astarion will make sarcastic remarks about the creature Gandrel is hunting. Choose to end the dialog peacefully and leave\r\n8. Talk to Gandrel again. This time choose to give up Astarion to him. \r\n\r\n2) Meeting Gandrel after dealing with Hag:\r\n1. Meet the Hag, fight her and spare her life\r\n2. goto -27, 5, 241 \r\n3. Speak to Gandrel."},
             "defaultAttitudes" : [
                {
                   "data" : [

@@ -10,6 +10,9 @@
 
     <BitmapImage x:Key="ScreenshotHolder" UriSource="pack://application:,,,/GustavNoesisGUI;component/Assets/SaveLoad/frame_screenshot.png"/>
     <BitmapImage x:Key="LineSeparator" UriSource="pack://application:,,,/GustavNoesisGUI;component/Assets/SaveLoad_c/line_preview.png"/>
+    <System:Double x:Key="PresenterWidth">1600</System:Double>
+    <Thickness x:Key="SavefileMargin">0,120,0,0</Thickness>
+    <Thickness x:Key="PresenterMargin">0,260,0,0</Thickness>
 
     <!-- Message box to ensure user wants to delete a savegame -->
     <ls:LSMessageBoxData x:Key="MessageBoxSaveDelete"
@@ -64,6 +67,49 @@
             <MultiBinding Converter="{StaticResource ParameterizedTranslatedStringConverter}">
                 <Binding Source="h66937a39g1904g45a6gae4ag8fad832cc5ee"/>
                 <Binding Path="DataContext.SelectedPlaythrough.ProtagonistName" RelativeSource="{RelativeSource AncestorType={x:Type ls:UIWidget}}"/>
+            </MultiBinding>
+        </ls:LSMessageBoxData.Text>
+    </ls:LSMessageBoxData>
+
+    <!-- Message boxes to ensure user wants to delete all the saves of a campaign (except latest) and confirming this action -->
+    <ls:LSMessageBoxData x:Key="MessageBoxSaveDeleteCampaignButLatestConfirmation"
+                         Title="{Binding Source='h9c2809d8g833dg4deagb0d9g5f0ab199cb41', Converter={StaticResource TranslatedStringConverter}}"
+                         UUID="UUID">
+        <ls:LSMessageBoxData.Actions>
+            <ls:LSGameCommandData ActionName="{Binding Source='hf52bf842g05beg48dega717gca15b3678e0e', Converter={StaticResource TranslatedStringConverter}}"
+                                  Command="{Binding DataContext.DoDeleteAllCampaignButLatest, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"
+                                  BoundInput="{Binding DataContext.CurrentPlayer.UIData.InputEvents, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIMessageBoxA'}"/>
+            <ls:LSGameCommandData ActionName="{Binding Source='heded8384gb4f5g439dg9883g5cf950b2bbfc', Converter={StaticResource TranslatedStringConverter}}" 
+                                  Command="{Binding DataContext.CustomEvent, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"
+                                  CommandParameter="CloseMessageBox"
+                                  BoundInput="{Binding DataContext.CurrentPlayer.UIData.InputEvents, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIMessageBoxB'}"/>
+        </ls:LSMessageBoxData.Actions>
+        <ls:LSMessageBoxData.Text>
+            <MultiBinding Converter="{StaticResource ParameterizedTranslatedStringConverter}">
+                <Binding Source="hbf7cfa8dgfed9g42c3gaf6eg218a67d5be4b"/>
+                <Binding Path="DataContext.SelectedPlaythrough.LatestSave.Title" RelativeSource="{RelativeSource AncestorType={x:Type ls:UIWidget}}"/>
+            </MultiBinding>
+        </ls:LSMessageBoxData.Text>
+    </ls:LSMessageBoxData>
+
+    <ls:LSMessageBoxData x:Key="MessageBoxSaveDeleteCampaignButLatest"
+                         Title="{Binding Source='h9c2809d8g833dg4deagb0d9g5f0ab199cb41', Converter={StaticResource TranslatedStringConverter}}"
+                         UUID="UUID">
+        <ls:LSMessageBoxData.Actions>
+            <ls:LSGameCommandData ActionName="{Binding Source='hf52bf842g05beg48dega717gca15b3678e0e', Converter={StaticResource TranslatedStringConverter}}"
+                                  Command="{Binding DataContext.OpenConfirmationDeleteCampaignCommand, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"
+                                  CommandParameter="{StaticResource MessageBoxSaveDeleteCampaignButLatestConfirmation}"
+                                  BoundInput="{Binding DataContext.CurrentPlayer.UIData.InputEvents, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIMessageBoxA'}"/>
+            <ls:LSGameCommandData ActionName="{Binding Source='heded8384gb4f5g439dg9883g5cf950b2bbfc', Converter={StaticResource TranslatedStringConverter}}" 
+                                  Command="{Binding DataContext.CustomEvent, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"
+                                  CommandParameter="CloseMessageBox"
+                                  BoundInput="{Binding DataContext.CurrentPlayer.UIData.InputEvents, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIMessageBoxB'}"/>
+        </ls:LSMessageBoxData.Actions>
+        <ls:LSMessageBoxData.Text>
+            <MultiBinding Converter="{StaticResource ParameterizedTranslatedStringConverter}">
+                <Binding Source="ha66a404cga5efg404dg80adg1a462b40c8b8"/>
+                <Binding Path="DataContext.SelectedPlaythrough.ProtagonistName" RelativeSource="{RelativeSource AncestorType={x:Type ls:UIWidget}}"/>
+                <Binding Path="DataContext.SelectedPlaythrough.LatestSave.Title" RelativeSource="{RelativeSource AncestorType={x:Type ls:UIWidget}}"/>
             </MultiBinding>
         </ls:LSMessageBoxData.Text>
     </ls:LSMessageBoxData>
@@ -191,7 +237,7 @@
 
     <Style x:Key="SavegameItemTemplateStyle" TargetType="ListBoxItem">
         <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}"/>
-        <Setter Property="Width" Value="1200"/>
+        <Setter Property="Width" Value="1760"/>
         <Setter Property="Margin" Value="40,0,0,12"/>
         <Setter Property="Template">
             <Setter.Value>
@@ -201,7 +247,7 @@
                         <BitmapImage x:Key="CloudImage" UriSource="pack://application:,,,/GustavNoesisGUI;component/Assets/SaveLoad/ico_cloud.png"/>
                     </ControlTemplate.Resources>
 
-                    <ContentControl x:Name="ControlRoot" Style="{StaticResource FocusableContentControlStyle}" Tag="{Binding RelativeSource={RelativeSource AncestorType={x:Type Expander}}}" >
+                    <ContentControl x:Name="ControlRoot" Style="{StaticResource FocusableContentControlStyle}" Tag="{Binding RelativeSource={RelativeSource AncestorType={x:Type Expander}}}" MinHeight="86">
                         <Grid x:Name="GridRoot" Background="Transparent" Margin="48,0">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
@@ -209,7 +255,9 @@
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
 
-                            <TextBlock x:Name="Title" IsHitTestVisible="False" Text="{Binding Title}" Grid.Column="0" Foreground="{StaticResource LS_accent75TxtColor}" FontSize="{StaticResource ScaledDefaultFontSize}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+                            <TextBlock x:Name="Title" Foreground="{StaticResource LS_accent75TxtColor}" FontSize="{StaticResource ScaledDefaultFontSize}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" IsHitTestVisible="False">
+                                <Run Text="{Binding Title}"/><Run x:Name="Location" Text="{Binding LevelName, StringFormat='{} - {0}'}" Foreground="{StaticResource LS_baseTxtColor}"/>
+                            </TextBlock>
 
                             <Image x:Name="CrossIcon" Source="{StaticResource CrossImage}" Grid.Column="1" VerticalAlignment="Center" Stretch="None"/>
                             <Image x:Name="CloudIcon" Source="{StaticResource CloudImage}" Grid.Column="2" VerticalAlignment="Center" Stretch="None"/>
@@ -219,6 +267,10 @@
                         <Trigger Property="IsSelected" Value="True">
                             <Setter TargetName="Title" Property="Foreground" Value="{StaticResource LS_extraspecialTxtColor}"/>
                         </Trigger>
+
+                        <DataTrigger Binding="{Binding Type}" Value="Normal">
+                            <Setter TargetName="Location" Property="Text" Value="{x:Null}"/>
+                        </DataTrigger>
 
                         <DataTrigger Binding="{Binding CloudStatus}" Value="NoSync">
                             <Setter Property="Visibility" Value="Hidden" TargetName="CloudIcon"/>
@@ -285,9 +337,10 @@
     </ControlTemplate>
 
     <ControlTemplate x:Key="SavePresenterTemplate" d:DataContext="{x:Type ls:DCSavegames}">
-        <StackPanel Orientation="Vertical" Width="1920">
-            <TextBlock Text="{Binding SelectedSave.Title}" HorizontalAlignment="Center" FontSize="{StaticResource ScaledBigFontSize}" Style="{StaticResource SaveLoad.Title}" Margin="0,0,0,40" Height="180" TextWrapping="Wrap" TextAlignment="Center" MaxWidth="1600"/>
-
+        <StackPanel Orientation="Vertical" Width="{StaticResource PresenterWidth}">
+            <Grid MinHeight="180">
+                <TextBlock Text="{Binding SelectedSave.Title}" HorizontalAlignment="Center" FontSize="{StaticResource ScaledBigFontSize}" Style="{StaticResource SaveLoad.Title}" VerticalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center"/>
+            </Grid>
             <Grid x:Name="ScreenshotContainer">
                 <Image Source="{StaticResource ScreenshotHolder}" Stretch="None"/>
                 <Border Background="{Binding SelectedScreenshot}" Width="1262" Height="706" HorizontalAlignment="Center" VerticalAlignment="Center"/>
@@ -308,6 +361,9 @@
                 <StackPanel Grid.Column="1" VerticalAlignment="Top">
                     <TextBlock Text="{Binding Source='hbb2f0430g4914g4a10g8e16g64475b192e02', Converter={StaticResource TranslatedStringConverter}}" Style="{StaticResource SaveLoad.DetailsTextStyle}" Foreground="{StaticResource LS_baseTxtColor}"/>
                     <TextBlock Text="{Binding SelectedSave.PlayTimeString, Mode=OneWay}" Style="{StaticResource SaveLoad.DetailsTextStyle}" FontWeight="SemiBold"/>
+
+                    <TextBlock Text="{Binding Source='h46616d84g0ebag4586g9230gca30c54e7596', Converter={StaticResource TranslatedStringConverter}}" Style="{StaticResource SaveLoad.DetailsTextStyle}" Foreground="{StaticResource LS_baseTxtColor}" Margin="0,40,0,0"/>
+                    <TextBlock Text="{Binding SelectedSave.Difficulty, Mode=OneWay}" Style="{StaticResource SaveLoad.DetailsTextStyle}" FontWeight="SemiBold"/>
                 </StackPanel>
 
                 <Control Grid.Column="2" Template="{StaticResource SteamCloudSaveInfo}" DataContext="{Binding SelectedSave}" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="40,0"/>
@@ -318,9 +374,10 @@
     </ControlTemplate>
 
     <ControlTemplate x:Key="CampaignPresenterTemplate" d:DataContext="{x:Type ls:DCSavegames}">
-        <StackPanel Orientation="Vertical" Width="1920">
-            <TextBlock Text="{Binding SelectedPlaythrough.ProtagonistName}" HorizontalAlignment="Center" FontSize="{StaticResource ScaledBigFontSize}" Style="{StaticResource SaveLoad.Title}" Margin="0,0,0,40" Height="180" TextWrapping="Wrap" TextAlignment="Center"/>
-
+        <StackPanel Orientation="Vertical" Width="{StaticResource PresenterWidth}">
+            <Grid MinHeight="180">
+                <TextBlock Text="{Binding SelectedPlaythrough.ProtagonistName}" HorizontalAlignment="Center" FontSize="{StaticResource ScaledBigFontSize}" Style="{StaticResource SaveLoad.Title}" VerticalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center"/>
+            </Grid>
             <Grid x:Name="ScreenshotContainer">
                 <Image Source="{StaticResource ScreenshotHolder}" Stretch="None"/>
                 <Border Background="{Binding SelectedScreenshot}" Width="1262" Height="706" HorizontalAlignment="Center" VerticalAlignment="Center"/>
@@ -340,7 +397,7 @@
     </ControlTemplate>
 
     <Style x:Key="SaveGamesListStyle" TargetType="ItemsControl">
-        <Setter Property="Height" Value="1520"/>
+        <Setter Property="Height" Value="1620"/>
         <Setter Property="ItemTemplate" Value="{StaticResource PlaythroughItemTemplate}"/>
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="BorderBrush" Value="Transparent"/>

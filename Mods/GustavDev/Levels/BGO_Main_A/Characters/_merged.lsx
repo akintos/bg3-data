@@ -3922,7 +3922,7 @@
 					<attribute id="SwarmGroup" type="22" value="" />
 					<attribute id="TemplateName" type="22" value="669b777a-2148-47da-980b-eee57dd0f520" />
 					<attribute id="Type" type="22" value="character" />
-					<attribute id="_OriginalFileVersion_" type="32" value="144115207403209024" />
+					<attribute id="_OriginalFileVersion_" type="32" value="144115209550692552" />
 					<children>
 						<node id="ItemList">
 							<children>
@@ -4169,33 +4169,6 @@
 									<attribute id="OnlyCastOnSelf" type="19" value="False" />
 									<attribute id="ScoreModifier" type="6" value="1" />
 									<attribute id="Skill" type="22" value="Target_HuntersMark" />
-									<attribute id="SpellCastingAbility" type="1" value="0" />
-									<attribute id="StartRound" type="4" value="0" />
-									<children>
-										<node id="SourceConditions">
-											<attribute id="MaximumHealthPercentage" type="4" value="100" />
-											<attribute id="MinimumHealthPercentage" type="4" value="0" />
-											<children>
-												<node id="Tags" />
-											</children>
-										</node>
-										<node id="TargetConditions">
-											<attribute id="MaximumHealthPercentage" type="4" value="100" />
-											<attribute id="MinimumHealthPercentage" type="4" value="0" />
-											<children>
-												<node id="Tags" />
-											</children>
-										</node>
-									</children>
-								</node>
-								<node id="Skill">
-									<attribute id="AIFlags" type="3" value="0" />
-									<attribute id="FallbackStartRound" type="4" value="-1" />
-									<attribute id="LearningStrategy" type="1" value="0" />
-									<attribute id="MinimumImpact" type="4" value="0" />
-									<attribute id="OnlyCastOnSelf" type="19" value="False" />
-									<attribute id="ScoreModifier" type="6" value="1" />
-									<attribute id="Skill" type="22" value="Target_HuntersMark_Reapply" />
 									<attribute id="SpellCastingAbility" type="1" value="0" />
 									<attribute id="StartRound" type="4" value="0" />
 									<children>
@@ -25016,6 +24989,7 @@
 				</node>
 				<node id="GameObjects">
 					<attribute id="AnubisConfigName" type="22" value="WYR_Circus_Bard" />
+					<attribute id="Archetype" type="22" value="mage" />
 					<attribute id="CanFight" type="19" value="True" />
 					<attribute id="CharacterVisualResourceID" type="22" value="ae988545-2b37-73af-72e2-2fe44cfbeebe" />
 					<attribute id="DisplayName" type="28" handle="h5101187eg86a6g4896g8e14gaef779127081" version="2" />
@@ -25030,7 +25004,7 @@
 					<attribute id="Stats" type="22" value="WYR_Circus_Viola" />
 					<attribute id="TemplateName" type="22" value="19dc6cab-aa38-4f09-b9cf-546e1c0ecb8a" />
 					<attribute id="Type" type="22" value="character" />
-					<attribute id="_OriginalFileVersion_" type="32" value="144115207403209024" />
+					<attribute id="_OriginalFileVersion_" type="32" value="144115207403209033" />
 					<children>
 						<node id="LayerList">
 							<children>
@@ -25091,7 +25065,7 @@
 									<attribute id="MinimumImpact" type="4" value="0" />
 									<attribute id="OnlyCastOnSelf" type="19" value="False" />
 									<attribute id="ScoreModifier" type="6" value="1" />
-									<attribute id="Skill" type="22" value="Target_HideousLaughter" />
+									<attribute id="Skill" type="22" value="Target_HoldPerson" />
 									<attribute id="SpellCastingAbility" type="1" value="0" />
 									<attribute id="StartRound" type="4" value="0" />
 									<children>
@@ -25118,7 +25092,7 @@
 									<attribute id="MinimumImpact" type="4" value="0" />
 									<attribute id="OnlyCastOnSelf" type="19" value="False" />
 									<attribute id="ScoreModifier" type="6" value="1" />
-									<attribute id="Skill" type="22" value="Target_HoldPerson" />
+									<attribute id="Skill" type="22" value="Target_BardicInspiration_Combat" />
 									<attribute id="SpellCastingAbility" type="1" value="0" />
 									<attribute id="StartRound" type="4" value="0" />
 									<children>
@@ -26428,16 +26402,19 @@
 				</node>
 				<node id="GameObjects">
 					<attribute id="AnubisConfigName" type="22" value="WYR_Circus_BackupPerformer_02" />
+					<attribute id="Archetype" type="22" value="mage" />
 					<attribute id="CharacterVisualResourceID" type="22" value="a2f92047-cf70-a2c2-fa8c-c92f6c935af9" />
 					<attribute id="DisplayName" type="28" handle="ha8d60b73gc7c5g4ab9g8b7fgea65e602b854" version="2" />
 					<attribute id="Flag" type="4" value="1" />
 					<attribute id="Icon" type="22" value="a2f92047-cf70-a2c2-fa8c-c92f6c935af9-_(Icon_Human_Male)" />
 					<attribute id="LevelName" type="22" value="BGO_Main_A" />
+					<attribute id="LevelOverride" type="4" value="1" />
 					<attribute id="MapKey" type="22" value="892f9260-502e-4987-8438-1e4714c6586c" />
 					<attribute id="Name" type="23" value="S_WYR_Circus_BackupPerformer_02" />
+					<attribute id="Stats" type="22" value="Human_Bard" />
 					<attribute id="TemplateName" type="22" value="3278f064-5353-4c08-ab96-c2f432d0fda0" />
 					<attribute id="Type" type="22" value="character" />
-					<attribute id="_OriginalFileVersion_" type="32" value="144115207403209024" />
+					<attribute id="_OriginalFileVersion_" type="32" value="144115207403209033" />
 					<children>
 						<node id="LayerList">
 							<children>
@@ -26462,6 +26439,64 @@
 							</children>
 						</node>
 						<node id="LocomotionParams" />
+						<node id="SkillList">
+							<children>
+								<node id="Skill">
+									<attribute id="AIFlags" type="3" value="0" />
+									<attribute id="FallbackStartRound" type="4" value="-1" />
+									<attribute id="LearningStrategy" type="1" value="0" />
+									<attribute id="MinimumImpact" type="4" value="0" />
+									<attribute id="OnlyCastOnSelf" type="19" value="False" />
+									<attribute id="ScoreModifier" type="6" value="1" />
+									<attribute id="Skill" type="22" value="Target_ViciousMockery" />
+									<attribute id="SpellCastingAbility" type="1" value="0" />
+									<attribute id="StartRound" type="4" value="0" />
+									<children>
+										<node id="SourceConditions">
+											<attribute id="MaximumHealthPercentage" type="4" value="100" />
+											<attribute id="MinimumHealthPercentage" type="4" value="0" />
+											<children>
+												<node id="Tags" />
+											</children>
+										</node>
+										<node id="TargetConditions">
+											<attribute id="MaximumHealthPercentage" type="4" value="100" />
+											<attribute id="MinimumHealthPercentage" type="4" value="0" />
+											<children>
+												<node id="Tags" />
+											</children>
+										</node>
+									</children>
+								</node>
+								<node id="Skill">
+									<attribute id="AIFlags" type="3" value="0" />
+									<attribute id="FallbackStartRound" type="4" value="-1" />
+									<attribute id="LearningStrategy" type="1" value="0" />
+									<attribute id="MinimumImpact" type="4" value="0" />
+									<attribute id="OnlyCastOnSelf" type="19" value="False" />
+									<attribute id="ScoreModifier" type="6" value="1" />
+									<attribute id="Skill" type="22" value="Target_Heroism" />
+									<attribute id="SpellCastingAbility" type="1" value="0" />
+									<attribute id="StartRound" type="4" value="0" />
+									<children>
+										<node id="SourceConditions">
+											<attribute id="MaximumHealthPercentage" type="4" value="100" />
+											<attribute id="MinimumHealthPercentage" type="4" value="0" />
+											<children>
+												<node id="Tags" />
+											</children>
+										</node>
+										<node id="TargetConditions">
+											<attribute id="MaximumHealthPercentage" type="4" value="100" />
+											<attribute id="MinimumHealthPercentage" type="4" value="0" />
+											<children>
+												<node id="Tags" />
+											</children>
+										</node>
+									</children>
+								</node>
+							</children>
+						</node>
 						<node id="TradeTreasures">
 							<children>
 								<node id="TreasureItem">
@@ -30206,6 +30241,7 @@
 				</node>
 				<node id="GameObjects">
 					<attribute id="AnubisConfigName" type="22" value="WYR_Circus_LoveDryad" />
+					<attribute id="Archetype" type="22" value="mage" />
 					<attribute id="CanFight" type="19" value="True" />
 					<attribute id="CharacterVisualResourceID" type="22" value="20c7b3c8-bbc8-0ab1-0f6d-d106638a2b82" />
 					<attribute id="DisplayName" type="28" handle="h5a932af6gf33dg4a79g99b6g5110b929c3a1" version="3" />
@@ -30214,13 +30250,13 @@
 					<attribute id="Flag" type="4" value="1" />
 					<attribute id="Icon" type="22" value="20c7b3c8-bbc8-0ab1-0f6d-d106638a2b82-WYR_LoveDryad_(Icon_Dryad)" />
 					<attribute id="LevelName" type="22" value="BGO_Main_A" />
-					<attribute id="LevelOverride" type="4" value="9" />
+					<attribute id="LevelOverride" type="4" value="7" />
 					<attribute id="MapKey" type="22" value="a8bce35d-17ee-46e3-8d56-1d0d29c4a01e" />
 					<attribute id="Name" type="23" value="S_WYR_Circus_LoveDryad" />
 					<attribute id="TemplateName" type="22" value="07d79901-9cb9-41e7-a289-e8b38432d24e" />
 					<attribute id="Title" type="28" handle="h7d836d94g4233g4d65gb758g20bc19be2f42" version="2" />
 					<attribute id="Type" type="22" value="character" />
-					<attribute id="_OriginalFileVersion_" type="32" value="144115207403209024" />
+					<attribute id="_OriginalFileVersion_" type="32" value="144115207403209033" />
 					<children>
 						<node id="LayerList">
 							<children>
@@ -30308,7 +30344,7 @@
 									<attribute id="MinimumImpact" type="4" value="0" />
 									<attribute id="OnlyCastOnSelf" type="19" value="False" />
 									<attribute id="ScoreModifier" type="6" value="1" />
-									<attribute id="Skill" type="22" value="Target_Moonbeam" />
+									<attribute id="Skill" type="22" value="Target_SpikeGrowth_Dryad" />
 									<attribute id="SpellCastingAbility" type="1" value="0" />
 									<attribute id="StartRound" type="4" value="0" />
 									<children>
@@ -30337,13 +30373,7 @@
 								</node>
 							</children>
 						</node>
-						<node id="StatusList">
-							<children>
-								<node id="Status">
-									<attribute id="Object" type="22" value="BARKSKIN" />
-								</node>
-							</children>
-						</node>
+						<node id="StatusList" />
 						<node id="Tags">
 							<children>
 								<node id="Tag">
@@ -31190,6 +31220,7 @@
 				</node>
 				<node id="GameObjects">
 					<attribute id="AnubisConfigName" type="22" value="WYR_Circus_BackupBard_01" />
+					<attribute id="Archetype" type="22" value="mage" />
 					<attribute id="CharacterVisualResourceID" type="22" value="b9f9e94e-23a8-d5ea-8421-3ba37a8b2c04" />
 					<attribute id="DisplayName" type="28" handle="h7683df1dg00b9g40b2g97c7g5b586bb6b02e" version="3" />
 					<attribute id="Equipment" type="22" value="EQP_HandCrossbow_Leather_Drum" />
@@ -31201,7 +31232,7 @@
 					<attribute id="Stats" type="22" value="WYR_Circus_Gnome_Bard" />
 					<attribute id="TemplateName" type="22" value="e8bb6117-3e7b-42b1-be1d-1096bc226ea8" />
 					<attribute id="Type" type="22" value="character" />
-					<attribute id="_OriginalFileVersion_" type="32" value="144115207403209026" />
+					<attribute id="_OriginalFileVersion_" type="32" value="144115207403209033" />
 					<children>
 						<node id="LayerList">
 							<children>
@@ -31226,6 +31257,64 @@
 							</children>
 						</node>
 						<node id="LocomotionParams" />
+						<node id="SkillList">
+							<children>
+								<node id="Skill">
+									<attribute id="AIFlags" type="3" value="0" />
+									<attribute id="FallbackStartRound" type="4" value="-1" />
+									<attribute id="LearningStrategy" type="1" value="0" />
+									<attribute id="MinimumImpact" type="4" value="0" />
+									<attribute id="OnlyCastOnSelf" type="19" value="False" />
+									<attribute id="ScoreModifier" type="6" value="1" />
+									<attribute id="Skill" type="22" value="Target_ViciousMockery" />
+									<attribute id="SpellCastingAbility" type="1" value="0" />
+									<attribute id="StartRound" type="4" value="0" />
+									<children>
+										<node id="SourceConditions">
+											<attribute id="MaximumHealthPercentage" type="4" value="100" />
+											<attribute id="MinimumHealthPercentage" type="4" value="0" />
+											<children>
+												<node id="Tags" />
+											</children>
+										</node>
+										<node id="TargetConditions">
+											<attribute id="MaximumHealthPercentage" type="4" value="100" />
+											<attribute id="MinimumHealthPercentage" type="4" value="0" />
+											<children>
+												<node id="Tags" />
+											</children>
+										</node>
+									</children>
+								</node>
+								<node id="Skill">
+									<attribute id="AIFlags" type="3" value="0" />
+									<attribute id="FallbackStartRound" type="4" value="-1" />
+									<attribute id="LearningStrategy" type="1" value="0" />
+									<attribute id="MinimumImpact" type="4" value="0" />
+									<attribute id="OnlyCastOnSelf" type="19" value="False" />
+									<attribute id="ScoreModifier" type="6" value="1" />
+									<attribute id="Skill" type="22" value="Target_Bane_AI" />
+									<attribute id="SpellCastingAbility" type="1" value="0" />
+									<attribute id="StartRound" type="4" value="0" />
+									<children>
+										<node id="SourceConditions">
+											<attribute id="MaximumHealthPercentage" type="4" value="100" />
+											<attribute id="MinimumHealthPercentage" type="4" value="0" />
+											<children>
+												<node id="Tags" />
+											</children>
+										</node>
+										<node id="TargetConditions">
+											<attribute id="MaximumHealthPercentage" type="4" value="100" />
+											<attribute id="MinimumHealthPercentage" type="4" value="0" />
+											<children>
+												<node id="Tags" />
+											</children>
+										</node>
+									</children>
+								</node>
+							</children>
+						</node>
 						<node id="TradeTreasures">
 							<children>
 								<node id="TreasureItem">
@@ -33661,13 +33750,13 @@
 					<attribute id="Faction" type="31" value="1c52504e-5262-4670-34a8-486285e6ad34" />
 					<attribute id="Flag" type="4" value="1" />
 					<attribute id="LevelName" type="22" value="BGO_Main_A" />
-					<attribute id="LevelOverride" type="4" value="6" />
+					<attribute id="LevelOverride" type="4" value="1" />
 					<attribute id="MapKey" type="22" value="b758a1e0-1b08-4052-86ec-969fa09cc56b" />
 					<attribute id="Name" type="23" value="S_WYR_Circus_CrawlingClaw_001" />
 					<attribute id="SwarmGroup" type="22" value="WYR_Circus_CrawlingClaws" />
 					<attribute id="TemplateName" type="22" value="21ac7288-39b8-478f-a827-cf8eb4b824e6" />
 					<attribute id="Type" type="22" value="character" />
-					<attribute id="_OriginalFileVersion_" type="32" value="144115207403209030" />
+					<attribute id="_OriginalFileVersion_" type="32" value="144115207403209033" />
 					<children>
 						<node id="LayerList">
 							<children>
@@ -37350,12 +37439,13 @@
 					<attribute id="Flag" type="4" value="1" />
 					<attribute id="Icon" type="22" value="091184fc-4b7a-5df0-d91a-d14996ae0730-EQP_GreatAxe_B_Chainmail_B_(Icon_HalfElf_Female)" />
 					<attribute id="LevelName" type="22" value="BGO_Main_A" />
+					<attribute id="LevelOverride" type="4" value="5" />
 					<attribute id="MapKey" type="22" value="c5b263c3-3d0e-4c6c-8e04-503b79b68fd0" />
 					<attribute id="Name" type="23" value="S_WYR_Flophouse_Guest_002" />
 					<attribute id="Stats" type="22" value="WYR_Flophouse_HalfElf_Melee" />
 					<attribute id="TemplateName" type="22" value="5c2fde04-0812-4588-9cb6-0c55c4b83c2b" />
 					<attribute id="Type" type="22" value="character" />
-					<attribute id="_OriginalFileVersion_" type="32" value="144115207403209024" />
+					<attribute id="_OriginalFileVersion_" type="32" value="144115209550692452" />
 					<children>
 						<node id="ItemList">
 							<children>
@@ -37759,18 +37849,21 @@
 				</node>
 				<node id="GameObjects">
 					<attribute id="AnubisConfigName" type="22" value="WYR_Circus_BackupBard_02" />
+					<attribute id="Archetype" type="22" value="mage" />
 					<attribute id="CharacterVisualResourceID" type="22" value="d4c3680a-0b59-e7f0-06f3-592ee8713c1c" />
 					<attribute id="DisplayName" type="28" handle="h71d7ae29g22c2g4f56gae32g9805f899c736" version="2" />
 					<attribute id="Equipment" type="22" value="EQP_Shortsword_Lyre" />
 					<attribute id="Flag" type="4" value="1" />
 					<attribute id="Icon" type="22" value="d4c3680a-0b59-e7f0-06f3-592ee8713c1c-EQP_Shortsword_Lyre_(Icon_Dragonborn_Male)" />
 					<attribute id="LevelName" type="22" value="BGO_Main_A" />
+					<attribute id="LevelOverride" type="4" value="1" />
 					<attribute id="MapKey" type="22" value="c6761d3e-62f4-4a43-a593-771b670b583d" />
 					<attribute id="Name" type="23" value="S_WYR_Circus_BackupBard_02" />
+					<attribute id="SpellSet" type="22" value="CommonNPCActions" />
 					<attribute id="Stats" type="22" value="WYR_Circus_Dragonborn_Red_Bard" />
 					<attribute id="TemplateName" type="22" value="c9d72c15-e76f-46cb-ad3f-ea04f2d97a3a" />
 					<attribute id="Type" type="22" value="character" />
-					<attribute id="_OriginalFileVersion_" type="32" value="144115207403209032" />
+					<attribute id="_OriginalFileVersion_" type="32" value="144115207403209033" />
 					<children>
 						<node id="LayerList">
 							<children>
@@ -37805,6 +37898,60 @@
 									<attribute id="OnlyCastOnSelf" type="19" value="False" />
 									<attribute id="ScoreModifier" type="6" value="1" />
 									<attribute id="Skill" type="22" value="Zone_BreathWeapon_Fire_Cone" />
+									<attribute id="SpellCastingAbility" type="1" value="0" />
+									<attribute id="StartRound" type="4" value="0" />
+									<children>
+										<node id="SourceConditions">
+											<attribute id="MaximumHealthPercentage" type="4" value="100" />
+											<attribute id="MinimumHealthPercentage" type="4" value="0" />
+											<children>
+												<node id="Tags" />
+											</children>
+										</node>
+										<node id="TargetConditions">
+											<attribute id="MaximumHealthPercentage" type="4" value="100" />
+											<attribute id="MinimumHealthPercentage" type="4" value="0" />
+											<children>
+												<node id="Tags" />
+											</children>
+										</node>
+									</children>
+								</node>
+								<node id="Skill">
+									<attribute id="AIFlags" type="3" value="0" />
+									<attribute id="FallbackStartRound" type="4" value="-1" />
+									<attribute id="LearningStrategy" type="1" value="0" />
+									<attribute id="MinimumImpact" type="4" value="0" />
+									<attribute id="OnlyCastOnSelf" type="19" value="False" />
+									<attribute id="ScoreModifier" type="6" value="1" />
+									<attribute id="Skill" type="22" value="Target_ViciousMockery" />
+									<attribute id="SpellCastingAbility" type="1" value="0" />
+									<attribute id="StartRound" type="4" value="0" />
+									<children>
+										<node id="SourceConditions">
+											<attribute id="MaximumHealthPercentage" type="4" value="100" />
+											<attribute id="MinimumHealthPercentage" type="4" value="0" />
+											<children>
+												<node id="Tags" />
+											</children>
+										</node>
+										<node id="TargetConditions">
+											<attribute id="MaximumHealthPercentage" type="4" value="100" />
+											<attribute id="MinimumHealthPercentage" type="4" value="0" />
+											<children>
+												<node id="Tags" />
+											</children>
+										</node>
+									</children>
+								</node>
+								<node id="Skill">
+									<attribute id="AIFlags" type="3" value="0" />
+									<attribute id="FallbackStartRound" type="4" value="-1" />
+									<attribute id="LearningStrategy" type="1" value="0" />
+									<attribute id="MinimumImpact" type="4" value="0" />
+									<attribute id="OnlyCastOnSelf" type="19" value="False" />
+									<attribute id="ScoreModifier" type="6" value="1" />
+									<attribute id="Skill" type="22" value="Target_FaerieFire" />
 									<attribute id="SpellCastingAbility" type="1" value="0" />
 									<attribute id="StartRound" type="4" value="0" />
 									<children>
@@ -38411,6 +38558,7 @@
 				</node>
 				<node id="GameObjects">
 					<attribute id="AnubisConfigName" type="22" value="WYR_Circus_Ringmaster" />
+					<attribute id="Archetype" type="22" value="mage_smart" />
 					<attribute id="CharacterVisualResourceID" type="22" value="eb90eea1-afd3-4ad5-c6ee-79f26fcb8c26" />
 					<attribute id="DisplayName" type="28" handle="h1ae6fa11g32c3g4846g820bgfcf0fc12b284" version="3" />
 					<attribute id="Equipment" type="22" value="EQP_WYR_Lucretious" />
@@ -38426,7 +38574,7 @@
 					<attribute id="TemplateName" type="22" value="bdf4f7c8-a385-4af0-8fb9-b02805250ca3" />
 					<attribute id="Title" type="28" handle="heb09c119g6fdcg4179gab1cgef800902b6b6" version="1" />
 					<attribute id="Type" type="22" value="character" />
-					<attribute id="_OriginalFileVersion_" type="32" value="144115207403209032" />
+					<attribute id="_OriginalFileVersion_" type="32" value="144115207403209033" />
 					<children>
 						<node id="ItemList">
 							<children>
@@ -38580,7 +38728,7 @@
 								<node id="Skill">
 									<attribute id="AIFlags" type="3" value="0" />
 									<attribute id="FallbackStartRound" type="4" value="-1" />
-									<attribute id="LearningStrategy" type="1" value="0" />
+									<attribute id="LearningStrategy" type="1" value="1" />
 									<attribute id="MinimumImpact" type="4" value="0" />
 									<attribute id="OnlyCastOnSelf" type="19" value="False" />
 									<attribute id="ScoreModifier" type="6" value="1" />
@@ -38630,6 +38778,13 @@
 											</children>
 										</node>
 									</children>
+								</node>
+							</children>
+						</node>
+						<node id="StatusList">
+							<children>
+								<node id="Status">
+									<attribute id="Object" type="22" value="MAGE_ARMOR" />
 								</node>
 							</children>
 						</node>
@@ -39570,13 +39725,13 @@
 					<attribute id="Faction" type="31" value="1c52504e-5262-4670-34a8-486285e6ad34" />
 					<attribute id="Flag" type="4" value="1" />
 					<attribute id="LevelName" type="22" value="BGO_Main_A" />
-					<attribute id="LevelOverride" type="4" value="6" />
+					<attribute id="LevelOverride" type="4" value="1" />
 					<attribute id="MapKey" type="22" value="ce15737b-ff82-4df0-8202-81389be58b64" />
 					<attribute id="Name" type="23" value="S_WYR_Circus_CrawlingClaw_002" />
 					<attribute id="SwarmGroup" type="22" value="WYR_Circus_CrawlingClaws" />
 					<attribute id="TemplateName" type="22" value="21ac7288-39b8-478f-a827-cf8eb4b824e6" />
 					<attribute id="Type" type="22" value="character" />
-					<attribute id="_OriginalFileVersion_" type="32" value="144115207403209024" />
+					<attribute id="_OriginalFileVersion_" type="32" value="144115207403209033" />
 					<children>
 						<node id="LayerList">
 							<children>

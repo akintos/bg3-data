@@ -1,7 +1,7 @@
 {
    "save" : {
       "header" : {
-         "version" : "4.0.9.328"
+         "version" : "4.0.10.300"
       },
       "regions" : {
          "dialog" : {
@@ -71,6 +71,9 @@
                      },
                      {
                         "RootNodes" : {"type" : "FixedString", "value" : "03f8ba41-1c80-ebf5-63f0-bc097a37a483"}
+                     },
+                     {
+                        "RootNodes" : {"type" : "FixedString", "value" : "d6f3df46-b9f8-429b-9641-80d136d85904"}
                      },
                      {
                         "RootNodes" : {"type" : "FixedString", "value" : "bb41207e-9943-dfd4-1099-6c027994585a"}
@@ -295,7 +298,9 @@
                                  {
                                     "flag" : [
                                        {
-                                          "UUID" : {"type" : "FixedString", "value" : "11646fca-54a8-050f-1277-fe173058e1c6"},"value" : {"type" : "bool", "value" : true}}
+                                          "UUID" : {"type" : "FixedString", "value" : "11646fca-54a8-050f-1277-fe173058e1c6"},"value" : {"type" : "bool", "value" : true}},
+                                       {
+                                          "UUID" : {"type" : "FixedString", "value" : "6e4b66e9-0f72-5171-04ba-441108b45b0e"},"value" : {"type" : "bool", "value" : true}}
                                     ],"type" : {"type" : "FixedString", "value" : "Global"}},
                                  {
                                     "flag" : [
@@ -411,7 +416,7 @@
                                  },
                                  {
                                     "key" : {"type" : "FixedString", "value" : "logicalname"},
-                                    "val" : {"type" : "LSString", "value" : "Non tadpoled - HasMet"}
+                                    "val" : {"type" : "LSString", "value" : "Non tadpoled - HasMet BLOCKED"}
                                  },
                                  {
                                     "key" : {"type" : "FixedString", "value" : "position"},
@@ -5293,8 +5298,6 @@
                               "OriginSound" : [ {} ]
                            }
                         ],
-                        "GroupID" : {"type" : "FixedString", "value" : "74a8a9ac-e288-6ad2-7538-2a2b09679166"},
-                        "GroupIndex" : {"type" : "int32", "value" : 1},
                         "TaggedTexts" : [
                            {
                               "TaggedText" : [
@@ -8951,8 +8954,6 @@
                               "OriginSound" : [ {} ]
                            }
                         ],
-                        "GroupID" : {"type" : "FixedString", "value" : "74a8a9ac-e288-6ad2-7538-2a2b09679166"},
-                        "GroupIndex" : {"type" : "int32", "value" : 0},
                         "Root" : {"type" : "bool", "value" : true},
                         "TaggedTexts" : [
                            {
@@ -15595,7 +15596,7 @@
                                  },
                                  {
                                     "key" : {"type" : "FixedString", "value" : "position"},
-                                    "val" : {"type" : "LSString", "value" : "335;-204"}
+                                    "val" : {"type" : "LSString", "value" : "335;15"}
                                  },
                                  {
                                     "key" : {"type" : "FixedString", "value" : "sourcetemplate"},
@@ -16878,6 +16879,85 @@
                         ],
                         "setflags" : [ {} ],
                         "speaker" : {"type" : "int32", "value" : -666}
+                     },
+                     {
+                        "GameData" : [
+                           {
+                              "AiPersonalities" : [ {} ],
+                              "MusicInstrumentSounds" : [ {} ],
+                              "OriginSound" : [ {} ]
+                           }
+                        ],
+                        "Greeting" : {"type" : "bool", "value" : true},
+                        "Root" : {"type" : "bool", "value" : true},
+                        "SourceNode" : {"type" : "FixedString", "value" : "74a8a9ac-e288-6ad2-7538-2a2b09679166"},
+                        "Tags" : [ {} ],
+                        "UUID" : {"type" : "FixedString", "value" : "d6f3df46-b9f8-429b-9641-80d136d85904"},
+                        "checkflags" : [
+                           {
+                              "flaggroup" : [
+                                 {
+                                    "flag" : [
+                                       {
+                                          "UUID" : {"type" : "FixedString", "value" : "11646fca-54a8-050f-1277-fe173058e1c6"},"value" : {"type" : "bool", "value" : true}}
+                                    ],"type" : {"type" : "FixedString", "value" : "Global"}},
+                                 {
+                                    "flag" : [
+                                       {
+                                          "UUID" : {"type" : "FixedString", "value" : "1eec74e8-3673-4500-abec-57b7ed8469ed"},
+                                          "paramval" : {"type" : "int32", "value" : 1},
+                                          "value" : {"type" : "bool", "value" : false}
+                                       }
+                                    ],"type" : {"type" : "FixedString", "value" : "Tag"}}
+                              ]
+                           }
+                        ],
+                        "children" : [
+                           {
+                              "child" : [
+                                 {
+                                    "UUID" : {"type" : "FixedString", "value" : "30211af6-4a0f-0725-ec50-762b563df24a"}
+                                 }
+                              ]
+                           }
+                        ],
+                        "constructor" : {"type" : "FixedString", "value" : "Alias"},
+                        "editorData" : [
+                           {
+                              "data" : [
+                                 {
+                                    "key" : {"type" : "FixedString", "value" : "ID"},
+                                    "val" : {"type" : "LSString", "value" : "N308"}
+                                 },
+                                 {
+                                    "key" : {"type" : "FixedString", "value" : "TemplateNodeUUID"},
+                                    "val" : {"type" : "LSString", "value" : "00000000-0000-0000-0000-000000000000"}
+                                 },
+                                 {
+                                    "key" : {"type" : "FixedString", "value" : "TemplateVersion"},
+                                    "val" : {"type" : "LSString", "value" : "0"}
+                                 },
+                                 {
+                                    "key" : {"type" : "FixedString", "value" : "collapsed"},
+                                    "val" : {"type" : "LSString", "value" : "False"}
+                                 },
+                                 {
+                                    "key" : {"type" : "FixedString", "value" : "logicalname"},
+                                    "val" : {"type" : "LSString", "value" : "Non tadpoled - HasMet"}
+                                 },
+                                 {
+                                    "key" : {"type" : "FixedString", "value" : "position"},
+                                    "val" : {"type" : "LSString", "value" : "335;-204"}
+                                 },
+                                 {
+                                    "key" : {"type" : "FixedString", "value" : "sourcetemplate"},
+                                    "val" : {"type" : "LSString", "value" : ""}
+                                 }
+                              ]
+                           }
+                        ],
+                        "setflags" : [ {} ],
+                        "speaker" : {"type" : "int32", "value" : -1}
                      },
                      {
                         "GameData" : [
@@ -19561,7 +19641,7 @@
                }
             ],
             "needLayout" : {"type" : "bool", "value" : false},
-            "nextNodeId" : {"type" : "uint32", "value" : 307},
+            "nextNodeId" : {"type" : "uint32", "value" : 308},
             "speakerSlotDescription" : [
                {
                   "data" : [

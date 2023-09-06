@@ -104,16 +104,17 @@
     <ControlTemplate x:Key="FocusableButtonTemplate" TargetType="{x:Type ls:LSButton}">
         <ls:LSNineSliceImage x:Name="Bg" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinHeight="110" ImageSource="{StaticResource ButtonBg}" Slices="24,40,24,24">
             <Grid>
+                <Control x:Name="Frame"/>
                 <ContentPresenter x:Name="Content" IsEnabled="False" VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="{TemplateBinding Padding}" TextElement.Foreground="{TemplateBinding Foreground}" Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}"/>
 
-                <Control x:Name="Frame" Visibility="Hidden" Template="{StaticResource FocusableBorderTemplate}"/>
+        
             </Grid>
         </ls:LSNineSliceImage>
         <ControlTemplate.Triggers>
             <Trigger Property="ls:MoveFocus.IsFocused" Value="True">
                 <Setter TargetName="Bg" Property="ImageSource" Value="{StaticResource ButtonBg_h}"/>
                 <Setter TargetName="Content" Property="IsEnabled" Value="True"/>
-                <Setter TargetName="Frame" Property="Visibility" Value="Visible"/>
+                <Setter TargetName="Frame" Property="Template" Value="{StaticResource FocusableBorderTemplate}"/>
             </Trigger>
         </ControlTemplate.Triggers>
     </ControlTemplate>
@@ -134,17 +135,18 @@
         </Style.Triggers>
     </Style>
 
+    <!-- Focusable style for buttons-->
     <ControlTemplate x:Key="FocusableButtonTemplateMinimal" TargetType="{x:Type ls:LSButton}">
         <Grid x:Name="Bg" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinHeight="73" >
             <Rectangle x:Name="HighlightBG" Fill="{StaticResource LS_PadSelectorBGColor}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Opacity="0" />
+            <Control x:Name="Frame"/>
             <ContentPresenter x:Name="Content" IsEnabled="False" VerticalAlignment="Center" HorizontalAlignment="Stretch"  TextElement.Foreground="{TemplateBinding Foreground}" Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}" />
-
-            <Control x:Name="Frame" Visibility="Hidden" Template="{StaticResource FocusableBorderTemplate}"/>
+            
         </Grid>
         <ControlTemplate.Triggers>
             <Trigger Property="ls:MoveFocus.IsFocused" Value="True">
                 <Setter TargetName="Content" Property="IsEnabled" Value="True"/>
-                <Setter TargetName="Frame" Property="Visibility" Value="Visible"/>
+                <Setter TargetName="Frame" Property="Template" Value="{StaticResource FocusableBorderTemplate}"/>
                 <Trigger.EnterActions>
                     <BeginStoryboard Name="FocusSb3" Storyboard="{StaticResource SelectorStoryboard3}"/>
                     <StopStoryboard BeginStoryboardName="FocusSb5" />
@@ -154,7 +156,6 @@
                     <StopStoryboard BeginStoryboardName="FocusSb3" />
                 </Trigger.ExitActions>
             </Trigger>
-
         </ControlTemplate.Triggers>
     </ControlTemplate>
 
@@ -168,7 +169,47 @@
         <Setter Property="VerticalContentAlignment" Value="Center"/>
         <Setter Property="Foreground" Value="{StaticResource LS_baseTxtColor}"/>
         <Setter Property="Padding" Value="10,4"/>
+        <Style.Triggers>
+            <Trigger Property="ls:MoveFocus.IsFocused" Value="True">
+                <Setter Property="Foreground" Value="{StaticResource LS_selectedTextPad}"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+    
+    <!-- Focusable Content Control Style -->
+    <ControlTemplate x:Key="FocusableContentControlNoBgTemplate" TargetType="{x:Type ContentControl}">
+        <Grid x:Name="Bg" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinHeight="73" >
+            <Rectangle x:Name="HighlightBG" Fill="{StaticResource LS_PadSelectorBGColor}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Opacity="0" />
+            <Control x:Name="Frame"/>
+            <ContentPresenter x:Name="Content" IsEnabled="False" VerticalAlignment="Center" HorizontalAlignment="Stretch"  TextElement.Foreground="{TemplateBinding Foreground}" Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}" />
+            
+        </Grid>
+        <ControlTemplate.Triggers>
+            <Trigger Property="ls:MoveFocus.IsFocused" Value="True">
+                <Setter TargetName="Content" Property="IsEnabled" Value="True"/>
+                <Setter TargetName="Frame" Property="Template" Value="{StaticResource FocusableBorderTemplate}"/>
+                <Trigger.EnterActions>
+                    <BeginStoryboard Name="FocusSb3"  Storyboard="{StaticResource SelectorStoryboard3}"/>
+                    <StopStoryboard BeginStoryboardName="FocusSb5" />
+                </Trigger.EnterActions>
+                <Trigger.ExitActions>
+                    <BeginStoryboard Name="FocusSb5"  Storyboard="{StaticResource SelectorStoryboard5}"/>
+                    <StopStoryboard BeginStoryboardName="FocusSb3" />
+                </Trigger.ExitActions>
+            </Trigger>
 
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+    <Style x:Key="FocusableContentControlNoBG" TargetType="{x:Type ContentControl}">
+        <Setter Property="Template" Value="{StaticResource FocusableContentControlNoBgTemplate}"/>
+        <Setter Property="Focusable" Value="True"/>
+        <Setter Property="ls:MoveFocus.Focusable" Value="True"/>
+        <Setter Property="ls:MoveFocus.FocusMovementMode" Value="MainAxisTunnel" />
+        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="Foreground" Value="{StaticResource LS_baseTxtColor}"/>
+        <Setter Property="Padding" Value="10,4"/>
         <Style.Triggers>
             <Trigger Property="ls:MoveFocus.IsFocused" Value="True">
                 <Setter Property="Foreground" Value="{StaticResource LS_selectedTextPad}"/>
@@ -238,7 +279,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ContentControl}">
-                    <ls:LSNineSliceImage x:Name="Bg" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinHeight="108" ImageSource="{StaticResource ButtonBg}" Slices="24,40,24,24">
+                    <ls:LSNineSliceImage x:Name="Bg" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinHeight="{TemplateBinding MinHeight}" ImageSource="{StaticResource ButtonBg}" Slices="24,40,24,24">
                         <ContentPresenter x:Name="Content" IsEnabled="False" VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="{TemplateBinding Padding}" TextElement.Foreground="{TemplateBinding Foreground}" Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}"/>
                     </ls:LSNineSliceImage>
                     <ControlTemplate.Triggers>
@@ -256,24 +297,25 @@
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="Margin" Value="0"/>
         <Setter Property="Padding" Value="0"/>
+        <Setter Property="MinHeight" Value="108"/>
         <Style.Triggers>
             <Trigger Property="ls:MoveFocus.IsFocused" Value="True">
                 <Setter Property="Foreground" Value="{StaticResource LS_selectedTextPad}"/>
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="{x:Type ContentControl}">
-                            <ls:LSNineSliceImage x:Name="Bg" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinHeight="108" ImageSource="{StaticResource ButtonBg}" Slices="24,40,24,24">
+                            <ls:LSNineSliceImage x:Name="Bg" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinHeight="{TemplateBinding MinHeight}" ImageSource="{StaticResource ButtonBg}" Slices="24,40,24,24">
                                 <Grid>
                                     <Rectangle x:Name="HighlightBG" Fill="{StaticResource LS_PadSelectorBGColor}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Opacity="0" />
 
                                     <ContentPresenter x:Name="Content" VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="{TemplateBinding Padding}" TextElement.Foreground="{TemplateBinding Foreground}" Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}"/>
 
-                                    <Control x:Name="Frame" Visibility="Hidden" Template="{StaticResource FocusableBorderTemplate}"/>
+                                    <Control x:Name="Frame"/>
                                 </Grid>
                             </ls:LSNineSliceImage>
                             <ControlTemplate.Triggers>
                                 <Trigger Property="ls:MoveFocus.IsFocused" Value="True">
-                                    <Setter TargetName="Frame" Property="Visibility" Value="Visible"/>
+                                    <Setter TargetName="Frame" Property="Template" Value="{StaticResource FocusableBorderTemplate}"/>
                                     <Trigger.EnterActions>
                                         <BeginStoryboard Name="FocusSb3"  Storyboard="{StaticResource SelectorStoryboard3}"/>
                                     </Trigger.EnterActions>
@@ -354,13 +396,13 @@
                             
                             <ContentPresenter x:Name="Content" IsEnabled="False" VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="{TemplateBinding Padding}" TextElement.Foreground="{TemplateBinding Foreground}" Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}"/>
 
-                            <Control x:Name="Frame" Visibility="Hidden" Template="{StaticResource FocusableBorderTemplate}" />
+                            <Control x:Name="Frame"/>
                         </Grid>
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="ls:MoveFocus.IsFocused" Value="True">
                             <Setter TargetName="Content" Property="IsEnabled" Value="True"/>
-                            <Setter TargetName="Frame" Property="Visibility" Value="Visible"/>
+                            <Setter TargetName="Frame" Property="Template" Value="{StaticResource FocusableBorderTemplate}"/>
 
                             <Trigger.EnterActions>
                                 <BeginStoryboard Name="FocusSb3"  Storyboard="{StaticResource SelectorStoryboard3}"/>
@@ -394,10 +436,10 @@
     <ControlTemplate x:Key="ExpanderButtonTemplate" TargetType="{x:Type Expander}">
         <DockPanel x:Name="DockRoot">
             <Grid DockPanel.Dock="Top">
-                <ls:LSToggleButton x:Name="ExpanderButton" IsChecked="{Binding IsExpanded, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" ls:MoveFocus.Focusable="True" Style="{StaticResource FocusableContentControlStyle}" Margin="0,0,0,12" Tag="ExpanderGroup">
-                    <DockPanel Margin="20,0">
-                        <Image x:Name="Arrow" DockPanel.Dock="Left" Source="{StaticResource ListArrowCollapsed}" Stretch="None" Margin="-18,-18,-8,-18" VerticalAlignment="Center"/>
-                        <TextBlock x:Name="Title" DockPanel.Dock="Right" Text="{Binding Header, RelativeSource={RelativeSource Mode=TemplatedParent}}" HorizontalAlignment="Left" TextWrapping="Wrap"/>
+                <ls:LSToggleButton x:Name="ExpanderButton" IsChecked="{Binding IsExpanded, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" ls:MoveFocus.Focusable="True" Style="{StaticResource FocusableContentControlNoBG}" Margin="{StaticResource ListPadding}" Tag="ExpanderGroup">
+                    <DockPanel>
+                        <Image x:Name="Arrow" DockPanel.Dock="Left" Source="{StaticResource ListArrowCollapsed}" Stretch="None" Margin="10,0" VerticalAlignment="Center"/>
+                        <TextBlock x:Name="Title" VerticalAlignment="Center" Text="{Binding Header, RelativeSource={RelativeSource Mode=TemplatedParent}}" Margin="{StaticResource TextTopBottomMargin}" HorizontalAlignment="Left" TextWrapping="Wrap"/>
                     </DockPanel>
                 </ls:LSToggleButton>
             </Grid>

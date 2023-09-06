@@ -3934,6 +3934,7 @@
 					</children>
 				</node>
 				<node id="GameObjects">
+					<attribute id="CanShootThrough" type="19" value="True" />
 					<attribute id="CoverAmount" type="1" value="1" />
 					<attribute id="Flag" type="4" value="1" />
 					<attribute id="HLOD" type="31" value="71831de0-7480-e9c9-3292-a51ab81093fd" />
@@ -3942,7 +3943,7 @@
 					<attribute id="Name" type="23" value="NAT_Tree_Evil_B_001" />
 					<attribute id="TemplateName" type="22" value="61931e99-4ef7-4a80-8559-c2262071d0d7" />
 					<attribute id="Type" type="22" value="scenery" />
-					<attribute id="_OriginalFileVersion_" type="32" value="144115207403209032" />
+					<attribute id="_OriginalFileVersion_" type="32" value="144115207403209035" />
 					<children>
 						<node id="LayerList">
 							<children>
@@ -7302,10 +7303,11 @@
 					<attribute id="LevelName" type="22" value="WLD_Hag_C_Evil" />
 					<attribute id="MapKey" type="22" value="16091036-7675-4963-a002-7ab96cf9721a" />
 					<attribute id="Name" type="23" value="BLD_GEN_Beam_Square_A_Wood_A_4H_A_028" />
+					<attribute id="SeeThrough" type="19" value="True" />
 					<attribute id="TemplateName" type="22" value="af49c8ab-774e-45fd-8be9-b383cda2540c" />
 					<attribute id="Type" type="22" value="scenery" />
 					<attribute id="WalkOn" type="19" value="False" />
-					<attribute id="_OriginalFileVersion_" type="32" value="144115207403208906" />
+					<attribute id="_OriginalFileVersion_" type="32" value="144115209550692654" />
 					<children>
 						<node id="LayerList">
 							<children>
@@ -14552,7 +14554,7 @@
 				</node>
 				<node id="GameObjects">
 					<attribute id="CanShineThrough" type="19" value="True" />
-					<attribute id="FadeGroup" type="22" value="" />
+					<attribute id="FadeGroup" type="22" value="FG_HouseRoof" />
 					<attribute id="Flag" type="4" value="1" />
 					<attribute id="GroupID" type="5" value="21412" />
 					<attribute id="HLOD" type="31" value="23c546c9-040b-7b46-9596-7ee7d638c130" />
@@ -14564,8 +14566,15 @@
 					<attribute id="SeeThrough" type="19" value="True" />
 					<attribute id="TemplateName" type="22" value="32584f14-f200-439a-aee2-12565943b28f" />
 					<attribute id="Type" type="22" value="scenery" />
-					<attribute id="_OriginalFileVersion_" type="32" value="144115207403209032" />
+					<attribute id="_OriginalFileVersion_" type="32" value="144115209550692654" />
 					<children>
+						<node id="FadeChildren">
+							<children>
+								<node id="FadeChild">
+									<attribute id="Object" type="22" value="a1937aa9-0ff7-42c4-81ce-ae1ccb73f87c" />
+								</node>
+							</children>
+						</node>
 						<node id="LayerList">
 							<children>
 								<node id="Layers">
@@ -17380,10 +17389,11 @@
 					<attribute id="MapKey" type="22" value="32888f35-88f8-40a1-9eef-a87c802e55f7" />
 					<attribute id="Name" type="23" value="BLD_GEN_Beam_Square_A_Wood_A_4H_A_004" />
 					<attribute id="RecieveDecal" type="19" value="True" />
+					<attribute id="SeeThrough" type="19" value="True" />
 					<attribute id="TemplateName" type="22" value="af49c8ab-774e-45fd-8be9-b383cda2540c" />
 					<attribute id="Type" type="22" value="scenery" />
 					<attribute id="WalkOn" type="19" value="False" />
-					<attribute id="_OriginalFileVersion_" type="32" value="144115207403208906" />
+					<attribute id="_OriginalFileVersion_" type="32" value="144115209550692654" />
 					<children>
 						<node id="LayerList">
 							<children>
@@ -20155,14 +20165,16 @@
 					</children>
 				</node>
 				<node id="GameObjects">
+					<attribute id="Fadeable" type="19" value="True" />
 					<attribute id="Flag" type="4" value="1" />
 					<attribute id="HLOD" type="31" value="2fb41d3d-2136-9229-261c-93bd1d04c967" />
+					<attribute id="HierarchyOnlyFade" type="19" value="True" />
 					<attribute id="LevelName" type="22" value="WLD_Hag_C_Evil" />
 					<attribute id="MapKey" type="22" value="39a4d465-0783-45e4-bdb2-6ac27983f49b" />
 					<attribute id="Name" type="23" value="DEC_GEN_Cage_Bird_A_000" />
 					<attribute id="TemplateName" type="22" value="d90be883-d7f7-451f-a274-e6be08164548" />
 					<attribute id="Type" type="22" value="scenery" />
-					<attribute id="_OriginalFileVersion_" type="32" value="144115207403208906" />
+					<attribute id="_OriginalFileVersion_" type="32" value="144115209550692654" />
 					<children>
 						<node id="LayerList">
 							<children>
@@ -22062,10 +22074,11 @@
 					<attribute id="MapKey" type="22" value="3e0fa8e8-e4d1-4a80-aa7e-db74f39b8351" />
 					<attribute id="Name" type="23" value="BLD_GEN_Beam_Square_A_Wood_A_4H_A_005" />
 					<attribute id="RecieveDecal" type="19" value="True" />
+					<attribute id="SeeThrough" type="19" value="True" />
 					<attribute id="TemplateName" type="22" value="af49c8ab-774e-45fd-8be9-b383cda2540c" />
 					<attribute id="Type" type="22" value="scenery" />
 					<attribute id="WalkOn" type="19" value="False" />
-					<attribute id="_OriginalFileVersion_" type="32" value="144115207403209014" />
+					<attribute id="_OriginalFileVersion_" type="32" value="144115209550692654" />
 					<children>
 						<node id="LayerList">
 							<children>
@@ -33500,14 +33513,16 @@
 					</children>
 				</node>
 				<node id="GameObjects">
+					<attribute id="Fadeable" type="19" value="True" />
 					<attribute id="Flag" type="4" value="1" />
 					<attribute id="HLOD" type="31" value="2fb41d3d-2136-9229-261c-93bd1d04c967" />
+					<attribute id="HierarchyOnlyFade" type="19" value="True" />
 					<attribute id="LevelName" type="22" value="WLD_Hag_C_Evil" />
 					<attribute id="MapKey" type="22" value="5f82ff4a-95bc-49e6-b414-c775df8fc378" />
 					<attribute id="Name" type="23" value="DEC_GEN_Cage_Bird_A_001" />
 					<attribute id="TemplateName" type="22" value="d90be883-d7f7-451f-a274-e6be08164548" />
 					<attribute id="Type" type="22" value="scenery" />
-					<attribute id="_OriginalFileVersion_" type="32" value="144115207403208906" />
+					<attribute id="_OriginalFileVersion_" type="32" value="144115209550692654" />
 					<children>
 						<node id="LayerList">
 							<children>
@@ -44086,6 +44101,7 @@
 					</children>
 				</node>
 				<node id="GameObjects">
+					<attribute id="CanShootThrough" type="19" value="True" />
 					<attribute id="Flag" type="4" value="1" />
 					<attribute id="HLOD" type="31" value="71831de0-7480-e9c9-3292-a51ab81093fd" />
 					<attribute id="LevelName" type="22" value="WLD_Hag_C_Evil" />
@@ -44094,7 +44110,7 @@
 					<attribute id="TemplateName" type="22" value="8dda4632-f1f5-4e07-b2fb-a6d16e8013f2" />
 					<attribute id="Type" type="22" value="scenery" />
 					<attribute id="WalkThrough" type="19" value="True" />
-					<attribute id="_OriginalFileVersion_" type="32" value="144115207403209032" />
+					<attribute id="_OriginalFileVersion_" type="32" value="144115207403209035" />
 					<children>
 						<node id="LayerList">
 							<children>
@@ -45869,10 +45885,11 @@
 					<attribute id="MapKey" type="22" value="837fbfdc-3721-4628-9ebd-ed7bb4316089" />
 					<attribute id="Name" type="23" value="BLD_GEN_Beam_Square_A_Wood_A_4H_A_003" />
 					<attribute id="RecieveDecal" type="19" value="True" />
+					<attribute id="SeeThrough" type="19" value="True" />
 					<attribute id="TemplateName" type="22" value="af49c8ab-774e-45fd-8be9-b383cda2540c" />
 					<attribute id="Type" type="22" value="scenery" />
 					<attribute id="WalkOn" type="19" value="False" />
-					<attribute id="_OriginalFileVersion_" type="32" value="144115207403208906" />
+					<attribute id="_OriginalFileVersion_" type="32" value="144115209550692654" />
 					<children>
 						<node id="LayerList">
 							<children>
@@ -57702,17 +57719,17 @@
 				</node>
 				<node id="GameObjects">
 					<attribute id="FadeGroup" type="22" value="" />
-					<attribute id="FadeIn" type="19" value="True" />
 					<attribute id="Fadeable" type="19" value="True" />
 					<attribute id="Flag" type="4" value="1" />
 					<attribute id="HLOD" type="31" value="23c546c9-040b-7b46-9596-7ee7d638c130" />
+					<attribute id="HierarchyOnlyFade" type="19" value="False" />
 					<attribute id="LevelName" type="22" value="WLD_Hag_C_Evil" />
 					<attribute id="MapKey" type="22" value="a1937aa9-0ff7-42c4-81ce-ae1ccb73f87c" />
 					<attribute id="Name" type="23" value="DEC_HAG_Cage_Bird_A_002" />
 					<attribute id="SeeThrough" type="19" value="True" />
 					<attribute id="TemplateName" type="22" value="d0726aa9-7272-45cc-9b93-5e3f507f2a53" />
 					<attribute id="Type" type="22" value="scenery" />
-					<attribute id="_OriginalFileVersion_" type="32" value="144115207403208906" />
+					<attribute id="_OriginalFileVersion_" type="32" value="144115209550692654" />
 					<children>
 						<node id="LayerList">
 							<children>
@@ -61770,14 +61787,16 @@
 					</children>
 				</node>
 				<node id="GameObjects">
+					<attribute id="Fadeable" type="19" value="True" />
 					<attribute id="Flag" type="4" value="1" />
 					<attribute id="HLOD" type="31" value="23c546c9-040b-7b46-9596-7ee7d638c130" />
+					<attribute id="HierarchyOnlyFade" type="19" value="True" />
 					<attribute id="LevelName" type="22" value="WLD_Hag_C_Evil" />
 					<attribute id="MapKey" type="22" value="abfe73ae-4eba-4611-894b-eae05de73b42" />
 					<attribute id="Name" type="23" value="DEC_GEN_Cage_Bird_A_002" />
 					<attribute id="TemplateName" type="22" value="d90be883-d7f7-451f-a274-e6be08164548" />
 					<attribute id="Type" type="22" value="scenery" />
-					<attribute id="_OriginalFileVersion_" type="32" value="144115207403208906" />
+					<attribute id="_OriginalFileVersion_" type="32" value="144115209550692654" />
 					<children>
 						<node id="LayerList">
 							<children>
@@ -81635,10 +81654,11 @@
 					<attribute id="LevelName" type="22" value="WLD_Hag_C_Evil" />
 					<attribute id="MapKey" type="22" value="e485db49-44af-47f4-909e-7a93f598365b" />
 					<attribute id="Name" type="23" value="BLD_GEN_Beam_Square_A_Wood_A_8H_A_004" />
+					<attribute id="SeeThrough" type="19" value="True" />
 					<attribute id="TemplateName" type="22" value="b3652b26-2b70-4f63-b83c-c8540cde838a" />
 					<attribute id="Type" type="22" value="scenery" />
 					<attribute id="WalkOn" type="19" value="False" />
-					<attribute id="_OriginalFileVersion_" type="32" value="144115207403208906" />
+					<attribute id="_OriginalFileVersion_" type="32" value="144115209550692654" />
 					<children>
 						<node id="LayerList">
 							<children>
@@ -84141,10 +84161,11 @@
 					<attribute id="MapKey" type="22" value="e9e31736-96a1-435d-b4ba-d47e4a4b6963" />
 					<attribute id="Name" type="23" value="BLD_GEN_Beam_Square_A_Wood_A_4H_A_002" />
 					<attribute id="RecieveDecal" type="19" value="True" />
+					<attribute id="SeeThrough" type="19" value="True" />
 					<attribute id="TemplateName" type="22" value="af49c8ab-774e-45fd-8be9-b383cda2540c" />
 					<attribute id="Type" type="22" value="scenery" />
 					<attribute id="WalkOn" type="19" value="False" />
-					<attribute id="_OriginalFileVersion_" type="32" value="144115207403208906" />
+					<attribute id="_OriginalFileVersion_" type="32" value="144115209550692654" />
 					<children>
 						<node id="LayerList">
 							<children>
@@ -88635,10 +88656,11 @@
 					<attribute id="LevelName" type="22" value="WLD_Hag_C_Evil" />
 					<attribute id="MapKey" type="22" value="f6c7972a-9ea1-4560-b17d-b1a3d72ce054" />
 					<attribute id="Name" type="23" value="BLD_GEN_Beam_Square_A_Wood_A_4H_A_012" />
+					<attribute id="SeeThrough" type="19" value="True" />
 					<attribute id="TemplateName" type="22" value="af49c8ab-774e-45fd-8be9-b383cda2540c" />
 					<attribute id="Type" type="22" value="scenery" />
 					<attribute id="WalkOn" type="19" value="False" />
-					<attribute id="_OriginalFileVersion_" type="32" value="144115207403208906" />
+					<attribute id="_OriginalFileVersion_" type="32" value="144115209550692654" />
 					<children>
 						<node id="LayerList">
 							<children>
@@ -88916,10 +88938,11 @@
 					<attribute id="LevelName" type="22" value="WLD_Hag_C_Evil" />
 					<attribute id="MapKey" type="22" value="f77f9e9a-51e3-4def-bdde-c94a8b1d5153" />
 					<attribute id="Name" type="23" value="BLD_GEN_Beam_Square_A_Wood_A_8H_A_005" />
+					<attribute id="SeeThrough" type="19" value="True" />
 					<attribute id="TemplateName" type="22" value="b3652b26-2b70-4f63-b83c-c8540cde838a" />
 					<attribute id="Type" type="22" value="scenery" />
 					<attribute id="WalkOn" type="19" value="False" />
-					<attribute id="_OriginalFileVersion_" type="32" value="144115207403208906" />
+					<attribute id="_OriginalFileVersion_" type="32" value="144115209550692654" />
 					<children>
 						<node id="LayerList">
 							<children>
@@ -90484,14 +90507,16 @@
 					</children>
 				</node>
 				<node id="GameObjects">
+					<attribute id="Fadeable" type="19" value="True" />
 					<attribute id="Flag" type="4" value="1" />
 					<attribute id="HLOD" type="31" value="097fb9a2-7551-850f-7e85-ae57c0713a8b" />
+					<attribute id="HierarchyOnlyFade" type="19" value="True" />
 					<attribute id="LevelName" type="22" value="WLD_Hag_C_Evil" />
 					<attribute id="MapKey" type="22" value="fb9147e8-07e6-4275-a0cc-647635a56231" />
 					<attribute id="Name" type="23" value="DEC_HAG_Cage_Bird_A_003" />
 					<attribute id="TemplateName" type="22" value="d0726aa9-7272-45cc-9b93-5e3f507f2a53" />
 					<attribute id="Type" type="22" value="scenery" />
-					<attribute id="_OriginalFileVersion_" type="32" value="144115207403208906" />
+					<attribute id="_OriginalFileVersion_" type="32" value="144115209550692654" />
 					<children>
 						<node id="LayerList">
 							<children>
@@ -91887,14 +91912,16 @@
 					</children>
 				</node>
 				<node id="GameObjects">
+					<attribute id="Fadeable" type="19" value="True" />
 					<attribute id="Flag" type="4" value="1" />
 					<attribute id="HLOD" type="31" value="23c546c9-040b-7b46-9596-7ee7d638c130" />
+					<attribute id="HierarchyOnlyFade" type="19" value="True" />
 					<attribute id="LevelName" type="22" value="WLD_Hag_C_Evil" />
 					<attribute id="MapKey" type="22" value="ffa2f367-128a-47ae-b31d-ad6e5b3a044b" />
 					<attribute id="Name" type="23" value="DEC_HAG_Cage_Bird_A_000" />
 					<attribute id="TemplateName" type="22" value="d0726aa9-7272-45cc-9b93-5e3f507f2a53" />
 					<attribute id="Type" type="22" value="scenery" />
-					<attribute id="_OriginalFileVersion_" type="32" value="144115207403208906" />
+					<attribute id="_OriginalFileVersion_" type="32" value="144115209550692654" />
 					<children>
 						<node id="LayerList">
 							<children>

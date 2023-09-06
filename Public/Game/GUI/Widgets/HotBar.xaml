@@ -1069,13 +1069,13 @@
             <Grid x:Name="HotbarRoot" Opacity="1" VerticalAlignment="Bottom" HorizontalAlignment="Center" ls:TooltipExtender.Owner="{Binding CurrentPlayer.SelectedCharacter}"
                   Visibility="{Binding CurrentPlayer.SelectedCharacter, Converter={StaticResource NullToCollapsedConverter}}">
 
-                <ls:LSInputBinding x:Name="LaunchJumpActionBinding" Command="{Binding LaunchDefaultActionCommand}" CommandParameter="Jump" BoundEvent="Jump" IsEnabled="{Binding CurrentPlayer.UIData.IsCharacterSelectOpen, Converter={StaticResource InvertBoolConverter}}"/>
+                <ls:LSInputBinding x:Name="LaunchJumpActionBinding" Command="{Binding LaunchDefaultActionCommand}" CommandParameter="Jump" BoundEvent="Jump"/>
 
-                <ls:LSInputBinding x:Name="LaunchShoveActionBinding" Command="{Binding LaunchDefaultActionCommand}" CommandParameter="Shove" BoundEvent="Shove" IsEnabled="{Binding CurrentPlayer.UIData.IsCharacterSelectOpen, Converter={StaticResource InvertBoolConverter}}"/>
+                <ls:LSInputBinding x:Name="LaunchShoveActionBinding" Command="{Binding LaunchDefaultActionCommand}" CommandParameter="Shove" BoundEvent="Shove"/>
 
-                <ls:LSInputBinding x:Name="LaunchThrowActionBinding" Command="{Binding LaunchDefaultActionCommand}" CommandParameter="Throw" BoundEvent="Throw" IsEnabled="{Binding CurrentPlayer.UIData.IsCharacterSelectOpen, Converter={StaticResource InvertBoolConverter}}"/>
+                <ls:LSInputBinding x:Name="LaunchThrowActionBinding" Command="{Binding LaunchDefaultActionCommand}" CommandParameter="Throw" BoundEvent="Throw"/>
 
-                <ls:LSInputBinding x:Name="LaunchHideActionBinding" Command="{Binding LaunchDefaultActionCommand}" CommandParameter="Hide" BoundEvent="ToggleSneak" IsEnabled="{Binding CurrentPlayer.UIData.IsCharacterSelectOpen, Converter={StaticResource InvertBoolConverter}}"/>
+                <ls:LSInputBinding x:Name="LaunchHideActionBinding" Command="{Binding LaunchDefaultActionCommand}" CommandParameter="Hide" BoundEvent="ToggleSneak"/>
 
                 <!-- ================================== -->
                 <!-- ========= HOTBAR CONTENT ========= -->
@@ -1178,36 +1178,7 @@
                                 <ls:LSTooltip Placement="Top">
                                     <StackPanel x:Name="root">
                                         <TextBlock Style="{DynamicResource TooltipTitleStyle}" ls:TextBlockFormatter.SourceText="{Binding Path=(ls:TooltipExtender.Owner).Name, ElementName=Portrait}"/>
-                                        <TextBlock>
-                                            <TextBlock.Style>
-                                                <Style TargetType="TextBlock" BasedOn="{StaticResource TooltipSubTitleStyle}">
-                                                    <Style.Triggers>
-                                                        <MultiDataTrigger>
-                                                            <MultiDataTrigger.Conditions>
-                                                                <Condition Binding="{Binding Path=(ls:TooltipExtender.Owner).Stats.ClassList.Count, ElementName=Portrait, Converter={StaticResource GreaterThanConverter}, ConverterParameter=0}" Value="True"/>
-                                                                <Condition Binding="{Binding Path=(ls:TooltipExtender.Owner).Stats.Level.Value, ElementName=Portrait, Converter={StaticResource GreaterThanConverter}, ConverterParameter=0}" Value="False"/>
-                                                            </MultiDataTrigger.Conditions>
-                                                            <Setter Property="ls:TextBlockFormatter.SourceText">
-                                                                <Setter.Value>
-                                                                    <Binding Path="(ls:TooltipExtender.Owner).Stats.ClassList" ElementName="Portrait" Converter="{StaticResource ListConcatenationConverter}" ConverterParameter="h2519408dg5fd7g4cbcg840cg14370239edf8"/>
-                                                                </Setter.Value>
-                                                            </Setter>
-                                                        </MultiDataTrigger>
-                                                        <DataTrigger Binding="{Binding Path=(ls:TooltipExtender.Owner).Stats.Level.Value, ElementName=Portrait, Converter={StaticResource GreaterThanConverter}, ConverterParameter=0}" Value="True">
-                                                            <Setter Property="ls:TextBlockFormatter.SourceText">
-                                                                <Setter.Value>
-                                                                    <MultiBinding Converter="{StaticResource ParameterizedTranslatedStringConverter}">
-                                                                        <Binding Source="h5df00b79ga6acg4d9fgb8dag23340151fba7"/>
-                                                                        <Binding Path="(ls:TooltipExtender.Owner).Stats.Level.Value" ElementName="Portrait"/>
-                                                                        <Binding Path="(ls:TooltipExtender.Owner).Stats.ClassList" ElementName="Portrait" Converter="{StaticResource ListConcatenationConverter}" ConverterParameter="h2519408dg5fd7g4cbcg840cg14370239edf8"/>
-                                                                    </MultiBinding>
-                                                                </Setter.Value>
-                                                            </Setter>
-                                                        </DataTrigger>
-                                                    </Style.Triggers>
-                                                </Style>
-                                            </TextBlock.Style>
-                                        </TextBlock>
+                                        <Control Template="{StaticResource LevelClassSubTitleTemplate}" DataContext="{Binding Path=(ls:TooltipExtender.Owner), ElementName=Portrait}"/>
 
                                         <TextBlock Style="{DynamicResource TooltipBaseTextStyle}" Foreground="{DynamicResource TooltipColor.Keyword}" Text="{Binding Source='h6f500b99gdd92g46fbg8266gdd794dfdf08e',Converter={StaticResource TranslatedStringConverter}}"/>
                                     </StackPanel>
@@ -1390,7 +1361,7 @@
                     </Grid>
 
                     <!-- ========= CENTRAL HOTBAR CONTENT ========= -->
-                    <Grid Grid.Column="1" VerticalAlignment="Bottom" Margin="0,0,0,-16">
+                    <Grid x:Name="HotbarCentre" Grid.Column="1" VerticalAlignment="Bottom" Margin="0,0,0,-16">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
@@ -2259,6 +2230,18 @@
                                                                     <Setter TargetName="ResourceImage" Property="Source" Value="{StaticResource IconSpellSlotUsed}"/>
                                                                 </MultiDataTrigger>
 
+                                                                <DataTrigger Binding="{Binding ResourceName}" Value="ShadowSpellSlot">
+                                                                    <Setter TargetName="ResourceImage" Property="Source" Value="{StaticResource ShadowSpellSlot}"/>
+                                                                </DataTrigger>
+                                                                <MultiDataTrigger>
+                                                                    <MultiDataTrigger.Conditions>
+                                                                        <Condition Binding="{Binding CanUse}" Value="False"/>
+                                                                        <Condition Binding="{Binding IsFake}" Value="False"/>
+                                                                        <Condition Binding="{Binding ResourceName}" Value="ShadowSpellSlot"/>
+                                                                    </MultiDataTrigger.Conditions>
+                                                                    <Setter TargetName="ResourceImage" Property="Source" Value="{StaticResource ShadowSpellSlotUsed}"/>
+                                                                </MultiDataTrigger>
+
                                                                 <DataTrigger Binding="{Binding ResourceName}" Value="SorceryPoint">
                                                                     <Setter TargetName="ResourceImage" Property="Source" Value="{StaticResource SorceryPoint}"/>
                                                                 </DataTrigger>
@@ -2559,10 +2542,15 @@
                         </Grid>
 
                         <!-- ===== RESOURCE BAR & TOP LINE COMPONENTS ===== -->
-                        <Grid Grid.Row="0" Margin="0,0,0,-25">
+                        <Grid Grid.Row="0" Margin="0,0,0,-25" HorizontalAlignment="Stretch" MaxWidth="{Binding ActualWidth, ElementName=HotbarDynamicContent}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="1*"/>
+                            </Grid.ColumnDefinitions>
 
                             <!-- Action Resources -->
-                            <Grid x:Name="ActionResourcesContainer" HorizontalAlignment="Center" VerticalAlignment="Bottom" >
+                            <Grid x:Name="ActionResourcesContainer" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Bottom" >
                                 <ls:LSNineSliceImage x:Name="HotbarBodyResourcesBg" HorizontalAlignment="Center" VerticalAlignment="Bottom" Height="64" MinWidth="208"
                                          Width="{Binding ActualWidth, ElementName=ActionResources, Converter={StaticResource AddConverter}, ConverterParameter=208}"
                                          ImageSource="{StaticResource BarResources}" Slices="104,0"/>
@@ -2596,46 +2584,57 @@
                                                             </ls:LSActionPointResources>
                                                         </Border>
 
-                                                        <Image x:Name="SpellSlotLevels" Stretch="None" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,-10,0,0" IsHitTestVisible="False"
-                                                   Style="{StaticResource RomanNumeralLevelImage}" Visibility="Hidden" DataContext="{Binding ActionResource}"/>
+                                                        <Image x:Name="SpellSlotLevels" Stretch="None" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,-10,0,0" IsHitTestVisible="False" Style="{StaticResource RomanNumeralLevelImage}" Visibility="Hidden" DataContext="{Binding ActionResource}"/>
+                                                        
                                                         <TextBlock x:Name="ResourcesNumeralDisplay" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,25,0,0"
-                                                       Foreground="{Binding Foreground, ElementName=ResourcePoints}" IsHitTestVisible="False"
-                                                       FontSize="{DynamicResource MediumFontSize}" Text="{Binding ActionResource.Value}"
-                                                       noesis:Text.Stroke="{StaticResource LS_PrimaryColorOutlineColor}" noesis:Text.StrokeThickness="4">
-                                                <b:Interaction.Triggers>
-                                                    <b:PropertyChangedTrigger Binding="{Binding Path=ActionResource.Value}">
-                                                        <b:Interaction.Behaviors>
-                                                            <b:ConditionBehavior>
-                                                                <b:ConditionalExpression>
-                                                                    <b:ComparisonCondition LeftOperand="{Binding ActionResource.MaxValue}" Operator="GreaterThan" RightOperand="{Binding MaxGroupActionPoints, ElementName=ResourcePoints}"/>
-                                                                    <b:ComparisonCondition LeftOperand="{Binding ActionResource.Value}" Operator="GreaterThan" RightOperand="1"/>
-                                                                </b:ConditionalExpression>
-                                                            </b:ConditionBehavior>
-                                                        </b:Interaction.Behaviors>
-                                                        <b:ChangePropertyAction PropertyName="Visibility" Value="Visible"/>
-                                                    </b:PropertyChangedTrigger>
+                                                                    Foreground="{Binding Foreground, ElementName=ResourcePoints}" IsHitTestVisible="False"
+                                                                    FontSize="{DynamicResource MediumFontSize}" Text="{Binding ActionResource.Value}"
+                                                                    noesis:Text.Stroke="{StaticResource LS_PrimaryColorOutlineColor}" noesis:Text.StrokeThickness="4">
+                                                            
+                                                            <b:Interaction.Triggers>
+                                                                <b:PropertyChangedTrigger Binding="{Binding ActionResource.Value}">
+                                                                    <b:Interaction.Behaviors>
+                                                                        <b:ConditionBehavior>
+                                                                            <b:ConditionalExpression>
+                                                                                <b:ComparisonCondition LeftOperand="{Binding ActionResource.Value}" Operator="GreaterThan" RightOperand="{Binding MaxGroupActionPoints, ElementName=ResourcePoints}"/>
+                                                                            </b:ConditionalExpression>
+                                                                        </b:ConditionBehavior>
+                                                                    </b:Interaction.Behaviors>
+                                                                    <b:ChangePropertyAction PropertyName="Visibility" Value="Visible"/>
+                                                                </b:PropertyChangedTrigger>
+                                                                
+                                                                <b:PropertyChangedTrigger Binding="{Binding ActionResource.Value}">
+                                                                    <b:Interaction.Behaviors>
+                                                                        <b:ConditionBehavior>
+                                                                            <b:ConditionalExpression>
+                                                                                <b:ComparisonCondition LeftOperand="{Binding ActionResource.Value}" Operator="LessThanOrEqual" RightOperand="{Binding MaxGroupActionPoints, ElementName=ResourcePoints}"/>
+                                                                            </b:ConditionalExpression>
+                                                                        </b:ConditionBehavior>
+                                                                    </b:Interaction.Behaviors>
+                                                                    <b:ChangePropertyAction PropertyName="Visibility" Value="Hidden"/>
+                                                                </b:PropertyChangedTrigger>
                                                     
-                                                    <b:PropertyChangedTrigger Binding="{Binding Path=ActionResource.Value}">
-                                                        <b:Interaction.Behaviors>
-                                                            <b:ConditionBehavior>
-                                                                <b:ConditionalExpression>
-                                                                    <b:ComparisonCondition LeftOperand="{Binding ActionResource.Value}" Operator="LessThanOrEqual" RightOperand="1"/>
-                                                                </b:ConditionalExpression>
-                                                            </b:ConditionBehavior>
-                                                        </b:Interaction.Behaviors>
-                                                        <b:ChangePropertyAction PropertyName="Visibility" Value="Collapsed"/>
-                                                    </b:PropertyChangedTrigger>
-                                                    <b:PropertyChangedTrigger Binding="{Binding Path=ActionResource.Value}">
-                                                        <b:Interaction.Behaviors>
-                                                            <b:ConditionBehavior>
-                                                                <b:ConditionalExpression>
-                                                                    <b:ComparisonCondition LeftOperand="{Binding ActionResource.MaxValue}" Operator="LessThanOrEqual" RightOperand="{Binding MaxGroupActionPoints, ElementName=ResourcePoints}"/>
-                                                                </b:ConditionalExpression>
-                                                            </b:ConditionBehavior>
-                                                        </b:Interaction.Behaviors>
-                                                        <b:ChangePropertyAction PropertyName="Visibility" Value="Collapsed"/>
-                                                    </b:PropertyChangedTrigger>
-                                                </b:Interaction.Triggers>
+                                                                <b:PropertyChangedTrigger Binding="{Binding Path=ActionResource.Value}">
+                                                                    <b:Interaction.Behaviors>
+                                                                        <b:ConditionBehavior>
+                                                                            <b:ConditionalExpression>
+                                                                                <b:ComparisonCondition LeftOperand="{Binding ActionResource.Value}" Operator="LessThanOrEqual" RightOperand="1"/>
+                                                                            </b:ConditionalExpression>
+                                                                        </b:ConditionBehavior>
+                                                                    </b:Interaction.Behaviors>
+                                                                    <b:ChangePropertyAction PropertyName="Visibility" Value="Hidden"/>
+                                                                </b:PropertyChangedTrigger>
+                                                                <b:PropertyChangedTrigger Binding="{Binding Path=ActionResource.Value}">
+                                                                    <b:Interaction.Behaviors>
+                                                                        <b:ConditionBehavior>
+                                                                            <b:ConditionalExpression>
+                                                                                <b:ComparisonCondition LeftOperand="{Binding ActionResource.MaxValue}" Operator="LessThanOrEqual" RightOperand="{Binding MaxGroupActionPoints, ElementName=ResourcePoints}"/>
+                                                                            </b:ConditionalExpression>
+                                                                        </b:ConditionBehavior>
+                                                                    </b:Interaction.Behaviors>
+                                                                    <b:ChangePropertyAction PropertyName="Visibility" Value="Hidden"/>
+                                                                </b:PropertyChangedTrigger>
+                                                            </b:Interaction.Triggers>
                                                         </TextBlock>
                                                     </Grid>
                                                     <b:Interaction.Triggers>
@@ -2842,15 +2841,16 @@
                             </Grid>
 
                             <!--REACTIONS/INTERRUPTS-->
-                            <Grid x:Name="ActiveInterruptList" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,48,16" ls:TutorialProperties.TargetID="TUT_Reactions" ls:TutorialProperties.ModalType="BottomRight">
+                            <Grid x:Name="ActiveInterruptList" Grid.Column="2" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,32,12" ls:TutorialProperties.TargetID="TUT_Reactions" ls:TutorialProperties.ModalType="BottomRight">
                                 <Grid.Resources>
-                                    <System:Double x:Key="InterruptIconSize">56</System:Double>
+                                    <System:Double x:Key="InterruptIconSize">48</System:Double>
                                     <System:Double x:Key="InterruptQuestionSize">34</System:Double>
                                     <System:Double x:Key="InterruptNumberFontSize">24</System:Double>
                                     <Style x:Key="InterruptIconRootStyle" TargetType="Grid">
                                         <Setter Property="ToolTipService.Placement" Value="Top"/>
                                     </Style>
                                 </Grid.Resources>
+                                <Viewbox Height="60" VerticalAlignment="Bottom">                                
                                 <ls:LSButton x:Name="ReactionsLineBtn" Command="{Binding CustomEvent}" BoundEvent="ToggleReactions" CommandParameter="ToggleInterrupts" ls:TutorialProperties.TargetID="TUT_BardicInspiration" ls:TutorialProperties.ModalType="BottomRight" IsHitTestVisible="True" >
                                     <b:Interaction.Behaviors>
                                         <ls:CollectionFilterBehavior x:Name="CharacterInterruptsFilter" ItemsSource="{Binding CurrentPlayer.SelectedCharacter.PlayerCharacterProperties.Interrupts}" Predicate="{Binding CurrentPlayer.SelectedCharacter.PlayerCharacterProperties.CharacterInterruptsFilterPredicate}"/>
@@ -2858,12 +2858,12 @@
                                     <ItemsControl ItemsSource="{Binding FilteredItems, ElementName=CharacterInterruptsFilter}" HorizontalAlignment="Center" Background="Transparent">
                                         <ItemsControl.ItemsPanel>
                                             <ItemsPanelTemplate>
-                                                <StackPanel Orientation="Horizontal" MaxWidth="450"/>
+                                                <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom"/>
                                             </ItemsPanelTemplate>
                                         </ItemsControl.ItemsPanel>
                                         <ItemsControl.ItemContainerStyle>
                                             <Style TargetType="ContentPresenter">
-                                                <Setter Property="Margin" Value="4,0,4,0"/>
+                                                <Setter Property="Margin" Value="2"/>
                                                 <Setter Property="ContentTemplate" Value="{StaticResource InterruptIcon}"/>
                                                 <Setter Property="Visibility" Value="{Binding Enabled , Converter={StaticResource BoolToVisibleConverter}}"/>
                                                 <Setter Property="IsHitTestVisible" Value="True"/>
@@ -2871,11 +2871,12 @@
                                         </ItemsControl.ItemContainerStyle>
                                     </ItemsControl>
                                 </ls:LSButton>
+                                </Viewbox>
                             </Grid>
 
                             <!--EXTRA STATUS NOTIFICATIONS-->                         
                             <!--As per CursorText - however differnt strings, differnt location-->
-                            <ItemsControl x:Name="CapabilitiesErrors" ItemsSource="{Binding CurrentPlayer.SelectedCharacter.ModifiedCapabilities}" AlternationCount="{Binding ItemsSource.Count, RelativeSource={RelativeSource Self}}" VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="0,0,0,88" Height="{Binding Path=ActualHeight, ElementName=Message}">
+                            <ItemsControl Grid.Column="0" Grid.ColumnSpan="3" x:Name="CapabilitiesErrors" ItemsSource="{Binding CurrentPlayer.SelectedCharacter.ModifiedCapabilities}" AlternationCount="{Binding ItemsSource.Count, RelativeSource={RelativeSource Self}}" VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="0,0,0,88" Height="{Binding Path=ActualHeight, ElementName=Message}">
                                 <b:Interaction.Behaviors>
                                     <ls:CapabilityListSelectorBehavior x:Name="CapabilityListSelectorBehavior" 
                                                                        CapabilitiesCollection="{Binding CurrentPlayer.SelectedCharacter.ModifiedCapabilities}"
@@ -2903,12 +2904,58 @@
                                 </ItemsControl.ItemContainerStyle>
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate DataType="{x:Type ls:VMCapabilityModifier}">
-                                        <Grid x:Name="MessageBlock" HorizontalAlignment="Center" >
-                                            <Rectangle x:Name ="Background" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,4" Opacity="0.6" Width="{Binding ActualWidth, ElementName=Message, Converter={StaticResource AddConverter}, ConverterParameter=60}" Height="{Binding ActualHeight, ElementName=Message, Converter={StaticResource AddConverter}, ConverterParameter=8}" Fill="{StaticResource Accessibility.BackgroundColorBrush}"/>
-                                            <TextBlock x:Name="Message" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" FontSize="{StaticResource IntermediateFontSize}" Foreground="{StaticResource LS_tint100}" noesis:Text.StrokeThickness="6" noesis:Text.Stroke="{StaticResource LS_TextOutlineColor}" Effect="{StaticResource HUD.DropShadow}"/>
-                                        </Grid>
+                                        <DataTemplate.Resources>
+                                            <BitmapImage x:Key="CastBarBackground" UriSource="pack://application:,,,/GustavNoesisGUI;component/Assets/TargetInfo/target_bar_cast.png"/>
+                                            <Style x:Key="CursorErrorTextStyle" TargetType="TextBlock">
+                                                <Setter Property="Foreground" Value="{StaticResource LS_tint100}"/>
+                                                <Setter Property="FontSize" Value="{StaticResource IntermediateFontSize}"/>
+                                                <Setter Property="noesis:Text.StrokeThickness" Value="6"/>
+                                                <Setter Property="noesis:Text.Stroke" Value="{StaticResource LS_TextOutlineColor}"/>
+                                            </Style>
+                                        </DataTemplate.Resources>
+
+                                        <ls:LSNineSliceImage x:Name="MessageBlock" HorizontalAlignment="Center" Height="84" Width="{Binding ActualWidth, ElementName=Message, Converter={StaticResource AddConverter}, ConverterParameter=140}" MinWidth="720"
+                                         ImageSource="{StaticResource CastBarBackground}" Slices="90,0,90,0" IconWidth="500" Visibility="Collapsed">
+
+                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Effect="{StaticResource HUD.DropShadow}">
+                                                <TextBlock x:Name="Message" Style="{StaticResource CursorErrorTextStyle}"/>
+                                                <TextBlock x:Name="Cause" Style="{StaticResource CursorErrorTextStyle}" Visibility="{Binding Cause, Converter={StaticResource NullToCollapsedConverter}, ConverterParameter='EmptyString'}">
+                                                    <TextBlock.Text>
+                                                        <MultiBinding Converter="{StaticResource ParameterizedTranslatedStringConverter}">
+                                                            <Binding Source="hb19f530dgfeb2g4d13g8d64ga8216f364f67"/>
+                                                            <Binding  Path="Cause"/>
+                                                        </MultiBinding>
+                                                    </TextBlock.Text>
+                                                </TextBlock>
+                                            </StackPanel>
+                                            
+                                        </ls:LSNineSliceImage>
 
                                         <DataTemplate.Triggers>
+
+                                            <DataTrigger Binding="{Binding Type}" Value="LostControl">
+                                                <Setter TargetName="MessageBlock" Property="Visibility" Value="Visible"/>
+                                            </DataTrigger>
+
+                                            <DataTrigger Binding="{Binding Type}" Value="ActionsBlocked">
+                                                <Setter TargetName="Message" Property="Text" Value="{Binding Source='hc26b3ee1g8586g4fc5gbc1dg14711bc21a4b', Converter={StaticResource TranslatedStringConverter}}"/>
+                                                <Setter TargetName="MessageBlock" Property="Visibility" Value="Visible"/>
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding Type}" Value="BonusActionsBlocked">
+                                                <Setter TargetName="Message" Property="Text" Value="{Binding Source='hc9c9197cg997fg4dcagad83g7fd70e8c645e', Converter={StaticResource TranslatedStringConverter}}"/>
+                                                <Setter TargetName="MessageBlock" Property="Visibility" Value="Visible"/>
+                                            </DataTrigger>
+
+                                            <DataTrigger Binding="{Binding Type}" Value="SpellcastingBlocked">
+                                                <Setter TargetName="Message" Property="Text" Value="{Binding Source='h016d4e05g4042g42c9g8e4cg351088deddf5', Converter={StaticResource TranslatedStringConverter}}"/>
+                                                <Setter TargetName="MessageBlock" Property="Visibility" Value="Visible"/>
+                                            </DataTrigger>
+
+                                            <DataTrigger Binding="{Binding Type}" Value="MovementBlocked">
+                                                <Setter TargetName="Message" Property="Text" Value="{Binding Source='h7760a99cg8a58g4555gb0f1g0e3e2b872f66', Converter={StaticResource TranslatedStringConverter}}"/>
+                                                <Setter TargetName="MessageBlock" Property="Visibility" Value="Visible"/>
+                                            </DataTrigger>
+
                                             <MultiDataTrigger>
                                                 <MultiDataTrigger.Conditions>
                                                     <Condition Binding="{Binding Type}" Value="LostControl"/>
@@ -2916,6 +2963,7 @@
                                                 </MultiDataTrigger.Conditions>
                                                 <Setter TargetName="Message" Property="Text" Value="{Binding Source='h5f3c3defgdf33g4bbbgafc5g487ca817cda4', Converter={StaticResource TranslatedStringConverter}}"/>
                                             </MultiDataTrigger>
+                                            
                                             <MultiDataTrigger>
                                                 <MultiDataTrigger.Conditions>
                                                     <Condition Binding="{Binding Type}" Value="LostControl"/>
@@ -2923,6 +2971,7 @@
                                                 </MultiDataTrigger.Conditions>
                                                 <Setter TargetName="Message" Property="Text" Value="{Binding Source='h296f3937g9cdcg4613ga574g5e9f11dbd095', Converter={StaticResource TranslatedStringConverter}}"/>
                                             </MultiDataTrigger>
+                                            
                                             <MultiDataTrigger>
                                                 <MultiDataTrigger.Conditions>
                                                     <Condition Binding="{Binding Type}" Value="LostControl"/>
@@ -2930,6 +2979,7 @@
                                                 </MultiDataTrigger.Conditions>
                                                 <Setter TargetName="Message" Property="Text" Value="{Binding Source='hbf29ef1cg54b7g4c65g9879g2a15e7090487', Converter={StaticResource TranslatedStringConverter}}"/>
                                             </MultiDataTrigger>
+                                            
                                             <MultiDataTrigger>
                                                 <MultiDataTrigger.Conditions>
                                                     <Condition Binding="{Binding Type}" Value="LostControl"/>
@@ -2937,6 +2987,7 @@
                                                 </MultiDataTrigger.Conditions>
                                                 <Setter TargetName="Message" Property="Text" Value="{Binding Source='hbadf852cgd385g4b95g9ae5ga4af93905815', Converter={StaticResource TranslatedStringConverter}}"/>
                                             </MultiDataTrigger>
+                                            
                                             <MultiDataTrigger>
                                                 <MultiDataTrigger.Conditions>
                                                     <Condition Binding="{Binding Type}" Value="LostControl"/>
@@ -2944,6 +2995,7 @@
                                                 </MultiDataTrigger.Conditions>
                                                 <Setter TargetName="Message" Property="Text" Value="{Binding Source='hbd5803f1g480cg4eb4g820fg242124c08ea9', Converter={StaticResource TranslatedStringConverter}}"/>
                                             </MultiDataTrigger>
+                                            
                                             <MultiDataTrigger>
                                                 <MultiDataTrigger.Conditions>
                                                     <Condition Binding="{Binding Type}" Value="LostControl"/>
@@ -2952,34 +3004,25 @@
                                                 <Setter TargetName="Message" Property="Text" Value="{Binding Source='hd870788dg1d5dg42f3ga261g8580eec92784', Converter={StaticResource TranslatedStringConverter}}"/>
                                             </MultiDataTrigger>
 
-                                            <DataTrigger Binding="{Binding Type}" Value="ShapeshiftedAgainstWill">
-                                                <Setter TargetName="Message" Property="Text" Value="{Binding Source='h3739559fg64acg42c3g893cg6fb341570556', Converter={StaticResource TranslatedStringConverter}}"/>
-                                            </DataTrigger>
-                                            <MultiDataTrigger>
-                                                <MultiDataTrigger.Conditions>
-                                                    <Condition Binding="{Binding Type}" Value="ShapeshiftedAgainstWill"/>
-                                                    <Condition Binding="{Binding Cause, Converter={StaticResource NullToBoolFalseConverter}, ConverterParameter='EmptyString'}" Value="True"/>
-                                                </MultiDataTrigger.Conditions>
-                                                <Setter TargetName="Message" Property="Text" Value="{Binding Cause}"/>
-                                            </MultiDataTrigger>
-
                                             <DataTrigger Binding="{Binding Type}" Value="ReactionsBlocked">
                                                 <Setter TargetName="Message" Property="Text" Value="{Binding Source='hae26bac2g2e14g4cccg8c47gd19467e488c6', Converter={StaticResource TranslatedStringConverter}}"/>
+                                                <Setter TargetName="MessageBlock" Property="Visibility" Value="Visible"/>
                                             </DataTrigger>
-
+                                            
                                             <DataTrigger Binding="{Binding Type}" Value="ResurrectedInThisTurn">
                                                 <Setter TargetName="Message" Property="Text" Value="{Binding Source='h1ac301b7gce0ag4693gbba2gb912e5abe10e', Converter={StaticResource TranslatedStringConverter}}"/>
+                                                <Setter TargetName="MessageBlock" Property="Visibility" Value="Visible"/>
                                             </DataTrigger>
-
+                                            
                                             <DataTrigger Binding="{Binding Type}" Value="DisarmedInThisTurn">
                                                 <Setter TargetName="Message" Property="Text" Value="{Binding Source='he4c05e4ag7e4eg46edgbc22g77fab2bddc2d', Converter={StaticResource TranslatedStringConverter}}"/>
+                                                <Setter TargetName="MessageBlock" Property="Visibility" Value="Visible"/>
                                             </DataTrigger>
+
                                         </DataTemplate.Triggers>
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>
                             </ItemsControl>
-
-
 
                         </Grid>
 
@@ -3909,6 +3952,8 @@
                                 </Style>
                             </ls:LSButton.Style>
                         </ls:LSButton>
+
+                        <ls:LSInputBinding x:Name="ShortRestShortcut" BoundEvent="ShortRest" PlayerId="{Binding CurrentPlayer.PlayerId}" Command="{Binding ShortRest}" IsEnabled="{Binding CurrentPlayer.SelectedCharacter.IsShortRestAvailable}" />
 
                         <Menu x:Name="RestMenu" Background="Transparent" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,26,78" ls:TooltipExtender.Owner="{Binding DataContext.CurrentPlayer.SelectedCharacter, ElementName=HotBar}"
                               IsEnabled="{Binding Data.LongRest.IsActive, Converter={StaticResource InvertBoolConverter}}">

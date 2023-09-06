@@ -87,18 +87,6 @@
         <ContentPresenter ContentTemplate="{StaticResource ActionResources.ActionGroup.ActionPointWithBG}"/>
     </ControlTemplate>
     
-     <DataTemplate x:Key="EquippedTorchIcon" DataType="{x:Type ls:VMItem}">
-        <Ellipse x:Name="icon" Width="20" Height="20" Fill="Magenta" Visibility="Collapsed"/>
-        <DataTemplate.Triggers>
-            <DataTrigger Binding="{Binding EquippedAsTorch}" Value="ThisEquipped">
-                <Setter TargetName="icon" Property="Visibility" Value="Visible"/>
-            </DataTrigger>
-            <DataTrigger Binding="{Binding EquippedAsTorch}" Value="OtherEquipped">
-                <Setter TargetName="icon" Property="Visibility" Value="Visible"/>
-            </DataTrigger>
-        </DataTemplate.Triggers>
-    </DataTemplate>
-
     <ControlTemplate x:Key="ActionResources.ActionGroup.BonusActionPointGroup">
         <ControlTemplate.Resources>
             <ImageSource x:Key="Highlight">/GustavNoesisGUI;component/Assets/ActionResources_c/Icons/c_ico_bonusAction_h.png</ImageSource>
@@ -299,18 +287,21 @@
         <ContentPresenter ContentTemplate="{StaticResource ActionResources.ActionGroup.ActionPoint}"/>
     </ControlTemplate>
 
+    <ControlTemplate x:Key="ActionResources.ActionGroup.ShadowSpellSlotGroup" TargetType="ls:LSActionPoint">
+        <ControlTemplate.Resources>
+            <ImageSource x:Key="Highlight">/GustavNoesisGUI;component/Assets/ActionResources_c/Icons/c_ico_mini_spellSlot_active.png</ImageSource>
+            <ImageSource x:Key="Available">/GustavNoesisGUI;component/Assets/ActionResources_c/Icons/c_ico_mini_spellSlot_shadow_point.png</ImageSource>
+            <ImageSource x:Key="Used">/GustavNoesisGUI;component/Assets/ActionResources_c/Icons/c_ico_mini_spellSlot_spent.png</ImageSource>
+            <ImageSource x:Key="Missing">/GustavNoesisGUI;component/Assets/ActionResources_c/Icons/c_ico_mini_spellSlot_unavailable.png</ImageSource>
+        </ControlTemplate.Resources>
+        <ContentPresenter ContentTemplate="{StaticResource ActionResources.ActionGroup.ActionPoint}"/>
+    </ControlTemplate>
+
     <ControlTemplate x:Key="DefaultProgressBar" TargetType="{x:Type ProgressBar}">
         <Grid x:Name="TemplateRoot" MinHeight="{TemplateBinding MinHeight}">
-            <Border x:Name="PART_Track"
-            Background="{TemplateBinding Background}" 
-            BorderBrush="{TemplateBinding BorderBrush}"
-            BorderThickness="{TemplateBinding BorderThickness}"
-            CornerRadius="1"/>
-            <Grid x:Name="PART_Indicator"
-            HorizontalAlignment="Left">
-                <Border x:Name="IndicatorBorder"
-                Margin="{TemplateBinding Padding}"
-                Background="{TemplateBinding Foreground}"/>
+            <Border x:Name="PART_Track" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="1"/>
+            <Grid x:Name="PART_Indicator" HorizontalAlignment="Left">
+                <Border x:Name="IndicatorBorder" Margin="{TemplateBinding Padding}" Background="{TemplateBinding Foreground}"/>
             </Grid>
         </Grid>
         <ControlTemplate.Triggers>
@@ -325,7 +316,7 @@
     </ControlTemplate>
 
     <Style x:Key="CharacterPortraitBarStyle" TargetType="ProgressBar">
-        <Setter Property="Foreground" Value="{StaticResource LS_PortraitHPColor}"/>
+        <Setter Property="Foreground" Value="{StaticResource LS_PortraitHealthBarColor}"/>
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="BorderBrush" Value="Transparent"/>
         <Setter Property="Value" Value="{Binding Stats.Health.PercentValue, Mode=OneWay, Converter={StaticResource InvertPercConverter}}"/>
@@ -334,7 +325,7 @@
         <Setter Property="Orientation" Value="Vertical"/>
         <Style.Triggers>
             <DataTrigger Binding="{Binding Stats.IsAlive}" Value="False">
-                <Setter Property="Foreground" Value="{StaticResource LS_PortraitDeadColor}"/>
+                <Setter Property="Foreground" Value="{StaticResource LS_PortraitDeadRadialColor}"/>
             </DataTrigger>
         </Style.Triggers>
     </Style>
@@ -535,54 +526,6 @@
 
         </ContentControl>
     </DataTemplate>
-
-    <ControlTemplate x:Key="SingleBasicPanel" TargetType="ContentControl">
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
-            <Image Grid.Row="1" x:Name="Background" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared_c/c_frame_standard.png" Stretch="None"/>
-            <Control Grid.Row="1" x:Name="GoldLabel" DataContext="{Binding Inventory.Gold, Mode=OneWay, StringFormat={}{0:N0}}" Template="{StaticResource CharacterPanelGold}" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,30,70,0"/>
-            <Grid Grid.Row="1">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition/>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="100"/>
-                    <RowDefinition Height="120"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
-                <Control Grid.Row="1" x:Name="NameLabel" Template="{DynamicResource NameAndDescriptionTemplate}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                <ContentPresenter Grid.Row="2" Margin="0,10,0,20"/>
-            </Grid>
-            <ContentControl ContentTemplate="{StaticResource FrameAttachedCharacterPortraitTemplate}" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,0,0,-120" Content="{Binding}"/>
-            <Grid.Triggers>
-                <EventTrigger RoutedEvent="FrameworkElement.Loaded">
-                    <BeginStoryboard >
-                        <Storyboard TargetName="GoldLabel">
-                            <Storyboard.Children>
-                                <Storyboard Children="{StaticResource FadeInSecElements}"  />
-                            </Storyboard.Children>
-                        </Storyboard>
-                    </BeginStoryboard>
-                    <BeginStoryboard >
-                        <Storyboard TargetName="NameLabel" >
-                            <Storyboard.Children>
-                                <Storyboard Children="{StaticResource FadeInTertElements}"  />
-                            </Storyboard.Children>
-                        </Storyboard>
-                    </BeginStoryboard>
-                </EventTrigger>
-
-            </Grid.Triggers>
-        </Grid>
-        <ControlTemplate.Triggers>
-            <DataTrigger Binding="{Binding IsSelectedCharacter}" Value="True">
-                <Setter Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared_c/c_frame_standard_selected.png" TargetName="Background"/>
-            </DataTrigger>
-        </ControlTemplate.Triggers>
-    </ControlTemplate>
 
     <!--Status Effects START -->
 
@@ -888,7 +831,7 @@
                            FontSize="{StaticResource ScaledMediumFontSize}" noesis:Text.Stroke="{StaticResource LS_TextOutlineColor}" noesis:Text.StrokeThickness="7"/>
             </Grid>
 
-            <TextBlock x:Name="ConcentrationLabel" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,0,0,0" FontWeight="DemiBold" FontSize="{StaticResource ScaledSmallFontSize}" Style="{StaticResource HUD.DefaultTextStyle}"
+            <TextBlock x:Name="ConcentrationLabel" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,0,0,0" FontWeight="DemiBold" FontSize="{StaticResource ScaledSmallFontSize}" TextWrapping="Wrap" Style="{StaticResource HUD.DefaultTextStyle}"
                        Foreground="{StaticResource LS_PrimaryColor}">
                 <TextBlock.Text>
                     <MultiBinding Converter="{StaticResource ParameterizedTranslatedStringConverter}">
@@ -956,7 +899,7 @@
     <DataTemplate DataType="{x:Type ls:QuestView}">
         <StackPanel>
             <ContentControl Template="{StaticResource QuestTooltipTemplate}" Content="{Binding .}"/>
-            <ls:LSButton x:Name="OpenInJournalBtn" ContentTemplate="{StaticResource ControllerButtonHint}" 
+            <ls:LSButton x:Name="OpenInJournalBtn" ContentTemplate="{StaticResource ControllerButtonHint}" Margin="-34,20,0,0" HorizontalAlignment="Left"
                          Content="{Binding Path=OwnerDCWidget.CurrentPlayer.UIData.InputEvents, RelativeSource={RelativeSource AncestorType={x:Type ls:LSTooltip}}, ConverterParameter=UICreate, Converter={StaticResource FindInputEventConverter}}" 
                          Tag="{Binding Source='h63f39696gf0d9g4b66g933bg4f22a72b4a37', Converter={StaticResource TranslatedStringConverter}}"/>
         </StackPanel>
@@ -1099,7 +1042,7 @@
     <!-- Pad Carousel Styles -->
     <ControlTemplate x:Key="TopCarouselBackground" >
         <ControlTemplate.Resources>
-            <BitmapImage x:Key="CarouselBottomImage" UriSource="pack://application:,,,/GustavNoesisGUI;component/Assets/CharacterPanel_c/c_topNav_bar.png"/>
+            <BitmapImage x:Key="CarouselBottomImage" UriSource="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared_c/c_headerCarouselDecor.png"/>
         </ControlTemplate.Resources>
 
         <Grid>
@@ -1112,7 +1055,7 @@
                     </LinearGradientBrush>
                 </Rectangle.Fill>
             </Rectangle>
-            <Image Source="{StaticResource CarouselBottomImage}" Stretch="None" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,-6"/>
+            <Image Source="{StaticResource CarouselBottomImage}" Stretch="None" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,-58"/>
         </Grid>
     </ControlTemplate>
     
@@ -1257,21 +1200,22 @@
                                 <Setter.Value>
                                     <ControlTemplate TargetType="{x:Type ListBox}">
                                         <StackPanel>
-                                            <StackPanel Orientation="Horizontal">
+                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" >
+                                                <ls:LSButton Template="{StaticResource ControllerButton.ImageSwitcher}" DataContext="{Binding CurrentPlayer.UIData.InputEvents, ConverterParameter=UITabPrev, Converter={StaticResource FindInputEventConverter}}" ls:LSButton.EatInput="False" Width="{DynamicResource ScaledControllerHintSize}" Height="{DynamicResource ScaledControllerHintSize}" VerticalAlignment="Center"/>
                                                 <ls:LSButton x:Name="leftBtn" BoundEvent="UITabPrev" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="40,0,0,0" Command="{Binding DataContext.PrevItemLooped, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}" SoundID="{DynamicResource CarouselButtonSoundEvent}">
                                                     <ls:LSButton.RenderTransform>
                                                         <ScaleTransform ScaleX="-1" CenterX="32"/>
                                                     </ls:LSButton.RenderTransform>
                                                 </ls:LSButton>
+
+
+
+                                                <TextBlock x:Name="PageName" Text="{Binding SelectedItem.Content, ElementName=SplitScreenCarousel}" VerticalAlignment="Center" TextAlignment="Center" MinWidth="300"/>
                                                 <ls:LSButton x:Name="rightBtn" BoundEvent="UITabNext" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,40,0" Command="{Binding DataContext.NextItemLooped, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}" SoundID="{DynamicResource CarouselButtonSoundEvent}"/>
-                                                <ls:LSButton Template="{StaticResource ControllerButton.ImageSwitcher}" DataContext="{Binding CurrentPlayer.UIData.InputEvents, ConverterParameter=UITabPrev, Converter={StaticResource FindInputEventConverter}}" ls:LSButton.EatInput="False" Width="{DynamicResource ScaledControllerHintSize}" Height="{DynamicResource ScaledControllerHintSize}" VerticalAlignment="Center"/>
-
-                                                <TextBlock x:Name="PageName" Text="{Binding SelectedItem.Content, ElementName=SplitScreenCarousel}" VerticalAlignment="Center" TextAlignment="Center"/>
-
                                                 <ls:LSButton Template="{StaticResource ControllerButton.ImageSwitcher}" DataContext="{Binding CurrentPlayer.UIData.InputEvents, ConverterParameter=UITabNext, Converter={StaticResource FindInputEventConverter}}" ls:LSButton.EatInput="False" Width="{DynamicResource ScaledControllerHintSize}" Height="{DynamicResource ScaledControllerHintSize}" VerticalAlignment="Center"/>
                                             </StackPanel>
 
-                                            <ItemsPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,-32,0,32"/>
+                                            <ItemsPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,-22,0,22"/>
                                         </StackPanel>
                                     </ControlTemplate>
                                 </Setter.Value>
@@ -1281,13 +1225,14 @@
 
                     <ListBox.ItemsPanel>
                         <ItemsPanelTemplate>
-                            <StackPanel Orientation="Horizontal"/>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" />
                         </ItemsPanelTemplate>
                     </ListBox.ItemsPanel>
 
                     <ListBox.ItemContainerStyle>
                         <Style TargetType="{x:Type ListBoxItem}">
                             <Setter Property="Padding" Value="4,0"/>
+                            <Setter Property="HorizontalAlignment" Value="Center" />
                             <Setter Property="Template">
                                 <Setter.Value>
                                     <ControlTemplate TargetType="{x:Type ListBoxItem}">
@@ -1425,6 +1370,20 @@
     <Style x:Key="PanelsCarouselStyle" TargetType="Control">
         <Setter Property="Template" Value="{StaticResource PanelsCarouselTemplate}"/>
         <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="VerticalAlignment" Value="Top"/>
+    </Style>
+
+    <ControlTemplate x:Key="PartyGoldTemplate">
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,54,90,0">
+            <TextBlock VerticalAlignment="Center" TextAlignment="Right" Foreground="{StaticResource LS_baseTxtColor}" Background="Transparent"  Text="{Binding Source='ha6564037g4678g44cdga274gadc09cbef56f',Converter={StaticResource TranslatedStringConverter}}" FontSize="{StaticResource ScaledDefaultFontSize}" Margin="0,0,12,0" FontWeight="DemiBold"/>
+            <TextBlock VerticalAlignment="Center" TextAlignment="Right" Foreground="{StaticResource LS_tint100}" Background="Transparent" Text="{Binding DataContext.CurrentPlayer.PartyGold, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" FontSize="{StaticResource ScaledIntermediateFontSize}" FontWeight="Bold" Margin="0,-4,0,0"/>
+            <Image VerticalAlignment="Center" Source="{StaticResource GoldIcon}" Stretch="None" Margin="8,0,0,0"/>
+        </StackPanel>
+    </ControlTemplate>
+
+    <Style x:Key="PartyGoldStyle" TargetType="Control">
+        <Setter Property="Template" Value="{StaticResource PartyGoldTemplate}"/>
+        <Setter Property="HorizontalAlignment" Value="Right"/>
         <Setter Property="VerticalAlignment" Value="Top"/>
     </Style>
 
@@ -1689,6 +1648,15 @@
                 </Setter>
             </DataTrigger>
 
+            <DataTrigger Binding="{Binding TypeId}" Value="ShadowSpellSlot">
+                <Setter TargetName="ResourceImage" Property="Fill">
+                    <Setter.Value>
+                        <ImageBrush ImageSource="pack://application:,,,/GustavNoesisGUI;component/Assets/ActionResources_c/Icons/c_ico_mini_spellSlot_shadow_point.png"
+                                                            TileMode="Tile" Stretch="None" ViewportUnits="Absolute" Viewport="0,0,25,64" ViewboxUnits="Absolute" Viewbox="8,0,25,64"/>
+                    </Setter.Value>
+                </Setter>
+            </DataTrigger>
+
             <DataTrigger Binding="{Binding Level}" Value="1">
                 <Setter TargetName="LevelImage" Property="Visibility" Value="Visible"/>
                 <Setter TargetName="LevelImage" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/ActionResources_c/Icons/c_ico_spellLevel_1.png"/>
@@ -1718,42 +1686,42 @@
             <MultiDataTrigger >
                 <MultiDataTrigger.Conditions>
                     <Condition Binding="{Binding TypeId}" Value="SpellSlot"/>
-                    <Condition Binding="{Binding Path=DataContext.CurrentPlayer.SelectedCharacter.CurrentSpellTask.RitualCost, Converter={StaticResource NullToBoolFalseConverter}, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}}" Value="True" />
-                    <Condition Binding="{Binding Path=DataContext.CurrentPlayer.SelectedCharacter.CurrentSpellTask.IsRitualDisabled, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}}" Value="False" />
+                    <Condition Binding="{Binding Path=DataContext.Spell.RitualCost, Converter={StaticResource NullToBoolFalseConverter}, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}}" Value="True" />
+                    <Condition Binding="{Binding Path=DataContext.Spell.IsRitualDisabled, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}}" Value="False" />
                 </MultiDataTrigger.Conditions>
                 <MultiDataTrigger.Setters>
                     <Setter TargetName="ResourceImage" Property="Fill">
                         <Setter.Value>
-                            <ImageBrush ImageSource="pack://application:,,,/GustavNoesisGUI;component/Assets/ActionResources_c/Icons/c_ico_classRes_rituals_d.png" 
-                                                                Stretch="Uniform"/>
+                            <ImageBrush ImageSource="pack://application:,,,/GustavNoesisGUI;component/Assets/ActionResources_c/Icons/c_ico_classRes_rituals_d.png" Stretch="Uniform"/>
                         </Setter.Value>
                     </Setter>
                     <Setter TargetName="ResourceImage" Property="Width" Value="64"/>
                     <Setter TargetName="LevelImage" Property="Visibility" Value="Collapsed"/>
+                    <Setter TargetName="ResourceName" Property="Text" Value="{Binding Source='hc3fa3d4agb98bg4cceg80a4g4ae437a80850', Converter={StaticResource TranslatedStringConverter}}"/>
                 </MultiDataTrigger.Setters>
             </MultiDataTrigger>
             <MultiDataTrigger >
                 <MultiDataTrigger.Conditions>
                     <Condition Binding="{Binding TypeId}" Value="WarlockSpellSlot"/>
-                    <Condition Binding="{Binding Path=DataContext.CurrentPlayer.SelectedCharacter.CurrentSpellTask.RitualCost, Converter={StaticResource NullToBoolFalseConverter}, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}}" Value="True" />
-                    <Condition Binding="{Binding Path=DataContext.CurrentPlayer.SelectedCharacter.CurrentSpellTask.IsRitualDisabled, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}}" Value="False" />
+                    <Condition Binding="{Binding Path=DataContext.Spell.RitualCost, Converter={StaticResource NullToBoolFalseConverter}, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}}" Value="True" />
+                    <Condition Binding="{Binding Path=DataContext.Spell.IsRitualDisabled, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}}" Value="False" />
                 </MultiDataTrigger.Conditions>
                 <MultiDataTrigger.Setters>
                     <Setter TargetName="ResourceImage" Property="Fill">
                         <Setter.Value>
-                            <ImageBrush ImageSource="pack://application:,,,/GustavNoesisGUI;component/Assets/ActionResources_c/Icons/c_ico_classRes_rituals_d.png" 
-                                                                Stretch="Uniform"/>
+                            <ImageBrush ImageSource="pack://application:,,,/GustavNoesisGUI;component/Assets/ActionResources_c/Icons/c_ico_classRes_rituals_d.png" Stretch="Uniform"/>
                         </Setter.Value>
                     </Setter>
                     <Setter TargetName="ResourceImage" Property="Width" Value="64"/>
                     <Setter TargetName="LevelImage" Property="Visibility" Value="Collapsed"/>
+                    <Setter TargetName="ResourceName" Property="Text" Value="{Binding Source='hc3fa3d4agb98bg4cceg80a4g4ae437a80850', Converter={StaticResource TranslatedStringConverter}}"/>
                 </MultiDataTrigger.Setters>
             </MultiDataTrigger>
         </DataTemplate.Triggers>
     </DataTemplate>
 
     <ControlTemplate x:Key="ActionDetailsTemplate">
-        <Grid x:Name="ActionInfoProperties" HorizontalAlignment="Right" ls:TooltipExtender.IsOpen="True" ls:TooltipExtender.Content="{Binding .}" >
+        <Grid x:Name="ActionInfoProperties" HorizontalAlignment="Center" ls:TooltipExtender.IsOpen="True" ls:TooltipExtender.Content="{Binding .}">
             <Grid.Resources>
                 <BitmapImage x:Key="ACIcon" UriSource="pack://application:,,,/GustavNoesisGUI;component/Assets/HUD_c/actionDetails/c_ico_AC.png" />
                 <BitmapImage x:Key="SeparatorIcon" UriSource="pack://application:,,,/GustavNoesisGUI;component/Assets/HUD_c/actionDetails/c_ico_dividiingDot.png" />
@@ -1791,12 +1759,8 @@
                 </Style>
             </Grid.Resources>
 
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
-            </Grid.ColumnDefinitions>
 
-            <StackPanel x:Name="ActionInfoPropertiesList" Grid.Column="0" Orientation="Horizontal">
+            <ls:LSWrapPanel x:Name="ActionInfoPropertiesList" Orientation="Horizontal" Width="1320" HorizontalAlignment="Center" HorizontalContentAlignment="Center">
                 <!-- AC -->
                 <StackPanel x:Name="ACProperty" FlowDirection="LeftToRight" Orientation="Horizontal"  Visibility="Collapsed" DataContext="{Binding AttachedStatus}">
                     <StackPanel x:Name="ACPropertyValues" Orientation="Horizontal" FlowDirection="RightToLeft" Margin="0,-1,5,1">
@@ -1870,7 +1834,7 @@
                     <TextBlock x:Name="CooldownText" VerticalAlignment="Center"  Style="{StaticResource ActionDetailBigTextStyle}"/>
                 </StackPanel>
                 
-            </StackPanel>
+            </ls:LSWrapPanel>
         </Grid>
 
         <ControlTemplate.Triggers>
@@ -2203,7 +2167,7 @@
             </b:Interaction.Triggers>
             <ContentPresenter IsHitTestVisible="False"/>
             <Image x:Name="SelectOverlay" Source="{StaticResource InvSlot_SelectionOverlay}" IsHitTestVisible="False" Visibility="Hidden" />
-            <Control x:Name="FocusOverlay" Visibility="Collapsed" Template="{DynamicResource FocusableBorderTemplateSlot}"/>
+            <Control x:Name="FocusOverlay" Visibility="Collapsed" Template="{DynamicResource FocusableBorderTemplate}"/>
             <Control Style="{StaticResource NewInventoryCellItemStyle}"/>
         </ls:LSEntityObject>
         <ControlTemplate.Triggers>
@@ -2231,19 +2195,4 @@
             </MultiDataTrigger>
         </ControlTemplate.Triggers>
     </ControlTemplate>
-
-    <ControlTemplate x:Key="EquippedItemIndicatorTemplate">
-        <TextBlock x:Name="EquipmentLetter" FontSize="{StaticResource ScaledMediumFontSize}" Foreground="{StaticResource LS_tint100}" FontWeight="DemiBold" Text="{Binding Source='h9079b9dcgb3b5g4f5cg9ca0gccadfa842d28',Converter={StaticResource TranslatedStringConverter}}" noesis:Text.Stroke="Black" noesis:Text.StrokeThickness="4" Visibility="Collapsed"/>
-
-        <ControlTemplate.Triggers>
-            <DataTrigger Binding="{Binding Equipped}" Value="ThisEquipped">
-                <Setter TargetName="EquipmentLetter" Property="Visibility" Value="Visible"/>
-            </DataTrigger>
-
-            <DataTrigger Binding="{Binding Equipped}" Value="OtherEquipped">
-                <Setter TargetName="EquipmentLetter" Property="Visibility" Value="Visible"/>
-            </DataTrigger>
-        </ControlTemplate.Triggers>
-    </ControlTemplate>
-
 </ResourceDictionary>

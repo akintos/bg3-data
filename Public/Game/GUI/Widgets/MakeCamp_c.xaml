@@ -181,6 +181,9 @@
                                             <b:EventTrigger EventName="LocalFocusChanged">
                                                 <b:InvokeCommandAction Command="{Binding DataContext.ShowTooltipOnUIElement, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" CommandParameter="{Binding Path=LocalFocus, ElementName=SuppliesView}"/>
                                             </b:EventTrigger>
+                                            <b:DataTrigger Binding="{Binding HasInputEnabled, ElementName=MakeCamp}" Value="True">
+                                                <b:InvokeCommandAction Command="{Binding ShowTooltipOnUIElement}" CommandParameter="{Binding Path=LocalFocus, ElementName=SuppliesView}"/>
+                                            </b:DataTrigger>
                                             <b:EventTrigger EventName="SelectionChanged">
                                                 <b:InvokeCommandAction Command="{Binding OnItemSelectedCommand}" CommandParameter="{Binding ElementName=SuppliesView, Path=SelectedItems}"/>
                                                 <ls:LSPlaySound Sound="UI_HUD_CampSuppliesFill_Start"/>
@@ -193,7 +196,7 @@
                             </StackPanel>
                         </Grid>
 
-                        <ContentControl Template="{StaticResource PrimaryButtonTemplateWrapper}" HorizontalAlignment="Center" Margin="0,-10,0,0"   >
+                        <ContentControl Template="{StaticResource PrimaryButtonTemplateWrapper}" HorizontalAlignment="Center" Margin="0,2,0,0"   >
                             <ls:LSButton x:Name="StartRestBtn"
 							             Command="{Binding DataContext.ProcessRestCommand, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"
 							             ls:LSButton.BoundEvent="UITakeAll"
@@ -205,7 +208,8 @@
                         </ContentControl>
 
                     </StackPanel>
-                    <StackPanel x:Name="ButtonHints" VerticalAlignment="Bottom" Style="{StaticResource ButtonHint.Container.Center}">
+
+                    <ls:LSWrapPanel x:Name="ButtonHints" HorizontalAlignment="Center" VerticalAlignment="Bottom" HorizontalContentAlignment="Center">
 
                             <ls:LSButton ContentTemplate="{StaticResource ControllerButtonHint}" Command="{Binding DataContext.ToggleListItemCommand, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" BoundEvent="UIAccept" Tag="{Binding Source='hd0c08193ga7f2g4a7eg8225g63748c7b3096', Converter={StaticResource TranslatedStringConverter}}" 
                                 Content="{Binding CurrentPlayer.UIData.InputEvents, ConverterParameter=UIAccept, Converter={StaticResource FindInputEventConverter}}" HorizontalAlignment="Left" SoundID="UI_HUD_MakeCamp_ItemSelect" >
@@ -229,16 +233,15 @@
                                  CommandParameter="{Binding LocalFocus.DataContext.Object, ElementName=SuppliesView}"
                                 />
                           
-                            <ls:LSButton ContentTemplate="{StaticResource ControllerButtonHint}" SoundID="" BoundEvent="UIShowInfo" Content="{Binding CurrentPlayer.UIData.InputEvents, ConverterParameter=UIShowInfo, Converter={StaticResource FindInputEventConverter}}"
-                                         Tag="{Binding Source='h2a8cab0cgbfb8g4890gbfbdg5a9426e29457', Converter={StaticResource TranslatedStringConverter}}" 
+                            <ls:LSButton x:Name="ToggleTooltips" ContentTemplate="{StaticResource ControllerButtonHint}" SoundID="" BoundEvent="UIShowInfo" Content="{Binding CurrentPlayer.UIData.InputEvents, ConverterParameter=UIShowInfo, Converter={StaticResource FindInputEventConverter}}"
+                                         Tag="{Binding Source='hf8dd4c2fg97e0g4ccdgac1ag3cd1fe5060ef', Converter={StaticResource TranslatedStringConverter}}" 
                                  Command="{Binding DataContext.ToggleTooltipOnUIElement, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" 
                                  CommandParameter="{Binding Path=LocalFocus, ElementName=SuppliesView}"
                                  IsEnabled="{Binding LocalFocus, ElementName=SuppliesView, Converter={StaticResource NullToBoolFalseConverter}}"/>
 
                             <ls:LSButton x:Name="CancelButton" BoundEvent="UICancel" Command="{Binding DataContext.CancelCampCommand, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" Tag="{Binding Source='h01d5c470g61bfg498cgb17eg7be425444fa5', Converter={StaticResource TranslatedStringConverter}}" 
                                  ContentTemplate="{StaticResource ControllerButtonHint}" Content="{Binding CurrentPlayer.UIData.InputEvents, ConverterParameter=UICancel, Converter={StaticResource FindInputEventConverter}}" HorizontalAlignment="Left" SoundID="UI_HUD_MakeCamp_Cancel" />
-                        </StackPanel>
-                    
+                    </ls:LSWrapPanel>
                 </Grid>
             </Grid>
 
@@ -255,6 +258,9 @@
                     <Setter TargetName="SplitStackButton" Property="IsEnabled" Value="False"/>
                 </DataTrigger>
 
+                <DataTrigger Binding="{Binding ShowUIElementTooltip}" Value="True">
+                    <Setter TargetName="ToggleTooltips" Property="Tag" Value="{Binding Source='hb33ec471gd611g4ee3gbbffg699af8f79167', Converter={StaticResource TranslatedStringConverter}}"/>
+                </DataTrigger>
 
             </ControlTemplate.Triggers>
         </ControlTemplate>

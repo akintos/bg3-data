@@ -15,23 +15,25 @@
              CanCacheFocusSurroundingElements="True"
              KeyboardNavigation.DirectionalNavigation="Continue">
 
-    <ls:UIWidget.Resources>
-        <ResourceDictionary Source="../Library/SaveLoad_c.xaml"/>
-    </ls:UIWidget.Resources>
-
     <ls:UIWidget.Template>
         <ControlTemplate>
             <ControlTemplate.Resources>
                 <ResourceDictionary>
+                    <ResourceDictionary.MergedDictionaries>
+                        <ResourceDictionary Source="../Library/SaveLoad_c.xaml"/>
+                    </ResourceDictionary.MergedDictionaries>
+
                     <ControlTemplate x:Key="NoSavePresenter">
                         <ControlTemplate.Resources>
                             <BitmapImage x:Key="BG3Logo" UriSource="pack://application:,,,/GustavNoesisGUI;component/Assets/MainMenu/menu_logo_2.png"/>
                         </ControlTemplate.Resources>
-                        <StackPanel Orientation="Vertical" Width="1920">
-                            <TextBlock Text="{Binding Source='h9f653fceg70d2g47ddg89b8g8289747c4896', Converter={StaticResource TranslatedStringConverter}}" HorizontalAlignment="Center" FontSize="{StaticResource ScaledBigFontSize}" Style="{DynamicResource SaveLoad.Title}" Margin="0,0,0,40" Height="180" TextWrapping="Wrap" TextAlignment="Center"/>
+                        <StackPanel Orientation="Vertical" Width="{StaticResource PresenterWidth}">
+                            <Grid MinHeight="180">
+                                <TextBlock Text="{Binding Source='h9f653fceg70d2g47ddg89b8g8289747c4896', Converter={StaticResource TranslatedStringConverter}}" HorizontalAlignment="Center" FontSize="{StaticResource ScaledBigFontSize}" Style="{StaticResource SaveLoad.Title}" VerticalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center"/>
+                            </Grid>
 
                             <Grid x:Name="ScreenshotContainer">
-                                <Image Source="{DynamicResource ScreenshotHolder}" Stretch="None"/>
+                                <Image Source="{StaticResource ScreenshotHolder}" Stretch="None"/>
                                 <Image Source="{StaticResource BG3Logo}" Stretch="None" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                             </Grid>
 
@@ -56,7 +58,7 @@
                 <Image Source="{StaticResource OptionsBackground}" Stretch="UniformToFill"/>
 
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                    <StackPanel x:Name="SavegamesListHolder" VerticalAlignment="Center" HorizontalAlignment="Center" Width="1300">
+                    <StackPanel x:Name="SavegamesListHolder" VerticalAlignment="Top" HorizontalAlignment="Center" Width="1860" Margin="{StaticResource SavefileMargin}">
                         <b:Interaction.Behaviors>
                             <ls:CollectionSortBehavior x:Name="SortBehavior" ItemsSource="{Binding ExistingPlaythroughs}" Comparer="{Binding SaveComparer}" />
                         </b:Interaction.Behaviors>
@@ -77,10 +79,10 @@
                         </ItemsControl>
                     </StackPanel>
 
-                    <Control x:Name="PresenterControl" Template="{StaticResource SavePresenterTemplate}" VerticalAlignment="Top" Margin="0,200,0,0"/>
+                    <Control x:Name="PresenterControl" Template="{StaticResource SavePresenterTemplate}" VerticalAlignment="Top" Margin="{StaticResource PresenterMargin}"/>
                 </StackPanel>
 
-                <StackPanel x:Name="ButtonPrompts" Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="0,0,0,20">
+                <StackPanel x:Name="ButtonPrompts" Style="{StaticResource ButtonHint.Container.Center}">
                     <!-- Load button -->
                     <ls:LSButton x:Name="LoadBtn"
                                  VerticalAlignment="Center" 
@@ -89,26 +91,7 @@
                                  Tag="{Binding Source='h77aacd82g3505g4a61g9794gca31245f7794',Converter={StaticResource TranslatedStringConverter}}" 
                                  BoundEvent="UIAccept"
                                  Command="{Binding DoLoad}"
-                                 SoundID="UI_Shared_Accept"/>
-
-                    <!-- Delete button -->
-                    <ls:LSButton x:Name="DelBtn"
-                                 VerticalAlignment="Center"
-                                 Style="{StaticResource ControllerHoldButtonStyle}"  
-                                 DataContext="{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIMessageBoxX'}"
-                                 Tag="{Binding Source='h4b0153e2g855bg45fag9e49g9c4ae03a648c',Converter={StaticResource TranslatedStringConverter}}"
-                                 Command="{Binding DataContext.OpenMessageBox, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"
-                                 CommandParameter="{DynamicResource MessageBoxSaveDelete}"
-                                 IsEnabled="{Binding DataContext.SelectedSave, Converter={StaticResource NullToBoolFalseConverter}, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"/>
-
-                    <!-- Collapse campaign button -->
-                    <ls:LSButton x:Name="CollapseBtn"
-                                 VerticalAlignment="Center"
-                                 ContentTemplate="{StaticResource ControllerButtonHint}"  
-                                 Content="{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIMessageBoxY'}"
-                                 Tag="{Binding Source='hdb087266gb0a6g464dg8893g83fda5d01358',Converter={StaticResource TranslatedStringConverter}}"
-                                 BoundEvent="UIMessageBoxY"
-                                 IsEnabled="{Binding SelectedSave, Converter={StaticResource NullToBoolFalseConverter}}">
+                                 SoundID="UI_Shared_Accept">
                         <b:Interaction.Triggers>
                             <b:EventTrigger EventName="LSButtonPressed">
                                 <b:Interaction.Behaviors>
@@ -120,19 +103,32 @@
                                 </b:Interaction.Behaviors>
                                 <b:ChangePropertyAction TargetObject="{Binding FocusedElement, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" PropertyName="IsChecked" Value="{Binding FocusedElement.IsChecked, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}, Converter={StaticResource InvertBoolConverter}}"/>
                             </b:EventTrigger>
-                            <b:EventTrigger EventName="LSButtonPressed">
-                                <b:Interaction.Behaviors>
-                                    <b:ConditionBehavior>
-                                        <b:ConditionalExpression>
-                                            <b:ComparisonCondition LeftOperand="{Binding SelectedPlaythrough}" Operator="Equal" RightOperand="{x:Null}"/>
-                                        </b:ConditionalExpression>
-                                    </b:ConditionBehavior>
-                                </b:Interaction.Behaviors>
-                                <b:ChangePropertyAction TargetObject="{Binding FocusedElement.Tag, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" PropertyName="IsExpanded" Value="{Binding FocusedElement.Tag.IsExpanded, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}, Converter={StaticResource InvertBoolConverter}}"/>
-                                <ls:SetMoveFocusAction TargetName="LoadGame_c" FocusElement="{Binding FocusedElement.Tag, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"/>
-                            </b:EventTrigger>
                         </b:Interaction.Triggers>
                     </ls:LSButton>
+
+                    <!-- Delete button -->
+                    <ls:LSButton x:Name="DelBtn"
+                                 VerticalAlignment="Center"
+                                 ContentTemplate="{StaticResource ControllerButtonHint}"  
+                                 Content="{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIMessageBoxX'}"
+                                 BoundEvent="UIMessageBoxX"
+                                 Tag="{Binding Source='h4b0153e2g855bg45fag9e49g9c4ae03a648c',Converter={StaticResource TranslatedStringConverter}}"
+                                 Command="{Binding OpenMessageBox}"
+                                 CommandParameter="{DynamicResource MessageBoxSaveDelete}"
+                                 TapTime="{StaticResource DefaultButtonTapTime}"
+                                 IsEnabled="{Binding SelectedSave, Converter={StaticResource NullToBoolFalseConverter}}"
+                                 EatInput="False"/>
+
+                    <ls:LSButton x:Name="DelCampaignBtn"
+                                 VerticalAlignment="Center"
+                                 Style="{StaticResource ControllerHoldButtonStyle}"
+                                 DataContext="{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIMessageBoxX'}"
+                                 Tag="{Binding Source='ha58e0d43g4b0ag433ag939eg1c140baa7732',Converter={StaticResource TranslatedStringConverter}}"
+                                 Command="{Binding DataContext.OpenMessageBox, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"
+                                 CommandParameter="{DynamicResource MessageBoxSaveDeleteCampaign}"
+                                 Visibility="Collapsed"
+                                 HoldDelay="{StaticResource DefaultButtonTapTime}"
+                                 IsEnabled="False"/>
 
                     <!-- Cancel button -->
                     <ls:LSButton x:Name="BackBtn"
@@ -154,10 +150,15 @@
                 
                 <DataTrigger Binding="{Binding SelectedPlaythrough, Converter={StaticResource NullToBoolFalseConverter}}" Value="True">
                     <Setter TargetName="PresenterControl" Property="Template" Value="{StaticResource CampaignPresenterTemplate}"/>
-                    <Setter TargetName="CollapseBtn" Property="IsEnabled" Value="True"/>
+                    <Setter TargetName="LoadBtn" Property="Command" Value="{x:Null}"/>
+                    <Setter TargetName="LoadBtn" Property="Tag" Value="{Binding Source='hdb087266gb0a6g464dg8893g83fda5d01358',Converter={StaticResource TranslatedStringConverter}}"/>
+                    <Setter TargetName="LoadBtn" Property="SoundID" Value=""/>
+                    <Setter TargetName="LoadBtn" Property="IsEnabled" Value="True"/>
                     <Setter TargetName="DelBtn" Property="IsEnabled" Value="True"/>
-                    <Setter TargetName="DelBtn" Property="Tag" Value="{Binding Source='ha58e0d43g4b0ag433ag939eg1c140baa7732',Converter={StaticResource TranslatedStringConverter}}"/>
-                    <Setter TargetName="DelBtn" Property="CommandParameter" Value="{DynamicResource MessageBoxSaveDeleteCampaign}"/>
+                    <Setter TargetName="DelBtn" Property="Tag" Value="{Binding Source='hd338417fg3591g475bga45cg85abc82bfa55',Converter={StaticResource TranslatedStringConverter}}"/>
+                    <Setter TargetName="DelBtn" Property="CommandParameter" Value="{DynamicResource MessageBoxSaveDeleteCampaignButLatest}"/>
+                    <Setter TargetName="DelCampaignBtn" Property="IsEnabled" Value="True"/>
+                    <Setter TargetName="DelCampaignBtn" Property="Visibility" Value="Visible"/>
                 </DataTrigger>
 
                 <!-- Button prompts triggers -->

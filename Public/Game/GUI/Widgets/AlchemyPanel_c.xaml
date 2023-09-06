@@ -609,9 +609,14 @@
             <Grid x:Name="AlchemyRoot" ls:TooltipExtender.Owner="{Binding CurrentPlayer.SelectedCharacter}" Tag="{StaticResource TrueValue}">
                 <!-- BACKGROUND -->
                 <Image HorizontalAlignment="Center" VerticalAlignment="Center" Source="{StaticResource AlchemyBackground}" Stretch="UniformToFill"/>
-
+                
+                <Grid Width="auto" Height="164" VerticalAlignment="Top">
+                    <Control Template="{StaticResource TopCarouselBackground}" />
+                </Grid>
+                <Control x:Name="c_PartyGold" Visibility="Collapsed" Style="{StaticResource PartyGoldStyle}" />
                 <!-- PAGE NAVIGATION -->
-                <DockPanel x:Name="NavigationTabs" HorizontalAlignment="Center" VerticalAlignment="Top" MinHeight="164">
+                <DockPanel x:Name="NavigationTabs" HorizontalAlignment="Center" VerticalAlignment="Top" MinHeight="164" >
+                   
                     <ls:LSButton x:Name="NavigationLeftButton" BoundEvent="UITabPrev" DockPanel.Dock="Left" ContentTemplate="{StaticResource ControllerButtonHint}" Content="{Binding CurrentPlayer.UIData.InputEvents, ConverterParameter=UITabPrev, Converter={StaticResource FindInputEventConverter}}" Width="{StaticResource ScaledControllerHintSize}" Height="{StaticResource ScaledControllerHintSize}" ls:LSButton.EatInput="False" VerticalAlignment="Center" Margin="0,0,40,0"/>
 
                     <ls:LSButton x:Name="NavigationRightButton" BoundEvent="UITabNext" DockPanel.Dock="Right" ContentTemplate="{StaticResource ControllerButtonHint}" Content="{Binding CurrentPlayer.UIData.InputEvents, ConverterParameter=UITabNext, Converter={StaticResource FindInputEventConverter}}" Width="{StaticResource ScaledControllerHintSize}" Height="{StaticResource ScaledControllerHintSize}" ls:LSButton.EatInput="False" VerticalAlignment="Center" Margin="20,0,0,0"/>
@@ -671,6 +676,9 @@
                         <b:EventTrigger EventName="GotKeyboardFocus">
                             <b:InvokeCommandAction Command="{Binding ShowTooltipOnUIElement}" CommandParameter="{Binding FocusedElement, ElementName=Alchemy_c}"/>
                         </b:EventTrigger>
+                        <b:DataTrigger Binding="{Binding HasInputEnabled, ElementName=Alchemy_c}" Value="True">
+                            <b:InvokeCommandAction Command="{Binding ShowTooltipOnUIElement}" CommandParameter="{Binding FocusedElement, ElementName=Alchemy_c}"/>
+                        </b:DataTrigger>
 
                         <b:EventTrigger EventName="Loaded">
                             <ls:SetMoveFocusAction TargetName="Alchemy_c"/>
@@ -1348,10 +1356,6 @@
             </Grid>
 
             <ControlTemplate.Triggers>
-                <DataTrigger Binding="{Binding CurrentPlayer.UIData.IsCharacterSelectOpen}" Value="True">
-                    <Setter Property="IsEnabled" Value="False"/>
-                </DataTrigger>
-
                 <!-- SPLIT SCREEN -->
                 <!-- If Common and lower or equal than 0.5625 ratio (this is 16/9), use wide view -->
                 <MultiDataTrigger>
@@ -1360,6 +1364,7 @@
                         <Condition Binding="{Binding Data.AspectRatio, Converter={StaticResource GreaterThanConverter}, ConverterParameter=0.5625}" Value="False"/>
                     </MultiDataTrigger.Conditions>
                     <Setter TargetName="AlchemyRoot" Property="Tag" Value="{StaticResource FalseValue}"/>
+                    <Setter TargetName="c_PartyGold" Property="Visibility" Value="Visible" />
                 </MultiDataTrigger>
 
                 <DataTrigger Binding="{Binding Tag, ElementName=AlchemyRoot}" Value="{StaticResource FalseValue}">
@@ -1548,7 +1553,6 @@
                 <MultiDataTrigger>
                     <MultiDataTrigger.Conditions>
                         <Condition Binding="{Binding IsCreatingItems}" Value="False"/>
-                        <Condition Binding="{Binding SelectedRecipe, Converter={StaticResource NullToBoolFalseConverter}}" Value="True"/>
                         <Condition Binding="{Binding SelectedRecipe.Result.Item.Count}" Value="0"/>
                     </MultiDataTrigger.Conditions>
                     <Setter TargetName="ExtractCraftingButton" Property="IsEnabled" Value="False"/>
@@ -1613,11 +1617,7 @@
                 </DataTrigger>
 
                 <!-- EXTRACT CRAFTING -->
-                <MultiDataTrigger>
-                    <MultiDataTrigger.Conditions>
-                        <Condition Binding="{Binding SelectedRecipe, Converter={StaticResource NullToBoolFalseConverter}}" Value="True"/>
-                        <Condition Binding="{Binding SelectedRecipe.IsSolutionRecipe}" Value="False"/>
-                    </MultiDataTrigger.Conditions>
+                <DataTrigger  Binding="{Binding SelectedRecipe.IsSolutionRecipe}" Value="False">
                     <Setter TargetName="CraftingTitle" Property="Visibility" Value="Collapsed"/>
                     <Setter TargetName="CraftingSolution" Property="Visibility" Value="Collapsed"/>
                     <Setter TargetName="CraftingExtract" Property="Visibility" Value="Visible"/>
@@ -1651,11 +1651,10 @@
                     <Setter TargetName="Result" Property="ls:MoveFocus.FocusForcedNextLeftElement" Value="{Binding ElementName=ExtractSlot1}"/>
                     <Setter TargetName="Result" Property="ls:MoveFocus.FocusForcedNextUpElement" Value="{Binding ElementName=ExtractSlot2}"/>
                     <Setter TargetName="Result" Property="ls:MoveFocus.FocusForcedNextRightElement" Value="{Binding ElementName=ExtractSlot3}"/>
-                </MultiDataTrigger>
+                </DataTrigger>
 
                 <MultiDataTrigger>
                     <MultiDataTrigger.Conditions>
-                        <Condition Binding="{Binding SelectedRecipe, Converter={StaticResource NullToBoolFalseConverter}}" Value="True"/>
                         <Condition Binding="{Binding SelectedRecipe.IsSolutionRecipe}" Value="False"/>
                         <Condition Binding="{Binding IsExploring}" Value="True"/>
                     </MultiDataTrigger.Conditions>
@@ -1664,7 +1663,6 @@
 
                 <MultiDataTrigger>
                     <MultiDataTrigger.Conditions>
-                        <Condition Binding="{Binding SelectedRecipe, Converter={StaticResource NullToBoolFalseConverter}}" Value="True"/>
                         <Condition Binding="{Binding SelectedRecipe.IsSolutionRecipe}" Value="False"/>
                         <Condition Binding="{Binding SelectedRecipe.CanBeCrafted}" Value="True"/>
                     </MultiDataTrigger.Conditions>

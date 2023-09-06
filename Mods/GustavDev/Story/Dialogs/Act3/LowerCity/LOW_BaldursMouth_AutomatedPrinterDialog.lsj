@@ -1,7 +1,7 @@
 {
    "save" : {
       "header" : {
-         "version" : "4.0.9.331"
+         "version" : "4.0.10.301"
       },
       "regions" : {
          "dialog" : {
@@ -5781,8 +5781,6 @@
                                  {
                                     "flag" : [
                                        {
-                                          "UUID" : {"type" : "FixedString", "value" : "a8bf8c49-52a9-458b-9cde-bbc6f8f4514a"},"value" : {"type" : "bool", "value" : false}},
-                                       {
                                           "UUID" : {"type" : "FixedString", "value" : "f89f6d6f-17dc-4089-acb9-e859beec6e75"},"value" : {"type" : "bool", "value" : true}}
                                     ],"type" : {"type" : "FixedString", "value" : "Global"}}
                               ]
@@ -9392,7 +9390,20 @@
                               ]
                            }
                         ],
-                        "setflags" : [ {} ],
+                        "setflags" : [
+                           {
+                              "flaggroup" : [
+                                 {
+                                    "flag" : [
+                                       {
+                                          "UUID" : {"type" : "FixedString", "value" : "51be3a71-adde-7642-e4e4-f50e88812157"},
+                                          "paramval" : {"type" : "int32", "value" : 0},
+                                          "value" : {"type" : "bool", "value" : true}
+                                       }
+                                    ],"type" : {"type" : "FixedString", "value" : "Dialog"}}
+                              ]
+                           }
+                        ],
                         "speaker" : {"type" : "int32", "value" : 0}
                      },
                      {

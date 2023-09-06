@@ -320,23 +320,4 @@
         </DoubleAnimationUsingKeyFrames>
     </Storyboard>
 
-    <!-- The Primary Button Style for Pad -->
-    <ControlTemplate x:Key="PrimaryButtonTemplateWrapper" TargetType="ContentControl">
-        <ls:LSNineSliceImage x:Name="bg" ImageSource="{StaticResource PrimaryButtonBG}" Slices="{StaticResource primaryButtonSlices}" HorizontalAlignment="Center" MinWidth="168" MinHeight="172" >
-            <ContentPresenter x:Name="contents" Margin="18,0,60,0"/>
-        </ls:LSNineSliceImage>
-        <ControlTemplate.Triggers>
-            <Trigger Property="IsEnabled" Value="False">
-                <Setter TargetName="bg" Property="ImageSource" Value="{StaticResource PrimaryButtonBG_Disabled}"/>
-                <Setter TargetName="contents" Property="Opacity" Value="{StaticResource DisabledOpacity}"/>
-            </Trigger>
-        </ControlTemplate.Triggers>
-    </ControlTemplate>
-
-    <ControlTemplate x:Key="PrimaryButtonTemplate" TargetType="ls:LSButton">
-        <ContentControl Template="{StaticResource PrimaryButtonTemplateWrapper}">
-            <ContentPresenter Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}" Tag="{TemplateBinding Tag}" HorizontalAlignment="Center"/>
-        </ContentControl>
-    </ControlTemplate>
-
 </ResourceDictionary>

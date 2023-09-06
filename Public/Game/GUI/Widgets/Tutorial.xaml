@@ -84,7 +84,7 @@
                             </Style>
                         </StackPanel.Style>
 
-                        <TextBlock x:Name="Title" TextWrapping="Wrap" FontSize="{StaticResource TitleFontSize}" Foreground="{StaticResource LS_PrimaryColor}" Height="60" IsHitTestVisible="False">
+                        <TextBlock x:Name="Title" TextWrapping="Wrap" FontSize="{StaticResource TitleFontSize}" Foreground="{StaticResource LS_PrimaryColor}" MinHeight="60" IsHitTestVisible="False">
                             <TextBlock.Style>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="ls:TextBlockFormatter.SourceText" Value="{Binding Tutorial.Title}"/>

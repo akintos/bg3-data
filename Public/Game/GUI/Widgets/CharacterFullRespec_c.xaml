@@ -48,6 +48,9 @@
         <b:EventTrigger EventName="GotKeyboardFocus">
             <b:InvokeCommandAction Command="{Binding ShowTooltipOnUIElement}" CommandParameter="{Binding Path=FocusedElement, ElementName=CharacterFullRespec_c}"/>
         </b:EventTrigger>
+        <b:DataTrigger Binding="{Binding HasInputEnabled, ElementName=CharacterFullRespec_c}" Value="True">
+            <b:InvokeCommandAction Command="{Binding ShowTooltipOnUIElement}" CommandParameter="{Binding FocusedElement, ElementName=CharacterFullRespec_c}"/>
+        </b:DataTrigger>
 
     </b:Interaction.Triggers>
 
@@ -98,8 +101,8 @@
                             <!-- forward navigation only here, back is in bottombuttons -->
                             <ls:LSButton x:Name="nextButton" Style="{StaticResource nextGameplayTabNavButtonStyle}" HorizontalAlignment="Center"/>
 
-                            <ls:LSNineSliceImage x:Name="ventureForthButton" Visibility="Collapsed" ImageSource="pack://application:,,,/GustavNoesisGUI;component/Assets/CC_c/c_cc_primaryButtonBG.png" Slices="84,84,84,84" MinHeight="196">
-                                <ls:LSButton Style="{StaticResource ControllerHoldButtonStyle}" DataContext="{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIDelete'}" Tag="{Binding Source='ha7867654g6f71g41ccgbd0bgba956a682293', Converter={StaticResource TranslatedStringConverter}}" EatInput="False" Command="{Binding DataContext.PlayDummyVFX, ElementName=CharacterFullRespec_c}" CommandParameter="VFX_UI_LevelUp_01" Margin="40,0,70,0">
+                            <ls:LSNineSliceImage x:Name="ventureForthButton" Visibility="Collapsed" Style="{StaticResource PrimaryButton9Slice}" Margin="0,0,0,20" HorizontalAlignment="Center" HorizontalContentAlignment="Center">
+                                <ls:LSButton Style="{StaticResource ControllerHoldButtonStyle}" DataContext="{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIDelete'}" Tag="{Binding Source='ha7867654g6f71g41ccgbd0bgba956a682293', Converter={StaticResource TranslatedStringConverter}}" EatInput="False" Command="{Binding DataContext.PlayDummyVFX, ElementName=CharacterFullRespec_c}" CommandParameter="VFX_UI_LevelUp_01" Margin="6,0,8,0">
                                     <b:Interaction.Triggers>
                                         <b:EventTrigger EventName="Click" >
 
@@ -174,8 +177,14 @@
                             </b:Interaction.Triggers>
                         </ls:LSInputBinding>
 
-                        <ls:LSButton x:Name="focusGameplayPanelButton" Visibility="Hidden" Content="" Style="{StaticResource ControllerButtonWBG}" 
-                            DataContext = "{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UITabNext'}" HorizontalAlignment="Right" VerticalAlignment="Top">
+                        <ls:LSButton x:Name="focusGameplayPanelButton"
+                                     Visibility="Hidden" 
+                                     Tag=" " 
+                                     ContentTemplate="{StaticResource ControllerButtonHint}"
+                                     Content="{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UITabNext'}"
+                                     BoundEvent="UITabNext"
+                                     HorizontalAlignment="Right"
+                                     VerticalAlignment="Top">
                             <b:Interaction.Triggers>
                                 <b:EventTrigger EventName="Click" >
                                     <b:ChangePropertyAction TargetName="leftSidePanels" PropertyName="IsEnabled" Value="True" />
@@ -189,8 +198,13 @@
                             </b:Interaction.Triggers>
                         </ls:LSButton>
 
-                        <ls:LSButton x:Name="focusSummaryPanelButton" Content="" Style="{StaticResource ControllerButtonWBG}" 
-                            DataContext = "{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UITabNext'}" HorizontalAlignment="Right" VerticalAlignment="Top">
+                        <ls:LSButton x:Name="focusSummaryPanelButton" 
+                                     Tag=" " 
+                                     ContentTemplate="{StaticResource ControllerButtonHint}" 
+                                     Content="{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UITabNext'}"
+                                     BoundEvent="UITabNext"
+                                     HorizontalAlignment="Right"
+                                     VerticalAlignment="Top">
                             <b:Interaction.Triggers>
                                 <b:EventTrigger EventName="Click" >
                                     <b:ChangePropertyAction TargetName="leftSidePanels" PropertyName="IsEnabled" Value="False" />

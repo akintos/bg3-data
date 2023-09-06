@@ -19,7 +19,7 @@
             <Grid IsHitTestVisible="False">
                 <!-- Voice chat -->
                 <Border x:Name="VoiceChatBorder" Visibility="Collapsed">
-                    <ItemsControl ItemsSource="{Binding Data.Players}" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="26,100"
+                    <ItemsControl x:Name="VoiceChatItems" ItemsSource="{Binding Data.Players}" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="26,100"
                         Visibility="{Binding Data.Players.Count, Converter={StaticResource CountToVisibilityConverter}, ConverterParameter={StaticResource SinglePlayerPartySize}}">
                         <ItemsControl.Resources>
                             <ImageSource x:Key="VolumeMuted">pack://application:,,,/GustavNoesisGUI;component/Assets/VoiceChat/ico_mic_disabled.png</ImageSource>
@@ -30,7 +30,7 @@
                         </ItemsControl.Resources>
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <StackPanel Orientation="Horizontal">
+                                <StackPanel x:Name="VoiceChatElements" Orientation="Horizontal" Visibility="Collapsed" >
                                     <Image x:Name="state" Source="{StaticResource VolumeUnmuted}" Stretch="None" VerticalAlignment="Center" IsHitTestVisible="False"/>
 
                                     <Grid>
@@ -40,25 +40,37 @@
                                         </Grid.ColumnDefinitions>
                                         <Image x:Name="nameBackground" Grid.Column="1" Stretch="None" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="-10,0"
                                                Source="{StaticResource VoiceChatBg}"/>
-                                        <Border x:Name="commIcon" Grid.Column="0" Background="{Binding CommunityIcon, Mode=OneWay}" Width="80" Height="80">
+                                        <Border x:Name="commIcon" Grid.Column="0" Background="{Binding CommunityIcon, Mode=OneWay}" Width="80" Height="80" FlowDirection="LeftToRight">
                                             <Border.Clip>
                                                 <RectangleGeometry Rect="0,0,80,80"/>
                                             </Border.Clip>
                                         </Border>
                                         <Image x:Name="iconFrame" Grid.Column="0" Stretch="None" Source="{StaticResource VoiceChatIconFrame}" Margin="5,0"/>
-
-                                        <TextBlock x:Name="nameTextBlock" Grid.Column="1" Text="{Binding Name}" VerticalAlignment="Center" Margin="20,0,0,0" Foreground="{StaticResource LS_baseTxtColor}"
+                                        <TextBlock x:Name="nameTextBlock" Grid.Column="1" Text="{Binding Name}" VerticalAlignment="Center" Margin="20,0,0,0" Foreground="{StaticResource LS_accent100TxtColor}"
                                                    TextTrimming="CharacterEllipsis" MaxWidth="730"/>
                                     </Grid>
+
                                 </StackPanel>
                                 <DataTemplate.Triggers>
                                     <DataTrigger Binding="{Binding VoiceChatTalking, Mode=OneWay}" Value="True">
+                                        <Setter TargetName="VoiceChatElements" Property="Visibility" Value="Visible"/>
                                         <Setter TargetName="state" Property="Source" Value="{StaticResource VolumeActive}"/>
                                         <Setter TargetName="nameTextBlock" Property="Foreground" Value="{StaticResource LS_accent100TxtColor}"/>
                                     </DataTrigger>
-                                    <DataTrigger Binding="{Binding VoiceChatMuted, Mode=OneWay}" Value="True">
+
+                                    <MultiDataTrigger>
+                                        <MultiDataTrigger.Conditions>
+                                            <Condition Binding="{Binding VoiceChatMuted, Mode=OneWay}" Value="True"/>
+                                            <Condition Binding="{Binding IsLocalPlayer}" Value="True"/>
+                                        </MultiDataTrigger.Conditions>
+                                        <Setter TargetName="VoiceChatElements" Property="Visibility" Value="Visible"/>
                                         <Setter TargetName="state" Property="Source" Value="{StaticResource VolumeMuted}"/>
+                                    </MultiDataTrigger>
+                                    
+                                    <DataTrigger Binding="{Binding DataContext.Layout, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" Value="Left">
+                                        <Setter TargetName="VoiceChatElements" Property="FlowDirection" Value="RightToLeft"/>
                                     </DataTrigger>
+
                                 </DataTemplate.Triggers>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
@@ -96,8 +108,17 @@
                 </MultiDataTrigger>
 
                 <DataTrigger Binding="{Binding Layout}" Value="Left">
-                    <Setter TargetName="VoiceChatBorder" Property="Margin" Value="0,550"/>
+                    <Setter TargetName="VoiceChatBorder" Property="HorizontalAlignment" Value="Right"/>
+                    <Setter TargetName="VoiceChatItems" Property="Margin" Value="26,10"/>
                 </DataTrigger>
+
+                <MultiDataTrigger>
+                    <MultiDataTrigger.Conditions>
+                        <Condition Binding="{Binding Layout}" Value="Left"/>
+                        <Condition Binding="{Binding CurrentPlayer.UIData.CharacterCreationMode}" Value="Creation"/>
+                    </MultiDataTrigger.Conditions>
+                    <Setter TargetName="VoiceChatItems" Property="Margin" Value="26,130"/>
+                </MultiDataTrigger>
 
                 <DataTrigger Binding="{Binding Layout}" Value="Right">
                     <Setter TargetName="VoiceChatBorder" Property="Visibility" Value="Collapsed"/>

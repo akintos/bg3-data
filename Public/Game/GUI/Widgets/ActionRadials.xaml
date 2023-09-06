@@ -22,9 +22,6 @@
 
         <b:EventTrigger EventName="Loaded">
             <b:InvokeCommandAction Command="{Binding EnableTooltipOnUIElement}"/>
-        </b:EventTrigger>
-
-        <b:EventTrigger EventName="Loaded">
             <b:ChangePropertyAction TargetObject="{Binding CurrentPlayer.UIData}" PropertyName="AreRadialsOpen" Value="True"/>
             <!-- Tutorial UI Event - Action Radials Open -->
             <b:InvokeCommandAction Command="{Binding TutorialEvent}" CommandParameter="f651618e-d396-4d4a-ba5a-8f50c3697708"/>
@@ -98,6 +95,15 @@
                 <Setter Property="VerticalAlignment" Value="Center"/>
                 <Setter Property="Visibility" Value="Hidden"/>
 
+            </Style>
+            <Style x:Key="RadialErrorTextStyle" TargetType="TextBlock" BasedOn="{StaticResource HUD.TitleTextStyle}">
+                <Setter Property="Foreground" Value="{StaticResource LS_baseTxtColor}"/>
+                <Setter Property="FontWeight" Value="DemiBold"/>
+                <Setter Property="TextAlignment" Value="Center"/>
+                <Setter Property="HorizontalAlignment" Value="Center"/>
+                <Setter Property="TextWrapping" Value="Wrap"/>
+                <Setter Property="FontSize" Value="{StaticResource ScaledMediumFontSize}"/>
+                <Setter Property="MaxWidth" Value="460" />
             </Style>
 
             <!-- Hint Text Pad-->
@@ -391,7 +397,6 @@
                                             <Setter TargetName="icon" Property="Opacity" Value="0.7"/>
                                         </MultiDataTrigger>
 
-
                                         <!-- Active MetaMagic Slot-->
                                         <MultiDataTrigger>
                                             <MultiDataTrigger.Conditions>
@@ -416,6 +421,20 @@
                                             <MultiDataTrigger.ExitActions>
                                                 <StopStoryboard BeginStoryboardName="ActiveMetaMagicAnimationSwirl"/>
                                             </MultiDataTrigger.ExitActions>
+                                        </MultiDataTrigger>
+
+                                        <!-- Spell modifiers -->
+                                        <MultiDataTrigger>
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding Spell.SpellModifier, Converter={StaticResource NullToBoolFalseConverter}}" Value="True"/>
+                                                <Condition Binding="{Binding DataContext.CurrentSingleHotbarFilter, ElementName=ActionRadials, Converter={StaticResource NullToBoolTrueConverter}, ConverterParameter='EmptyString'}" Value="True"/>
+                                            </MultiDataTrigger.Conditions>
+                                            <Setter Property="Visibility" Value="Visible" TargetName="SubSelectIndicator" />
+                                            <Setter Property="Margin" Value="0,0,0,10" TargetName="SubSelectIndicator" />
+
+                                            <!-- Ignore CanUse, since this is a fake container -->
+                                            <Setter TargetName="icon" Property="Opacity" Value="1"/>
+                                            <Setter TargetName="DisabledOverlay" Property="Visibility" Value="Collapsed"/>
                                         </MultiDataTrigger>
                                     </DataTemplate.Triggers>
                                 </DataTemplate>
@@ -745,7 +764,14 @@
                                     <Setter TargetName="SlotBg" Property="Visibility" Value="Collapsed"/>
                                 </DataTrigger>
 
-                                
+                                <MultiDataTrigger>
+                                    <MultiDataTrigger.Conditions>
+                                        <Condition Binding="{Binding Spell.SpellModifier, Converter={StaticResource NullToBoolFalseConverter}}" Value="True"/>
+                                        <Condition Binding="{Binding DataContext.CurrentSingleHotbarFilter, ElementName=ActionRadials, Converter={StaticResource NullToBoolTrueConverter}, ConverterParameter='EmptyString'}" Value="True"/>
+                                    </MultiDataTrigger.Conditions>
+                                    <!-- Ignore CanUse, since this is a fake container -->
+                                    <Setter TargetName="SlotBg" Property="Visibility" Value="Visible"/>
+                                </MultiDataTrigger>
 
                             </ControlTemplate.Triggers>
                         </ControlTemplate>
@@ -773,20 +799,15 @@
                         </MultiDataTrigger.Conditions>
                         <Setter Property="IsEnabled" Value="False"/>
                     </MultiDataTrigger>
+
+                    <!-- Spell modifiers -->
                     <MultiDataTrigger>
                         <MultiDataTrigger.Conditions>
-                            <Condition Binding="{Binding SlotType}" Value="Spell"/>
-                            <Condition Value="True">
-                                <Condition.Binding>
-                                    <MultiBinding Converter="{StaticResource EqualConverter}">
-                                        <Binding Path="Spell.PrototypeID"/>
-                                        <Binding Path="DataContext.CurrentPlayer.SelectedCharacter.ConcentrationSpell.PrototypeID" RelativeSource="{RelativeSource AncestorType={x:Type ls:UIWidget}}"/>
-                                    </MultiBinding>
-                                </Condition.Binding>
-                            </Condition>
-                            <Condition Binding="{Binding DataContext.CurrentPlayer.SelectedCharacter.RecastSpell, RelativeSource={RelativeSource AncestorType=ls:UIWidget}, Converter={StaticResource NullToBoolFalseConverter}}" Value="True"/>
+                            <Condition Binding="{Binding Spell.SpellModifier, Converter={StaticResource NullToBoolFalseConverter}}" Value="True"/>
+                            <Condition Binding="{Binding DataContext.CurrentSingleHotbarFilter, ElementName=ActionRadials, Converter={StaticResource NullToBoolTrueConverter}, ConverterParameter='EmptyString'}" Value="True"/>
                         </MultiDataTrigger.Conditions>
-                        <Setter Property="Tag" Value="{Binding DataContext.CurrentPlayer.SelectedCharacter.RecastSpell, RelativeSource={RelativeSource AncestorType=ls:UIWidget}}"/>
+                        <!-- Ignore CanUse, since this is a fake container -->
+                        <Setter Property="IsEnabled" Value="True"/>
                     </MultiDataTrigger>
                 </Style.Triggers>
             </Style>
@@ -1159,7 +1180,7 @@
                                                                                 <ls:ContextMenuItem x:Name="SwapSlotItem" IsIndented="True" Header="{Binding Source='h18e19f89g10e2g4546gadfdg6657ad7f56b8', Converter={StaticResource TranslatedStringConverter}}" Command="{Binding DataContext.SwapSlotCommand, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" CommandParameter="{Binding Tag, ElementName=ActionRadials}"/>
                                                                                 <ls:ContextMenuItem x:Name="ClearSlotItem" IsIndented="True" Header="{Binding Source='haba68145g1fc9g4380g9ff0gf498f5ee383d', Converter={StaticResource TranslatedStringConverter}}" Command="{Binding DataContext.ClearSlotCommand, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" CommandParameter="{Binding Tag, ElementName=ActionRadials}"/>
                                                                                 <ls:ContextMenuItem Header="{Binding Source='h921d24b9g4a44g441agbbbag176eef91b713', Converter={StaticResource TranslatedStringConverter}}" IsTitle="True" IsEnabled="False"/>
-                                                                                <ls:ContextMenuItem x:Name="AddRadialItem" IsIndented="True" Header="{Binding Source='hfab2af0fg32feg4c0ag9ac8g40e08eb46ad3', Converter={StaticResource TranslatedStringConverter}}" Command="{Binding DataContext.AddRadialCommand, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" CommandParameter="{Binding .}"/>
+                                                                                <ls:ContextMenuItem x:Name="AddRadialItem" IsIndented="True" Header="{Binding Source='hfab2af0fg32feg4c0ag9ac8g40e08eb46ad3', Converter={StaticResource TranslatedStringConverter}}" Command="{Binding DataContext.AddRadialCommand, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" CommandParameter="{Binding .}" IsEnabled="{Binding NumberOfBars,Converter={StaticResource LessThanConverter}, ConverterParameter='12'}"/>
                                                                                 <ls:ContextMenuItem x:Name="RemoveRadialItem" IsIndented="True" Header="{Binding Source='hd79704d4g27bag4aa7gac16g9fdf4554e53f', Converter={StaticResource TranslatedStringConverter}}" Command="{Binding DataContext.RemoveRadialCommand, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}">
                                                                                     <ls:ContextMenuItem.CommandParameter>
                                                                                         <MultiBinding Converter="{StaticResource PassThroughConverter}">
@@ -1321,8 +1342,131 @@
 
                     <ls:LSButton x:Name="ActionButtonIcon" DataContext="{Binding DataContext.CurrentPlayer.UIData.InputEvents, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIAccept'}" Style="{StaticResource ControllerButtonIconOnly}" Width="{StaticResource ScaledControllerHintSize}" Height="{StaticResource ScaledControllerHintSize}" EatInput="False" VerticalAlignment="Center" Visibility="Hidden" SoundID="UI_HUD_Controller_RadialMenu_SlotSelect"/>
 
-                    <TextBlock x:Name="RadialActionErrorMessage" Text="{Binding Source='hc4df7df6gdc7dg48fdgac0fg0a299ddf74f6', Converter={StaticResource TranslatedStringConverter}}" FontSize="{StaticResource ScaledMediumFontSize}" Visibility="Collapsed" TextWrapping="Wrap" HorizontalAlignment="Center" TextAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" Style="{StaticResource HUD.TitleTextStyle}" FontWeight="DemiBold" Foreground="{StaticResource LS_baseTxtColor}" />
 
+
+                    <!-- Not Available Messages -->
+                    <TextBlock x:Name="RadialActionErrorMessage" Text="{Binding Source='hc4df7df6gdc7dg48fdgac0fg0a299ddf74f6', Converter={StaticResource TranslatedStringConverter}}" Style="{StaticResource RadialErrorTextStyle}" Visibility="Collapsed" Margin="0,0,0,0" />
+
+                    <!-- Error Messages -->
+                    <StackPanel x:Name="AdditionalErrors" VerticalAlignment="Top" HorizontalAlignment="Center">
+                        <b:Interaction.Behaviors>
+                            <ls:CapabilityListSelectorBehavior x:Name="CapabilityListSelectorBehavior" 
+                                                                   CapabilitiesCollection="{Binding DataContext.CurrentPlayer.SelectedCharacter.ModifiedCapabilities, ElementName=ActionRadials}"/>
+                        </b:Interaction.Behaviors>
+
+                        <Control x:Name="SpellWarnings" Visibility="Collapsed" HorizontalAlignment="Center">
+                            <Control.Template>
+                                <ControlTemplate>
+                                    <!-- WARNINGS -->
+                                    <Border x:Name="WarningsRoot" ls:TooltipExtender.IsOpen="True" ls:TooltipExtender.Content="{Binding .}">
+                                        <ItemsControl x:Name="Warnings" ItemsSource="{Binding (ls:TooltipExtender.Data).UnavailableReasons, ElementName=WarningsRoot}" Visibility="{Binding (ls:TooltipExtender.Data).UnavailableReasons.Count, Converter={StaticResource CountToVisibilityConverter}, ElementName=WarningsRoot}" Margin="0,12,0,12">
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <DockPanel HorizontalAlignment="Center" Visibility="{Binding Line, Converter={StaticResource StringToVisibilityConverter}}" Margin="-16,-4,0,0">
+                                                        <Image Source="{StaticResource IconWarning}" DockPanel.Dock="Left" Stretch="None" Style="{StaticResource leftAlignedTooltipWarningIcon}" />
+                                                        <TextBlock ls:TextBlockFormatter.SourceText="{Binding Line}" Style="{StaticResource AlertText}"  noesis:Text.Stroke="{StaticResource LS_textStrokeColor}" noesis:Text.StrokeThickness="6" Effect="{StaticResource HUD.TitleDropShadow}"/>
+                                                    </DockPanel>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </Border>
+                                </ControlTemplate>
+                            </Control.Template>
+                        </Control>
+                        
+
+                        <ItemsControl x:Name="CapabilitiesErrors" ItemsSource="{Binding DataContext.CurrentPlayer.SelectedCharacter.ModifiedCapabilities, ElementName=ActionRadials}" AlternationCount="{Binding ItemsSource.Count, RelativeSource={RelativeSource Self}}">
+                            <ItemsControl.ItemContainerStyle>
+                                <Style TargetType="ContentPresenter">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                    <Style.Triggers>
+                                        <!-- Show only the first one -->
+                                        <DataTrigger Value="True">
+                                            <DataTrigger.Binding>
+                                                <MultiBinding Converter="{StaticResource EqualConverter}">
+                                                    <Binding Path="."/>
+                                                    <Binding Path="FirstVisibleElement" ElementName="CapabilityListSelectorBehavior"/>
+                                                </MultiBinding>
+                                            </DataTrigger.Binding>
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </ItemsControl.ItemContainerStyle>
+
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate DataType="{x:Type ls:VMCapabilityModifier}">
+                                    <StackPanel>
+                                        <TextBlock x:Name="CapabilityError" Style="{StaticResource RadialErrorTextStyle}" Visibility="Collapsed" >
+                                            <Run x:Name="Message"/><Run x:Name="Cause"/>
+                                        </TextBlock>
+                                    </StackPanel>
+                                    <DataTemplate.Triggers>
+                                        <DataTrigger Binding="{Binding Cause, Converter={StaticResource NullToBoolFalseConverter}}" Value="True">
+                                            <Setter TargetName="Cause" Property="Text">
+                                                <Setter.Value>
+                                                    <MultiBinding Converter="{StaticResource ParameterizedTranslatedStringConverter}">
+                                                        <Binding Source="hb19f530dgfeb2g4d13g8d64ga8216f364f67"/>
+                                                        <Binding Path="Cause"/>
+                                                    </MultiBinding>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </DataTrigger>
+
+                                        <DataTrigger  Binding="{Binding Type}" Value="LostControl">
+                                            <Setter TargetName="CapabilityError" Property="Visibility" Value="Visible" />
+                                        </DataTrigger>
+
+                                        <MultiDataTrigger>
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding Type}" Value="LostControl"/>
+                                                <Condition Binding="{Binding Value}" Value="Incapacitated"/>
+                                            </MultiDataTrigger.Conditions>
+                                            <Setter TargetName="Message" Property="Text" Value="{Binding Source='h651a24ddgb955g43b5g8a7bgff54a162cab1', Converter={StaticResource TranslatedStringConverter}}"/>
+                                        </MultiDataTrigger>
+                                        <MultiDataTrigger>
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding Type}" Value="LostControl"/>
+                                                <Condition Binding="{Binding Value}" Value="KnockedDown"/>
+                                            </MultiDataTrigger.Conditions>
+                                            <Setter TargetName="Message" Property="Text" Value="{Binding Source='hfba6780fgc9e9g4271g8b98g46884bf56443', Converter={StaticResource TranslatedStringConverter}}"/>
+                                        </MultiDataTrigger>
+                                        <MultiDataTrigger>
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding Type}" Value="LostControl"/>
+                                                <Condition Binding="{Binding Value}" Value="Downed"/>
+                                            </MultiDataTrigger.Conditions>
+                                            <Setter TargetName="Message" Property="Text" Value="{Binding Source='h371b7c23g65beg45f4g8680gbcd03907e57f', Converter={StaticResource TranslatedStringConverter}}"/>
+                                        </MultiDataTrigger>
+                                        <MultiDataTrigger>
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding Type}" Value="LostControl"/>
+                                                <Condition Binding="{Binding Value}" Value="Dying"/>
+                                            </MultiDataTrigger.Conditions>
+                                            <Setter TargetName="Message" Property="Text" Value="{Binding Source='h2e807311g8c4bg4141g85f3gcc88ee095888', Converter={StaticResource TranslatedStringConverter}}"/>
+                                        </MultiDataTrigger>
+                                        <MultiDataTrigger>
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding Type}" Value="LostControl"/>
+                                                <Condition Binding="{Binding Value}" Value="StoryFrozen"/>
+                                            </MultiDataTrigger.Conditions>
+                                            <Setter TargetName="Message" Property="Text" Value="{Binding Source='hbd5803f1g480cg4eb4g820fg242124c08ea9', Converter={StaticResource TranslatedStringConverter}}"/>
+                                        </MultiDataTrigger>
+                                        <MultiDataTrigger>
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding Type}" Value="LostControl"/>
+                                                <Condition Binding="{Binding Value}" Value="LostControl"/>
+                                            </MultiDataTrigger.Conditions>
+                                            <Setter TargetName="Cause" Property="Text" Value="{Binding Cause}"/>
+                                        </MultiDataTrigger>
+
+                                    </DataTemplate.Triggers>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+
+                    
                     <Control x:Name="MetamagicLabel" Margin="-10,0,8,0" Template="{StaticResource MetamagicLabelTemplate}" FontSize="{StaticResource ScaledMediumFontSize}" VerticalAlignment="Center" FontStyle="Italic" FontWeight="DemiBold" />
                     <TextBlock x:Name="ActionButtonDescription" Width="480" TextAlignment="Center" Text="{Binding Name}" HorizontalAlignment="Center" FontSize="{StaticResource ScaledIntermediateFontSize}" TextWrapping="Wrap" Foreground="{StaticResource LS_tint100}" Style="{StaticResource HUD.TitleTextStyle}" FontWeight="DemiBold" />
                     <TextBlock x:Name="UpcastInfo" Text="{Binding Spell.SlotLevel, Converter={StaticResource DecimalToRomanConverter}}" TextAlignment="Center" VerticalAlignment="Center" FontSize="{StaticResource ScaledIntermediateFontSize}" FontWeight="DemiBold"  />
@@ -1331,77 +1475,6 @@
                 <!-- Radial type -->
                 <TextBlock x:Name="RadialTypeText" Visibility="Collapsed" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,-140,0,140" Style="{StaticResource HUD.DefaultTextStyle}"/>
                 
-                <Grid x:Name="Root" VerticalAlignment="Bottom" >
-                    <Grid.ColumnDefinitions>
-                    <ColumnDefinition x:Name="resourceBarLeftPadding" Width="600"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition x:Name="resourceBarRightPadding" Width="600"/>
-                </Grid.ColumnDefinitions>
-
-                    <StackPanel x:Name="ResourceContainer" Grid.Column="1" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,46" Width="Auto">
-
-                    <!-- Movement Bar -->
-                    <Grid Height="40" Margin="0,0,0,-17" DataContext="{Binding DataContext.CurrentPlayer.UIData.MovementResourceCostPreview, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" VerticalAlignment="Bottom" HorizontalAlignment="Center" Panel.ZIndex="2" >
-
-                        <ls:LSProgressBar Value="{Binding ActionResource.Value, Mode=OneWay}" Maximum="{Binding ActionResource.MaxValue}"
-                                                                                      Minimum="0" Background="#E0000000"
-                                                                                      Width="584" Height="14" Margin="0,8,0,0">
-                            <ls:LSProgressBar.Foreground>
-                                <LinearGradientBrush EndPoint="424,22" MappingMode="Absolute" >
-                                    <LinearGradientBrush.RelativeTransform>
-                                        <TransformGroup>
-                                            <ScaleTransform CenterY="0.5" CenterX="0.5"/>
-                                            <SkewTransform CenterY="0.5" CenterX="0.5"/>
-                                            <RotateTransform Angle="90" CenterY="0.5" CenterX="0.5"/>
-                                            <TranslateTransform/>
-                                        </TransformGroup>
-                                    </LinearGradientBrush.RelativeTransform>
-                                    <GradientStop Color="White" Offset="0" />
-                                    <GradientStop Color="White" Offset="1"/>
-                                </LinearGradientBrush>
-                            </ls:LSProgressBar.Foreground>
-                        </ls:LSProgressBar>
-
-
-                        <ls:LSProgressBar Value="{Binding ValueAfterUse, Mode=OneWay}"  Maximum="{Binding ActionResource.MaxValue}"
-                                                                                      Minimum="0" Background="Transparent"
-                                                                                      Width="584" Height="14" Margin="0,8,0,0">
-                            <ls:LSProgressBar.Foreground>
-                                <LinearGradientBrush EndPoint="424,22" MappingMode="Absolute" >
-                                    <LinearGradientBrush.RelativeTransform>
-                                        <TransformGroup>
-                                            <ScaleTransform CenterY="0.5" CenterX="0.5"/>
-                                            <SkewTransform CenterY="0.5" CenterX="0.5"/>
-                                            <RotateTransform Angle="90" CenterY="0.5" CenterX="0.5"/>
-                                            <TranslateTransform/>
-                                        </TransformGroup>
-                                    </LinearGradientBrush.RelativeTransform>
-                                    <GradientStop Color="{StaticResource MovementCol1}" Offset="0" />
-                                    <GradientStop Color="{StaticResource MovementCol2}" Offset="1"/>
-                                </LinearGradientBrush>
-                            </ls:LSProgressBar.Foreground>
-                        </ls:LSProgressBar>
-                        <Image Source="pack://application:,,,/GustavNoesisGUI;component/Assets/ActionResources_c/c_movementBar.png" Stretch="None" />
-                    </Grid>
-                    <!-- Action Resources -->
-                    <ls:LSNineSliceImage x:Name="ActionRadialResourceBar" Style="{StaticResource ResourceBar9Slice}" HorizontalAlignment="Center"  Panel.ZIndex="1">
-                        <Grid VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,-4,0,0" >
-                                <Rectangle x:Name="ActionRadialResourceBarBG" Height="Auto" VerticalAlignment="Stretch" Opacity="0.7" Margin="-30,-4,-30,-4" Panel.ZIndex="0">
-                                    <Rectangle.Fill>
-                                    <LinearGradientBrush StartPoint="0,1" EndPoint="1,0">
-                                        <GradientStop Offset="0" Color="#00000000" />
-                                        <GradientStop Offset="0.1" Color="#0c0906"/>
-                                        <GradientStop Offset="0.9" Color="#0c0906"/>
-                                        <GradientStop Offset="1" Color="#00000000" />
-                                    </LinearGradientBrush>
-                                </Rectangle.Fill>
-                            </Rectangle>
-                            <Control x:Name="actionResourceBar" Template="{StaticResource ActionResourcesTemplate}" DataContext="{Binding DataContext.CurrentPlayer.UIData.ActionResourcesHoverCostPreview, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ls:UIWidget}}}" VerticalAlignment="Bottom" IsEnabled="False"/>
-                        </Grid>
-                    </ls:LSNineSliceImage>
-                </StackPanel>
-                </Grid>
-
                 <ContentPresenter x:Name="SwapSlotHint" ContentTemplate="{StaticResource ControllerButtonHint}" Content="{Binding CurrentPlayer.UIData.InputEvents, ConverterParameter=UIAccept, Converter={StaticResource FindInputEventConverter}}" 
                                           Tag="{Binding Source='h18e19f89g10e2g4546gadfdg6657ad7f56b8', Converter={StaticResource TranslatedStringConverter}}" Visibility="Collapsed"
                                   VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0, 100, 0, -100"/>
@@ -1414,6 +1487,7 @@
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="*" />
+                            <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
@@ -1451,8 +1525,23 @@
                             <TextBlock Text="{Binding Source='hdda88715g0f4fg49c1ga22dga11b80dcf8b9', Converter={StaticResource TranslatedStringConverter}}"  Style="{StaticResource HUD.DefaultTextStyle}" FontSize="{StaticResource ScaledSmallishFontSize}" FontWeight="DemiBold" Foreground="{StaticResource LS_accent75TxtColor}"/>
                         </StackPanel>
 
+                        <!-- Shortcuts -->
+                        <TextBlock x:Name="ShortcutText" Grid.Row="4" Style="{StaticResource HUD.DefaultTextStyle}" FontSize="{StaticResource ScaledSmallishFontSize}" FontWeight="DemiBold" Foreground="{StaticResource LS_accent75TxtColor}" Visibility="Collapsed" Margin="0,-38,0,16" HorizontalAlignment="Center" Tag="hcddbfb84g910cg44a1g8695ge48859c74f58">
+                            <b:Interaction.Behaviors>
+                                <ls:CtxTransStringRunGeneratorBehavior x:Name="ShortcutTextBehavior" PlayerId="{Binding DataContext.CurrentPlayer.PlayerId, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ls:UIWidget}}}" NamedParamContentStyle="{StaticResource ParamContentControllerStyle}">
+                                    <ls:CtxTransStringRunGeneratorBehavior.LocaSource>
+                                        <MultiBinding Converter="{StaticResource ParameterizedTranslatedStringConverter}">
+                                            <Binding Path="Tag" ElementName="ShortcutText"/>
+                                            <Binding Path="Tag.Name" ElementName="ActionRadials"/>
+                                            <Binding Path="(ls:AttachedProperties.InheritedTag)" ElementName="ShortcutText"/>
+                                        </MultiBinding>
+                                    </ls:CtxTransStringRunGeneratorBehavior.LocaSource>
+                                </ls:CtxTransStringRunGeneratorBehavior>
+                            </b:Interaction.Behaviors>
+                        </TextBlock>
+
                         <!-- Action Cost -->
-                        <Border x:Name="ActionCostSection" HorizontalAlignment="Stretch" Grid.Row="4" VerticalAlignment="Bottom" Visibility="Collapsed" Margin="0,-4,0,0">
+                        <Border x:Name="ActionCostSection" HorizontalAlignment="Stretch" Grid.Row="5" VerticalAlignment="Bottom" Visibility="Collapsed" Margin="0,-4,0,0">
                             <Border.Background>
                                 <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
                                     <GradientStop Color="{StaticResource Trade.BackgroundTransparentColor}" Offset="0"/>
@@ -1496,117 +1585,124 @@
                                                     <Grid x:Name="bgFade" Background="{StaticResource LS_PopUpBackgroundColor}"/>
 
                                                     <ContentControl x:Name="assignSlotPanel" Template="{StaticResource BaseOverlayBG}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="-600,0,0,0">
-                                                        <Grid Height="760" MaxHeight="760">
+                                                        <StackPanel Orientation="Vertical">
+                                                            <Grid Height="760">
+                                                                <ls:LSListBox x:Name="AssignList" Background="Black" KeyboardNavigation.DirectionalNavigation="Contained" ActionNextEvent="UIDown" ActionPrevEvent="UIUp" SelectedIndex="0"
+                                                                              LocalFocusSelector="{Binding ElementName=SelectorAssign,Mode=OneWay}" Height="760" ItemTemplate="{StaticResource SpellGroupList}">
+                                                                    <ls:LSListBox.ToolTip>
+                                                                        <ls:LSTooltip x:Name="assignSlotTooltip" ToolTipService.Placement="Right" ToolTipService.HorizontalOffset="40" ToolTipService.VerticalOffset="-84"  />
+                                                                    </ls:LSListBox.ToolTip>
+                                                                    <ls:LSListBox.Template>
+                                                                        <ControlTemplate TargetType="{x:Type ListBox}">
+                                                                            <ScrollViewer HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Visible" Padding="32,-46,0,-46" Template="{StaticResource ScrollViewerTemplate}" >
+                                                                                <ScrollViewer.Resources>
+                                                                                    <GridLength x:Key="Top">0</GridLength>
+                                                                                    <GridLength x:Key="Bottom">0</GridLength>
+                                                                                </ScrollViewer.Resources>
+                                                                                <ItemsPresenter/>
+                                                                            </ScrollViewer>
+                                                                        </ControlTemplate>
+                                                                    </ls:LSListBox.Template>
 
-                                                            <ls:LSListBox x:Name="AssignList" Background="Black" KeyboardNavigation.DirectionalNavigation="Contained" ActionNextEvent="UIDown" ActionPrevEvent="UIUp" SelectedIndex="0"
-                                                                  LocalFocusSelector="{Binding ElementName=SelectorAssign,Mode=OneWay}" Height="760" ItemTemplate="{StaticResource SpellGroupList}">
-                                                                <ls:LSListBox.ToolTip>
-                                                                    <ls:LSTooltip x:Name="assignSlotTooltip" ToolTipService.Placement="Right" ToolTipService.HorizontalOffset="40" ToolTipService.VerticalOffset="-84"  />
-                                                                </ls:LSListBox.ToolTip>
-                                                                <ls:LSListBox.Template>
-                                                                    <ControlTemplate TargetType="{x:Type ListBox}">
-                                                                        <ScrollViewer HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Visible" Padding="32,-46,0,-46" Template="{StaticResource ScrollViewerTemplate}" >
-                                                                            <ScrollViewer.Resources>
-                                                                                <GridLength x:Key="Top">0</GridLength>
-                                                                                <GridLength x:Key="Bottom">0</GridLength>
-                                                                            </ScrollViewer.Resources>
-                                                                            <ItemsPresenter/>
-                                                                        </ScrollViewer>
-                                                                    </ControlTemplate>
-                                                                </ls:LSListBox.Template>
+                                                                    <ls:LSListBox.ItemsPanel>
+                                                                        <ItemsPanelTemplate>
+                                                                            <ls:LSVirtualizingStackPanel/>
+                                                                        </ItemsPanelTemplate>
+                                                                    </ls:LSListBox.ItemsPanel>
 
-                                                                <ls:LSListBox.ItemsPanel>
-                                                                    <ItemsPanelTemplate>
-                                                                        <ls:LSVirtualizingStackPanel/>
-                                                                    </ItemsPanelTemplate>
-                                                                </ls:LSListBox.ItemsPanel>
+                                                                    <!-- Spells & actions list -->
+                                                                    <ls:LSListBoxItem HorizontalAlignment="Center">
+                                                                        <ls:LSListBox x:Name="SpellGroupList" ItemsSource="{Binding CurrentPlayer.SelectedCharacter.SpellsAndActions}" ActionNextEvent="UIDown" ActionPrevEvent="UIUp" ItemTemplate="{StaticResource SpellGroupList}" KeyboardNavigation.DirectionalNavigation="Continue" MaxWidth="860" Template="{StaticResource ScrolllessListBox}">
+                                                                            <ls:LSListBox.ItemContainerStyle>
+                                                                                <Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource {x:Type ListBoxItem}}">
+                                                                                    <Setter Property="Background" Value="Transparent"/>
+                                                                                    <Style.Triggers>
+                                                                                        <Trigger Property="IsSelected" Value="True">
+                                                                                            <Setter Property="Background" Value="Transparent"/>
+                                                                                            <Setter Property="BorderBrush" Value="Transparent"/>
+                                                                                        </Trigger>
+                                                                                        <DataTrigger Binding="{Binding Actions.Count}" Value="0">
+                                                                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                                                                        </DataTrigger>
+                                                                                    </Style.Triggers>
+                                                                                </Style>
+                                                                            </ls:LSListBox.ItemContainerStyle>
+                                                                        </ls:LSListBox>
+                                                                    </ls:LSListBoxItem>
 
-                                                                <!-- Spells & actions list -->
-                                                                <ls:LSListBoxItem HorizontalAlignment="Center">
-                                                                    <ls:LSListBox x:Name="SpellGroupList" ItemsSource="{Binding CurrentPlayer.SelectedCharacter.SpellsAndActions}" ActionNextEvent="UIDown" ActionPrevEvent="UIUp" ItemTemplate="{StaticResource SpellGroupList}" KeyboardNavigation.DirectionalNavigation="Continue" MaxWidth="860" Template="{StaticResource ScrolllessListBox}">
-                                                                        <ls:LSListBox.ItemContainerStyle>
-                                                                            <Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource {x:Type ListBoxItem}}">
-                                                                                <Setter Property="Background" Value="Transparent"/>
-                                                                                <Style.Triggers>
-                                                                                    <Trigger Property="IsSelected" Value="True">
-                                                                                        <Setter Property="Background" Value="Transparent"/>
-                                                                                        <Setter Property="BorderBrush" Value="Transparent"/>
-                                                                                    </Trigger>
-                                                                                    <DataTrigger Binding="{Binding Actions.Count}" Value="0">
-                                                                                        <Setter Property="Visibility" Value="Collapsed"/>
-                                                                                    </DataTrigger>
-                                                                                </Style.Triggers>
-                                                                            </Style>
-                                                                        </ls:LSListBox.ItemContainerStyle>
-                                                                    </ls:LSListBox>
-                                                                </ls:LSListBoxItem>
-
-                                                                <!-- Passives list -->
-                                                                <ls:LSListBoxItem HorizontalAlignment="Center" x:Name="PassivesHolder">
-                                                                    <b:Interaction.Behaviors>
-                                                                        <ls:CollectionFilterBehavior x:Name="PassivesFilter" ItemsSource="{Binding CurrentPlayer.SelectedCharacter.Stats.Passives}" Predicate="{Binding CurrentPlayer.SelectedCharacter.TogglablePassivePredicate}"/>
-                                                                    </b:Interaction.Behaviors>
-                                                                    <ls:LSListBox ItemsSource="{Binding (b:Interaction.Behaviors)[0].FilteredItems, ElementName=PassivesHolder}" KeyboardNavigation.DirectionalNavigation="Continue" MaxWidth="860" Template="{StaticResource ScrolllessListBox}"
-                                                                                      Visibility="{Binding (b:Interaction.Behaviors)[0].FilteredItems.Count, ElementName=PassivesHolder, Converter={StaticResource CountToVisibilityConverter}}" ItemContainerStyle="{StaticResource AvailableSlotContainer}" ItemsPanel="{StaticResource AvailableSlotsListPanelTemplate}"/>
-                                                                </ls:LSListBoxItem>
-
-                                                                <!-- MetaMagic list -->
-                                                                <ls:LSListBoxItem HorizontalAlignment="Center" x:Name="MetaMagicHolder">
-                                                                    <b:Interaction.Behaviors>
-                                                                        <ls:CollectionFilterBehavior x:Name="MetaMagicFilter" ItemsSource="{Binding CurrentPlayer.SelectedCharacter.Stats.Passives}" Predicate="{Binding CurrentPlayer.SelectedCharacter.TogglableMetaMagicPassivePredicate}"/>
-                                                                    </b:Interaction.Behaviors>
-                                                                    <ls:LSListBox ItemsSource="{Binding (b:Interaction.Behaviors)[0].FilteredItems, ElementName=MetaMagicHolder}" KeyboardNavigation.DirectionalNavigation="Continue" MaxWidth="860" Template="{StaticResource ScrolllessListBox}"
-                                                                                      Visibility="{Binding (b:Interaction.Behaviors)[0].FilteredItems.Count, ElementName=MetaMagicHolder, Converter={StaticResource CountToVisibilityConverter}}" ItemContainerStyle="{StaticResource AvailableSlotContainer}" ItemsPanel="{StaticResource AvailableSlotsListPanelTemplate}"/>
-                                                                </ls:LSListBoxItem>
-
-                                                                <!-- Inventory list -->
-                                                                <ls:LSListBoxItem HorizontalAlignment="Center" x:Name="InventoryListHolder">
-
-                                                                    <ls:LSListBox ItemsSource="{Binding CurrentPlayer.SelectedCharacter.Inventory.Slots}" Style="{StaticResource InventoryGrid}" KeyboardNavigation.DirectionalNavigation="Continue" MaxWidth="860" Template="{StaticResource ScrolllessListBox}" ItemsPanel="{StaticResource AvailableSlotsListPanelTemplate}"/>
-                                                                </ls:LSListBoxItem>
-
-                                                                <b:Interaction.Triggers>
-                                                                    <b:EventTrigger EventName="LocalFocusChanged">
-                                                                        <!-- Make sure the Content is set on the LSToolTip before ShowTooltipOnUIElement is called -->
-                                                                        <b:ChangePropertyAction TargetName="assignSlotTooltip" PropertyName="Content" Value="{Binding LocalFocus.DataContext, ElementName=AssignList}" />
-                                                                        <b:InvokeCommandAction IsEnabled="{Binding LocalFocus, ElementName=AssignList,Converter={StaticResource NullToBoolFalseConverter}}" Command="{Binding ShowTooltipOnUIElement}" CommandParameter="{Binding ., ElementName=AssignList}"/>
-                                                                        <b:InvokeCommandAction IsEnabled="{Binding LocalFocus, ElementName=AssignList,Converter={StaticResource NullToBoolTrueConverter}}" Command="{Binding ShowTooltipOnUIElement}" CommandParameter="{x:Null}"/>
-                                                                    </b:EventTrigger>
-
-                                                                    <b:EventTrigger EventName="LocalFocusChanged">
+                                                                    <!-- Passives list -->
+                                                                    <ls:LSListBoxItem HorizontalAlignment="Center" x:Name="PassivesHolder">
                                                                         <b:Interaction.Behaviors>
-                                                                            <b:ConditionBehavior>
-                                                                                <b:ConditionalExpression>
-                                                                                    <b:ComparisonCondition LeftOperand="{Binding LocalFocus.DataContext.Object, ElementName=AssignList}" Operator="NotEqual" RightOperand="{x:Null}"/>
-                                                                                </b:ConditionalExpression>
-                                                                            </b:ConditionBehavior>
+                                                                            <ls:CollectionFilterBehavior x:Name="PassivesFilter" ItemsSource="{Binding CurrentPlayer.SelectedCharacter.Stats.Passives}" Predicate="{Binding CurrentPlayer.SelectedCharacter.TogglablePassivePredicate}"/>
                                                                         </b:Interaction.Behaviors>
-                                                                        <b:ChangePropertyAction TargetName="assignSlotTooltip" PropertyName="Content" Value="{Binding LocalFocus.DataContext.Object, ElementName=AssignList}" />
-                                                                    </b:EventTrigger>
-                                                                </b:Interaction.Triggers>
-                                                            </ls:LSListBox>
+                                                                        <ls:LSListBox ItemsSource="{Binding (b:Interaction.Behaviors)[0].FilteredItems, ElementName=PassivesHolder}" KeyboardNavigation.DirectionalNavigation="Continue" MaxWidth="860" Template="{StaticResource ScrolllessListBox}"
+                                                                                      Visibility="{Binding (b:Interaction.Behaviors)[0].FilteredItems.Count, ElementName=PassivesHolder, Converter={StaticResource CountToVisibilityConverter}}" ItemContainerStyle="{StaticResource AvailableSlotContainer}" ItemsPanel="{StaticResource AvailableSlotsListPanelTemplate}"/>
+                                                                    </ls:LSListBoxItem>
 
-                                                            <Control x:Name="SelectorAssign" IsHitTestVisible="False" VerticalAlignment="Top" HorizontalAlignment="Left" Template="{StaticResource SelectorTemplate}" Visibility="{Binding Visibility, ElementName=AssignList}"/>
-                                                        </Grid>
-                                                       
+                                                                    <!-- MetaMagic list -->
+                                                                    <ls:LSListBoxItem HorizontalAlignment="Center" x:Name="MetaMagicHolder">
+                                                                        <b:Interaction.Behaviors>
+                                                                            <ls:CollectionFilterBehavior x:Name="MetaMagicFilter" ItemsSource="{Binding CurrentPlayer.SelectedCharacter.Stats.Passives}" Predicate="{Binding CurrentPlayer.SelectedCharacter.TogglableMetaMagicPassivePredicate}"/>
+                                                                        </b:Interaction.Behaviors>
+                                                                        <ls:LSListBox ItemsSource="{Binding (b:Interaction.Behaviors)[0].FilteredItems, ElementName=MetaMagicHolder}" KeyboardNavigation.DirectionalNavigation="Continue" MaxWidth="860" Template="{StaticResource ScrolllessListBox}"
+                                                                                      Visibility="{Binding (b:Interaction.Behaviors)[0].FilteredItems.Count, ElementName=MetaMagicHolder, Converter={StaticResource CountToVisibilityConverter}}" ItemContainerStyle="{StaticResource AvailableSlotContainer}" ItemsPanel="{StaticResource AvailableSlotsListPanelTemplate}"/>
+                                                                    </ls:LSListBoxItem>
+
+                                                                    <!-- Inventory list -->
+                                                                    <ls:LSListBoxItem HorizontalAlignment="Center" x:Name="InventoryListHolder">
+
+                                                                        <ls:LSListBox ItemsSource="{Binding CurrentPlayer.SelectedCharacter.Inventory.Slots}" Style="{StaticResource InventoryGrid}" KeyboardNavigation.DirectionalNavigation="Continue" MaxWidth="860" Template="{StaticResource ScrolllessListBox}" ItemsPanel="{StaticResource AvailableSlotsListPanelTemplate}"/>
+                                                                    </ls:LSListBoxItem>
+
+                                                                    <b:Interaction.Triggers>
+                                                                        <b:EventTrigger EventName="LocalFocusChanged">
+                                                                            <!-- Make sure the Content is set on the LSToolTip before ShowTooltipOnUIElement is called -->
+                                                                            <b:ChangePropertyAction TargetName="assignSlotTooltip" PropertyName="Content" Value="{Binding LocalFocus.DataContext, ElementName=AssignList}" />
+                                                                            <b:InvokeCommandAction IsEnabled="{Binding LocalFocus, ElementName=AssignList,Converter={StaticResource NullToBoolFalseConverter}}" Command="{Binding ShowTooltipOnUIElement}" CommandParameter="{Binding ., ElementName=AssignList}"/>
+                                                                            <b:InvokeCommandAction IsEnabled="{Binding LocalFocus, ElementName=AssignList,Converter={StaticResource NullToBoolTrueConverter}}" Command="{Binding ShowTooltipOnUIElement}" CommandParameter="{x:Null}"/>
+                                                                        </b:EventTrigger>
+
+                                                                        <b:EventTrigger EventName="LocalFocusChanged">
+                                                                            <b:Interaction.Behaviors>
+                                                                                <b:ConditionBehavior>
+                                                                                    <b:ConditionalExpression>
+                                                                                        <b:ComparisonCondition LeftOperand="{Binding LocalFocus.DataContext.Object, ElementName=AssignList}" Operator="NotEqual" RightOperand="{x:Null}"/>
+                                                                                    </b:ConditionalExpression>
+                                                                                </b:ConditionBehavior>
+                                                                            </b:Interaction.Behaviors>
+                                                                            <b:ChangePropertyAction TargetName="assignSlotTooltip" PropertyName="Content" Value="{Binding LocalFocus.DataContext.Object, ElementName=AssignList}" />
+                                                                        </b:EventTrigger>
+                                                                    </b:Interaction.Triggers>
+                                                                </ls:LSListBox>
+
+                                                                <Control x:Name="SelectorAssign" IsHitTestVisible="False" VerticalAlignment="Top" HorizontalAlignment="Left" Template="{StaticResource SelectorTemplate}" Visibility="{Binding Visibility, ElementName=AssignList}"/>
+                                                            </Grid>
+
+                                                            <!-- Hints  -->
+                                                            <ls:LSWrapPanel x:Name="BtnHintStackPanel" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Bottom" HorizontalContentAlignment="Center" Width="600" Margin="-20,0,20,0">
+
+                                                                <!-- Assign Slot-->
+                                                        <ls:LSButton x:Name="AssignButton" 
+                                                                     VerticalAlignment="Center"
+                                                                     Margin="0,0,20,0"
+                                                                     ContentTemplate="{StaticResource ControllerButtonHint}"
+                                                                     Content="{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIAccept'}" 
+                                                                     BoundEvent="UIAccept"
+                                                                     Tag="{Binding Source='h40295ee1g2029g4282ga924g61751691cb3d',Converter={StaticResource TranslatedStringConverter}}"
+                                                                     Command="{Binding AssignSlotCommand}"
+                                                                             CommandParameter="{Binding LocalFocus.DataContext, ElementName=AssignList}"/>
+
+                                                                <!-- Cancel button -->
+                                                        <ls:LSButton VerticalAlignment="Center" 
+                                                                     ContentTemplate="{StaticResource ControllerButtonHint}"
+                                                                     Content ="{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UICancel'}"
+                                                                     BoundEvent="UICancel"
+                                                                     Tag="{Binding Source='h43f0dd5cg543cg46f5gaa87g4f14f4803cd1',Converter={StaticResource TranslatedStringConverter}}"
+                                                                     Command="{Binding AssignSlotCommand}"
+                                                                             CommandParameter=""/>
+                                                            </ls:LSWrapPanel>
+                                                        </StackPanel>
                                                     </ContentControl>
-                                                    <!-- Hints  -->
-                                                    <StackPanel x:Name="BtnHintStackPanel" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="-600,0,0,600">
-
-                                                        <!-- Assign Slot-->
-                                                        <ls:LSButton VerticalAlignment="Center" x:Name="AssignButton" Margin="0,0,20,0" Style="{StaticResource ControllerButtonWBG}"
-                                                             DataContext = "{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIAccept'}" 
-                                                             Content="Set Slot"
-                                                             Command="{Binding DataContext.AssignSlotCommand, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"
-                                                             CommandParameter="{Binding LocalFocus.DataContext, ElementName=AssignList}"/>
-
-                                                        <!-- Cancel button -->
-                                                        <ls:LSButton VerticalAlignment="Center" Style="{StaticResource ControllerButtonWBG}"
-                                                             DataContext ="{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UICancel'}"
-                                                             Content="{Binding Source='h43f0dd5cg543cg46f5gaa87g4f14f4803cd1',Converter={StaticResource TranslatedStringConverter}}"
-                                                             Command="{Binding DataContext.AssignSlotCommand, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"
-                                                             CommandParameter=""/>
-                                                    </StackPanel>
 
                                                     <Grid.Triggers>
                                                         
@@ -1672,10 +1768,15 @@
                         </b:Interaction.Triggers>
                     </ls:LSButton>
 
-                    <ls:LSInputBinding x:Name="PinTooltipBinding" Style="{StaticResource PinTooltipBindingRadialStyle}"/>
+                    <ls:LSInputBinding x:Name="PinTooltipBinding" Style="{StaticResource PinTooltipBindingStyle}" BoundEvent="UIShowInfo"/>
+
+                    <ls:LSInputBinding x:Name="ShortcutMenuBinding" Command="{Binding CustomEvent}" BoundEvent="PanelSelect" CommandParameter="ToggleShortcutMenu"/>
                 </StackPanel>
             </Grid>
             <ControlTemplate.Triggers>
+                <DataTrigger Binding="{Binding Path=Tag.SlotType, ElementName=ActionRadials, FallbackValue='Empty'}" Value="Empty">
+                    <Setter TargetName="PinTooltipBinding" Property="IsEnabled" Value="False"/>
+                </DataTrigger>
 
                 <DataTrigger Binding="{Binding CurrentPlayer.SelectedCharacter.PlayerCharacterProperties.MetamagicActive}" Value="True">
                     <Setter TargetName="metaMagicSwirl" Property="Visibility" Value="Visible"/>
@@ -1691,35 +1792,7 @@
                     </DataTrigger.ExitActions>
 
                 </DataTrigger>
-
-                <DataTrigger Binding="{Binding Layout}" Value="Left">
-                    <Setter TargetName="resourceBarRightPadding" Property="Width" Value="200"/>
-                    <Setter TargetName="resourceBarLeftPadding" Property="Width" Value="200"/>
-                </DataTrigger>
-
-                <DataTrigger Binding="{Binding Layout}" Value="Right">
-                    <Setter TargetName="resourceBarRightPadding" Property="Width" Value="200"/>
-                    <Setter TargetName="resourceBarLeftPadding" Property="Width" Value="200"/>
-                </DataTrigger>
-
-                <MultiDataTrigger>
-                    <MultiDataTrigger.Conditions>
-                        <Condition Binding="{Binding CurrentPlayer.SelectedCharacter.IsCurrentTurn}" Value="True"/>
-                        <Condition Binding="{Binding CurrentPlayer.SelectedCharacter.InTurnBasedMode}" Value="True"/>
-                    </MultiDataTrigger.Conditions>
-                    <Setter TargetName="ActionRadialResourceBar" Property="ImageSource" Value="{x:Null}"/>
-                    <Setter TargetName="ActionRadialResourceBarBG" Property="Opacity" Value="0"/>
-
-                </MultiDataTrigger>
-                <MultiDataTrigger>
-                    <MultiDataTrigger.Conditions>
-                        <Condition Binding="{Binding CurrentPlayer.SelectedCharacter.IsCurrentTurn}" Value="False"/>
-                        <Condition Binding="{Binding CurrentPlayer.SelectedCharacter.InTurnBasedMode}" Value="True"/>
-                    </MultiDataTrigger.Conditions>
-                    <Setter TargetName="ActionRadialResourceBarBG" Property="Opacity" Value="0.7"/>
-
-                </MultiDataTrigger>
-
+                
                 <DataTrigger Binding="{Binding SingleHotBar.SlotList.Count, Converter={StaticResource GreaterThanConverter},ConverterParameter=0}" Value="True">
                     <Setter TargetName="singleBarHolder" Property="Visibility" Value="Visible"/>
                     <Setter TargetName="singleBarBG" Property="Visibility" Value="Visible"/>
@@ -1743,14 +1816,18 @@
 
                 <DataTrigger Binding="{Binding Path=Tag.GameObject, ElementName=ActionRadials, Converter={StaticResource NullToBoolFalseConverter}, FallbackValue={x:Null}}" Value="True">
                     <Setter TargetName="ActionDetails" Property="DataContext" Value="{Binding Tag.GameObject, ElementName=ActionRadials}"/>
+                    <Setter TargetName="SpellWarnings" Property="DataContext" Value="{Binding Tag.GameObject, ElementName=ActionRadials}"/>
                     <Setter TargetName="ActionDetails" Property="Visibility" Value="Visible"/>
+                    <Setter TargetName="SpellWarnings" Property="Visibility" Value="Visible"/>
                     <Setter TargetName="MetamagicLabel" Property="DataContext" Value="{Binding Tag.GameObject, ElementName=ActionRadials}"/>
                     <Setter TargetName="ActionCostSummary" Property="ItemsSource" Value="{Binding Tag.GameObject.CostSummary, ElementName=ActionRadials}"/>
                     <Setter TargetName="ActionCostSummary" Property="AlternationCount" Value="{Binding Tag.GameObject.CostSummary.Count, ElementName=ActionRadials}"/>
                 </DataTrigger>
                 <DataTrigger Binding="{Binding Path=Tag.Spell, ElementName=ActionRadials, Converter={StaticResource NullToBoolFalseConverter}, FallbackValue={x:Null}}" Value="True">
                     <Setter TargetName="ActionDetails" Property="DataContext" Value="{Binding Tag.Spell, ElementName=ActionRadials}"/>
+                    <Setter TargetName="SpellWarnings" Property="DataContext" Value="{Binding Tag.Spell, ElementName=ActionRadials}"/>
                     <Setter TargetName="ActionDetails" Property="Visibility" Value="Visible"/>
+                    <Setter TargetName="SpellWarnings" Property="Visibility" Value="Visible"/>
                     <Setter TargetName="MetamagicLabel" Property="DataContext" Value="{Binding Tag.Spell, ElementName=ActionRadials}"/>
                     <Setter TargetName="ActionCostSummary" Property="ItemsSource" Value="{Binding Tag.Spell.CostSummary, ElementName=ActionRadials}"/>
                     <Setter TargetName="ActionCostSummary" Property="AlternationCount" Value="{Binding Tag.Spell.CostSummary.Count, ElementName=ActionRadials}"/>
@@ -1770,6 +1847,20 @@
                     <Setter TargetName="UseSlotBinding" Property="IsEnabled" Value="False"/>
                     <Setter TargetName="RadialActionErrorMessage" Property="Visibility" Value="Visible" />
                 </DataTrigger>
+
+                <!-- Spell modifiers -->
+                <MultiDataTrigger>
+                    <MultiDataTrigger.Conditions>
+                        <Condition Binding="{Binding Tag.Spell.SpellModifier, ElementName=ActionRadials, Converter={StaticResource NullToBoolFalseConverter}}" Value="True"/>
+                        <Condition Binding="{Binding CurrentSingleHotbarFilter, Converter={StaticResource NullToBoolTrueConverter}, ConverterParameter='EmptyString'}" Value="True"/>
+                    </MultiDataTrigger.Conditions>
+                    <!-- Ignore CanUse, since this is a fake container -->
+                    <Setter TargetName="ActionButtonIcon" Property="Opacity" Value="1"/>
+                    <Setter TargetName="ActionButtonDescription" Property="Opacity" Value="1"/>
+                    <Setter TargetName="ActionButtonTooltipDescription" Property="Opacity" Value="1"/>
+                    <Setter TargetName="UseSlotBinding" Property="IsEnabled" Value="True"/>
+                    <Setter TargetName="RadialActionErrorMessage" Property="Visibility" Value="Collapsed" />
+                </MultiDataTrigger>
 
                 <DataTrigger Binding="{Binding SingleHotBar.SlotList.Count}" Value="0">
                     <Setter TargetName="CancelButton" Property="Command" Value="{Binding CustomEvent}"/>
@@ -1851,8 +1942,15 @@
                     <StopStoryboard BeginStoryboardName="WidgetFadeInAnim"/>
                 </EventTrigger>
 
-                <DataTrigger Binding="{Binding ActualHeight, ElementName=actionResourceBar, Converter={StaticResource GreaterThanConverter}, ConverterParameter=140}" Value="True">
-                    <Setter TargetName="ResourceContainer" Property="Margin" Value="0,0,0,10"/>
+                <!-- Shortcuts -->
+                <DataTrigger Binding="{Binding Tag.Spell.ActionId, ElementName=ActionRadials}" Value="Jump">
+                    <Setter TargetName="ShortcutText" Property="Visibility" Value="Visible"/>
+                    <Setter TargetName="ShortcutText" Property="ls:AttachedProperties.InheritedTag" Value="[IE_Jump]"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Tag.Spell.ActionId, ElementName=ActionRadials}" Value="Hide">
+                    <Setter TargetName="ShortcutText" Property="Visibility" Value="Visible"/>
+                    <Setter TargetName="ShortcutText" Property="ls:AttachedProperties.InheritedTag" Value="[IE_ToggleSneak]"/>
+                    <Setter TargetName="ShortcutText" Property="Tag" Value="h643ff96cg564dg4b8cg892bga492460d06b0"/>
                 </DataTrigger>
 
             </ControlTemplate.Triggers>

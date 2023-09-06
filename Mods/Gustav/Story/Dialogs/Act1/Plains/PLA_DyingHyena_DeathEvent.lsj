@@ -1,7 +1,7 @@
 {
    "save" : {
       "header" : {
-         "version" : "4.0.9.328"
+         "version" : "4.0.10.302"
       },
       "regions" : {
          "dialog" : {
@@ -290,6 +290,50 @@
                         ],
                         "setflags" : [ {} ],
                         "speaker" : {"type" : "int32", "value" : -666}
+                     },
+                     {
+                        "Tags" : [ {} ],
+                        "UUID" : {"type" : "FixedString", "value" : "05b82e55-446c-9197-81b3-7d51e7904e24"},
+                        "checkflags" : [ {} ],
+                        "children" : [ {} ],
+                        "constructor" : {"type" : "FixedString", "value" : "Jump"},
+                        "editorData" : [
+                           {
+                              "data" : [
+                                 {
+                                    "key" : {"type" : "FixedString", "value" : "ID"},
+                                    "val" : {"type" : "LSString", "value" : "N3894"}
+                                 },
+                                 {
+                                    "key" : {"type" : "FixedString", "value" : "TemplateNodeUUID"},
+                                    "val" : {"type" : "LSString", "value" : "00000000-0000-0000-0000-000000000000"}
+                                 },
+                                 {
+                                    "key" : {"type" : "FixedString", "value" : "TemplateVersion"},
+                                    "val" : {"type" : "LSString", "value" : "0"}
+                                 },
+                                 {
+                                    "key" : {"type" : "FixedString", "value" : "collapsed"},
+                                    "val" : {"type" : "LSString", "value" : "False"}
+                                 },
+                                 {
+                                    "key" : {"type" : "FixedString", "value" : "logicalname"},
+                                    "val" : {"type" : "LSString", "value" : "Jump"}
+                                 },
+                                 {
+                                    "key" : {"type" : "FixedString", "value" : "position"},
+                                    "val" : {"type" : "LSString", "value" : "11215;24105"}
+                                 },
+                                 {
+                                    "key" : {"type" : "FixedString", "value" : "sourcetemplate"},
+                                    "val" : {"type" : "LSString", "value" : ""}
+                                 }
+                              ]
+                           }
+                        ],
+                        "jumptarget" : {"type" : "FixedString", "value" : "e84b6131-d482-64ee-8209-b7b742f150fa"},
+                        "jumptargetpoint" : {"type" : "uint8", "value" : 1},
+                        "setflags" : [ {} ]
                      },
                      {
                         "ApprovalRatingID" : {"type" : "guid", "value" : "33578864-b337-46eb-a23c-8c10ad551f6a"},
@@ -816,7 +860,8 @@
                         ],
                         "endnode" : {"type" : "bool", "value" : true},
                         "setflags" : [ {} ],
-                        "speaker" : {"type" : "int32", "value" : 0}
+                        "speaker" : {"type" : "int32", "value" : 0},
+                        "transitionmode" : {"type" : "uint8", "value" : 2}
                      },
                      {
                         "GameData" : [
@@ -5610,7 +5655,7 @@
                            {
                               "child" : [
                                  {
-                                    "UUID" : {"type" : "FixedString", "value" : "9fd9f853-4325-3e34-8e7a-1687a4c2d0d9"}
+                                    "UUID" : {"type" : "FixedString", "value" : "05b82e55-446c-9197-81b3-7d51e7904e24"}
                                  }
                               ]
                            }
@@ -5768,67 +5813,6 @@
                         "jumptarget" : {"type" : "FixedString", "value" : "cc9765d5-74ca-266f-f550-1d343aac71a5"},
                         "jumptargetpoint" : {"type" : "uint8", "value" : 1},
                         "setflags" : [ {} ]
-                     },
-                     {
-                        "GameData" : [
-                           {
-                              "AiPersonalities" : [ {} ],
-                              "MusicInstrumentSounds" : [ {} ],
-                              "OriginSound" : [ {} ]
-                           }
-                        ],
-                        "SourceNode" : {"type" : "FixedString", "value" : "e84b6131-d482-64ee-8209-b7b742f150fa"},
-                        "Tags" : [ {} ],
-                        "UUID" : {"type" : "FixedString", "value" : "9fd9f853-4325-3e34-8e7a-1687a4c2d0d9"},
-                        "checkflags" : [ {} ],
-                        "children" : [ {} ],
-                        "constructor" : {"type" : "FixedString", "value" : "Alias"},
-                        "editorData" : [
-                           {
-                              "data" : [
-                                 {
-                                    "key" : {"type" : "FixedString", "value" : "ID"},
-                                    "val" : {"type" : "LSString", "value" : "N3862"}
-                                 },
-                                 {
-                                    "key" : {"type" : "FixedString", "value" : "TemplateNodeUUID"},
-                                    "val" : {"type" : "LSString", "value" : "00000000-0000-0000-0000-000000000000"}
-                                 },
-                                 {
-                                    "key" : {"type" : "FixedString", "value" : "TemplateVersion"},
-                                    "val" : {"type" : "LSString", "value" : "0"}
-                                 },
-                                 {
-                                    "key" : {"type" : "FixedString", "value" : "collapsed"},
-                                    "val" : {"type" : "LSString", "value" : "False"}
-                                 },
-                                 {
-                                    "key" : {"type" : "FixedString", "value" : "logicalname"},
-                                    "val" : {"type" : "LSString", "value" : "Alias (Answer)"}
-                                 },
-                                 {
-                                    "key" : {"type" : "FixedString", "value" : "position"},
-                                    "val" : {"type" : "LSString", "value" : "11215;24105"}
-                                 },
-                                 {
-                                    "key" : {"type" : "FixedString", "value" : "sourcetemplate"},
-                                    "val" : {"type" : "LSString", "value" : ""}
-                                 }
-                              ]
-                           }
-                        ],
-                        "setflags" : [
-                           {
-                              "flaggroup" : [
-                                 {
-                                    "flag" : [
-                                       {
-                                          "UUID" : {"type" : "FixedString", "value" : "d9c6cee2-e57b-0275-db29-f640f8d3753d"},"value" : {"type" : "bool", "value" : true}}
-                                    ],"type" : {"type" : "FixedString", "value" : "Global"}}
-                              ]
-                           }
-                        ],
-                        "speaker" : {"type" : "int32", "value" : -1}
                      },
                      {
                         "Success" : {"type" : "bool", "value" : true},
@@ -7758,7 +7742,7 @@
                                  },
                                  {
                                     "key" : {"type" : "FixedString", "value" : "position"},
-                                    "val" : {"type" : "LSString", "value" : "11535;24105"}
+                                    "val" : {"type" : "LSString", "value" : "11535;23886"}
                                  },
                                  {
                                     "key" : {"type" : "FixedString", "value" : "sourcetemplate"},
@@ -10160,7 +10144,7 @@
             "isImportantForStagings" : [ {} ],
             "isPeanuts" : [ {} ],
             "needLayout" : {"type" : "bool", "value" : false},
-            "nextNodeId" : {"type" : "uint32", "value" : 3893},
+            "nextNodeId" : {"type" : "uint32", "value" : 3894},
             "speakerSlotDescription" : [ {} ],
             "synopsis" : {"type" : "LSString", "value" : "The player encounters a dying hyena that is about to turn into a gnoll. If they discover this in time, they can try to stop the gnoll from being born. Otherwise, the gnoll is born and attacks the player when the dialogue ends. "}
          }

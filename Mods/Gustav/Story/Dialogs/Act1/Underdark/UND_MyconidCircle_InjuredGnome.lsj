@@ -1,7 +1,7 @@
 {
    "save" : {
       "header" : {
-         "version" : "4.0.9.330"
+         "version" : "4.0.10.400"
       },
       "regions" : {
          "dialog" : {
@@ -24322,6 +24322,9 @@
                                     "UUID" : {"type" : "FixedString", "value" : "d2db00b8-e6ff-8f78-de97-8beb15c0567f"}
                                  },
                                  {
+                                    "UUID" : {"type" : "FixedString", "value" : "ac806dd2-eabe-fdf2-509b-051311c66ed9"}
+                                 },
+                                 {
                                     "UUID" : {"type" : "FixedString", "value" : "1724b014-4c8f-2184-6226-5ee728111973"}
                                  },
                                  {
@@ -26095,6 +26098,192 @@
                         ],
                         "setflags" : [ {} ],
                         "speaker" : {"type" : "int32", "value" : 0}
+                     },
+                     {
+                        "GameData" : [
+                           {
+                              "AiPersonalities" : [ {} ],
+                              "MusicInstrumentSounds" : [ {} ],
+                              "OriginSound" : [ {} ]
+                           }
+                        ],
+                        "ShowOnce" : {"type" : "bool", "value" : true},
+                        "TaggedTexts" : [
+                           {
+                              "TaggedText" : [
+                                 {
+                                    "HasTagRule" : {"type" : "bool", "value" : true},
+                                    "RuleGroup" : [
+                                       {
+                                          "Rules" : [ {} ],
+                                          "TagCombineOp" : {"type" : "uint8", "value" : 0}
+                                       }
+                                    ],
+                                    "TagTexts" : [
+                                       {
+                                          "TagText" : [
+                                             {
+                                                "LineId" : {"type" : "guid", "value" : "f937b06d-390e-4ca2-9e13-aa7bc8afb102"},
+                                                "TagText" : {
+                                                   "handle" : "h22fee558g8866g4d2bgabd0g23a2682d883a",
+                                                   "type" : "TranslatedString",
+                                                   "version" : 2
+                                                },
+                                                "stub" : {"type" : "bool", "value" : true}
+                                             }
+                                          ]
+                                       }
+                                    ]
+                                 }
+                              ]
+                           }
+                        ],
+                        "Tags" : [ {} ],
+                        "UUID" : {"type" : "FixedString", "value" : "ac806dd2-eabe-fdf2-509b-051311c66ed9"},
+                        "ValidatedFlags" : [
+                           {
+                              "ValidatedHasValue" : {"type" : "bool", "value" : false}
+                           }
+                        ],
+                        "checkflags" : [
+                           {
+                              "flaggroup" : [
+                                 {
+                                    "flag" : [
+                                       {
+                                          "UUID" : {"type" : "FixedString", "value" : "49acb531-d0c4-d3d1-6af4-c79e246e4327"},"value" : {"type" : "bool", "value" : false}},
+                                       {
+                                          "UUID" : {"type" : "FixedString", "value" : "99fa547a-d3c9-46fe-b53f-7cceb510cd6f"},"value" : {"type" : "bool", "value" : false}}
+                                    ],"type" : {"type" : "FixedString", "value" : "Global"}},
+                                 {
+                                    "flag" : [
+                                       {
+                                          "UUID" : {"type" : "FixedString", "value" : "abbeb9cd-20d5-4931-a262-8f8676cc1282"},
+                                          "paramval" : {"type" : "int32", "value" : 1},
+                                          "value" : {"type" : "bool", "value" : true}
+                                       }
+                                    ],"type" : {"type" : "FixedString", "value" : "Quest"}}
+                              ]
+                           }
+                        ],
+                        "children" : [
+                           {
+                              "child" : [
+                                 {
+                                    "UUID" : {"type" : "FixedString", "value" : "2fe35a53-dc1a-42f7-6af5-e76454c21fbb"}
+                                 }
+                              ]
+                           }
+                        ],
+                        "constructor" : {"type" : "FixedString", "value" : "TagQuestion"},
+                        "editorData" : [
+                           {
+                              "data" : [
+                                 {
+                                    "key" : {"type" : "FixedString", "value" : "AnimationTags"},
+                                    "val" : {"type" : "LSString", "value" : ""}
+                                 },
+                                 {
+                                    "key" : {"type" : "FixedString", "value" : "Attitude"},
+                                    "val" : {"type" : "LSString", "value" : "Default"}
+                                 },
+                                 {
+                                    "key" : {"type" : "FixedString", "value" : "CinematicNodeContext"},
+                                    "val" : {"type" : "LSString", "value" : ""}
+                                 },
+                                 {
+                                    "key" : {"type" : "FixedString", "value" : "CinematicObjects"},
+                                    "val" : {"type" : "LSString", "value" : ""}
+                                 },
+                                 {
+                                    "key" : {"type" : "FixedString", "value" : "CustomCineArtKeysPresent"},
+                                    "val" : {"type" : "LSString", "value" : "False"}
+                                 },
+                                 {
+                                    "key" : {"type" : "FixedString", "value" : "CustomLightingPresent"},
+                                    "val" : {"type" : "LSString", "value" : "False"}
+                                 },
+                                 {
+                                    "key" : {"type" : "FixedString", "value" : "CustomSoundPresent"},
+                                    "val" : {"type" : "LSString", "value" : "False"}
+                                 },
+                                 {
+                                    "key" : {"type" : "FixedString", "value" : "CustomVFXPresent"},
+                                    "val" : {"type" : "LSString", "value" : "False"}
+                                 },
+                                 {
+                                    "key" : {"type" : "FixedString", "value" : "Emotion"},
+                                    "val" : {"type" : "LSString", "value" : "Default"}
+                                 },
+                                 {
+                                    "key" : {"type" : "FixedString", "value" : "ForceDisableIsCustomNode"},
+                                    "val" : {"type" : "LSString", "value" : "False"}
+                                 },
+                                 {
+                                    "key" : {"type" : "FixedString", "value" : "ID"},
+                                    "val" : {"type" : "LSString", "value" : "N2493"}
+                                 },
+                                 {
+                                    "key" : {"type" : "FixedString", "value" : "InternalNodeContext"},
+                                    "val" : {"type" : "LSString", "value" : ""}
+                                 },
+                                 {
+                                    "key" : {"type" : "FixedString", "value" : "IsCustomNode"},
+                                    "val" : {"type" : "LSString", "value" : "False"}
+                                 },
+                                 {
+                                    "key" : {"type" : "FixedString", "value" : "MusicTags"},
+                                    "val" : {"type" : "LSString", "value" : ""}
+                                 },
+                                 {
+                                    "key" : {"type" : "FixedString", "value" : "NodeContext"},
+                                    "val" : {"type" : "LSString", "value" : ""}
+                                 },
+                                 {
+                                    "key" : {"type" : "FixedString", "value" : "Quality"},
+                                    "val" : {"type" : "LSString", "value" : "Bronze"}
+                                 },
+                                 {
+                                    "key" : {"type" : "FixedString", "value" : "SFXTags"},
+                                    "val" : {"type" : "LSString", "value" : ""}
+                                 },
+                                 {
+                                    "key" : {"type" : "FixedString", "value" : "StateChangeTags"},
+                                    "val" : {"type" : "LSString", "value" : ""}
+                                 },
+                                 {
+                                    "key" : {"type" : "FixedString", "value" : "TemplateNodeUUID"},
+                                    "val" : {"type" : "LSString", "value" : "00000000-0000-0000-0000-000000000000"}
+                                 },
+                                 {
+                                    "key" : {"type" : "FixedString", "value" : "TemplateVersion"},
+                                    "val" : {"type" : "LSString", "value" : "0"}
+                                 },
+                                 {
+                                    "key" : {"type" : "FixedString", "value" : "VFXTags"},
+                                    "val" : {"type" : "LSString", "value" : ""}
+                                 },
+                                 {
+                                    "key" : {"type" : "FixedString", "value" : "collapsed"},
+                                    "val" : {"type" : "LSString", "value" : "False"}
+                                 },
+                                 {
+                                    "key" : {"type" : "FixedString", "value" : "logicalname"},
+                                    "val" : {"type" : "LSString", "value" : "Question"}
+                                 },
+                                 {
+                                    "key" : {"type" : "FixedString", "value" : "position"},
+                                    "val" : {"type" : "LSString", "value" : "-5745;-10497"}
+                                 },
+                                 {
+                                    "key" : {"type" : "FixedString", "value" : "sourcetemplate"},
+                                    "val" : {"type" : "LSString", "value" : ""}
+                                 }
+                              ]
+                           }
+                        ],
+                        "setflags" : [ {} ],
+                        "speaker" : {"type" : "int32", "value" : 1}
                      },
                      {
                         "Tags" : [ {} ],
@@ -35059,7 +35248,7 @@
                }
             ],
             "needLayout" : {"type" : "bool", "value" : false},
-            "nextNodeId" : {"type" : "uint32", "value" : 2489},
+            "nextNodeId" : {"type" : "uint32", "value" : 2493},
             "speakerSlotDescription" : [ {} ],
             "synopsis" : {"type" : "LSString", "value" : "STATE NODES - first half of dialogue, Thulla is in EXTREME pain, speaking in short, terse sentences.\r\n\r\nSecond half - she's weary but recovering.\r\n\r\nThulla is a member of the Ironhand Gnomes, a group of militant gnomish artificers who came to the Underdark to find a forbidden - and extremely secret - formula for runepowder: an explosive of awesome power.\r\n\r\nThulla is a true believer in the cause - when her group was captured by duergar, she escaped but picked up a poisoned wound on the way. She's slowly succumbing to poison - initially vague and feverish. If we heal her, she's exhausted but straight back on task, giving us the job of freeing her people."},
             "templateInstances" : [

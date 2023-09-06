@@ -58,19 +58,19 @@
                 <BitmapImage x:Key="PartyOn" UriSource="pack://application:,,,/GustavNoesisGUI;component/Assets/CharacterPanel_c/c_ico_partyFilter_on.png" />
             </ControlTemplate.Resources>
 
-            <ls:LSNineSliceImage ImageSource="{StaticResource FiltersBg}" Slices="42" MaxHeight="92" Padding="-12,0" HorizontalAlignment="Right">
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+            <ls:LSNineSliceImage Style="{StaticResource SecondaryButton9Slice}" HorizontalContentAlignment="Center" HorizontalAlignment="Center">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="25,0,6,0">
                     <Image x:Name="ProficiencyIndicator" Source="{StaticResource ProficiencyOff}" Stretch="None" VerticalAlignment="Center" Margin="32,0,0,0" Visibility="Collapsed"/>
 
                     <Image x:Name="ProficiencySeparator" Source="{StaticResource Divider}" Stretch="None" VerticalAlignment="Center" Margin="8,0" Visibility="{Binding Visibility, ElementName=ProficiencyIndicator}"/>
 
                     <Image x:Name="PartyIndicator" Source="{StaticResource PartyOff}" Stretch="None" VerticalAlignment="Center" Margin="32,0,0,0"/>
 
-                    <Image Source="{StaticResource Divider}" Stretch="None" VerticalAlignment="Center" Margin="8,0" Visibility="{Binding Visibility, ElementName=FilterNameText}"/>
+                    <Image Source="{StaticResource Divider}" Stretch="None" VerticalAlignment="Center" Margin="12,0" Visibility="{Binding Visibility, ElementName=FilterNameText}"/>
 
-                    <TextBlock x:Name="FilterNameText" Text="{Binding DataContext.CurrentInventoryTab.Name.Str, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" VerticalAlignment="Center" FontSize="{StaticResource ScaledSmallishFontSize}" Visibility="{Binding DataContext.CurrentInventoryTab.Name.Str, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}, Converter={StaticResource NullToCollapsedConverter}, ConverterParameter='EmptyString'}"/>
+                    <TextBlock x:Name="FilterNameText" Text="{Binding DataContext.CurrentInventoryTab.Name.Str, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" VerticalAlignment="Center" Visibility="{Binding DataContext.CurrentInventoryTab.Name.Str, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}, Converter={StaticResource NullToCollapsedConverter}, ConverterParameter='EmptyString'}" FontSize="{StaticResource ScaledMediumFontSize}" FontWeight="DemiBold" />
 
-                    <ContentPresenter Margin="-8,0,0,0" VerticalAlignment="Center"/>
+                    <ContentPresenter Margin="-14,-9,0,0" VerticalAlignment="Center" HorizontalAlignment="Right"/>
                 </StackPanel>
             </ls:LSNineSliceImage>
 
@@ -90,7 +90,7 @@
             </ControlTemplate.Triggers>
         </ControlTemplate>
 
-        <Style x:Key="TradeDefaultFontStyle" TargetType="TextBlock" BasedOn="{StaticResource baseStyle}">
+        <Style x:Key="TradeDefaultFontStyle" TargetType="TextBlock">
             <Style.Resources>
                 <Style TargetType="ls:LSSpan" BasedOn="{StaticResource {x:Type ls:LSSpan}}">
                     <Style.Triggers>
@@ -100,6 +100,7 @@
                     </Style.Triggers>
                 </Style>
             </Style.Resources>
+            <Setter Property="FontFamily" Value="{StaticResource DefaultFont}" />
             <Setter Property="FontSize" Value="{StaticResource ScaledIntermediateFontSize}" />
             <Setter Property="Foreground" Value="{StaticResource LS_extraspecialTxtColor}" />
             <Setter Property="VerticalAlignment" Value="Center"/>
@@ -210,8 +211,7 @@
                     <ls:LSEntityObject x:Name="entityObject" EntityRef="{Binding EntityHandle}" Background="Transparent" Context="Inventory" Style="{StaticResource BaseLSEntityObject}">
                         <ContentPresenter Content="{Binding}" ContentTemplate="{StaticResource Template.GameObject}" IsHitTestVisible="False"/>
                     </ls:LSEntityObject>
-                    <Control Template="{StaticResource EquippedItemIndicatorTemplate}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="4,-8,0,0"/>
-                    <ContentPresenter ContentTemplate="{StaticResource EquippedTorchIcon}" Content="{Binding .}" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,10,10,0"/>
+                    <Control Template="{StaticResource EquippedItemIconIndicator}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="8,8,0,0"/>
                 </Grid>
                 <Image x:Name="Selector" Stretch="UniformToFill" Source="{StaticResource SelectorImage}" Visibility="Collapsed" Margin="-16,-16,-24,-24"/>
             </Grid>
@@ -408,6 +408,7 @@
                                    WidgetChainedNavigation="True"
                                    Focusable="False"
                                    AutoIndex="True"
+                                   WidgetNavigationMarkerBrush="{StaticResource NavigableGridMarkerBrush}"
                                    ViewportExtension="8,8"/>
                     </ItemsPanelTemplate>
                 </Setter.Value>
@@ -676,34 +677,49 @@
                                 </StackPanel>
 
                                 <ContentControl x:Name="InventoryFilterIndicator" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Left" Template="{StaticResource FilterContainerTemplate}" DataContext="{Binding DataContext.CurrentPlayer.SelectedCharacter, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}">
-                                    <ls:LSButton x:Name="OpenFiltersButton" Template="{StaticResource ControllerButton.ImageSwitcher}" DataContext="{Binding DataContext.CurrentPlayer.UIData.InputEvents, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIFilter'}" BoundEvent="UIFilter" Width="{StaticResource ScaledControllerHintSize}" Height="{StaticResource ScaledControllerHintSize}" VerticalAlignment="Center">
-                                        <b:Interaction.Triggers>
-                                            <b:EventTrigger EventName="LSButtonPressed">
-                                                <b:Interaction.Behaviors>
-                                                    <b:ConditionBehavior>
-                                                        <b:ConditionalExpression>
-                                                            <b:ComparisonCondition LeftOperand="{Binding Visibility, ElementName=InventoryFilter}" Operator="NotEqual" RightOperand="Visible"/>
-                                                        </b:ConditionalExpression>
-                                                    </b:ConditionBehavior>
-                                                </b:Interaction.Behaviors>
-                                                <b:ChangePropertyAction TargetName="PanelsContainer" PropertyName="IsEnabled" Value="False"/>
-                                                <b:ChangePropertyAction TargetName="TraderInventoryContainer" PropertyName="IsEnabled" Value="False"/>
-                                                <b:ControlStoryboardAction Storyboard="{StaticResource ShowInventoryFilterAnimation}"/>
-                                            </b:EventTrigger>
-                                            <b:EventTrigger EventName="LSButtonPressed">
-                                                <b:Interaction.Behaviors>
-                                                    <b:ConditionBehavior>
-                                                        <b:ConditionalExpression>
-                                                            <b:ComparisonCondition LeftOperand="{Binding Visibility, ElementName=InventoryFilter}" Operator="Equal" RightOperand="Visible"/>
-                                                        </b:ConditionalExpression>
-                                                    </b:ConditionBehavior>
-                                                </b:Interaction.Behaviors>
-                                                <b:ChangePropertyAction TargetName="PanelsContainer" PropertyName="IsEnabled" Value="True"/>
-                                                <b:ChangePropertyAction TargetName="TraderInventoryContainer" PropertyName="IsEnabled" Value="True"/>
-                                                <b:ControlStoryboardAction Storyboard="{StaticResource HideInventoryFilterAnimation}"/>
-                                            </b:EventTrigger>
-                                        </b:Interaction.Triggers>
-                                    </ls:LSButton>
+                                    <Grid>
+                                        <ls:LSButton x:Name="OpenFiltersButton" Template="{StaticResource ControllerButton.ImageSwitcher}" DataContext="{Binding DataContext.CurrentPlayer.UIData.InputEvents, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIFilter'}" BoundEvent="UIFilter" Width="{StaticResource ScaledControllerHintSize}" Height="{StaticResource ScaledControllerHintSize}" VerticalAlignment="Center">
+                                            <b:Interaction.Triggers>
+                                                <b:EventTrigger EventName="LSButtonPressed">
+                                                    <b:Interaction.Behaviors>
+                                                        <b:ConditionBehavior>
+                                                            <b:ConditionalExpression>
+                                                                <b:ComparisonCondition LeftOperand="{Binding Visibility, ElementName=InventoryFilter}" Operator="NotEqual" RightOperand="Visible"/>
+                                                            </b:ConditionalExpression>
+                                                        </b:ConditionBehavior>
+                                                    </b:Interaction.Behaviors>
+                                                    <b:ChangePropertyAction TargetName="PanelsContainer" PropertyName="IsEnabled" Value="False"/>
+                                                    <b:ChangePropertyAction TargetName="TraderInventoryContainer" PropertyName="IsEnabled" Value="False"/>
+                                                    <b:ChangePropertyAction TargetName="CloseFiltersListButtonInput" PropertyName="IsEnabled" Value="True"/>
+                                                    <b:ControlStoryboardAction Storyboard="{StaticResource ShowInventoryFilterAnimation}"/>
+                                                </b:EventTrigger>
+                                                <b:EventTrigger EventName="LSButtonPressed">
+                                                    <b:Interaction.Behaviors>
+                                                        <b:ConditionBehavior>
+                                                            <b:ConditionalExpression>
+                                                                <b:ComparisonCondition LeftOperand="{Binding Visibility, ElementName=InventoryFilter}" Operator="Equal" RightOperand="Visible"/>
+                                                            </b:ConditionalExpression>
+                                                        </b:ConditionBehavior>
+                                                    </b:Interaction.Behaviors>
+                                                    <b:ChangePropertyAction TargetName="PanelsContainer" PropertyName="IsEnabled" Value="True"/>
+                                                    <b:ChangePropertyAction TargetName="TraderInventoryContainer" PropertyName="IsEnabled" Value="True"/>
+                                                    <b:ChangePropertyAction TargetName="CloseFiltersListButtonInput" PropertyName="IsEnabled" Value="False"/>
+                                                    <b:ControlStoryboardAction Storyboard="{StaticResource HideInventoryFilterAnimation}"/>
+                                                </b:EventTrigger>
+                                            </b:Interaction.Triggers>
+                                        </ls:LSButton>
+
+                                        <ls:LSInputBinding x:Name="CloseFiltersListButtonInput" BoundEvent="UICancel" IsEnabled="False">
+                                            <b:Interaction.Triggers>
+                                                <b:EventTrigger EventName="LSInputBindingPressed">
+                                                    <b:ChangePropertyAction TargetName="PanelsContainer" PropertyName="IsEnabled" Value="True"/>
+                                                    <b:ChangePropertyAction TargetName="TraderInventoryContainer" PropertyName="IsEnabled" Value="True"/>
+                                                    <b:ChangePropertyAction TargetName="CloseFiltersListButtonInput" PropertyName="IsEnabled" Value="False"/>
+                                                    <b:ControlStoryboardAction Storyboard="{StaticResource HideInventoryFilterAnimation}"/>
+                                                </b:EventTrigger>
+                                            </b:Interaction.Triggers>
+                                        </ls:LSInputBinding>
+                                    </Grid>
                                 </ContentControl>
 
                                 <!-- Trader side -->
@@ -788,34 +804,48 @@
                                     <Control x:Name="SelectedItemInfo" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center" Template="{StaticResource HoveredItemInfoTemplate}" Margin="0,0,80,8"/>
 
                                     <ContentControl x:Name="InventoryFilterIndicator" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Left" Template="{StaticResource FilterContainerTemplate}" DataContext="{Binding DataContext.CurrentPlayer.SelectedCharacter, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}">
-                                        <ls:LSButton x:Name="OpenFiltersButton" Template="{StaticResource ControllerButton.ImageSwitcher}" DataContext="{Binding DataContext.CurrentPlayer.UIData.InputEvents, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIFilter'}" BoundEvent="UIFilter" Width="{StaticResource ScaledControllerHintSize}" Height="{StaticResource ScaledControllerHintSize}" VerticalAlignment="Center">
-                                            <b:Interaction.Triggers>
-                                                <b:EventTrigger EventName="LSButtonPressed">
-                                                    <b:Interaction.Behaviors>
-                                                        <b:ConditionBehavior>
-                                                            <b:ConditionalExpression>
-                                                                <b:ComparisonCondition LeftOperand="{Binding Visibility, ElementName=InventoryFilter}" Operator="NotEqual" RightOperand="Visible"/>
-                                                            </b:ConditionalExpression>
-                                                        </b:ConditionBehavior>
-                                                    </b:Interaction.Behaviors>
-                                                    <b:ChangePropertyAction TargetName="PanelsContainer" PropertyName="IsEnabled" Value="False"/>
-                                                    <b:ChangePropertyAction TargetName="TraderInventoryContainer" PropertyName="IsEnabled" Value="False"/>
-                                                    <b:ControlStoryboardAction Storyboard="{StaticResource ShowInventoryFilterAnimation}"/>
-                                                </b:EventTrigger>
-                                                <b:EventTrigger EventName="LSButtonPressed">
-                                                    <b:Interaction.Behaviors>
-                                                        <b:ConditionBehavior>
-                                                            <b:ConditionalExpression>
-                                                                <b:ComparisonCondition LeftOperand="{Binding Visibility, ElementName=InventoryFilter}" Operator="Equal" RightOperand="Visible"/>
-                                                            </b:ConditionalExpression>
-                                                        </b:ConditionBehavior>
-                                                    </b:Interaction.Behaviors>
-                                                    <b:ChangePropertyAction TargetName="PanelsContainer" PropertyName="IsEnabled" Value="True"/>
-                                                    <b:ChangePropertyAction TargetName="TraderInventoryContainer" PropertyName="IsEnabled" Value="True"/>
-                                                    <b:ControlStoryboardAction Storyboard="{StaticResource HideInventoryFilterAnimation}"/>
-                                                </b:EventTrigger>
-                                            </b:Interaction.Triggers>
-                                        </ls:LSButton>
+                                        <Grid>
+                                            <ls:LSButton x:Name="OpenFiltersButton" Template="{StaticResource ControllerButton.ImageSwitcher}" DataContext="{Binding DataContext.CurrentPlayer.UIData.InputEvents, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIFilter'}" BoundEvent="UIFilter" Width="{StaticResource ScaledControllerHintSize}" Height="{StaticResource ScaledControllerHintSize}" VerticalAlignment="Center">
+                                                <b:Interaction.Triggers>
+                                                    <b:EventTrigger EventName="LSButtonPressed">
+                                                        <b:Interaction.Behaviors>
+                                                            <b:ConditionBehavior>
+                                                                <b:ConditionalExpression>
+                                                                    <b:ComparisonCondition LeftOperand="{Binding Visibility, ElementName=InventoryFilter}" Operator="NotEqual" RightOperand="Visible"/>
+                                                                </b:ConditionalExpression>
+                                                            </b:ConditionBehavior>
+                                                        </b:Interaction.Behaviors>
+                                                        <b:ChangePropertyAction TargetName="PanelsContainer" PropertyName="IsEnabled" Value="False"/>
+                                                        <b:ChangePropertyAction TargetName="TraderInventoryContainer" PropertyName="IsEnabled" Value="False"/>
+                                                        <b:ChangePropertyAction TargetName="CloseFiltersListButtonInput" PropertyName="IsEnabled" Value="True"/>
+                                                        <b:ControlStoryboardAction Storyboard="{StaticResource ShowInventoryFilterAnimation}"/>
+                                                    </b:EventTrigger>
+                                                    <b:EventTrigger EventName="LSButtonPressed">
+                                                        <b:Interaction.Behaviors>
+                                                            <b:ConditionBehavior>
+                                                                <b:ConditionalExpression>
+                                                                    <b:ComparisonCondition LeftOperand="{Binding Visibility, ElementName=InventoryFilter}" Operator="Equal" RightOperand="Visible"/>
+                                                                </b:ConditionalExpression>
+                                                            </b:ConditionBehavior>
+                                                        </b:Interaction.Behaviors>
+                                                        <b:ChangePropertyAction TargetName="PanelsContainer" PropertyName="IsEnabled" Value="True"/>
+                                                        <b:ChangePropertyAction TargetName="TraderInventoryContainer" PropertyName="IsEnabled" Value="True"/>
+                                                        <b:ChangePropertyAction TargetName="CloseFiltersListButtonInput" PropertyName="IsEnabled" Value="False"/>
+                                                        <b:ControlStoryboardAction Storyboard="{StaticResource HideInventoryFilterAnimation}"/>
+                                                    </b:EventTrigger>
+                                                </b:Interaction.Triggers>
+                                            </ls:LSButton>
+                                            <ls:LSInputBinding x:Name="CloseFiltersListButtonInput" BoundEvent="UICancel" IsEnabled="False">
+                                                <b:Interaction.Triggers>
+                                                    <b:EventTrigger EventName="LSInputBindingPressed">
+                                                        <b:ChangePropertyAction TargetName="PanelsContainer" PropertyName="IsEnabled" Value="True"/>
+                                                        <b:ChangePropertyAction TargetName="TraderInventoryContainer" PropertyName="IsEnabled" Value="True"/>
+                                                        <b:ChangePropertyAction TargetName="CloseFiltersListButtonInput" PropertyName="IsEnabled" Value="False"/>
+                                                        <b:ControlStoryboardAction Storyboard="{StaticResource HideInventoryFilterAnimation}"/>
+                                                    </b:EventTrigger>
+                                                </b:Interaction.Triggers>
+                                            </ls:LSInputBinding>
+                                        </Grid>
                                     </ContentControl>
 
                                     <!-- Player side -->
@@ -902,38 +932,54 @@
                                 </Grid.RowDefinitions>
 
                                 <ContentControl x:Name="InventoryFilterIndicator" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Bottom" Template="{StaticResource FilterContainerTemplate}" DataContext="{Binding DataContext.CurrentPlayer.SelectedCharacter, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}">
-                                    <ls:LSButton x:Name="OpenFiltersButton" Template="{StaticResource ControllerButton.ImageSwitcher}" DataContext="{Binding DataContext.CurrentPlayer.UIData.InputEvents, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIFilter'}" BoundEvent="UIFilter" Width="{StaticResource ScaledControllerHintSize}" Height="{StaticResource ScaledControllerHintSize}" VerticalAlignment="Center">
-                                        <b:Interaction.Triggers>
-                                            <b:EventTrigger EventName="LSButtonPressed">
-                                                <b:Interaction.Behaviors>
-                                                    <b:ConditionBehavior>
-                                                        <b:ConditionalExpression>
-                                                            <b:ComparisonCondition LeftOperand="{Binding Visibility, ElementName=InventoryFilter}" Operator="NotEqual" RightOperand="Visible"/>
-                                                        </b:ConditionalExpression>
-                                                    </b:ConditionBehavior>
-                                                </b:Interaction.Behaviors>
-                                                <b:ChangePropertyAction TargetName="PanelsContainer" PropertyName="IsEnabled" Value="False"/>
-                                                <b:ChangePropertyAction TargetName="TraderInventoryContainer" PropertyName="IsEnabled" Value="False"/>
-                                                <b:ChangePropertyAction TargetName="PlayerOffer" PropertyName="IsEnabled" Value="False"/>
-                                                <b:ChangePropertyAction TargetName="TraderOffer" PropertyName="IsEnabled" Value="False"/>
-                                                <b:ControlStoryboardAction Storyboard="{StaticResource ShowInventoryFilterAnimation}"/>
-                                            </b:EventTrigger>
-                                            <b:EventTrigger EventName="LSButtonPressed">
-                                                <b:Interaction.Behaviors>
-                                                    <b:ConditionBehavior>
-                                                        <b:ConditionalExpression>
-                                                            <b:ComparisonCondition LeftOperand="{Binding Visibility, ElementName=InventoryFilter}" Operator="Equal" RightOperand="Visible"/>
-                                                        </b:ConditionalExpression>
-                                                    </b:ConditionBehavior>
-                                                </b:Interaction.Behaviors>
-                                                <b:ChangePropertyAction TargetName="PanelsContainer" PropertyName="IsEnabled" Value="True"/>
-                                                <b:ChangePropertyAction TargetName="TraderInventoryContainer" PropertyName="IsEnabled" Value="True"/>
-                                                <b:ChangePropertyAction TargetName="PlayerOffer" PropertyName="IsEnabled" Value="True"/>
-                                                <b:ChangePropertyAction TargetName="TraderOffer" PropertyName="IsEnabled" Value="True"/>
-                                                <b:ControlStoryboardAction Storyboard="{StaticResource HideInventoryFilterAnimation}"/>
-                                            </b:EventTrigger>
-                                        </b:Interaction.Triggers>
-                                    </ls:LSButton>
+                                    <Grid>
+                                        <ls:LSButton x:Name="OpenFiltersButton" Template="{StaticResource ControllerButton.ImageSwitcher}" DataContext="{Binding DataContext.CurrentPlayer.UIData.InputEvents, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIFilter'}" BoundEvent="UIFilter" Width="{StaticResource ScaledControllerHintSize}" Height="{StaticResource ScaledControllerHintSize}" VerticalAlignment="Center">
+                                            <b:Interaction.Triggers>
+                                                <b:EventTrigger EventName="LSButtonPressed">
+                                                    <b:Interaction.Behaviors>
+                                                        <b:ConditionBehavior>
+                                                            <b:ConditionalExpression>
+                                                                <b:ComparisonCondition LeftOperand="{Binding Visibility, ElementName=InventoryFilter}" Operator="NotEqual" RightOperand="Visible"/>
+                                                            </b:ConditionalExpression>
+                                                        </b:ConditionBehavior>
+                                                    </b:Interaction.Behaviors>
+                                                    <b:ChangePropertyAction TargetName="PanelsContainer" PropertyName="IsEnabled" Value="False"/>
+                                                    <b:ChangePropertyAction TargetName="TraderInventoryContainer" PropertyName="IsEnabled" Value="False"/>
+                                                    <b:ChangePropertyAction TargetName="PlayerOffer" PropertyName="IsEnabled" Value="False"/>
+                                                    <b:ChangePropertyAction TargetName="TraderOffer" PropertyName="IsEnabled" Value="False"/>
+                                                    <b:ChangePropertyAction TargetName="CloseFiltersListButtonInput" PropertyName="IsEnabled" Value="True"/>
+                                                    <b:ControlStoryboardAction Storyboard="{StaticResource ShowInventoryFilterAnimation}"/>
+                                                </b:EventTrigger>
+                                                <b:EventTrigger EventName="LSButtonPressed">
+                                                    <b:Interaction.Behaviors>
+                                                        <b:ConditionBehavior>
+                                                            <b:ConditionalExpression>
+                                                                <b:ComparisonCondition LeftOperand="{Binding Visibility, ElementName=InventoryFilter}" Operator="Equal" RightOperand="Visible"/>
+                                                            </b:ConditionalExpression>
+                                                        </b:ConditionBehavior>
+                                                    </b:Interaction.Behaviors>
+                                                    <b:ChangePropertyAction TargetName="PanelsContainer" PropertyName="IsEnabled" Value="True"/>
+                                                    <b:ChangePropertyAction TargetName="TraderInventoryContainer" PropertyName="IsEnabled" Value="True"/>
+                                                    <b:ChangePropertyAction TargetName="PlayerOffer" PropertyName="IsEnabled" Value="True"/>
+                                                    <b:ChangePropertyAction TargetName="TraderOffer" PropertyName="IsEnabled" Value="True"/>
+                                                    <b:ChangePropertyAction TargetName="CloseFiltersListButtonInput" PropertyName="IsEnabled" Value="False"/>
+                                                    <b:ControlStoryboardAction Storyboard="{StaticResource HideInventoryFilterAnimation}"/>
+                                                </b:EventTrigger>
+                                            </b:Interaction.Triggers>
+                                        </ls:LSButton>
+                                        <ls:LSInputBinding x:Name="CloseFiltersListButtonInput" BoundEvent="UICancel" IsEnabled="False">
+                                            <b:Interaction.Triggers>
+                                                <b:EventTrigger EventName="LSInputBindingPressed">
+                                                    <b:ChangePropertyAction TargetName="PanelsContainer" PropertyName="IsEnabled" Value="True"/>
+                                                    <b:ChangePropertyAction TargetName="TraderInventoryContainer" PropertyName="IsEnabled" Value="True"/>
+                                                    <b:ChangePropertyAction TargetName="PlayerOffer" PropertyName="IsEnabled" Value="True"/>
+                                                    <b:ChangePropertyAction TargetName="TraderOffer" PropertyName="IsEnabled" Value="True"/>
+                                                    <b:ChangePropertyAction TargetName="CloseFiltersListButtonInput" PropertyName="IsEnabled" Value="False"/>
+                                                    <b:ControlStoryboardAction Storyboard="{StaticResource HideInventoryFilterAnimation}"/>
+                                                </b:EventTrigger>
+                                            </b:Interaction.Triggers>
+                                        </ls:LSInputBinding>
+                                    </Grid>
                                 </ContentControl>
 
                                 <!-- Player side -->
@@ -1066,7 +1112,8 @@
                 </Grid>
 
                 <!-- Confirm Barter Button -->
-                <ls:LSNineSliceImage x:Name="BarterButtonHolder" Grid.Row="2" ImageSource="{StaticResource ConfirmBarterBackgroundImage}" HorizontalContentAlignment="Center" Slices="80,80,80,80" HorizontalAlignment="Center" Padding="20,32,50,20" Focusable="False" Margin="0,-8,0,8">
+
+                <ContentControl x:Name="BarterButtonHolder" Grid.Row="2" Template="{StaticResource PrimaryButtonTemplateWrapper}" HorizontalAlignment="Center" Margin="0,2,0,0" IsEnabled="{Binding TradeButtonsEnabled}"  >
                     <ls:LSButton x:Name="FinishBarterButton"
                              VerticalAlignment="Center"
                              ContentTemplate="{StaticResource ControllerButtonHint}" 
@@ -1076,7 +1123,8 @@
                              Command="{Binding FinishBarter}"
                              SoundID="UI_HUD_Trade"
                              IsEnabled="{Binding TradeButtonsEnabled}"/>
-                </ls:LSNineSliceImage>
+                </ContentControl>
+
             </Grid>
 
             <ControlTemplate.Triggers>
@@ -1088,6 +1136,14 @@
                         </MultiBinding>
                     </DataTrigger.Binding>
                     <Setter TargetName="SplitScreenFeedbackText" Property="Text" Value="{Binding Source='ha669035bgb2b8g43d2g96ccgd1e9f19b35cc', Converter={StaticResource TranslatedStringConverter}}"/>
+                </DataTrigger>
+
+                <DataTrigger Binding="{Binding FocusedElement.Tag, ElementName=Trade_c}" Value="Sort">
+                    <Setter TargetName="FinishBarterButton" Property="IsEnabled" Value="False"/>
+                </DataTrigger>
+
+                <DataTrigger Binding="{Binding FocusedElement.Tag, ElementName=Trade_c}" Value="InventoryFilter">
+                    <Setter TargetName="FinishBarterButton" Property="IsEnabled" Value="False"/>
                 </DataTrigger>
 
                 <DataTrigger Binding="{Binding TradeDeclined}" Value="True">
@@ -1132,6 +1188,7 @@
                                     </Grid.RowDefinitions>
 
                                     <ContentControl x:Name="InventoryFilterIndicator" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Left" Template="{StaticResource FilterContainerTemplate}" DataContext="{Binding DataContext.CurrentPlayer.SelectedCharacter, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}">
+                                        <Grid>
                                         <ls:LSButton x:Name="OpenFiltersButton" Template="{StaticResource ControllerButton.ImageSwitcher}" DataContext="{Binding DataContext.CurrentPlayer.UIData.InputEvents, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIFilter'}" BoundEvent="UIFilter" Width="{StaticResource ScaledControllerHintSize}" Height="{StaticResource ScaledControllerHintSize}" VerticalAlignment="Center">
                                             <b:Interaction.Triggers>
                                                 <b:EventTrigger EventName="LSButtonPressed">
@@ -1146,6 +1203,7 @@
                                                     <b:ChangePropertyAction TargetName="TraderInventoryContainer" PropertyName="IsEnabled" Value="False"/>
                                                     <b:ChangePropertyAction TargetName="PlayerOffer" PropertyName="IsEnabled" Value="False"/>
                                                     <b:ChangePropertyAction TargetName="TraderOffer" PropertyName="IsEnabled" Value="False"/>
+                                                    <b:ChangePropertyAction TargetName="CloseFiltersListButtonInput" PropertyName="IsEnabled" Value="True"/>
                                                     <b:ControlStoryboardAction Storyboard="{StaticResource ShowInventoryFilterAnimation}"/>
                                                 </b:EventTrigger>
                                                 <b:EventTrigger EventName="LSButtonPressed">
@@ -1160,10 +1218,24 @@
                                                     <b:ChangePropertyAction TargetName="TraderInventoryContainer" PropertyName="IsEnabled" Value="True"/>
                                                     <b:ChangePropertyAction TargetName="PlayerOffer" PropertyName="IsEnabled" Value="True"/>
                                                     <b:ChangePropertyAction TargetName="TraderOffer" PropertyName="IsEnabled" Value="True"/>
+                                                    <b:ChangePropertyAction TargetName="CloseFiltersListButtonInput" PropertyName="IsEnabled" Value="False"/>
                                                     <b:ControlStoryboardAction Storyboard="{StaticResource HideInventoryFilterAnimation}"/>
                                                 </b:EventTrigger>
                                             </b:Interaction.Triggers>
                                         </ls:LSButton>
+                                            <ls:LSInputBinding x:Name="CloseFiltersListButtonInput" BoundEvent="UICancel" IsEnabled="False">
+                                                <b:Interaction.Triggers>
+                                                    <b:EventTrigger EventName="LSInputBindingPressed">
+                                                        <b:ChangePropertyAction TargetName="PanelsContainer" PropertyName="IsEnabled" Value="True"/>
+                                                        <b:ChangePropertyAction TargetName="TraderInventoryContainer" PropertyName="IsEnabled" Value="True"/>
+                                                        <b:ChangePropertyAction TargetName="PlayerOffer" PropertyName="IsEnabled" Value="True"/>
+                                                        <b:ChangePropertyAction TargetName="TraderOffer" PropertyName="IsEnabled" Value="True"/>
+                                                        <b:ChangePropertyAction TargetName="CloseFiltersListButtonInput" PropertyName="IsEnabled" Value="False"/>
+                                                        <b:ControlStoryboardAction Storyboard="{StaticResource HideInventoryFilterAnimation}"/>
+                                                    </b:EventTrigger>
+                                                </b:Interaction.Triggers>
+                                            </ls:LSInputBinding>
+                                        </Grid>
                                     </ContentControl>
                                     
                                     <!-- Selected item price -->
@@ -1235,7 +1307,9 @@
         <b:EventTrigger EventName="FocusChanged">
             <b:InvokeCommandAction Command="{Binding ShowTooltipOnUIElement}" CommandParameter="{Binding Path=FocusedElement, ElementName=Trade_c}"/>
         </b:EventTrigger>
-
+        <b:DataTrigger Binding="{Binding HasInputEnabled, ElementName=Trade_c}" Value="True">
+            <b:InvokeCommandAction Command="{Binding ShowTooltipOnUIElement}" CommandParameter="{Binding Path=FocusedElement, ElementName=Trade_c}"/>
+        </b:DataTrigger>
     </b:Interaction.Triggers>
 
     <ls:UIWidget.Style>
@@ -1436,10 +1510,16 @@
 							 Visibility="Collapsed">
                                 </ls:LSButton>
 
-                                <ls:LSButton x:Name="ActionButton"
+
+                                <ls:LSButton x:Name="CloseFiltersListButton"
+                                             ContentTemplate="{StaticResource ControllerButtonHint}"
+                                             Content="{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UICancel'}"
+                                             Tag="{Binding Source='hde539272g6e1fg4eb2g965fgf5e45dd80d96', Converter={StaticResource TranslatedStringConverter}}"
+                                             Visibility="Collapsed"/>
+
+                                    <ls:LSButton x:Name="ActionButton"
                                  ContentTemplate="{StaticResource ControllerButtonHint}"
                                  Content = "{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIAccept'}"
-                                 Margin="20,0" 
                                  EatInput="True"
                                  BoundEvent="UIAccept"
                                  IsEnabled="False"
@@ -1448,7 +1528,6 @@
                                  CommandParameter="{Binding Path=FocusedElement.DataContext, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"/>
 
                                 <ls:LSButton x:Name="BalanceOfferButton"
-                                 Margin="20,0"
                                  ContentTemplate="{StaticResource ControllerButtonHint}"
                                  Content="{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='ContextMenu'}"
                                  BoundEvent="ContextMenu"
@@ -1469,8 +1548,7 @@
                                 <ls:LSButton x:Name="ToggleTooltipButton" ContentTemplate="{StaticResource ControllerButtonHint}"
                                  Content = "{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIShowInfo'}"
                                  BoundEvent="UIShowInfo"
-                                 Margin="20,0" 
-                                 Tag="{Binding Source='h07aaca85g63dbg4e60g88a2g0590077ea7e2',Converter={StaticResource TranslatedStringConverter}}" 
+                                 Tag="{Binding Source='hf8dd4c2fg97e0g4ccdgac1ag3cd1fe5060ef',Converter={StaticResource TranslatedStringConverter}}" 
                                  Command="{Binding ToggleTooltipOnUIElement}"
                                  CommandParameter="{Binding Path=FocusedElement, ElementName=Trade_c}"/>
 
@@ -1479,7 +1557,6 @@
                                 <ls:LSButton x:Name="CloseWidgetButton" ContentTemplate="{StaticResource ControllerButtonHint}" 
                                  Content = "{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UICancel'}"
                                  BoundEvent="UICancel"
-                                 Margin="20,0" 
                                  Tag="{Binding Source='h6fefa28bg2149g4cacga071gd95b236b2d0b',Converter={StaticResource TranslatedStringConverter}}" 
                                  Command="{Binding CustomEvent}"
                                  SoundID="UI_Shared_Cancel"
@@ -1495,8 +1572,8 @@
                                 <b:EventTrigger EventName="Unloaded">
                                     <ls:LSPlaySound Sound="UI_HUD_Inventory_Close"/>
                                     <b:InvokeCommandAction Command="{Binding HideTooltipOnUIElement}"/>
-                                    <b:ControlStoryboardAction Storyboard="{DynamicResource ShowInventoryFilterAnimation}" ControlStoryboardOption="Stop" />
-                                    <b:ControlStoryboardAction Storyboard="{DynamicResource HideInventoryFilterAnimation}" ControlStoryboardOption="Stop" />
+                                    <b:ControlStoryboardAction Storyboard="{StaticResource ShowInventoryFilterAnimation}" ControlStoryboardOption="Stop" />
+                                    <b:ControlStoryboardAction Storyboard="{StaticResource HideInventoryFilterAnimation}" ControlStoryboardOption="Stop" />
                                 </b:EventTrigger>
 
                                 <b:StoryboardCompletedTrigger Storyboard="{StaticResource ShowInventoryFilterAnimation}">
@@ -1598,8 +1675,10 @@
                                 <Setter TargetName="ActionButton" Property="Visibility" Value="Collapsed"/>
                                 <Setter TargetName="SellWaresTradeHolder" Property="Visibility" Value="Collapsed"/>
                                 <Setter TargetName="ToggleTooltipButton" Property="Visibility" Value="Collapsed"/>
+                                <Setter TargetName="BalanceOfferButton" Property="Visibility" Value="Collapsed"/>
 
                                 <Setter TargetName="SelectSortOptionButton" Property="Visibility" Value="Visible"/>
+                                <Setter TargetName="CloseFiltersListButton" Property="Visibility" Value="Visible"/>
                             </DataTrigger>
 
                             <DataTrigger Binding="{Binding FocusedElement.Tag, RelativeSource={RelativeSource Mode=Self}}" Value="InventoryFilter">
@@ -1607,8 +1686,10 @@
                                 <Setter TargetName="ActionButton" Property="Visibility" Value="Collapsed"/>
                                 <Setter TargetName="SellWaresTradeHolder" Property="Visibility" Value="Collapsed"/>
                                 <Setter TargetName="ToggleTooltipButton" Property="Visibility" Value="Collapsed"/>
+                                <Setter TargetName="BalanceOfferButton" Property="Visibility" Value="Collapsed"/>
 
                                 <Setter TargetName="SelectFilterOptionButton" Property="Visibility" Value="Visible"/>
+                                <Setter TargetName="CloseFiltersListButton" Property="Visibility" Value="Visible"/>
                             </DataTrigger>
 
                             <DataTrigger Binding="{Binding FocusedElement.Tag, ElementName=Trade_c}" Value="PartyExpanded">
@@ -1638,6 +1719,10 @@
                                 </DataTrigger.Binding>
 
                                 <Setter TargetName="BalanceOfferButton" Property="IsEnabled" Value="True"/>
+                            </DataTrigger>
+
+                            <DataTrigger Binding="{Binding ShowUIElementTooltip}" Value="True">
+                                <Setter TargetName="ToggleTooltipButton" Property="Tag" Value="{Binding Source='hb33ec471gd611g4ee3gbbffg699af8f79167', Converter={StaticResource TranslatedStringConverter}}"/>
                             </DataTrigger>
 
                             <!-- Fullscreen modifiers -->
@@ -1716,7 +1801,7 @@
                                         Content = "{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIShowInfo'}"
                                         BoundEvent="UIShowInfo"
                                         Margin="20,0" 
-                                        Tag="{Binding Source='h07aaca85g63dbg4e60g88a2g0590077ea7e2',Converter={StaticResource TranslatedStringConverter}}" 
+                                        Tag="{Binding Source='hf8dd4c2fg97e0g4ccdgac1ag3cd1fe5060ef',Converter={StaticResource TranslatedStringConverter}}" 
                                         Command="{Binding ToggleTooltipOnUIElement}"
                                         CommandParameter="{Binding Path=FocusedElement, ElementName=Trade_c}"/>
 
@@ -1726,6 +1811,10 @@
                                 <ControlTemplate.Triggers>
                                     <DataTrigger Binding="{Binding FocusedElement.DataContext, RelativeSource={RelativeSource Mode=Self}, Converter={StaticResource TypeConverter}}" Value="ls.VMInventorySlot">
                                         <Setter TargetName="DonateButton" Property="IsEnabled" Value="True"/>
+                                    </DataTrigger>
+
+                                    <DataTrigger Binding="{Binding ShowUIElementTooltip}" Value="True">
+                                        <Setter TargetName="ToggleTooltipButton" Property="Tag" Value="{Binding Source='hb33ec471gd611g4ee3gbbffg699af8f79167', Converter={StaticResource TranslatedStringConverter}}"/>
                                     </DataTrigger>
                                 </ControlTemplate.Triggers>
                             </ControlTemplate>

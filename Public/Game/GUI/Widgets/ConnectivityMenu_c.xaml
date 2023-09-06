@@ -151,15 +151,18 @@
                     </StackPanel>
                 </Border>
 
-               <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" Style="{StaticResource ButtonHint.Container.Center}" >
-                  <ls:LSButton x:Name="CloseBtn" Focusable="False" BoundEvent="UICancel" Margin="0,200,0,0" HorizontalAlignment="Center"
+                <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" Style="{StaticResource ButtonHint.Container.Center}" >
+                    <ls:LSButton x:Name="CloseBtn" Focusable="False" BoundEvent="UICancel" Margin="0,200,0,0" HorizontalAlignment="Center"
                                      Content="{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UICancel'}"
                                      Tag="{Binding Source='h8d7a06bcgf023g47cbg95dagd290e0a05142',Converter={StaticResource TranslatedStringConverter}}"
                                      ContentTemplate="{StaticResource ControllerButtonHint}"
                                      Command="{Binding CustomEvent}"
                                      CommandParameter="CloseWidget"
                                      SoundID="UI_Shared_Cancel"/>
-               </StackPanel>
+                </StackPanel>
+                <Control x:Name="Spinner" HorizontalAlignment="Center" VerticalAlignment="Center" Template="{StaticResource BusyElement}"
+                             Visibility="{Binding IsApplyingSettings, Converter={StaticResource BoolToVisibleConverter}}"/>
+                <ls:LSInputBinding AnyClick="True" AnyKey="True" EatInput="True" IsEnabled="{Binding IsApplyingSettings, FallbackValue=False}"/>
             </Grid>
         </ControlTemplate>
     </ls:UIWidget.Template>

@@ -27,6 +27,7 @@ data "ItemWallStatus" "END_DRAGONFIRE_TECHNICAL"
 data "PrepareEffect" "68441fef-df1c-4622-acba-e79f53edf7e7"
 data "CastEffect" "23f0ede1-066a-4377-8395-20a1d8500c75"
 data "Requirements" "Combat"
+data "RequirementConditions" "not HasStatus('END_ALLYABILITIES_VOSSALLIESCONSUMED')"
 
 new entry "Wall_MAG_Legendary_Chromatic_WallOfFire"
 type "SpellData"

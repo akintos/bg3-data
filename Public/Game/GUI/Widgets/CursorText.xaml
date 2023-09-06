@@ -72,6 +72,7 @@
                         </Setter>
                     </Style>
 
+                    <System:Double x:Key="NumberMinusFourteen">-14</System:Double>
                 </ControlTemplate.Resources>
                 
                 <Grid >
@@ -88,8 +89,8 @@
                             <Grid.Tag>
                                 <!--Calculate if HightDefense needs to be shown-->
                                 <MultiBinding Converter="{StaticResource LessThanOrEqualMultiConverter}">
-                                    <Binding Path="CurrentPlayer.CurrentTarget.Stats.ArmorClass.Value" Converter="{StaticResource AddConverter}" ConverterParameter="-14"/>
-                                    <Binding Path="CurrentPlayer.SelectedCharacter.Stats.Level.Value" Converter="{StaticResource DivideConverter}" ConverterParameter="2"/>
+                                    <Binding Path="CurrentPlayer.CurrentTarget.Stats.ArmorClass.Value" Converter="{StaticResource AddConverter}" ConverterParameter="{StaticResource NumberMinusFourteen}"/>
+                                    <Binding Path="CurrentPlayer.SelectedCharacter.Stats.Level.Value" Converter="{StaticResource DivideConverter}" ConverterParameter="{StaticResource DoubleTwoValue}"/>
                                 </MultiBinding>
                             </Grid.Tag>
                             <!-- Task Icon -->
@@ -190,12 +191,12 @@
 
                                 <!-- Advantage / Disadvantage -->
                                 <StackPanel x:Name="AdvantagesList" Orientation="Horizontal" Visibility="{Binding HitChanceDesc.Advantages.Count, Converter={StaticResource CountToVisibilityConverter}}">
-                                    <Image Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared/ico_advantage.png" Stretch="None" VerticalAlignment="Center" Effect="{StaticResource DropShadow}"/>
+                                    <Image Source="{StaticResource IconAdvantage}" Stretch="None" VerticalAlignment="Center" Effect="{StaticResource DropShadow}"/>
                                     <TextBlock Text="{Binding Source='h986f906agb172g4956g9567g5cbd32150349', Converter={StaticResource TranslatedStringConverter}, StringFormat='\ {0}'}" Style="{StaticResource CursorTextStyle}" FontSize="{StaticResource ScaledSmallishFontSize}" VerticalAlignment="Center" Margin="0,0"/>
                                 </StackPanel>
 
                                 <StackPanel x:Name="DisadvantagesList" Orientation="Horizontal" Visibility="{Binding HitChanceDesc.Disadvantages.Count, Converter={StaticResource CountToVisibilityConverter}}">
-                                    <Image Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared/ico_disadvantage.png" Stretch="None" VerticalAlignment="Center"/>
+                                    <Image Source="{StaticResource IconDisadvantage}" Stretch="None" VerticalAlignment="Center"/>
                                     <TextBlock Text="{Binding Source='had6da506gedf2g4c86g9324g452e287e3c47', Converter={StaticResource TranslatedStringConverter}}" Style="{StaticResource CursorTextStyle}" FontSize="{StaticResource ScaledSmallishFontSize}" VerticalAlignment="Center" Margin="0,0"/>
                                 </StackPanel>
 
@@ -204,12 +205,12 @@
 
                                 <!-- IF: WIP Bonus Modifiers will need code support
                                 <StackPanel x:Name="BonusModifier" Orientation="Horizontal" Visibility="Visible">
-                                    <Image Source="pack://application:,,,/GustavNoesisGUI;component/Assets/TargetInfo/targetInfo_deltas_plus.png" Stretch="None" VerticalAlignment="Center" Margin="-16,0,-4,0"/>
+                                    <Image Source="{StaticResource DeltasPlus}" Stretch="None" VerticalAlignment="Center" Margin="-16,0,-4,0"/>
                                     <TextBlock Text="+2 Damage" Style="{StaticResource CursorTextStyle}" Foreground="{StaticResource TooltipColor.Bonus}" FontSize="{StaticResource ScaledSmallishFontSize}" VerticalAlignment="Center" Margin="0,0"/>
                                 </StackPanel>
 
                                 <StackPanel x:Name="NegativeModifier" Orientation="Horizontal" Visibility="Visible">
-                                    <Image Source="pack://application:,,,/GustavNoesisGUI;component/Assets/TargetInfo/targetInfo_deltas_minus.png" Stretch="None" VerticalAlignment="Center" Margin="-16,0,-4,0"/>
+                                    <Image Source="{StaticResource DeltasMinus}" Stretch="None" VerticalAlignment="Center" Margin="-16,0,-4,0"/>
                                     <TextBlock Text="-2 Damage" Style="{StaticResource CursorTextStyle}" Foreground="{StaticResource TooltipColor.Alert}" FontSize="{StaticResource ScaledSmallishFontSize}" VerticalAlignment="Center" Margin="0,0"/>
                                 </StackPanel> -->
                                 
@@ -268,12 +269,7 @@
                                             </StackPanel>
 
                                             <DataTemplate.Triggers>
-                                               <DataTrigger Binding="{Binding Type}" Value="ActionsBlocked">
-                                                    <Setter TargetName="Message" Property="Text" Value="{Binding Source='hc26b3ee1g8586g4fc5gbc1dg14711bc21a4b', Converter={StaticResource TranslatedStringConverter}}"/>
-                                                </DataTrigger>
-                                                <DataTrigger Binding="{Binding Type}" Value="BonusActionsBlocked">
-                                                    <Setter TargetName="Message" Property="Text" Value="{Binding Source='hc9c9197cg997fg4dcagad83g7fd70e8c645e', Converter={StaticResource TranslatedStringConverter}}"/>
-                                                </DataTrigger>
+
                                                 <DataTrigger Binding="{Binding Type}" Value="MovementBlocked">
                                                     <Setter TargetName="Message" Property="Text" Value="{Binding Source='h7760a99cg8a58g4555gb0f1g0e3e2b872f66', Converter={StaticResource TranslatedStringConverter}}"/>
                                                 </DataTrigger>
@@ -285,6 +281,7 @@
                                                 <DataTrigger Binding="{Binding Type}" Value="MovementMultiplier">
                                                     <Setter TargetName="Message" Property="Text" Value="{Binding Source='h987efa83g0f3bg416dga3dfg7a588084af78', Converter={StaticResource TranslatedStringConverter}}"/>
                                                 </DataTrigger>
+                                                
                                                 <MultiDataTrigger>
                                                     <MultiDataTrigger.Conditions>
                                                         <Condition Binding="{Binding Type}" Value="MovementMultiplier"/>
@@ -304,17 +301,10 @@
                                                     <Setter TargetName="Message" Property="Text" Value="{Binding Source='hb8b5ca34g224eg4ed0g8029g170746bef0f4', Converter={StaticResource TranslatedStringConverter}}"/>
                                                 </MultiDataTrigger>
 
-                                                <DataTrigger Binding="{Binding Type}" Value="SpellcastingBlocked">
-                                                    <Setter TargetName="Message" Property="Text" Value="{Binding Source='h016d4e05g4042g42c9g8e4cg351088deddf5', Converter={StaticResource TranslatedStringConverter}}"/>
-                                                </DataTrigger>
-                                               
-                                                <DataTrigger Binding="{Binding Type}" Value="ResurrectedInThisTurn">
-                                                    <Setter TargetName="Message" Property="Text" Value="{Binding Source='h1ac301b7gce0ag4693gbba2gb912e5abe10e', Converter={StaticResource TranslatedStringConverter}}"/>
+                                                <DataTrigger Binding="{Binding Visibility, ElementName=Message}" Value="Collapsed">
+                                                    <Setter TargetName="Cause" Property="Visibility" Value="Collapsed"/>
                                                 </DataTrigger>
 
-                                                <DataTrigger Binding="{Binding Type}" Value="DisarmedInThisTurn">
-                                                    <Setter TargetName="Message" Property="Text" Value="{Binding Source='he4c05e4ag7e4eg46edgbc22g77fab2bddc2d', Converter={StaticResource TranslatedStringConverter}}"/>
-                                                </DataTrigger>
                                             </DataTemplate.Triggers>
                                         </DataTemplate>
                                     </ItemsControl.ItemTemplate>
@@ -354,13 +344,12 @@
                                 </ControlTemplate>
                             </ls:LSButton.Template>
                         </ls:LSButton>
-                        <StackPanel  x:Name="ttHolder" HorizontalAlignment="Left" VerticalAlignment="Top" Orientation="Horizontal" Margin="80,0,0,0" >
+                        <StackPanel x:Name="ttHolder" HorizontalAlignment="Left" VerticalAlignment="Top" Orientation="Horizontal" Margin="80,0,0,0" >
                             <StackPanel.RenderTransform>
                                 <TransformGroup>
                                     <TranslateTransform x:Name="TTTransform" X="0" Y="0"/>
-                                    <TranslateTransform x:Name="TTOffset" X="{Binding ElementName=SurfaceTTList,Path=ActualWidth,Converter={StaticResource MultiplierConverter}, ConverterParameter=-1}" Y="0"/>
+                                    <TranslateTransform x:Name="TTOffset" X="{Binding ElementName=SurfaceTTList,Path=ActualWidth,Converter={StaticResource MultiplierConverter}, ConverterParameter={StaticResource DoubleMinusOneValue}}" Y="0"/>
                                 </TransformGroup>
-
                             </StackPanel.RenderTransform>
                             <b:Interaction.Behaviors>
                                 <ls:KeepInsideParentBehavior Parent="{Binding ElementName=ExtendedInfo}"/>
@@ -371,7 +360,6 @@
                                 <ContentControl Template="{StaticResource NoPinTooltipTemplate}" Content="{Binding Surface}" ContentTemplate="{StaticResource SurfaceTooltipContentTemplate}" HorizontalAlignment="Left" Width="{StaticResource SurfaceTooltipContentWidth}" MinHeight="{StaticResource SurfaceTooltipMinHeight}" Visibility="{Binding Surface.HasSurface, Converter={StaticResource BoolToVisibleConverter}}" Margin="{StaticResource TooltipMargin}"/>
                             </StackPanel>
                             <ContentControl x:Name="worldTargetTT" Template="{StaticResource NoPinTooltipTemplate}" ls:TooltipExtender.Content="{Binding CurrentTarget}" Content="{Binding CurrentTarget}" ContentTemplate="{StaticResource CharacterTooltipTemplate}" HorizontalAlignment="Left" HorizontalContentAlignment="Left" Visibility="{Binding CurrentTarget, Converter={StaticResource NullToCollapsedConverter}}" Margin="{StaticResource TooltipMargin}" ls:TooltipExtender.IsOpen="{Binding IsVisible , RelativeSource={RelativeSource Self}}"/>
-
                         </StackPanel>
 
                     </Grid>
@@ -404,12 +392,6 @@
 	                    <Setter TargetName="TaskIcon" Property="Visibility" Value="Visible"/>
                     </DataTrigger>
                     
-                    <DataTrigger Binding="{Binding Data.UIInputMethod}" Value="Controller">
-                        <Setter TargetName="TaskIcon" Property="Margin" Value="100,-80,0,0"/>
-                        <Setter TargetName="TaskIcon" Property="Width" Value="80"/>
-                        <Setter TargetName="TaskIcon" Property="Height" Value="80"/>
-                    </DataTrigger>
-                    
                     <DataTrigger Binding="{Binding CurrentPlayer.UIData.ActiveTask.TaskObject,Converter={StaticResource NullToBoolFalseConverter}}" Value="True">
 		                <Setter TargetName="TaskIcon" Property="Visibility" Value="Visible"/>
 	                </DataTrigger>
@@ -423,7 +405,7 @@
 
                     <MultiDataTrigger>
                         <MultiDataTrigger.Conditions>
-                            <Condition Binding="{Binding CurrentPlayer.UIData.HitChanceDesc.Advantages.Count, Converter={StaticResource GreaterThanConverter}, ConverterParameter=0}" Value="True"/>
+                            <Condition Binding="{Binding CurrentPlayer.UIData.HitChanceDesc.Advantages.Count, Converter={StaticResource GreaterThanConverter}, ConverterParameter={StaticResource DoubleZeroValue}}" Value="True"/>
                             <Condition Binding="{Binding CurrentPlayer.UIData.HitChanceDesc.Disadvantages.Count}" Value="0"/>
                         </MultiDataTrigger.Conditions>
                         <Setter TargetName="hitChanceText" Property="Foreground" Value="{StaticResource LS_bonusTxtColor}"/>
@@ -432,7 +414,7 @@
                     <MultiDataTrigger>
                         <MultiDataTrigger.Conditions>
                             <Condition Binding="{Binding CurrentPlayer.UIData.HitChanceDesc.Advantages.Count}" Value="0"/>
-                            <Condition Binding="{Binding CurrentPlayer.UIData.HitChanceDesc.Disadvantages.Count, Converter={StaticResource GreaterThanConverter}, ConverterParameter=0}" Value="True"/>
+                            <Condition Binding="{Binding CurrentPlayer.UIData.HitChanceDesc.Disadvantages.Count, Converter={StaticResource GreaterThanConverter}, ConverterParameter={StaticResource DoubleZeroValue}}" Value="True"/>
                         </MultiDataTrigger.Conditions>
                         <Setter TargetName="hitChanceText" Property="Foreground" Value="{StaticResource LS_alertTxtColor}"/>
                     </MultiDataTrigger>
@@ -465,7 +447,7 @@
                     </DataTrigger>
                     
                     <!-- Tirggers: TargetPanel -->
-                    
+
                     <DataTrigger Binding="{Binding CurrentTarget, Converter={StaticResource TypeConverter}}" Value="ls.VMItem">
                         <Setter TargetName="worldTargetTT" Property="ContentTemplate" Value="{StaticResource ItemsTooltip}"/>
                     </DataTrigger>
@@ -525,8 +507,8 @@
                     
                     <MultiDataTrigger>
                         <MultiDataTrigger.Conditions>
-                            <Condition Binding="{Binding CurrentPlayer.UIData.HitChanceDesc.Advantages.Count, Converter={StaticResource GreaterThanConverter}, ConverterParameter=0}" Value="True"/>
-                            <Condition Binding="{Binding CurrentPlayer.UIData.HitChanceDesc.Disadvantages.Count, Converter={StaticResource GreaterThanConverter}, ConverterParameter=0}" Value="True"/>
+                            <Condition Binding="{Binding CurrentPlayer.UIData.HitChanceDesc.Advantages.Count, Converter={StaticResource GreaterThanConverter}, ConverterParameter={StaticResource DoubleZeroValue}}" Value="True"/>
+                            <Condition Binding="{Binding CurrentPlayer.UIData.HitChanceDesc.Disadvantages.Count, Converter={StaticResource GreaterThanConverter}, ConverterParameter={StaticResource DoubleZeroValue}}" Value="True"/>
                         </MultiDataTrigger.Conditions>
                         <Setter TargetName="AdvantagesList" Property="Visibility" Value="Collapsed"/>
                         <Setter TargetName="DisadvantagesList" Property="Visibility" Value="Collapsed"/>

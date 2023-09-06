@@ -42,6 +42,25 @@
 
     <System:Double x:Key="DoubleZeroValue">0</System:Double>
     <System:Double x:Key="DoubleOneValue">1</System:Double>
+    <System:Double x:Key="DoubleTwoValue">2</System:Double>
+    <System:Double x:Key="DoubleThreeValue">3</System:Double>
+    <System:Double x:Key="DoubleFourValue">4</System:Double>
+    <System:Double x:Key="DoubleFiveValue">5</System:Double>
+    <System:Double x:Key="DoubleSixValue">6</System:Double>
+    <System:Double x:Key="DoubleSevenValue">7</System:Double>
+    <System:Double x:Key="DoubleEightValue">8</System:Double>
+    <System:Double x:Key="DoubleNineValue">9</System:Double>
+    <System:Double x:Key="DoubleTenValue">10</System:Double>
+    <System:Double x:Key="DoubleMinusOneValue">-1</System:Double>
+    <System:Double x:Key="DoubleMinusTwoValue">-2</System:Double>
+    <System:Double x:Key="DoubleMinusThreeValue">-3</System:Double>
+    <System:Double x:Key="DoubleMinusFourValue">-4</System:Double>
+    <System:Double x:Key="DoubleMinusFiveValue">-5</System:Double>
+    <System:Double x:Key="DoubleMinusSixValue">-6</System:Double>
+    <System:Double x:Key="DoubleMinusSevenValue">-7</System:Double>
+    <System:Double x:Key="DoubleMinusEightValue">-8</System:Double>
+    <System:Double x:Key="DoubleMinusNineValue">-9</System:Double>
+    <System:Double x:Key="DoubleMinusTenValue">-10</System:Double>
 
     <System:Double x:Key="DisabledOpacity">0.5</System:Double>
     <System:Double x:Key="OtherPlayersItemOpacity">0.75</System:Double>
@@ -70,7 +89,7 @@
                         <System:Int32 x:Key="MinFloor">-100</System:Int32>
                     </ControlTemplate.Resources>
                     <Grid x:Name="Root" Background="Black" ClipToBounds="True">
-                        <Grid x:Name="MapHolder" RenderTransformOrigin="0.5,0.5" >
+                        <Grid x:Name="MapHolder" RenderTransformOrigin="0.5,0.5" DataContext="{Binding WorldMapData, RelativeSource={RelativeSource TemplatedParent}}">
                             <Grid.RenderTransform>
                                 <TransformGroup>
                                     <TranslateTransform X="{Binding MapPos.X, RelativeSource={RelativeSource TemplatedParent}}" Y="{Binding MapPos.Y, RelativeSource={RelativeSource TemplatedParent}}"/>
@@ -79,19 +98,20 @@
                                 </TransformGroup>
                             </Grid.RenderTransform>
 
-                            <Image x:Name="MapImage" Source="{Binding WorldMapData.MapImageUri, RelativeSource={RelativeSource TemplatedParent}}" Stretch="Uniform" Opacity="0.0" />
+                            <Image x:Name="MapImage" Source="{Binding MapImageUri}" Stretch="Uniform" Opacity="0.0" />
 
                             <Rectangle x:Name="MapImageVT" Width="{Binding ElementName=MapImage, Path=ActualWidth}" Height="{Binding ElementName=MapImage, Path=ActualHeight}" noesis:Element.PPAAMode="Disabled" Opacity="1.0">
                                 <Rectangle.Fill>
-                                    <ImageBrush ImageSource="{Binding WorldMapData.MapImageUri, RelativeSource={RelativeSource TemplatedParent}}" Stretch="Uniform" >
+                                    <ImageBrush ImageSource="{Binding MapImageUri}" Stretch="Uniform" >
                                         <noesis:Brush.Shader>
-                                            <ls:VirtualTextureBrushShader Darken="{Binding WorldMapData.Darken, RelativeSource={RelativeSource TemplatedParent}}" />
+                                            <ls:VirtualTextureBrushShader Darken="{Binding Darken}" />
                                         </noesis:Brush.Shader>
                                     </ImageBrush>
                                 </Rectangle.Fill>
                             </Rectangle>
 
-                            <ItemsControl x:Name="RegionsContainer" ItemsSource="{Binding WorldMapData.RegionsContainer.Regions, RelativeSource={RelativeSource TemplatedParent}}" Width="{Binding ElementName=MapImage,Path=ActualWidth}" Height="{Binding ElementName=MapImage,Path=ActualHeight}" Opacity="1.0">
+                            <ItemsControl x:Name="RegionsContainer" ItemsSource="{Binding RegionsContainer.Regions}"
+                                          Width="{Binding ElementName=MapImage,Path=ActualWidth}" Height="{Binding ElementName=MapImage,Path=ActualHeight}" Opacity="1.0">
                                 <ItemsControl.RenderTransform>
                                     <TransformGroup>
                                         <MatrixTransform Matrix="{Binding ProjectionMatrix,RelativeSource={RelativeSource AncestorType=ls:LSWorldMap}}" />
@@ -104,18 +124,18 @@
                                 </ItemsControl.ItemsPanel>
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate DataType="ls:VMRegion">
-                                        <Rectangle x:Name="region" Height="{Binding DataContext.WorldSize.Y, RelativeSource={RelativeSource TemplatedParent}}" Width="{Binding DataContext.WorldSize.X, RelativeSource={RelativeSource TemplatedParent}}" Stretch="Fill" VerticalAlignment="Top" HorizontalAlignment="Left" noesis:Element.PPAAMode="Disabled">
+                                        <Rectangle x:Name="region" Height="{Binding WorldSize.Y}" Width="{Binding WorldSize.X}" Stretch="Fill" VerticalAlignment="Top" HorizontalAlignment="Left" noesis:Element.PPAAMode="Disabled">
                                             <Rectangle.RenderTransform>
                                                 <TransformGroup>
                                                     <TranslateTransform
-                                                        X="{Binding DataContext.WorldPos.X, RelativeSource={RelativeSource TemplatedParent}}"
-                                                        Y="{Binding DataContext.WorldPos.Y, RelativeSource={RelativeSource TemplatedParent}}"/>
+                                                        X="{Binding WorldPos.X}"
+                                                        Y="{Binding WorldPos.Y}"/>
                                                 </TransformGroup>
                                             </Rectangle.RenderTransform>
                                             <Rectangle.Fill>
                                                 <ImageBrush ImageSource="{Binding GUID}" Stretch="Fill">
                                                     <noesis:Brush.Shader>
-                                                        <ls:VirtualTextureBrushShader Darken="{Binding WorldMapData.Darken, RelativeSource={RelativeSource AncestorType=ls:LSWorldMap}}"/>
+                                                        <ls:VirtualTextureBrushShader Darken="{Binding DataContext.Darken, RelativeSource={RelativeSource AncestorType=ItemsControl}}"/>
                                                     </noesis:Brush.Shader>
                                                 </ImageBrush>
                                             </Rectangle.Fill>
@@ -124,7 +144,8 @@
                                 </ItemsControl.ItemTemplate>
                             </ItemsControl>
 
-                            <ItemsControl x:Name="CurrentBuilding" ItemsSource="{Binding WorldMapData.CurrentBuilding.Floors, RelativeSource={RelativeSource TemplatedParent}}"  Width="{Binding ElementName=MapImage,Path=ActualWidth}" Height="{Binding ElementName=MapImage,Path=ActualHeight}">
+                            <ItemsControl x:Name="CurrentBuilding" ItemsSource="{Binding CurrentBuilding.Floors}"
+                                          Width="{Binding ElementName=MapImage, Path=ActualWidth}" Height="{Binding ElementName=MapImage, Path=ActualHeight}">
                                 <ItemsControl.RenderTransform>
                                     <TransformGroup>
                                         <MatrixTransform Matrix="{Binding ProjectionMatrix,RelativeSource={RelativeSource AncestorType=ls:LSWorldMap}}" />
@@ -145,12 +166,12 @@
                                             </ItemsControl.ItemsPanel>
                                             <ItemsControl.ItemTemplate>
                                                 <DataTemplate DataType="ls:VMFloorSection">
-                                                    <Rectangle x:Name="floorSection" Height="{Binding DataContext.WorldSize.Y, RelativeSource={RelativeSource TemplatedParent}}" Width="{Binding DataContext.WorldSize.X, RelativeSource={RelativeSource TemplatedParent}}" Stretch="Fill" VerticalAlignment="Top" HorizontalAlignment="Left" noesis:Element.PPAAMode="Disabled">
+                                                    <Rectangle x:Name="floorSection" Height="{Binding WorldSize.Y}" Width="{Binding WorldSize.X}" Stretch="Fill" VerticalAlignment="Top" HorizontalAlignment="Left" noesis:Element.PPAAMode="Disabled">
                                                         <Rectangle.RenderTransform>
                                                             <TransformGroup>
                                                                 <TranslateTransform 
-                                                                        X="{Binding DataContext.WorldPos.X, RelativeSource={RelativeSource TemplatedParent}}" 
-                                                                        Y="{Binding DataContext.WorldPos.Y, RelativeSource={RelativeSource TemplatedParent}}"/>
+                                                                        X="{Binding WorldPos.X}" 
+                                                                        Y="{Binding WorldPos.Y}"/>
                                                             </TransformGroup>
                                                         </Rectangle.RenderTransform>
                                                         <Rectangle.Fill>
@@ -175,7 +196,7 @@
                                                 <DataTrigger.Binding>
                                                     <MultiBinding Converter="{StaticResource LessThanOrEqualMultiConverter}">
                                                         <Binding Path="Floor"/>
-                                                        <Binding Path="WorldMapData.Floor" RelativeSource="{RelativeSource AncestorType=ls:LSWorldMap}"/>
+                                                        <Binding Path="DataContext.Floor" RelativeSource="{RelativeSource AncestorType=ItemsControl}"/>
                                                     </MultiBinding>
                                                 </DataTrigger.Binding>
                                                 <Setter Property="Visibility" Value="Collapsed"/>
@@ -185,10 +206,11 @@
                                 </ItemsControl.ItemContainerStyle>
                             </ItemsControl>
 
-                            <ItemsControl x:Name="ShroudedRooms" ItemsSource="{Binding WorldMapData.Rooms, RelativeSource={RelativeSource TemplatedParent}}"  Width="{Binding ElementName=MapImage,Path=ActualWidth}" Height="{Binding ElementName=MapImage,Path=ActualHeight}" Opacity="1.0">
+                            <ItemsControl x:Name="ShroudedRooms" ItemsSource="{Binding Rooms}"
+                                          Width="{Binding ElementName=MapImage,Path=ActualWidth}" Height="{Binding ElementName=MapImage,Path=ActualHeight}" Opacity="1.0">
                                 <ItemsControl.RenderTransform>
                                     <TransformGroup>
-	                                    <MatrixTransform Matrix="{Binding ProjectionMatrix,RelativeSource={RelativeSource AncestorType=ls:LSWorldMap}}" />
+	                                    <MatrixTransform Matrix="{Binding ProjectionMatrix, RelativeSource={RelativeSource AncestorType=ls:LSWorldMap}}" />
                                     </TransformGroup>
                                 </ItemsControl.RenderTransform>
                                 <ItemsControl.ItemsPanel>
@@ -211,7 +233,7 @@
 	                                                    <Condition.Binding>
                                                             <MultiBinding Converter="{StaticResource EqualConverter}">
 	                                                            <Binding Path="Floor"/>
-	                                                            <Binding Path="WorldMapData.Floor" RelativeSource="{RelativeSource AncestorType=ls:LSWorldMap}"/>
+	                                                            <Binding Path="DataContext.Floor" RelativeSource="{RelativeSource AncestorType=ItemsControl}"/>
                                                             </MultiBinding>
                                                         </Condition.Binding>
                                                     </Condition>
@@ -219,7 +241,7 @@
 			                                            <Condition.Binding>
 				                                            <MultiBinding Converter="{StaticResource EqualConverter}">
 					                                            <Binding Path="BuildingUuid"/>
-					                                            <Binding Path="WorldMapData.CurrentBuilding.UuidStr" RelativeSource="{RelativeSource AncestorType=ls:LSWorldMap}"/>
+                                                                <Binding Path="DataContext.CurrentBuilding.UuidStr" RelativeSource="{RelativeSource AncestorType=ItemsControl}"/>
 				                                            </MultiBinding>
 			                                            </Condition.Binding>
 		                                            </Condition>
@@ -238,10 +260,11 @@
                                 </ItemsControl.ItemTemplate>
                             </ItemsControl>
 
-                            <ItemsControl x:Name="SemiShroudedRooms" ItemsSource="{Binding WorldMapData.Rooms, RelativeSource={RelativeSource TemplatedParent}}"  Width="{Binding ElementName=MapImage,Path=ActualWidth}" Height="{Binding ElementName=MapImage,Path=ActualHeight}" Opacity="0.5">
+                            <ItemsControl x:Name="SemiShroudedRooms" ItemsSource="{Binding Rooms}"
+                                          Width="{Binding ElementName=MapImage,Path=ActualWidth}" Height="{Binding ElementName=MapImage,Path=ActualHeight}" Opacity="0.5">
                                 <ItemsControl.RenderTransform>
                                     <TransformGroup>
-	                                    <MatrixTransform Matrix="{Binding ProjectionMatrix,RelativeSource={RelativeSource AncestorType=ls:LSWorldMap}}" />
+	                                    <MatrixTransform Matrix="{Binding ProjectionMatrix, RelativeSource={RelativeSource AncestorType=ls:LSWorldMap}}" />
                                     </TransformGroup>
                                 </ItemsControl.RenderTransform>
                                 <ItemsControl.ItemsPanel>
@@ -264,7 +287,7 @@
                                                         <Condition.Binding>
                                                             <MultiBinding Converter="{StaticResource EqualConverter}">
                                                                 <Binding Path="Floor"/>
-                                                                <Binding Path="WorldMapData.Floor" RelativeSource="{RelativeSource AncestorType=ls:LSWorldMap}"/>
+                                                                <Binding Path="DataContext.Floor" RelativeSource="{RelativeSource AncestorType=ItemsControl}"/>
                                                             </MultiBinding>
                                                         </Condition.Binding>
                                                     </Condition>
@@ -272,7 +295,7 @@
                                                         <Condition.Binding>
                                                             <MultiBinding Converter="{StaticResource EqualConverter}">
                                                                 <Binding Path="BuildingUuid"/>
-                                                                <Binding Path="WorldMapData.CurrentBuilding.UuidStr" RelativeSource="{RelativeSource AncestorType=ls:LSWorldMap}"/>
+                                                                <Binding Path="DataContext.CurrentBuilding.UuidStr" RelativeSource="{RelativeSource AncestorType=ItemsControl}"/>
                                                             </MultiBinding>
                                                         </Condition.Binding>
                                                     </Condition>
@@ -293,18 +316,18 @@
 
                             <Rectangle x:Name="Shroud" Width="{Binding ElementName=MapImage, Path=ActualWidth}" Height="{Binding ElementName=MapImage, Path=ActualHeight}" noesis:Element.PPAAMode="Disabled">
                                 <Rectangle.Fill>
-                                    <ImageBrush ImageSource="{Binding WorldMapData.ShroudImageUri, RelativeSource={RelativeSource TemplatedParent}}">
+                                    <ImageBrush ImageSource="{Binding ShroudImageUri}">
                                         <noesis:Brush.Shader>
-                                            <ls:ShroudBrushShader WorldSize="{Binding WorldMapData.WorldSize, RelativeSource={RelativeSource TemplatedParent}}"
-                                                                  AiWorldSize="{Binding WorldMapData.AiWorldSize, RelativeSource={RelativeSource TemplatedParent}}"
+                                            <ls:ShroudBrushShader WorldSize="{Binding WorldSize}"
+                                                                  AiWorldSize="{Binding AiWorldSize}"
                                                                   GridOpacity="0.20" GridLineWidth="0.03"
-                                                                  ShroudSubregionMin="{Binding WorldMapData.ShroudSubregionMin, RelativeSource={RelativeSource TemplatedParent}}"
-                                                                  ShroudSubregionMax="{Binding WorldMapData.ShroudSubregionMax, RelativeSource={RelativeSource TemplatedParent}}"/>
+                                                                  ShroudSubregionMin="{Binding ShroudSubregionMin}"
+                                                                  ShroudSubregionMax="{Binding ShroudSubregionMax}"/>
                                         </noesis:Brush.Shader>
                                         <ImageBrush.RelativeTransform>
                                             <TransformGroup>
-                                                <ScaleTransform CenterX="0.5" CenterY="0.5" ScaleX="{Binding WorldMapData.ShroudScale.X, RelativeSource={RelativeSource TemplatedParent}}" ScaleY="{Binding WorldMapData.ShroudScale.Y, RelativeSource={RelativeSource TemplatedParent}}"/>
-                                                <TranslateTransform X="{Binding WorldMapData.ShroudPos.X, RelativeSource={RelativeSource TemplatedParent}}" Y="{Binding WorldMapData.ShroudPos.Y, RelativeSource={RelativeSource TemplatedParent}}"/>
+                                                <ScaleTransform CenterX="0.5" CenterY="0.5" ScaleX="{Binding ShroudScale.X}" ScaleY="{Binding ShroudScale.Y}"/>
+                                                <TranslateTransform X="{Binding ShroudPos.X}" Y="{Binding ShroudPos.Y}"/>
                                             </TransformGroup>
                                         </ImageBrush.RelativeTransform>
                                     </ImageBrush>
@@ -620,13 +643,9 @@
         <Setter Property="VerticalAlignment" Value="Center"/>
     </Style>
 
-
-    <ImageSource x:Key="IconWarningSoft" >pack://application:,,,/GustavNoesisGUI;component/Assets/Tooltips/ico_warningSoft.png</ImageSource>
-    <ImageSource x:Key="IconWarning" >pack://application:,,,/GustavNoesisGUI;component/Assets/Tooltips/ico_warning.png</ImageSource>
-    <ImageSource x:Key="IconWarningGrey" >pack://application:,,,/GustavNoesisGUI;component/Assets/Tooltips/ico_warningGrey.png</ImageSource>
-    <ImageBrush x:Key="IconBrushWarningSoft" ImageSource="{StaticResource IconWarningSoft}"/>
-    <ImageBrush x:Key="IconBrushWarning" ImageSource="{StaticResource IconWarning}"/>
-    <ImageBrush x:Key="IconBrushWarningGrey" ImageSource="{StaticResource IconWarningGrey}"/>
+    <ImageSource x:Key="TutIconWarningSoft" >pack://application:,,,/GustavNoesisGUI;component/Assets/Tooltips/ico_warningSoft.png</ImageSource>
+    <ImageSource x:Key="TutIconWarning" >pack://application:,,,/GustavNoesisGUI;component/Assets/Tooltips/ico_warning.png</ImageSource>
+    <ImageSource x:Key="TutIconWarningGrey" >pack://application:,,,/GustavNoesisGUI;component/Assets/Tooltips/ico_warningGrey.png</ImageSource>
 
     <Style TargetType="ls:LSTextContent">
         <Setter Property="Template">
@@ -647,12 +666,12 @@
                                 </DataTrigger>
 
                                 <DataTrigger Binding="{Binding TagInfo, RelativeSource={RelativeSource AncestorType=ls:LSTextContent}}" Value="SoftWarning">
-                                    <Setter TargetName="InsertedImage" Property="Source" Value="{StaticResource IconWarningGrey}"/>
+                                    <Setter TargetName="InsertedImage" Property="Source" Value="{StaticResource TutIconWarningGrey}"/>
                                     <Setter TargetName="InsertedImage" Property="Style" Value="{StaticResource LSTagImageWarningStyle}"/>
                                 </DataTrigger>
                                 
                                 <DataTrigger Binding="{Binding TagInfo, RelativeSource={RelativeSource AncestorType=ls:LSTextContent}}" Value="Warning">
-                                    <Setter TargetName="InsertedImage" Property="Source" Value="{StaticResource IconWarning}"/>
+                                    <Setter TargetName="InsertedImage" Property="Source" Value="{StaticResource TutIconWarning}"/>
                                     <Setter TargetName="InsertedImage" Property="Style" Value="{StaticResource LSTagImageWarningStyle}"/>
                                 </DataTrigger> 
                                 
@@ -859,7 +878,7 @@
 
                                 <DataTrigger Binding="{Binding TagInfo, RelativeSource={RelativeSource AncestorType=ls:LSTextContent}}" Value="TutorialEncumbered">
                                     <Setter TargetName="InsertedImage" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Tutorial/TutIcons/tutorial_encumbered1.png"/>
-                                    <Setter TargetName="InsertedImage" Property="Margin" Value="-12,0,-4,-22"/>
+                                    <Setter TargetName="InsertedImage" Property="Margin" Value="-12,-18"/>
                                 </DataTrigger>
 
                                 <DataTrigger Binding="{Binding TagInfo, RelativeSource={RelativeSource AncestorType=ls:LSTextContent}}" Value="TutorialAdvantage">
@@ -921,9 +940,19 @@
                                     <Setter TargetName="InsertedImage" Property="Margin" Value="4,8,4,-8"/>
                                 </DataTrigger>
 
+                                <DataTrigger Binding="{Binding TagInfo, RelativeSource={RelativeSource AncestorType=ls:LSTextContent}}" Value="SpellSlotPAD">
+                                    <Setter TargetName="InsertedImage" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/ActionResources_c/Icons/c_ico_mini_spellSlot.png"/>
+                                    <Setter TargetName="InsertedImage" Property="Margin" Value="0,20,0,-20"/>
+                                </DataTrigger>
+
                                 <DataTrigger Binding="{Binding TagInfo, RelativeSource={RelativeSource AncestorType=ls:LSTextContent}}" Value="WarlockSpellSlot">
                                     <Setter TargetName="InsertedImage" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared/Resources/ico_mini_spellSlot_warlock.png"/>
                                     <Setter TargetName="InsertedImage" Property="Margin" Value="4,8,4,-8"/>
+                                </DataTrigger>
+
+                                <DataTrigger Binding="{Binding TagInfo, RelativeSource={RelativeSource AncestorType=ls:LSTextContent}}" Value="WarlockSpellSlotPAD">
+                                    <Setter TargetName="InsertedImage" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/ActionResources_c/Icons/c_ico_mini_spellSlot_warlock_point.png"/>
+                                    <Setter TargetName="InsertedImage" Property="Margin" Value="0,20,0,-20"/>
                                 </DataTrigger>
 
                                 <DataTrigger Binding="{Binding TagInfo, RelativeSource={RelativeSource AncestorType=ls:LSTextContent}}" Value="TutorialConsumableTadpole">

@@ -12,7 +12,7 @@
 
     <ls:UIWidget.Resources>
         <ResourceDictionary>
-            <Thickness x:Key="NotificationPosition">0,450,0,0</Thickness>
+            <Thickness x:Key="NotificationPosition">0,432,0,0</Thickness>
             <Thickness x:Key="CombatNotificationPosition">0,0,0,320</Thickness>
             <Thickness x:Key="FTBNotificationPosition">0,0,0,320</Thickness>
         </ResourceDictionary>
@@ -80,27 +80,6 @@
                     <Setter TargetName="Notifications" Property="VerticalAlignment" Value="Bottom" />
                     <Setter TargetName="Notifications" Property="Margin" Value="0,0,0,220" />
                 </DataTrigger>
-
-                <DataTrigger Binding="{Binding CurrentPlayer.UIData.Notification.Type}" Value="CombatTurn">
-                    <Setter TargetName="Notifications" Property="VerticalAlignment" Value="Bottom" />
-                    <Setter TargetName="Notifications" Property="Margin" Value="{StaticResource CombatNotificationPosition}" />
-                </DataTrigger>
-
-                <DataTrigger Binding="{Binding CurrentPlayer.UIData.Notification.Type}" Value="CombatStarted">
-                    <Setter TargetName="Notifications" Property="VerticalAlignment" Value="Bottom" />
-                    <Setter TargetName="Notifications" Property="Margin" Value="{StaticResource CombatNotificationPosition}" />
-                </DataTrigger>
-
-                <DataTrigger Binding="{Binding CurrentPlayer.UIData.Notification.Type}" Value="FTBModeStarted">
-                    <Setter TargetName="Notifications" Property="VerticalAlignment" Value="Bottom" />
-                    <Setter TargetName="Notifications" Property="Margin" Value="{StaticResource FTBNotificationPosition}" />
-                </DataTrigger>
-
-                <DataTrigger Binding="{Binding CurrentPlayer.UIData.Notification.Type}" Value="StartTurnFTB">
-                    <Setter TargetName="Notifications" Property="VerticalAlignment" Value="Bottom" />
-                    <Setter TargetName="Notifications" Property="Margin" Value="{StaticResource FTBNotificationPosition}" />
-                </DataTrigger>
-
 
                 <DataTrigger Binding="{Binding CurrentPlayer.UIData.AreRadialsOpen}" Value="True">
                     <Setter TargetName="TurnIndicationCombat" Property="Visibility" Value="Hidden" />

@@ -1,7 +1,7 @@
 {
    "save" : {
       "header" : {
-         "version" : "4.0.9.331"
+         "version" : "4.0.10.400"
       },
       "regions" : {
          "dialog" : {
@@ -1605,7 +1605,20 @@
                               ]
                            }
                         ],
-                        "setflags" : [ {} ],
+                        "setflags" : [
+                           {
+                              "flaggroup" : [
+                                 {
+                                    "flag" : [
+                                       {
+                                          "UUID" : {"type" : "FixedString", "value" : "7a429beb-fbfb-fa8a-3a33-0349323ad11d"},
+                                          "paramval" : {"type" : "int32", "value" : 0},
+                                          "value" : {"type" : "bool", "value" : true}
+                                       }
+                                    ],"type" : {"type" : "FixedString", "value" : "Object"}}
+                              ]
+                           }
+                        ],
                         "speaker" : {"type" : "int32", "value" : 0}
                      },
                      {
@@ -8438,20 +8451,7 @@
                               "ValidatedHasValue" : {"type" : "bool", "value" : false}
                            }
                         ],
-                        "checkflags" : [
-                           {
-                              "flaggroup" : [
-                                 {
-                                    "flag" : [
-                                       {
-                                          "UUID" : {"type" : "FixedString", "value" : "e78c0aab-fb48-98e9-3ed9-773a0c39988d"},
-                                          "paramval" : {"type" : "int32", "value" : 0},
-                                          "value" : {"type" : "bool", "value" : false}
-                                       }
-                                    ],"type" : {"type" : "FixedString", "value" : "Object"}}
-                              ]
-                           }
-                        ],
+                        "checkflags" : [ {} ],
                         "children" : [
                            {
                               "child" : [

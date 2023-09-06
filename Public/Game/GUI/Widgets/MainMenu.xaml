@@ -22,8 +22,8 @@
                 <Setter  Property="FontSize" Value="{StaticResource ScaledDefaultFontSize}"/>
             </Style>
 
-            <!-- Message box to ensure user wants to activate cross save -->
-            <ls:LSMessageBoxData x:Key="MessageBoxCrossSaveCheck"
+            <!-- Message box to ensure user wants to activate cross save - Hidden for now - See GUS-304340 -->
+            <!--<ls:LSMessageBoxData x:Key="MessageBoxCrossSaveCheck"
                              Text="{Binding Source='hd2483c4eg1d05g4a56gae35g86f1ddad520e', Converter={StaticResource TranslatedStringConverter}}"
                              Title="{Binding Source='h38a2b4efg958eg46baga570ge044a8985709', Converter={StaticResource TranslatedStringConverter}}"
                              UUID="UUIDCrossSave" CheckBox="True" CheckBoxValue="False" CheckBoxLabel="{Binding Source='hf23e5e61g00fcg4531g9f57gc6079562ba62', Converter={StaticResource TranslatedStringConverter}}">
@@ -33,7 +33,7 @@
                                           ControlTemplate="{StaticResource BlueButton}"
                                           BoundEvent="UIAccept"/>
                 </ls:LSMessageBoxData.Actions>
-            </ls:LSMessageBoxData>           
+            </ls:LSMessageBoxData>-->           
 
             <Style x:Key="MainMenuTextStyle" TargetType="TextBlock">
                 <Setter  Property="Foreground" Value="{StaticResource LS_accent75TxtColor}"/>
@@ -355,32 +355,6 @@
 
         <b:Interaction.Triggers>
             <b:EventTrigger EventName="Loaded">
-                <b:Interaction.Behaviors>
-                    <b:ConditionBehavior>
-                        <b:ConditionalExpression>
-                            <b:ComparisonCondition LeftOperand="{Binding ShowEAMsg}" Operator="Equal" RightOperand="True" />
-                        </b:ConditionalExpression>
-                    </b:ConditionBehavior>
-                </b:Interaction.Behaviors>
-                <b:InvokeCommandAction Command="{Binding OpenMessageBox}" >
-                    <b:InvokeCommandAction.CommandParameter>
-                        <!-- Message box to ensure user knows this is EA -->
-                        <ls:LSMessageBoxData 
-                             Text="{Binding Source='h517db734g3a11g4331g9034g697e40614a9b', Converter={StaticResource TranslatedStringConverter}}"
-                             Title="{Binding Source='hc5b40e4bg4ce7g40c3g990cgf78829caf6f7', Converter={StaticResource TranslatedStringConverter}}"
-                             UUID="UUIDEA" >
-                            <ls:LSMessageBoxData.Actions>
-                                <ls:LSGameCommandData ActionName="{Binding Source='h31d65d36gfe5fg4f9bg9184g9f8ceee5f3ed', Converter={StaticResource TranslatedStringConverter}}" ControlTemplate="{StaticResource BlueButton}"
-                                          Command="{Binding DataContext.EAAcceptCommand, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"
-                                          BoundInput="{Binding DataContext.CurrentPlayer.UIData.InputEvents, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIMessageBoxA'}"/>
-                            </ls:LSMessageBoxData.Actions>
-                        </ls:LSMessageBoxData>
-                    </b:InvokeCommandAction.CommandParameter>
-                </b:InvokeCommandAction>
-            </b:EventTrigger>
-
-            <b:EventTrigger EventName="Loaded">
-                <b:InvokeCommandAction Command="{Binding OpenCrossSaveMsgCommand}" CommandParameter="{StaticResource MessageBoxCrossSaveCheck}"/>
                 <b:InvokeCommandAction Command="{Binding CheckFirstTimeSetupValueCommand}"/>
                 <b:InvokeCommandAction Command="{Binding TryOpenGammaCalibrationCommand}"/>
                 <b:InvokeCommandAction Command="{Binding TryOpenHDRCommand}"/>

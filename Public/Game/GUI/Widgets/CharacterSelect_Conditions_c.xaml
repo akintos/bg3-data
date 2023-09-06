@@ -133,18 +133,19 @@
             </StackPanel>
         </Grid>
         <StackPanel VerticalAlignment="Bottom" HorizontalAlignment="Center" Orientation="Horizontal" Margin="0 0 0 30">
-            <ls:LSButton Style="{StaticResource ControllerButtonWBG}" 
-                         DataContext = "{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIRadialUp'}" 
-                         Content="{Binding Source='h5c405124g4622g4197g9239gb635f371bf0e',Converter={StaticResource TranslatedStringConverter}}"/>
+            <ls:LSButton ContentTemplate="{StaticResource ControllerButtonHint}"  
+                         Content="{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIRadialUp'}" 
+                         Tag="{Binding Source='h5c405124g4622g4197g9239gb635f371bf0e',Converter={StaticResource TranslatedStringConverter}}"/>
 
-            <ls:LSButton Style="{StaticResource ControllerButtonWBG}"  
-                         DataContext = "{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIScrollUp'}"
-                         Content="{Binding Source='hd493683egfdfdg4a5ag85fagfc2aff4902b6',Converter={StaticResource TranslatedStringConverter}}"/>
+            <ls:LSButton ContentTemplate="{StaticResource ControllerButtonHint}"   
+                         Content = "{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIScrollUp'}"
+                         Tag="{Binding Source='hd493683egfdfdg4a5ag85fagfc2aff4902b6',Converter={StaticResource TranslatedStringConverter}}"/>
 
-            <ls:LSButton Style="{StaticResource ControllerButtonWBG}" 
-                         DataContext = "{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UICancel'}"
-                         Content="{Binding Source='h6fefa28bg2149g4cacga071gd95b236b2d0b',Converter={StaticResource TranslatedStringConverter}}" 
-                         Command="{Binding DataContext.CustomEvent, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"
+            <ls:LSButton ContentTemplate="{StaticResource ControllerButtonHint}"  
+                         Content="{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UICancel'}"
+                         BoundEvent="UICancel"
+                         Tag="{Binding Source='h6fefa28bg2149g4cacga071gd95b236b2d0b',Converter={StaticResource TranslatedStringConverter}}" 
+                         Command="{Binding CustomEvent}"
                          CommandParameter="CloseCondition"/>
         </StackPanel>
     </Grid>

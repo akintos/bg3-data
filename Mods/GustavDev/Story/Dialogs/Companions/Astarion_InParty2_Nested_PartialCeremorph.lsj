@@ -1,7 +1,7 @@
 {
    "save" : {
       "header" : {
-         "version" : "4.0.9.323"
+         "version" : "4.2.0.0"
       },
       "regions" : {
          "dialog" : {
@@ -346,6 +346,68 @@
                         "jumptarget" : {"type" : "FixedString", "value" : "7f3a6813-8e01-45fb-9358-d6538cdbdba2"},
                         "jumptargetpoint" : {"type" : "uint8", "value" : 1},
                         "setflags" : [ {} ]
+                     },
+                     {
+                        "GameData" : [
+                           {
+                              "AiPersonalities" : [ {} ],
+                              "MusicInstrumentSounds" : [ {} ],
+                              "OriginSound" : [ {} ]
+                           }
+                        ],
+                        "SourceNode" : {"type" : "FixedString", "value" : "60fed5ff-9930-446b-b17d-59250d428c72"},
+                        "Tags" : [ {} ],
+                        "UUID" : {"type" : "FixedString", "value" : "0db95d64-d35b-f61e-ef38-99c03b2fd09c"},
+                        "checkflags" : [ {} ],
+                        "children" : [ {} ],
+                        "constructor" : {"type" : "FixedString", "value" : "Alias"},
+                        "editorData" : [
+                           {
+                              "data" : [
+                                 {
+                                    "key" : {"type" : "FixedString", "value" : "ID"},
+                                    "val" : {"type" : "LSString", "value" : "N1096"}
+                                 },
+                                 {
+                                    "key" : {"type" : "FixedString", "value" : "TemplateNodeUUID"},
+                                    "val" : {"type" : "LSString", "value" : "00000000-0000-0000-0000-000000000000"}
+                                 },
+                                 {
+                                    "key" : {"type" : "FixedString", "value" : "TemplateVersion"},
+                                    "val" : {"type" : "LSString", "value" : "0"}
+                                 },
+                                 {
+                                    "key" : {"type" : "FixedString", "value" : "collapsed"},
+                                    "val" : {"type" : "LSString", "value" : "False"}
+                                 },
+                                 {
+                                    "key" : {"type" : "FixedString", "value" : "logicalname"},
+                                    "val" : {"type" : "LSString", "value" : "Alias (Answer)"}
+                                 },
+                                 {
+                                    "key" : {"type" : "FixedString", "value" : "position"},
+                                    "val" : {"type" : "LSString", "value" : "8975;29361"}
+                                 },
+                                 {
+                                    "key" : {"type" : "FixedString", "value" : "sourcetemplate"},
+                                    "val" : {"type" : "LSString", "value" : ""}
+                                 }
+                              ]
+                           }
+                        ],
+                        "endnode" : {"type" : "bool", "value" : true},
+                        "setflags" : [
+                           {
+                              "flaggroup" : [
+                                 {
+                                    "flag" : [
+                                       {
+                                          "UUID" : {"type" : "FixedString", "value" : "47a4c8bd-6dc4-4dd6-b51a-cf0972282e2b"},"value" : {"type" : "bool", "value" : true}}
+                                    ],"type" : {"type" : "FixedString", "value" : "Global"}}
+                              ]
+                           }
+                        ],
+                        "speaker" : {"type" : "int32", "value" : -1}
                      },
                      {
                         "GameData" : [
@@ -1897,7 +1959,7 @@
                            {
                               "child" : [
                                  {
-                                    "UUID" : {"type" : "FixedString", "value" : "d0c40707-9087-4b49-b3a7-7df730b17182"}
+                                    "UUID" : {"type" : "FixedString", "value" : "0db95d64-d35b-f61e-ef38-99c03b2fd09c"}
                                  }
                               ]
                            }
@@ -10732,50 +10794,6 @@
                      },
                      {
                         "Tags" : [ {} ],
-                        "UUID" : {"type" : "FixedString", "value" : "d0c40707-9087-4b49-b3a7-7df730b17182"},
-                        "checkflags" : [ {} ],
-                        "children" : [ {} ],
-                        "constructor" : {"type" : "FixedString", "value" : "Jump"},
-                        "editorData" : [
-                           {
-                              "data" : [
-                                 {
-                                    "key" : {"type" : "FixedString", "value" : "ID"},
-                                    "val" : {"type" : "LSString", "value" : "N5203"}
-                                 },
-                                 {
-                                    "key" : {"type" : "FixedString", "value" : "TemplateNodeUUID"},
-                                    "val" : {"type" : "LSString", "value" : "00000000-0000-0000-0000-000000000000"}
-                                 },
-                                 {
-                                    "key" : {"type" : "FixedString", "value" : "TemplateVersion"},
-                                    "val" : {"type" : "LSString", "value" : "0"}
-                                 },
-                                 {
-                                    "key" : {"type" : "FixedString", "value" : "collapsed"},
-                                    "val" : {"type" : "LSString", "value" : "False"}
-                                 },
-                                 {
-                                    "key" : {"type" : "FixedString", "value" : "logicalname"},
-                                    "val" : {"type" : "LSString", "value" : "Jump"}
-                                 },
-                                 {
-                                    "key" : {"type" : "FixedString", "value" : "position"},
-                                    "val" : {"type" : "LSString", "value" : "8975;29361"}
-                                 },
-                                 {
-                                    "key" : {"type" : "FixedString", "value" : "sourcetemplate"},
-                                    "val" : {"type" : "LSString", "value" : ""}
-                                 }
-                              ]
-                           }
-                        ],
-                        "jumptarget" : {"type" : "FixedString", "value" : "20c27e70-2c7c-4752-8dbf-0c0f06c6a12b"},
-                        "jumptargetpoint" : {"type" : "uint8", "value" : 2},
-                        "setflags" : [ {} ]
-                     },
-                     {
-                        "Tags" : [ {} ],
                         "UUID" : {"type" : "FixedString", "value" : "d2d0d499-d1c8-4054-ba92-253f1240e537"},
                         "checkflags" : [ {} ],
                         "children" : [ {} ],
@@ -12720,7 +12738,7 @@
             "isImportantForStagings" : [ {} ],
             "isPeanuts" : [ {} ],
             "needLayout" : {"type" : "bool", "value" : false},
-            "nextNodeId" : {"type" : "uint32", "value" : 1095},
+            "nextNodeId" : {"type" : "uint32", "value" : 1096},
             "speakerSlotDescription" : [ {} ],
             "synopsis" : {"type" : "LSString", "value" : "Avatar and Astarion disucss partial ceremorph"}
          }

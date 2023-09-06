@@ -1,7 +1,7 @@
 {
    "save" : {
       "header" : {
-         "version" : "4.0.9.331"
+         "version" : "4.0.10.400"
       },
       "regions" : {
          "dialog" : {
@@ -8225,7 +8225,17 @@
                               ]
                            }
                         ],
-                        "setflags" : [ {} ],
+                        "setflags" : [
+                           {
+                              "flaggroup" : [
+                                 {
+                                    "flag" : [
+                                       {
+                                          "UUID" : {"type" : "FixedString", "value" : "f334b6de-349a-01e6-2a04-d794a62b38ec"},"value" : {"type" : "bool", "value" : true}}
+                                    ],"type" : {"type" : "FixedString", "value" : "Global"}}
+                              ]
+                           }
+                        ],
                         "speaker" : {"type" : "int32", "value" : 0}
                      },
                      {
@@ -10572,7 +10582,17 @@
                               ]
                            }
                         ],
-                        "setflags" : [ {} ],
+                        "setflags" : [
+                           {
+                              "flaggroup" : [
+                                 {
+                                    "flag" : [
+                                       {
+                                          "UUID" : {"type" : "FixedString", "value" : "f334b6de-349a-01e6-2a04-d794a62b38ec"},"value" : {"type" : "bool", "value" : true}}
+                                    ],"type" : {"type" : "FixedString", "value" : "Global"}}
+                              ]
+                           }
+                        ],
                         "speaker" : {"type" : "int32", "value" : 0}
                      },
                      {
@@ -11314,7 +11334,9 @@
                                  {
                                     "flag" : [
                                        {
-                                          "UUID" : {"type" : "FixedString", "value" : "0c86e73c-d3a3-7a38-2b26-2e0f2e714b13"},"value" : {"type" : "bool", "value" : false}}
+                                          "UUID" : {"type" : "FixedString", "value" : "0c86e73c-d3a3-7a38-2b26-2e0f2e714b13"},"value" : {"type" : "bool", "value" : false}},
+                                       {
+                                          "UUID" : {"type" : "FixedString", "value" : "d71c9c16-e445-ac8d-c5ec-a23f40e6da90"},"value" : {"type" : "bool", "value" : true}}
                                     ],"type" : {"type" : "FixedString", "value" : "Local"}}
                               ]
                            }
@@ -24826,7 +24848,17 @@
                               ]
                            }
                         ],
-                        "setflags" : [ {} ],
+                        "setflags" : [
+                           {
+                              "flaggroup" : [
+                                 {
+                                    "flag" : [
+                                       {
+                                          "UUID" : {"type" : "FixedString", "value" : "f334b6de-349a-01e6-2a04-d794a62b38ec"},"value" : {"type" : "bool", "value" : true}}
+                                    ],"type" : {"type" : "FixedString", "value" : "Global"}}
+                              ]
+                           }
+                        ],
                         "speaker" : {"type" : "int32", "value" : 0}
                      },
                      {
@@ -29665,6 +29697,8 @@
                                     "flag" : [
                                        {
                                           "UUID" : {"type" : "FixedString", "value" : "45cddb53-edf5-4a9e-9943-898f55b29af3"},"value" : {"type" : "bool", "value" : false}},
+                                       {
+                                          "UUID" : {"type" : "FixedString", "value" : "62ac2304-a7a6-4519-b661-37ea993b1f97"},"value" : {"type" : "bool", "value" : false}},
                                        {
                                           "UUID" : {"type" : "FixedString", "value" : "a74e8e73-8101-494b-b169-c0faf21f0cab"},"value" : {"type" : "bool", "value" : true}},
                                        {
@@ -35901,6 +35935,8 @@
                                        {
                                           "UUID" : {"type" : "FixedString", "value" : "45cddb53-edf5-4a9e-9943-898f55b29af3"},"value" : {"type" : "bool", "value" : true}},
                                        {
+                                          "UUID" : {"type" : "FixedString", "value" : "62ac2304-a7a6-4519-b661-37ea993b1f97"},"value" : {"type" : "bool", "value" : false}},
+                                       {
                                           "UUID" : {"type" : "FixedString", "value" : "a74e8e73-8101-494b-b169-c0faf21f0cab"},"value" : {"type" : "bool", "value" : true}},
                                        {
                                           "UUID" : {"type" : "FixedString", "value" : "a946f0b8-badb-435d-915d-2e6a45845c7c"},"value" : {"type" : "bool", "value" : false}}
@@ -36036,7 +36072,36 @@
                            }
                         ],
                         "ShowOnce" : {"type" : "bool", "value" : true},
-                        "TaggedTexts" : [ {} ],
+                        "TaggedTexts" : [
+                           {
+                              "TaggedText" : [
+                                 {
+                                    "HasTagRule" : {"type" : "bool", "value" : true},
+                                    "RuleGroup" : [
+                                       {
+                                          "Rules" : [ {} ],
+                                          "TagCombineOp" : {"type" : "uint8", "value" : 0}
+                                       }
+                                    ],
+                                    "TagTexts" : [
+                                       {
+                                          "TagText" : [
+                                             {
+                                                "LineId" : {"type" : "guid", "value" : "5f896fd3-37e0-46a3-8c23-695271e61fce"},
+                                                "TagText" : {
+                                                   "handle" : "h077f1ab8gb637g4a3bg8efcge45326277239",
+                                                   "type" : "TranslatedString",
+                                                   "version" : 1
+                                                },
+                                                "stub" : {"type" : "bool", "value" : true}
+                                             }
+                                          ]
+                                       }
+                                    ]
+                                 }
+                              ]
+                           }
+                        ],
                         "Tags" : [ {} ],
                         "UUID" : {"type" : "FixedString", "value" : "e0824aa0-0d0e-087a-30d1-5f3179fe736c"},
                         "ValidatedFlags" : [

@@ -60,6 +60,7 @@
                                  SoundID="UI_Shared_Accept">
                         <b:Interaction.Triggers>
                             <b:EventTrigger EventName="Click">
+                                <ls:SetMoveFocusAction TargetName="SaveGamePopup" Reset="True"/>
                                 <noesis:SetFocusAction TargetName="SaveName"/>
                             </b:EventTrigger>
                         </b:Interaction.Triggers>

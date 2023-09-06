@@ -10,7 +10,8 @@
              mc:Ignorable="d"
              d:DesignHeight="2160" d:DesignWidth="3840"
              ls:UIWidget.UseCustomDC="True"
-             ls:UIWidget.ContextName="Combine">
+             ls:UIWidget.ContextName="Combine"
+             d:DataContext="{d:DesignInstance {x:Type ls:DCCombine}, IsDesignTimeCreatable=True}">
 
     <ls:UIWidget.Template>
         <ControlTemplate>
@@ -266,6 +267,10 @@
                                     <b:EventTrigger EventName="LocalFocusChanged">
                                         <b:InvokeCommandAction Command="{Binding DataContext.ShowTooltipOnUIElement, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" CommandParameter="{Binding Path=LocalFocus, ElementName=Inventory}"/>
                                     </b:EventTrigger>
+
+                                    <b:DataTrigger Binding="{Binding HasInputEnabled, ElementName=Combine_c}" Value="True">
+                                        <b:InvokeCommandAction Command="{Binding ShowTooltipOnUIElement}" CommandParameter="{Binding Path=LocalFocus, ElementName=Inventory}"/>
+                                    </b:DataTrigger>
                                 </b:Interaction.Triggers>
                             </ls:LSListBox>
                             <Control x:Name="Selector" IsHitTestVisible="False" VerticalAlignment="Top" HorizontalAlignment="Left" Template="{StaticResource SelectorTemplate}" Panel.ZIndex="1000" />
@@ -296,7 +301,7 @@
 
                     <ls:LSButton x:Name="ContextMenuBtn" BoundEvent="ContextMenu" ContentTemplate="{StaticResource ControllerButtonHint}" Content="{Binding CurrentPlayer.UIData.InputEvents, ConverterParameter=ContextMenu, Converter={StaticResource FindInputEventConverter}}" Tag="{Binding Source='heb4b592bgc665g4e17ga685g07e2eb5e25db', Converter={StaticResource TranslatedStringConverter}}" Command="{Binding ShowContextMenu}" CommandParameter="{Binding LocalFocus, ElementName=Inventory}" IsEnabled="{Binding LocalFocus, ElementName=Inventory, Converter={StaticResource NullToBoolFalseConverter}}"/>
 
-                    <ls:LSButton x:Name="TooltipBtn" BoundEvent="UIShowInfo" ContentTemplate="{StaticResource ControllerButtonHint}" Content="{Binding CurrentPlayer.UIData.InputEvents, ConverterParameter=UIShowInfo, Converter={StaticResource FindInputEventConverter}}" Tag="{Binding Source='hdb3826d2gfc2bg4cc3gb654gf80410859c3f',Converter={StaticResource TranslatedStringConverter}}" Command="{Binding ToggleTooltipOnUIElement}" CommandParameter="{Binding Path=LocalFocus, ElementName=Inventory}" IsEnabled="{Binding LocalFocus, ElementName=Inventory, Converter={StaticResource NullToBoolFalseConverter}}"/>
+                    <ls:LSButton x:Name="TooltipBtn" BoundEvent="UIShowInfo" ContentTemplate="{StaticResource ControllerButtonHint}" Content="{Binding CurrentPlayer.UIData.InputEvents, ConverterParameter=UIShowInfo, Converter={StaticResource FindInputEventConverter}}" Tag="{Binding Source='hf8dd4c2fg97e0g4ccdgac1ag3cd1fe5060ef',Converter={StaticResource TranslatedStringConverter}}" Command="{Binding ToggleTooltipOnUIElement}" CommandParameter="{Binding Path=LocalFocus, ElementName=Inventory}" IsEnabled="{Binding LocalFocus, ElementName=Inventory, Converter={StaticResource NullToBoolFalseConverter}}"/>
 
                     <ls:LSButton x:Name="btnSort" BoundEvent="UISort" ContentTemplate="{StaticResource ControllerButtonHint}" Content="{Binding CurrentPlayer.UIData.InputEvents, ConverterParameter=UISort, Converter={StaticResource FindInputEventConverter}}" Tag="{Binding Source='hce314911gcae3g4345gbc5ag201bc976a594',Converter={StaticResource TranslatedStringConverter}}">
                         <b:Interaction.Triggers>
@@ -316,6 +321,10 @@
             <ControlTemplate.Triggers>
                 <DataTrigger Binding="{Binding LocalFocus, ElementName=Inventory}" Value="{x:Null}">
                     <Setter TargetName="btnAddRemove" Property="IsEnabled" Value="False"/>
+                </DataTrigger>
+
+                <DataTrigger Binding="{Binding ShowUIElementTooltip}" Value="True">
+                    <Setter TargetName="TooltipBtn" Property="Tag" Value="{Binding Source='hb33ec471gd611g4ee3gbbffg699af8f79167', Converter={StaticResource TranslatedStringConverter}}"/>
                 </DataTrigger>
 
                 <DataTrigger Binding="{Binding Result, ElementName=FocusIsIngredient}" Value="True">

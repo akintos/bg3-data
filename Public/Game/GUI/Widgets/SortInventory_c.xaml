@@ -79,16 +79,20 @@
         </ls:LSListBox>
 
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center">
-            <ls:LSButton Style="{StaticResource ControllerButtonWBG}" Margin="20,0" 
-                                DataContext="{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIAccept'}"
-                                Content="{Binding Source='hce314911gcae3g4345gbc5ag201bc976a594',Converter={StaticResource TranslatedStringConverter}}" 
-                                Command="{Binding DataContext.SortAndClose.ActionCommand, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"
+            <ls:LSButton ContentTemplate="{StaticResource ControllerButtonHint}"
+                         Margin="20,0" 
+                         Content="{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIAccept'}"
+                         BoundEvent="UIAccept"
+                         Tag="{Binding Source='hce314911gcae3g4345gbc5ag201bc976a594',Converter={StaticResource TranslatedStringConverter}}" 
+                         Command="{Binding SortAndClose.ActionCommand}"
                                 CommandParameter="{Binding ElementName=SortOptions, Path=SelectedItem}"/>
 
-            <ls:LSButton Style="{StaticResource ControllerButtonWBG}" Margin="20,0" 
-                                DataContext="{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UICancel'}"
-                                Content="{Binding Source='h43f0dd5cg543cg46f5gaa87g4f14f4803cd1',Converter={StaticResource TranslatedStringConverter}}" 
-                                Command="{Binding DataContext.CustomEvent, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"
+            <ls:LSButton ContentTemplate="{StaticResource ControllerButtonHint}" 
+                         Margin="20,0" 
+                         Content="{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UICancel'}"
+                         BoundEvent="UICancel"
+                         Tag="{Binding Source='h43f0dd5cg543cg46f5gaa87g4f14f4803cd1',Converter={StaticResource TranslatedStringConverter}}" 
+                         Command="{Binding CustomEvent}"
                                 SoundID="UI_Shared_Cancel"
                                 CommandParameter="CloseWidget"/>
         </StackPanel>

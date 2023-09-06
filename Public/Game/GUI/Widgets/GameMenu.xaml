@@ -96,8 +96,8 @@
                     </ls:LSButton>
 
                     <ls:LSButton x:Name="ConnectivityButton" Style="{StaticResource BigBrownButtonStyle}"
-                                 Content="{Binding Source='h9ca1c81fged74g4594ga818gd9f44de63aa5', Converter={StaticResource TranslatedStringConverter}}"
-                                 Command="{Binding ConnectivityCommand}"
+                                 Content="{Binding Source='h908649e6gdfe9g4a44g8bf3ga66cc295f28e', Converter={StaticResource TranslatedStringConverter}}"
+                                 Command="{Binding CustomEvent}" CommandParameter="CharacterAssignOpen"
                                  SoundID="UI_HUD_MainMenu_Credits" Margin="{StaticResource MainButtonSpacing}">
                     </ls:LSButton>
 
@@ -136,6 +136,8 @@
                 <Control x:Name="PlayerSlots" Template="{StaticResource PlayerSlotsTemplate}" VerticalAlignment="Bottom" Margin="0,0,0,56"/>
 
                 <ls:LSInputBinding PlayerId="{Binding CurrentPlayer.PlayerId}" BoundEvent="UICancel" Command="{Binding CustomEvent}" CommandParameter="CloseGameMenu" />
+
+                <TextBlock x:Name="VersionString" Text="{Binding Data.VersionString}" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,64,36" Foreground="{StaticResource LS_accent75TxtColor}" FontSize="{StaticResource ScaledMediumFontSize}"/>
 
                 <b:Interaction.Triggers>
                     <b:EventTrigger EventName="Loaded">

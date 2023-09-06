@@ -76,6 +76,49 @@
         </ls:LSMessageBoxData.Text>
     </ls:LSMessageBoxData>
 
+    <!-- Message boxes to ensure user wants to delete all the saves of a campaign (except latest) and confirming this action -->
+    <ls:LSMessageBoxData x:Key="MessageBoxSaveDeleteCampaignButLatestConfirmation"
+                         Title="{Binding Source='h9c2809d8g833dg4deagb0d9g5f0ab199cb41', Converter={StaticResource TranslatedStringConverter}}"
+                         UUID="UUID">
+        <ls:LSMessageBoxData.Actions>
+            <ls:LSGameCommandData ActionName="{Binding Source='hf52bf842g05beg48dega717gca15b3678e0e', Converter={StaticResource TranslatedStringConverter}}"
+                                  Command="{Binding DataContext.DoDeleteAllCampaignButLatest, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"
+                                  BoundEvent="UIAccept"/>
+            <ls:LSGameCommandData ActionName="{Binding Source='heded8384gb4f5g439dg9883g5cf950b2bbfc', Converter={StaticResource TranslatedStringConverter}}" 
+                                  Command="{Binding DataContext.CustomEvent, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"
+                                  CommandParameter="CloseMessageBox"
+                                  BoundEvent="UICancel"/>
+        </ls:LSMessageBoxData.Actions>
+        <ls:LSMessageBoxData.Text>
+            <MultiBinding Converter="{StaticResource ParameterizedTranslatedStringConverter}">
+                <Binding Source="hbf7cfa8dgfed9g42c3gaf6eg218a67d5be4b"/>
+                <Binding Path="DataContext.SelectedPlaythrough.LatestSave.Title" RelativeSource="{RelativeSource AncestorType={x:Type ls:UIWidget}}"/>
+            </MultiBinding>
+        </ls:LSMessageBoxData.Text>
+    </ls:LSMessageBoxData>
+
+    <ls:LSMessageBoxData x:Key="MessageBoxSaveDeleteCampaignButLatest"
+                         Title="{Binding Source='h9c2809d8g833dg4deagb0d9g5f0ab199cb41', Converter={StaticResource TranslatedStringConverter}}"
+                         UUID="UUID">
+        <ls:LSMessageBoxData.Actions>
+            <ls:LSGameCommandData ActionName="{Binding Source='hf52bf842g05beg48dega717gca15b3678e0e', Converter={StaticResource TranslatedStringConverter}}"
+                                  Command="{Binding DataContext.OpenConfirmationDeleteCampaignCommand, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"
+                                  CommandParameter="{StaticResource MessageBoxSaveDeleteCampaignButLatestConfirmation}"
+                                  BoundEvent="UIAccept"/>
+            <ls:LSGameCommandData ActionName="{Binding Source='heded8384gb4f5g439dg9883g5cf950b2bbfc', Converter={StaticResource TranslatedStringConverter}}" 
+                                  Command="{Binding DataContext.CustomEvent, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"
+                                  CommandParameter="CloseMessageBox"
+                                  BoundEvent="UICancel"/>
+        </ls:LSMessageBoxData.Actions>
+        <ls:LSMessageBoxData.Text>
+            <MultiBinding Converter="{StaticResource ParameterizedTranslatedStringConverter}">
+                <Binding Source="ha66a404cga5efg404dg80adg1a462b40c8b8"/>
+                <Binding Path="DataContext.SelectedPlaythrough.ProtagonistName" RelativeSource="{RelativeSource AncestorType={x:Type ls:UIWidget}}"/>
+                <Binding Path="DataContext.SelectedPlaythrough.LatestSave.Title" RelativeSource="{RelativeSource AncestorType={x:Type ls:UIWidget}}"/>
+            </MultiBinding>
+        </ls:LSMessageBoxData.Text>
+    </ls:LSMessageBoxData>
+
     <!-- The deprecated message box appears only for debug/internal builds -->
     <ls:LSMessageBoxData x:Key="MessageBoxSaveDeleteDeprecated"
                          Text="Are you sure you want to delete the deprecated save files? (aka the ones that can't be loaded because we bumped the savefile version)"
@@ -236,14 +279,13 @@
     </Style>
 
     <ControlTemplate x:Key="SaveInformationTemplate">
-        <Grid x:Name="TimeHolders" Margin="0,12,0,0">
+        <Grid x:Name="TimeHolders" Margin="0,12,0,60">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="1.5*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
@@ -260,20 +302,9 @@
             <TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding Source='hd2d05509gaea8g4d37g9457gf3e226b4baa1', Converter={StaticResource TranslatedStringConverter}}" Style="{StaticResource SavefileInfo.Title}"/>
             <TextBlock Grid.Column="1" Grid.Row="1" Text="{Binding TimeString}" Style="{StaticResource SavefileInfo.Value}"/>
             
-            <TextBlock Grid.Column="2" Grid.Row="0" Text="{Binding Source='hbbc4fb50ga17ag467dgb3b8g8db652071022', Converter={StaticResource TranslatedStringConverter}}" Style="{StaticResource SavefileInfo.Title}"/>
-            <TextBlock Grid.Column="2" Grid.Row="1" Text="{Binding Version}" Style="{StaticResource SavefileInfo.Value}"/>
-            <TextBlock Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="2" x:Name="SaveVersionFeedback" Text="" Style="{StaticResource SavefileInfo.Value}"/>
+            <TextBlock Grid.Column="2" Grid.Row="0" Text="{Binding Source='h46616d84g0ebag4586g9230gca30c54e7596', Converter={StaticResource TranslatedStringConverter}}" Style="{StaticResource SavefileInfo.Title}"/>
+            <TextBlock Grid.Column="2" Grid.Row="1" Text="{Binding Difficulty}" Style="{StaticResource SavefileInfo.Value}"/>
         </Grid>
-
-        <ControlTemplate.Triggers>
-            <!-- Triggers for version compatibility -->
-            <DataTrigger Binding="{Binding Validity}" Value="TooOld">
-                <Setter TargetName="SaveVersionFeedback" Property="Text" Value="{Binding Source='h4cb97c56g2888g45c4g8b54ga92efe29d05f', Converter={StaticResource TranslatedStringConverter}, StringFormat=' - {0}'}"/>
-            </DataTrigger>
-            <DataTrigger Binding="{Binding Validity}" Value="TooNew">
-                <Setter TargetName="SaveVersionFeedback" Property="Text" Value="{Binding Source='h1a72f51bg19b8g489cg875dg60e3ca119f57', Converter={StaticResource TranslatedStringConverter}, StringFormat=' - {0}'}"/>
-            </DataTrigger>
-        </ControlTemplate.Triggers>
     </ControlTemplate>
 
     <ControlTemplate x:Key="SavePresenterTemplate">
@@ -300,6 +331,7 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 
                 <TextBlock Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="0" x:Name="SaveType" Text="{Binding Source='hc41b7af0g94d7g4e1ag979cg904a9146c941', Converter={StaticResource TranslatedStringConverter}}" Style="{StaticResource SavefileInfo.Title}" FontSize="{StaticResource ScaledLargeFontSize}"/>
@@ -322,6 +354,29 @@
                 <Image Grid.Column="2" Grid.Row="3" x:Name="CloudIcon" Source="{StaticResource CloudImage}" Stretch="None"/>
                 <TextBlock Grid.Column="2" Grid.Row="4" x:Name="CloudTitle" Text="{Binding Source='hc76b68d4g8daeg422eg80b2ge283aa2465d9', Converter={StaticResource TranslatedStringConverter}}" Style="{StaticResource SavefileInfo.Title}" FontSize="{StaticResource ScaledMediumFontSize}"/>
                 <TextBlock Grid.Column="2" Grid.Row="5" x:Name="CloudSaveStatus" Text="{Binding Source='hb20007ddg7ba5g4432ga01eg42b1f30c0e2f', Converter={StaticResource TranslatedStringConverter}}" Style="{StaticResource SavefileInfo.Value}" VerticalAlignment="Top"/>
+
+
+                <StackPanel x:Name="VersionText" Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="3" Orientation="Horizontal" HorizontalAlignment="Center">
+                    <StackPanel.Resources>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="FontSize" Value="{StaticResource ScaledMediumFontSize}"/>
+                            <Setter Property="Foreground" Value="{StaticResource LS_accent00TxtColor}"/>
+                        </Style>
+                    </StackPanel.Resources>
+
+                    <TextBlock>
+                        <TextBlock.Text>
+                            <MultiBinding Converter="{StaticResource ParameterizedTranslatedStringConverter}">
+                                <Binding Source="hf5795482g056ag446fgb664gfe2b0007058e"/>
+                                <Binding Source="hbbc4fb50ga17ag467dgb3b8g8db652071022" Converter="{StaticResource TranslatedStringConverter}"/>
+                                <Binding Path="SelectedSave.Version" FallbackValue=""/>
+                            </MultiBinding>
+                        </TextBlock.Text>
+                    </TextBlock>
+
+                    <TextBlock x:Name="ValiditySeparator" Text=" - " Visibility="{Binding Visibility, ElementName=InvalidTextReason}"/>
+                    <TextBlock x:Name="InvalidTextReason" Text="" Visibility="Collapsed"/>
+                </StackPanel>
             </Grid>
 
         </DockPanel>
@@ -369,6 +424,20 @@
             <DataTrigger Binding="{Binding SelectedSave.Type}" Value="Autosave">
                 <Setter TargetName="SaveType" Property="Text" Value="{Binding Source='habeee505g3007g49cag8398gca3ebc53911b', Converter={StaticResource TranslatedStringConverter}}"/>
             </DataTrigger>
+
+            <!-- Save validity -->
+            <DataTrigger Binding="{Binding SelectedSave.Validity}" Value="TooOld">
+                <Setter TargetName="InvalidTextReason" Property="Visibility" Value="Visible"/>
+                <Setter TargetName="InvalidTextReason" Property="Text" Value="{Binding Source='h4cb97c56g2888g45c4g8b54ga92efe29d05f', Converter={StaticResource TranslatedStringConverter}}"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding SelectedSave.Validity}" Value="TooNew">
+                <Setter TargetName="InvalidTextReason" Property="Visibility" Value="Visible"/>
+                <Setter TargetName="InvalidTextReason" Property="Text" Value="{Binding Source='h1a72f51bg19b8g489cg875dg60e3ca119f57', Converter={StaticResource TranslatedStringConverter}}"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding SelectedSave.Validity}" Value="DataNotReady">
+                <Setter TargetName="InvalidTextReason" Property="Visibility" Value="Visible"/>
+                <Setter TargetName="InvalidTextReason" Property="Text" Value="{Binding Source='hbe37675cg33d5g4f00gbcf0gd82ef213b101', Converter={StaticResource TranslatedStringConverter}}"/>
+            </DataTrigger>
         </ControlTemplate.Triggers>
     </ControlTemplate>
 
@@ -387,16 +456,29 @@
 
             <Control DockPanel.Dock="Top" Template="{StaticResource SaveInformationTemplate}" DataContext="{Binding SelectedPlaythrough.LatestSave}" Margin="80"/>
 
-            <Grid DockPanel.Dock="Top">
-                <Image Source="{StaticResource Decoration}" Stretch="Uniform" Width="600" Margin="0,-16,0,-12"/>
-                <ls:LSButton  x:Name="DeleteCampaignBtn" 
-                             HorizontalAlignment="Center" 
-                             Style="{StaticResource BigBrownButtonStyle}" 
-                             Content="{Binding Source='ha58e0d43g4b0ag433ag939eg1c140baa7732', Converter={StaticResource TranslatedStringConverter}}" 
-                             Command="{Binding OpenMessageBox}"
-                             CommandParameter="{DynamicResource MessageBoxSaveDeleteCampaign}"
-                             BoundEvent="UIDelete"/>
-            </Grid>
+            <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" HorizontalAlignment="Center">
+                <Grid>
+                    <Image Source="{StaticResource Decoration}" Stretch="Uniform" Width="600" Margin="0,-16,0,-12"/>
+                    <ls:LSButton  x:Name="DeleteCampaignExceptKatestBtn" 
+                                  HorizontalAlignment="Center" 
+                                  Style="{StaticResource BigBrownButtonStyle}" 
+                                  Content="{Binding Source='hd338417fg3591g475bga45cg85abc82bfa55', Converter={StaticResource TranslatedStringConverter}}" 
+                                  Command="{Binding OpenMessageBox}"
+                                  CommandParameter="{DynamicResource MessageBoxSaveDeleteCampaignButLatest}"
+                                  IsEnabled="{Binding SelectedPlaythrough.Saves.Count, Converter={StaticResource GreaterThanConverter}, ConverterParameter=1}"/>
+                </Grid>
+
+                <Grid>
+                    <Image Source="{StaticResource Decoration}" Stretch="Uniform" Width="600" Margin="0,-16,0,-12"/>
+                    <ls:LSButton  x:Name="DeleteCampaignBtn" 
+                                  HorizontalAlignment="Center" 
+                                  Style="{StaticResource BigBrownButtonStyle}" 
+                                  Content="{Binding Source='ha58e0d43g4b0ag433ag939eg1c140baa7732', Converter={StaticResource TranslatedStringConverter}}" 
+                                  Command="{Binding OpenMessageBox}"
+                                  CommandParameter="{DynamicResource MessageBoxSaveDeleteCampaign}"
+                                  BoundEvent="UIDelete"/>
+                </Grid>
+            </StackPanel>
 
             <ls:LSButton DockPanel.Dock="Bottom" x:Name="DeleteDeprecatedDbg" Style="{StaticResource DeleteDeprecatedButtonStyle}" Margin="0,0,0,60"/>
         </DockPanel>

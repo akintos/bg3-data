@@ -83,7 +83,7 @@
                 </b:Interaction.Behaviors>
                 <ls:LSToggleButton x:Name="SortToggleButton" Margin="16,4,0,0" Template="{StaticResource SortToggleButtonTemplate}" VerticalAlignment="Top"/>
                 <ls:FilteringContainer x:Name="GlobalFilteringContainerHolder" FilterPredicate="{Binding CurrentPlayer.UIData.PartyCharacterInventoryPredicate}" Template="{StaticResource FilterHolderTemplate}" VerticalAlignment="Top" Margin="16,0,0,0"
-                                   CurrentFilter="{Binding CurrentPlayer.UIData.GlobalSelectedFilter, Mode=TwoWay}" ItemsList="{Binding InventoriesSlots, ElementName=PartyInventoriesMerger}" MaxDisplayedFilters="6">
+                                   CurrentFilter="{Binding CurrentPlayer.UIData.GlobalSelectedFilter, Mode=TwoWay}" ItemsList="{Binding InventoriesSlots, ElementName=PartyInventoriesMerger}" MaxDisplayedFilters="12">
                     <ls:FilteringContainer.EnumFiltersList>
                         <ls:EnumFilterItem EnumId="gui::EPopularFilters" Label="h977af483ga6d9g4334g9ee0g3b85b94c67db" AlwaysVisible="True" />
                         <ls:EnumFilterItem EnumId="eoc::EProficiencyGroup" Label="ha4c5f0cfg93ebg47ecg8eecg6524ad70aee0" />

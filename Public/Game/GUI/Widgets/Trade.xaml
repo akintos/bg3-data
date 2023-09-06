@@ -614,7 +614,11 @@
 
                     <!-- Balance and Trade Buttons -->
                     <StackPanel VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="0,0,0,-114">
-                        <ls:LSButton Style="{StaticResource BalanceTradeButton}" Command="{Binding BalanceTrade}" CommandParameter="{Binding ActionCommandParameter}" SoundID="UI_HUD_Trade_Balance" IsEnabled="{Binding TradeButtonsEnabled}"/>
+                        <ls:LSButton Style="{StaticResource BalanceTradeButton}" Command="{Binding BalanceTrade}" CommandParameter="{Binding ActionCommandParameter}" SoundID="UI_HUD_Trade_Balance" IsEnabled="{Binding TradeButtonsEnabled}" ToolTipService.Placement="Center" ToolTipService.VerticalOffset="-100" ToolTipService.ShowOnDisabled="True">
+                            <ls:LSButton.ToolTip>
+                                <ls:LSTooltip Content="{Binding Source='hb0e3f01fg505eg43ffg87e0g088ea4853d46', Converter={StaticResource TranslatedStringConverter}}"/>
+                            </ls:LSButton.ToolTip>
+                        </ls:LSButton>
                         <StackPanel Margin="0,-60,0,0">
                             <StackPanel Orientation="Horizontal">
                                 <Image Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared/BigBtn_sideDecor.png" Stretch="None"/>
@@ -1295,7 +1299,16 @@
                                                                                 <Grid Style="{StaticResource PortraitGridStyle}">
                                                                                     <ls:LSEntityObject EntityRef="{Binding EntityHandle}" Background="Transparent" Margin="0,-3,0,-3" Opacity="1">
                                                                                         <Grid IsHitTestVisible="False">
-                                                                                            <Rectangle Margin="0,0,0,0" VerticalAlignment="Center" Width="128" Height="198" Fill="{Binding Icon}"/>
+                                                                                            <!--ALIVE-->
+                                                                                            <Rectangle Width="134" Height="200" VerticalAlignment="Center" HorizontalAlignment="Center"  Fill="{Binding Icon}" Visibility="{Binding Stats.IsAlive, Converter={StaticResource BoolToVisibleConverter}}"/>
+
+                                                                                            <!--DEAD-->
+                                                                                            <Rectangle Width="134" Height="200" VerticalAlignment="Center" HorizontalAlignment="Center"  Fill="{Binding Icon}" Visibility="{Binding Stats.IsAlive, Converter={StaticResource BoolToHiddenConverter}}">
+                                                                                                <Rectangle.Effect>
+                                                                                                    <ls:SaturationEffect Saturation="0.1"/>
+                                                                                                </Rectangle.Effect>
+                                                                                            </Rectangle>
+                                                                                            
                                                                                             <ProgressBar Template="{DynamicResource DefaultProgressBar}" VerticalAlignment="Center" HorizontalAlignment="Center" Width="132" Height="196" Style="{StaticResource CharacterPortraitBarStyle}"/>
                                                                                             <Image Stretch="None">
                                                                                                 <Image.Style>

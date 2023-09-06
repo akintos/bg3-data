@@ -98,14 +98,30 @@
 
                                             <b:InvokeCommandAction Command="{Binding DataContext.EnableTooltipOnUIElement, ElementName=JournalCombatLog_c}" CommandParameter="{Binding ElementName=Container}"/>
                                         </b:EventTrigger>
+
+                                        <b:DataTrigger Binding="{Binding HasInputEnabled, ElementName=JournalCombatLog_c}" Value="True">
+                                            <b:Interaction.Behaviors>
+                                                <b:ConditionBehavior>
+                                                    <b:ConditionalExpression>
+                                                        <b:ComparisonCondition LeftOperand="{Binding (ls:MoveFocus.IsFocused), ElementName=Container}" Operator="Equal" RightOperand="True"/>
+                                                        <b:ComparisonCondition LeftOperand="{Binding Path=DataContext.Layout, ElementName=JournalCombatLog_c}" Operator="NotEqual" RightOperand="Common"/>
+                                                    </b:ConditionalExpression>
+                                                </b:ConditionBehavior>
+                                            </b:Interaction.Behaviors>
+                                            <b:InvokeCommandAction Command="{Binding DataContext.ShowTooltipOnUIElement, ElementName=JournalCombatLog_c}" CommandParameter="{Binding ElementName=Container}"/>
+                                        </b:DataTrigger>
                                     </b:Interaction.Triggers>
 
                                     <Grid>
-                                        <ContentPresenter x:Name="EntryPresenter" Content="{Binding Entries[0]}" Margin="90,30,30,30">
-                                            <ContentPresenter.Resources>
-                                                <Style x:Key="TextStyle" TargetType="TextBlock" BasedOn="{StaticResource Journal.BaseTextStyle}"/>
-                                                <Style x:Key="ParamStyle" TargetType="TextBlock" BasedOn="{StaticResource CombatLog.Entry.ParamRun}"/>
-                                            </ContentPresenter.Resources>
+                                        <ContentPresenter x:Name="EntryPresenter" Content="{Binding Entries[0]}" Margin="80,8,8,8">
+                                            <ContentPresenter.Style>
+                                                <Style TargetType="ContentPresenter">
+                                                    <Style.Resources>
+                                                        <Style x:Key="TextStyle" TargetType="TextBlock" BasedOn="{StaticResource Journal.HighlightedBaseTextStyle}"/>
+                                                        <Style x:Key="ParamStyle" TargetType="TextBlock" BasedOn="{StaticResource CombatLog.Entry.ParamRun}"/>
+                                                    </Style.Resources>
+                                                </Style>
+                                            </ContentPresenter.Style>
                                         </ContentPresenter>
 
                                         <ls:LSInputBinding x:Name="SplitScreenDetailsBtn" Command="{Binding DataContext.ToggleTooltipOnUIElement, ElementName=JournalCombatLog_c}" CommandParameter="{Binding ElementName=Container}" BoundEvent="UIShowInfo" IsEnabled="{Binding (ls:MoveFocus.IsFocused), ElementName=Container}"/>
@@ -115,7 +131,7 @@
                                 </ContentControl>
                                 <DataTemplate.Triggers>
                                     <DataTrigger Binding="{Binding ChildDepth}" Value="0">
-                                        <Setter TargetName="EntryPresenter" Property="Margin" Value="30"/>
+                                        <Setter TargetName="EntryPresenter" Property="Margin" Value="20,8,8,8"/>
                                     </DataTrigger>
 
                                     <DataTrigger Binding="{Binding ParamTooltips.Count, Converter={StaticResource GreaterThanConverter}, ConverterParameter=0}" Value="True">
@@ -130,6 +146,16 @@
 
                                     <Trigger SourceName="Container" Property="ls:MoveFocus.IsFocused" Value="False">
                                         <Setter TargetName="Container" Property="ToolTipService.IsEnabled" Value="False"/>
+                                        <Setter TargetName="EntryPresenter" Property="Style">
+                                            <Setter.Value>
+                                                <Style TargetType="ContentPresenter">
+                                                    <Style.Resources>
+                                                        <Style x:Key="TextStyle" TargetType="TextBlock" BasedOn="{StaticResource Journal.BaseTextStyle}"/>
+                                                        <Style x:Key="ParamStyle" TargetType="TextBlock" BasedOn="{StaticResource CombatLog.Entry.ParamRun}"/>
+                                                    </Style.Resources>
+                                                </Style>
+                                            </Setter.Value>
+                                        </Setter>
                                     </Trigger>
 
                                     <DataTrigger Binding="{Binding Path=Layout, ElementName=JournalCombatLog_c}" Value="Common">
@@ -163,7 +189,7 @@
                                  ls:LSButton.BoundEvent="UIShowInfo" 
                                  ContentTemplate="{StaticResource ControllerButtonHint}" 
                                  Content="{Binding CurrentPlayer.UIData.InputEvents, ConverterParameter=UIShowInfo, Converter={StaticResource FindInputEventConverter}}" 
-                                 Tag="{Binding Source='h2a8cab0cgbfb8g4890gbfbdg5a9426e29457', Converter={StaticResource TranslatedStringConverter}}"
+                                 Tag="{Binding Source='hf8dd4c2fg97e0g4ccdgac1ag3cd1fe5060ef', Converter={StaticResource TranslatedStringConverter}}"
                                  EatInput="False"/>
 
                     <ls:LSButton x:Name="CancelButton" BoundEvent="UICancel" 
@@ -199,10 +225,18 @@
                         </b:Interaction.Behaviors>
                         <b:InvokeCommandAction Command="{Binding ShowTooltipOnUIElement}" CommandParameter="{Binding ElementName=TooltipAnchor}"/>
                     </b:PropertyChangedTrigger>
+
+                    <b:DataTrigger Binding="{Binding HasInputEnabled, ElementName=JournalCombatLog_c}" Value="True">
+                        <b:InvokeCommandAction Command="{Binding ShowTooltipOnUIElement}" CommandParameter="{Binding ElementName=TooltipAnchor}"/>
+                    </b:DataTrigger>
                 </b:Interaction.Triggers>
             </Grid>
 
             <ControlTemplate.Triggers>
+                <DataTrigger Binding="{Binding ShowUIElementTooltip}" Value="True">
+                    <Setter TargetName="DetailsBtn" Property="Tag" Value="{Binding Source='hb33ec471gd611g4ee3gbbffg699af8f79167', Converter={StaticResource TranslatedStringConverter}}"/>
+                </DataTrigger>
+
                 <DataTrigger Binding="{Binding Layout}" Value="Common">
                     <Setter TargetName="ColumnDef0" Property="Width" Value="1*"/>
                     <Setter TargetName="ColumnDef1" Property="Width" Value="4*"/>

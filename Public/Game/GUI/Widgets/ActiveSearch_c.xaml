@@ -18,7 +18,6 @@
                 <DataTemplate x:Key="InteractableItemTemplate">
                     <ContentControl x:Name="FocusableContent" Style="{StaticResource FocusableContentControlStyle}" Margin="0,0,0,12" Tag="{Binding Path=(ItemsControl.AlternationIndex), RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContentPresenter}},
                             Converter={StaticResource AddConverter}, ConverterParameter=1}">
-                        
                         <Grid x:Name="ItemPanel">
                             
                             <b:Interaction.Triggers>
@@ -27,6 +26,7 @@
                                                            CommandParameter="{Binding .}"/>
                                     <b:InvokeCommandAction Command="{Binding DataContext.HighlightGameobject, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" 
                                                            CommandParameter="{Binding .}"/>
+                                    <b:InvokeCommandAction Command="{Binding DataContext.SetCameraOnGameObject, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" CommandParameter="{Binding .}" />
                                 </b:DataTrigger>
                                 <b:DataTrigger Binding="{Binding Path=(ls:MoveFocus.IsFocused), ElementName=FocusableContent}" Value="False">
                                     <b:InvokeCommandAction Command="{Binding DataContext.ClearHighlightGameobject, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" 
@@ -44,13 +44,18 @@
                                            noesis:Text.StrokeThickness="4" noesis:Text.Stroke="{StaticResource LS_tint00}" FontWeight="Bold"/>
                             </Grid>
 
-                            <TextBlock x:Name="ItemName" Grid.Column="1" Text="{Binding Name}" VerticalAlignment="Center" Margin="20,0" FontSize="{StaticResource ScaledDefaultFontSize}" LineHeight="{StaticResource ScaledDefaultFontSizeLineHeight}" LineStackingStrategy="BlockLineHeight" TextWrapping="Wrap"/>
+                            <DockPanel Grid.Column="1" VerticalAlignment="Center" Margin="20, 0">
+                                <TextBlock x:Name="ItemName" Text="{Binding Name}" FontSize="{StaticResource ScaledDefaultFontSize}" LineHeight="{StaticResource ScaledDefaultFontSizeLineHeight}" LineStackingStrategy="BlockLineHeight" TextWrapping="Wrap"/>
+                                <TextBlock x:Name="ContainerState" Text="{Binding Source='h823595e6g550fg4614gb1ddgdcd323bb4c69',Converter={StaticResource TranslatedStringConverter}, StringFormat='{} ({0})'}" Visibility="Collapsed"
+                                           FontSize="{StaticResource ScaledDefaultFontSize}" LineHeight="{StaticResource ScaledDefaultFontSizeLineHeight}"/>
+                            </DockPanel>
                         </Grid>
 
                     </ContentControl>
                     <DataTemplate.Triggers>
                         <DataTrigger Binding="{Binding HasIllegalInteraction}" Value="True">
                             <Setter TargetName="ItemName" Property="Foreground" Value="{StaticResource LS_alertTxtColor}" />
+                            <Setter TargetName="ContainerState" Property="Foreground" Value="{StaticResource LS_alertTxtColor}" />
                             <Setter TargetName="ItemBorder" Property="BorderBrush" Value="{StaticResource LS_alertTxtColor}" />
                             <Setter TargetName="ItemBorder" Property="Opacity" Value="0.6" />
                         </DataTrigger>
@@ -61,6 +66,13 @@
                         <Trigger SourceName="itemCount" Property="Text" Value="1">
                             <Setter TargetName="itemCount" Property="Visibility" Value="Collapsed" />
                         </Trigger>
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding IsContainer}" Value="True"/>
+                                <Condition Binding="{Binding Inventory.Slots.Count}" Value="0"/>
+                            </MultiDataTrigger.Conditions>
+                            <Setter TargetName="ContainerState" Property="Visibility" Value="Visible" />
+                        </MultiDataTrigger>
                     </DataTemplate.Triggers>
                 </DataTemplate>
 
@@ -81,7 +93,9 @@
                         <b:EventTrigger EventName="GotKeyboardFocus">
                             <b:InvokeCommandAction Command="{Binding ShowTooltipOnUIElement}" CommandParameter="{Binding ElementName=TooltipHolder}"/>
                         </b:EventTrigger>
-
+                        <b:DataTrigger Binding="{Binding HasInputEnabled, ElementName=ActiveSearch}" Value="True">
+                            <b:InvokeCommandAction Command="{Binding ShowTooltipOnUIElement}" CommandParameter="{Binding ElementName=TooltipHolder}"/>
+                        </b:DataTrigger>
 
                         <b:EventTrigger EventName="Loaded">
                             <b:Interaction.Behaviors>
@@ -133,7 +147,14 @@
                         </ItemsControl.ItemsPanel>
                         <b:Interaction.Triggers>
                             <b:PropertyChangedTrigger Binding="{Binding DataContext.CurrentPlayer.UIData.InteractableObjects.Count, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}">
-                                <ls:SetMoveFocusAction TargetName="ActiveSearch" FocusElement="{Binding ElementName=InteractableObjectsList}"/>
+                                <b:Interaction.Behaviors>
+                                    <b:ConditionBehavior>
+                                        <b:ConditionalExpression>
+                                            <b:ComparisonCondition LeftOperand="{Binding DataContext.CurrentPlayer.UIData.InteractableObjects.Count}" Operator="GreaterThan" RightOperand="0"/>
+                                        </b:ConditionalExpression>
+                                    </b:ConditionBehavior>
+                                </b:Interaction.Behaviors>
+                                <ls:SetMoveFocusAction TargetName="ActiveSearch" DirectionFocusSourceElement="{Binding FocusedElement, ElementName=ActiveSearch}" DirectionFocus="Up"/>
                             </b:PropertyChangedTrigger>
                         </b:Interaction.Triggers>
                     </ItemsControl>
@@ -150,17 +171,23 @@
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
-                        <ls:LSButton x:Name="ActionBtn" DataContext="{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIAccept'}"
-                                 Content="{Binding DataContext.TargetActionDescription, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" Style="{StaticResource ControllerButton}"
-                                 Command="{Binding DataContext.ExecuteTargetActionCommand, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" Arrangement="Left"
+                        <ls:LSButton x:Name="ActionBtn" 
+                                 ContentTemplate="{StaticResource ControllerButtonHint}" 
+                                 Content="{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIAccept'}"
+                                 Tag="{Binding TargetActionDescription}"
+                                 Command="{Binding ExecuteTargetActionCommand}" Arrangement="Left"
                                  CommandParameter="{Binding FocusedElement.DataContext, ElementName=ActiveSearch}" SoundID="UI_Shared_Accept" HorizontalAlignment="Center"
-                                 Visibility="{Binding DataContext.CurrentPlayer.UIData.InteractableObjects.Count, Converter={StaticResource CountToVisibilityConverter}, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" Margin="0,0,0,40"/>
+                                 BoundEvent="UIAccept"
+                                 Visibility="{Binding CurrentPlayer.UIData.InteractableObjects.Count, Converter={StaticResource CountToVisibilityConverter}}" Margin="0,0,0,40"/>
 
                         <WrapPanel Grid.Row="1" HorizontalAlignment="Center">
-                            <ls:LSButton x:Name="ShowContextMenu" HorizontalAlignment="Center" DataContext="{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='ContextMenu'}"
-                                 Content="{Binding Source='heb4b592bgc665g4e17ga685g07e2eb5e25db',Converter={StaticResource TranslatedStringConverter}}" Style="{StaticResource ControllerButton}"
-                                 Command="{Binding DataContext.ShowContextMenu, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" Arrangement="Left" BoundEvent="ContextMenu"
-                                 Visibility="{Binding DataContext.CurrentPlayer.UIData.InteractableObjects.Count, Converter={StaticResource CountToVisibilityConverter}, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"
+                            <ls:LSButton x:Name="ShowContextMenu" HorizontalAlignment="Center" 
+                                 ContentTemplate="{StaticResource ControllerButtonHint}" 
+                                 Content="{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='ContextMenu'}"
+                                 Tag="{Binding Source='heb4b592bgc665g4e17ga685g07e2eb5e25db',Converter={StaticResource TranslatedStringConverter}}" 
+                                 Command="{Binding ShowContextMenu}" Arrangement="Left" 
+                                 BoundEvent="ContextMenu"
+                                 Visibility="{Binding CurrentPlayer.UIData.InteractableObjects.Count, Converter={StaticResource CountToVisibilityConverter}}"
                                  CommandParameter="{Binding FocusedElement, ElementName=ActiveSearch}"/>
 
                             <!-- Toggle tooltips -->
@@ -170,18 +197,13 @@
                                  ls:LSButton.BoundEvent="UIShowInfo"
                                  ContentTemplate="{StaticResource ControllerButtonHint}"
                                  Content="{Binding CurrentPlayer.UIData.InputEvents, ConverterParameter=UIShowInfo, Converter={StaticResource FindInputEventConverter}}"
-                                 Tag="{Binding Source='h2a8cab0cgbfb8g4890gbfbdg5a9426e29457', Converter={StaticResource TranslatedStringConverter}}" TapTime="{StaticResource DefaultButtonTapTime}"/>
+                                 Tag="{Binding Source='hf8dd4c2fg97e0g4ccdgac1ag3cd1fe5060ef', Converter={StaticResource TranslatedStringConverter}}" TapTime="{StaticResource DefaultButtonTapTime}"/>
 
-                            <ls:LSButton x:Name="CloseUIBtn" DataContext="{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UICancel'}" Arrangement="Left"
-                                 Content="{Binding Converter={StaticResource TranslatedStringConverter}, Source=h8d7a06bcgf023g47cbg95dagd290e0a05142, Mode=OneWay}" Style="{StaticResource ControllerButton}"
-                                 Command="{Binding DataContext.CustomEvent, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" CommandParameter="CloseWidget" HorizontalAlignment="Center">
-                                <b:Interaction.Triggers>
-                                    <b:EventTrigger EventName="LSButtonPressed" >
-                                        <b:InvokeCommandAction Command="{Binding DataContext.ClearHighlightGameobject, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" 
-                                                           CommandParameter="{Binding FocusedElement.DataContext, ElementName=ActiveSearch}"/>
-                                    </b:EventTrigger>
-                                </b:Interaction.Triggers>
-                            </ls:LSButton>
+                            <ls:LSButton x:Name="CloseUIBtn" 
+                                 ContentTemplate="{StaticResource ControllerButtonHint}" 
+                                 Content="{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UICancel'}" Arrangement="Left"
+                                 Tag="{Binding Converter={StaticResource TranslatedStringConverter}, Source=h8d7a06bcgf023g47cbg95dagd290e0a05142, Mode=OneWay}"
+                                 Command="{Binding CustomEvent}" CommandParameter="CloseWidget" HorizontalAlignment="Center"/>
                         </WrapPanel>
                     </Grid>
                 </Grid>
@@ -193,7 +215,17 @@
                 <DataTrigger Binding="{Binding DataContext.CurrentPlayer.UIData.InteractableObjects.Count, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" Value="0">
                     <Setter TargetName="TooltipHolder" Property="Visibility" Value="Collapsed"/>
                 </DataTrigger>
+                <DataTrigger Binding="{Binding ShowUIElementTooltip}" Value="True">
+                    <Setter TargetName="ToggleTooltips" Property="Tag" Value="{Binding Source='hb33ec471gd611g4ee3gbbffg699af8f79167', Converter={StaticResource TranslatedStringConverter}}"/>
+                </DataTrigger>
             </DataTemplate.Triggers>
         </DataTemplate>
     </ls:UIWidget.ContentTemplate>
+    <b:Interaction.Triggers>
+        <b:EventTrigger EventName="WidgetClosing">
+            <b:InvokeCommandAction Command="{Binding ClearHighlightGameobject}" CommandParameter="{Binding FocusedElement.DataContext, ElementName=ActiveSearch}"/>
+            <b:InvokeCommandAction Command="{Binding DataContext.SetCameraOnGameObject, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"
+                                   CommandParameter="{Binding DataContext.CurrentPlayer.SelectedCharacter, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" />
+        </b:EventTrigger>
+    </b:Interaction.Triggers>
 </ls:UIWidget>

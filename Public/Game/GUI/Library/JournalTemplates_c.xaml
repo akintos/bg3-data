@@ -5,6 +5,7 @@
 					xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                     xmlns:ls="clr-namespace:ls;assembly=SharedGUI"
                     xmlns:noesis="clr-namespace:NoesisGUIExtensions;assembly=Noesis.GUI.Extensions"
+                    xmlns:System="clr-namespace:System;assembly=mscorlib"
 					mc:Ignorable="d">
 
     <ResourceDictionary.MergedDictionaries>
@@ -123,6 +124,10 @@
 		<Setter Property="TextWrapping" Value="Wrap"/>
 	</Style>
 
+    <Style x:Key="Journal.HighlightedBaseTextStyle" TargetType="TextBlock" BasedOn="{StaticResource Journal.BaseTextStyle}">
+        <Setter Property="Foreground" Value="{StaticResource LS_accent100TxtColor}"/>
+    </Style>
+
 	<Style x:Key="Journal.TitleStyle" TargetType="TextBlock" BasedOn="{StaticResource Journal.BaseTextStyle}">
 		<Setter Property="Foreground" Value="{StaticResource LS_tint100}"/>
         <Setter Property="FontSize" Value="{StaticResource ScaledHugeFontSize}"/>
@@ -144,27 +149,22 @@
 	</Storyboard>
 
 	<ControlTemplate x:Key="Journal.ListItemTemplate" TargetType="ContentControl">
-		<Grid>
+        <ControlTemplate.Resources>
+            <System:Double x:Key="HighlightMargin">36</System:Double>
+        </ControlTemplate.Resources>
+        <Grid>
             <Grid x:Name="Bg" VerticalAlignment="Top">
                 <Rectangle x:Name="BgHighlight" Fill="#66FEDEA3" Visibility="Collapsed" />
                 <ContentPresenter Margin="{StaticResource Journal.TextTopBottomMargin}"/>
             </Grid>
-            <ls:LSNineSliceImage x:Name="Highlight1" ImageSource="{StaticResource Journal.SelectionHighlightImage}" Slices="{StaticResource Journal.SelectionHighlightSlices}" Margin="-18" HorizontalAlignment="Stretch" VerticalAlignment="Center" Visibility="Collapsed">
-				<ls:LSNineSliceImage.Height>
-					<MultiBinding Converter="{StaticResource AddMultipleConverter}">
-						<Binding Path="ActualHeight" ElementName="Bg"/>
-						<Binding Source="36"/>
-					</MultiBinding>
-				</ls:LSNineSliceImage.Height>
-			</ls:LSNineSliceImage>
-			<ls:LSNineSliceImage x:Name="Highlight2" ImageSource="{StaticResource Journal.SelectionHighlightImage2}" Slices="{StaticResource Journal.SelectionHighlightSlices}" Margin="-18" HorizontalAlignment="Stretch" VerticalAlignment="Center" Visibility="Collapsed">
-				<ls:LSNineSliceImage.Height>
-					<MultiBinding Converter="{StaticResource AddMultipleConverter}">
-						<Binding Path="ActualHeight" ElementName="Bg"/>
-						<Binding Source="36"/>
-					</MultiBinding>
-				</ls:LSNineSliceImage.Height>
-			</ls:LSNineSliceImage>
+            <ls:LSNineSliceImage x:Name="Highlight1" ImageSource="{StaticResource Journal.SelectionHighlightImage}" Slices="{StaticResource Journal.SelectionHighlightSlices}" 
+                                 Width="{Binding ActualWidth, ElementName=Bg, Converter={StaticResource AddConverter}, ConverterParameter={StaticResource HighlightMargin}}"
+                                 Height="{Binding ActualHeight, ElementName=Bg, Converter={StaticResource AddConverter}, ConverterParameter={StaticResource HighlightMargin}}"
+                                 Margin="-18" HorizontalAlignment="Stretch" VerticalAlignment="Center" Visibility="Collapsed"/>
+			<ls:LSNineSliceImage x:Name="Highlight2" ImageSource="{StaticResource Journal.SelectionHighlightImage2}" Slices="{StaticResource Journal.SelectionHighlightSlices}" 
+                                 Width="{Binding ActualWidth, ElementName=Bg, Converter={StaticResource AddConverter}, ConverterParameter={StaticResource HighlightMargin}}"
+                                 Height="{Binding ActualHeight, ElementName=Bg, Converter={StaticResource AddConverter}, ConverterParameter={StaticResource HighlightMargin}}"
+                                 Margin="-18" HorizontalAlignment="Stretch" VerticalAlignment="Center" Visibility="Collapsed"/>
 		</Grid>
 
 		<ControlTemplate.Triggers>
@@ -188,7 +188,7 @@
         </ControlTemplate.Triggers>
 	</ControlTemplate>
 
-	<Storyboard x:Key="Journal.FadeInSidePanelAnim">
+    <Storyboard x:Key="Journal.FadeInSidePanelAnim" FillBehavior="Stop">
 		<!-- Navigation -->
 		<ThicknessAnimation Duration="{StaticResource Journal.AnimationFadeDuration}" From="{StaticResource Journal.NavigationMargin}" To="-50,0,0,0" Storyboard.TargetProperty="Margin" Storyboard.TargetName="Navigation">
 			<ThicknessAnimation.EasingFunction>

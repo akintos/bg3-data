@@ -84,6 +84,23 @@
         <Setter Property="StepSoundID" Value="UI_Controller_DefaultSlider"/>
     </Style>
 
+    <Style x:Key="AutoRotateCameraSpeedSliderValueStyle" TargetType="TextBlock">
+        <Setter Property="Visibility" Value="Visible"/>
+        <!-- Default, 'Normal' case, less than 65, greater than 35 -->
+        <Setter Property="Text" Value="{Binding Source='h6311cf93gc2fdg4dbbga861g2c7a44f394d8', Converter={StaticResource TranslatedStringConverter}}"/>
+
+        <Style.Triggers>
+            <!-- 'Slow' case: less than 35 -->
+            <DataTrigger Binding="{Binding Value, Converter={StaticResource LessThanConverter}, ConverterParameter=35}" Value="True">
+                <Setter Property="Text" Value="{Binding Source='hc71f7bb4g5029g4e4bg9de5g637a4a3e34f7', Converter={StaticResource TranslatedStringConverter}}"/>
+            </DataTrigger>
+            <!-- 'Fast' case: more than 65 -->
+            <DataTrigger Binding="{Binding Value, Converter={StaticResource GreaterThanConverter}, ConverterParameter=65}" Value="True">
+                <Setter Property="Text" Value="{Binding Source='h51157197gd1b8g414bga9b8gd205000c0415', Converter={StaticResource TranslatedStringConverter}}"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
     <ControlTemplate x:Key="OptionsSliderTemplate" TargetType="ls:LSSlider">
         <ControlTemplate.Resources>
             <System:Double x:Key="SliderHeight">8</System:Double>
@@ -330,6 +347,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="ls:LSTickBox">
+                    <Grid>
                     <StackPanel Orientation="Horizontal">
                         <Image x:Name="prevImg" Style="{StaticResource LeftCarouselImage}"/>
                         <TextBlock x:Name="text" VerticalAlignment="Center" HorizontalAlignment="Center" Width="500" TextAlignment="Center"
@@ -338,9 +356,20 @@
                                    IsHitTestVisible="False"/>
                         <Image x:Name="nextImg" Style="{StaticResource RightCarouselImage}"/>
                     </StackPanel>
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Center">
+                            <Rectangle x:Name="offRect" Height="6" StrokeThickness="0" Fill="Gray" Width="230" Opacity="1" Margin="8,0" VerticalAlignment="Center"/>
+                            <Rectangle x:Name="onRect" Height="4" StrokeThickness="0" Fill="Gray" Width="210" Opacity="0.75" Margin="8,0" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Grid>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsChecked" Value="True">
                             <Setter TargetName="text" Property="Text" Value="{Binding Source='hc358d80cga01ag4497gafd6gf7e066081f3e', Converter={StaticResource TranslatedStringConverter}}"/>
+                            <Setter TargetName="offRect" Property="Opacity" Value="0.75"/>
+                            <Setter TargetName="offRect" Property="Height" Value="4"/>
+                            <Setter TargetName="offRect" Property="Width" Value ="210"/>
+                            <Setter TargetName="onRect" Property="Opacity" Value="1"/>
+                            <Setter TargetName="onRect" Property="Height" Value="6"/>
+                            <Setter TargetName="onRect" Property="Width" Value ="230"/>
                         </Trigger>
 
                         <DataTrigger Binding="{Binding IsEnabled, RelativeSource={RelativeSource TemplatedParent}}" Value="True">
@@ -420,7 +449,7 @@
     </ControlTemplate>
 
     <DataTemplate x:Key="OptionTemplate">
-        <Grid x:Name="Container" Margin="0,8" Height="136" Width="1920">
+        <Grid x:Name="Container" Margin="0,8" Height="104" Width="1920">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition x:Name="LabelColumn" Width="*"/>
                 <ColumnDefinition x:Name="ContentColumn" Width="800"/>
@@ -491,13 +520,41 @@
             <DataTrigger Binding="{Binding OptionType}" Value="OVERHEAD_FONT_SIZE">
                 <Setter Property="Style" Value="{StaticResource FontSizeSliderValueStyle}" TargetName="PART_ValueLabel"/>
             </DataTrigger>
-            <DataTrigger Binding="{Binding OptionType}" Value="InputMode">
-                <Setter Property="Style" Value="{StaticResource FontSizeSliderValueStyle}" TargetName="PART_ValueLabel"/>
-                <Setter Property="Text" Value="{Binding Value, Converter={StaticResource EnumTranslatedStringConverter}, ConverterParameter='habe6b14fge373g4d19g86c6g2f48faa77fed'}" TargetName="PART_ValueLabel"/>
+            <DataTrigger Binding="{Binding OptionType}" Value="GAME_CAMERA_AUTO_ROTATION_SPEED">
+                <Setter Property="Style" Value="{StaticResource AutoRotateCameraSpeedSliderValueStyle}" TargetName="PART_ValueLabel"/>
             </DataTrigger>
             <DataTrigger Binding="{Binding OptionType}" Value="UIScaling">
                 <Setter Property="Style" Value="{StaticResource FontSizeSliderValueStyle}" TargetName="PART_ValueLabel"/>
                 <Setter Property="Text" Value="{Binding Value, Converter={StaticResource EnumTranslatedStringConverter}, ConverterParameter='h2e12e1f7g7318g4704ga3efgf4121ab0027a'}" TargetName="PART_ValueLabel"/>
+            </DataTrigger>
+
+            <!-- Sub elements list -->
+            <DataTrigger Binding="{Binding OptionType}" Value="AUTO_SAVES">
+                <Setter Property="Margin" Value="{StaticResource SubOptionMargin}" TargetName="label"/>
+            </DataTrigger>
+
+            <DataTrigger Binding="{Binding OptionType}" Value="PANNING_SPEED">
+                <Setter Property="Margin" Value="{StaticResource SubOptionMargin}" TargetName="label"/>
+            </DataTrigger>
+
+            <DataTrigger Binding="{Binding OptionType}" Value="FRAME_CAP">
+                <Setter Property="Margin" Value="{StaticResource SubOptionMargin}" TargetName="label"/>
+            </DataTrigger>
+
+            <DataTrigger Binding="{Binding OptionType}" Value="SHARPNESS_VALUE">
+                <Setter Property="Margin" Value="{StaticResource SubOptionMargin}" TargetName="label"/>
+            </DataTrigger>
+
+            <DataTrigger Binding="{Binding OptionType}" Value="SHOW_SPEAKER">
+                <Setter Property="Margin" Value="{StaticResource SubOptionMargin}" TargetName="label"/>
+            </DataTrigger>
+
+            <DataTrigger Binding="{Binding OptionType}" Value="TEXT_BACKGROUND_OPACITY">
+                <Setter Property="Margin" Value="{StaticResource SubOptionMargin}" TargetName="label"/>
+            </DataTrigger>
+
+            <DataTrigger Binding="{Binding OptionType}" Value="GAME_CAMERA_AUTO_ROTATION_SPEED">
+                <Setter Property="Margin" Value="{StaticResource SubOptionMargin}" TargetName="label"/>
             </DataTrigger>
 
             <Trigger Property="ls:MoveFocus.IsFocused" Value="True">
@@ -506,6 +563,12 @@
                 <Setter TargetName="Frame" Property="Visibility" Value="Visible"/>
                 <Setter TargetName="label" Property="Foreground" Value="{StaticResource LS_tint100}"/>
             </Trigger>
+
+            <DataTrigger Binding="{Binding Enabled}" Value="False">
+                <Setter TargetName="Box" Property="Opacity" Value="{StaticResource DisabledOpacity}" />
+                <Setter TargetName="label" Property="Opacity" Value="{StaticResource DisabledOpacity}" />
+                <Setter TargetName="content" Property="Opacity" Value="{StaticResource DisabledOpacity}" />
+            </DataTrigger>
         </DataTemplate.Triggers>
     </DataTemplate>
 
@@ -770,22 +833,24 @@
                 </StackPanel>
 
                 <!--begin preview-->
-                <StackPanel x:Name="PreviewHolder" DataContext="{Binding FocusedElement.DataContext, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" VerticalAlignment="Top" Margin="160,0,0,0" Width="1280" Height="1600" Background="Transparent">
-
-                    <Control Template="{StaticResource OptionPreview}" HorizontalAlignment="Center" Margin="0,80,0,0"/>
+                <StackPanel x:Name="PreviewHolder" DataContext="{Binding FocusedElement.DataContext, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" VerticalAlignment="Top" Margin="160,0,0,0" Width="1280" Height="1600">
 
                     <TextBlock Text="{Binding Text}"
-                               HorizontalAlignment="Center" Margin="0,28,0,60"
+                               HorizontalAlignment="Left" Margin="0,80,0,0"
                                FontSize="{StaticResource ScaledBigFontSize}" 
                                Foreground="{StaticResource LS_tint100}"
-                               TextAlignment="Center" TextWrapping="Wrap"
+                               TextAlignment="Left" TextWrapping="Wrap"
                                Width="1280"/>
 
                     <TextBlock ls:TextBlockFormatter.SourceText="{Binding Description}"
-                               HorizontalAlignment="Center" Width="1280"
+                               HorizontalAlignment="Left" Width="1280" Margin="0,28,0,0"
                                FontSize="{StaticResource ScaledDefaultFontSize}" 
                                Foreground="{StaticResource LS_accent75TxtColor}"
-                               TextAlignment="Left" TextWrapping="Wrap"/>
+                               TextAlignment="Left" TextWrapping="Wrap"
+                               Visibility="{Binding Description, Converter={StaticResource NullToCollapsedConverter}, ConverterParameter='EmptyString'}"/>
+
+                    <Control Template="{StaticResource OptionPreview}" HorizontalAlignment="Center" Margin="0,40,0,0"/>
+
 
                     <ListBox ItemsSource="{Binding ComboItems}" SelectedItem="{Binding SelectedItem}" Visibility="{Binding ShowComboItemsDescriptions, Converter={StaticResource BoolToVisibleConverter}}">
                         <ListBox.ItemsPanel>
@@ -802,16 +867,16 @@
                                         <Setter Property="HorizontalAlignment" Value="Left"/>
                                     </Style>
 
-                                    <ImageSource x:Key="SelectedOptionIcon">pack://application:,,,/GustavNoesisGUI;component/Assets/CharacterPanel/ico_bullet_d.png</ImageSource>
+                                    <ImageSource x:Key="SelectedOptionIcon">pack://application:,,,/GustavNoesisGUI;component/Assets/Shared_c/c_bullet_d.png</ImageSource>
                                 </DataTemplate.Resources>
 
-                                <StackPanel Orientation="Vertical" Margin="8,0,0,20" Width="1200">
+                                <StackPanel Orientation="Vertical" HorizontalAlignment="Left" Width="1280">
                                     <StackPanel Orientation="Horizontal">
-                                        <Image x:Name="SelectedIcon" Source="{StaticResource SelectedOptionIcon}" Stretch="None" Visibility="Collapsed" VerticalAlignment="Center" Margin="0,0,8,0"/>
-                                        <TextBlock x:Name="Title" ls:TextBlockFormatter.SourceText="{Binding Name}" Foreground="{StaticResource LS_accent75TxtColor}" FontSize="{StaticResource ScaledIntermediateFontSize}"/>
+                                        <Image x:Name="SelectedIcon" Source="{StaticResource SelectedOptionIcon}" Stretch="None" Visibility="Collapsed" VerticalAlignment="Center" Margin="-60,0,0,0"/>
+                                        <TextBlock x:Name="Title" ls:TextBlockFormatter.SourceText="{Binding Name}" Foreground="{StaticResource LS_tint100}" FontSize="{StaticResource ScaledIntermediateFontSize}"/>
                                     </StackPanel>
 
-                                    <TextBlock ls:TextBlockFormatter.SourceText="{Binding Description}" Foreground="{StaticResource LS_baseTxtColor}" FontSize="{StaticResource ScaledDefaultFontSize}"/>
+                                    <TextBlock ls:TextBlockFormatter.SourceText="{Binding Description}" Foreground="{StaticResource LS_baseTxtColor}" FontSize="{StaticResource ScaledDefaultFontSize}" Margin="0,0,0,40"/>
                                 </StackPanel>
 
                                 <DataTemplate.Triggers>
@@ -823,7 +888,6 @@
                                             </MultiBinding>
                                         </DataTrigger.Binding>
                                         <Setter TargetName="SelectedIcon" Property="Visibility" Value="Visible"/>
-                                        <Setter TargetName="Title" Property="Foreground" Value="{StaticResource LS_tint100}"/>
                                     </DataTrigger>
                                 </DataTemplate.Triggers>
                             </DataTemplate>
@@ -837,9 +901,6 @@
                                     <Setter Property="Visibility" Value="Hidden"/>
                                 </DataTrigger>
                                 <DataTrigger Binding="{Binding ListItemType}" Value="None">
-                                    <Setter Property="Visibility" Value="Hidden"/>
-                                </DataTrigger>
-                                <DataTrigger Binding="{Binding ListItemType}" Value="Button">
                                     <Setter Property="Visibility" Value="Hidden"/>
                                 </DataTrigger>
                                 <DataTrigger Binding="{Binding ListItemType}" Value="Keybinding">

@@ -20,16 +20,19 @@
     <ls:UIWidget.Resources>
         <GridLength x:Key="ColWidthQuantity">60</GridLength>
         <GridLength x:Key="ColWidthIcon">160</GridLength>
+        <GridLength x:Key="ColWidthQuantity_header">215</GridLength>
+        <GridLength x:Key="ColWidthIcon_header">5</GridLength>
         <GridLength x:Key="ColWidthStar">44</GridLength>
         <GridLength x:Key="ColWidthCost">70</GridLength>
 
-        <System:Double x:Key="TableWidth">800</System:Double>
+        <System:Double x:Key="TableWidth">1012</System:Double>
+        <System:Double x:Key="TableWidthHeader">1022</System:Double>
     </ls:UIWidget.Resources>
     
     <ls:UIWidget.Template>
         <ControlTemplate>
             <Border>
-                <Grid x:Name="Container" Background="{StaticResource LS_PopUpBackgroundColorMedium}">
+                <Grid x:Name="Container" Background="{StaticResource LS_PopUpBackgroundColorMedium}" >
                     <b:Interaction.Triggers>
                         <b:EventTrigger EventName="Loaded">
                             <ls:SetMoveFocusAction TargetName="LearnSpells_c" FocusElement="{Binding .}"/>
@@ -41,12 +44,14 @@
                         <ls:CollectionSortBehavior x:Name="SortBehavior" ItemsSource="{Binding LearnableScrolls}" Comparer="{Binding ScrollSortComparer}"/>
                     </b:Interaction.Behaviors>
 
-                    <Grid x:Name="Panel" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <Grid x:Name="Panel" HorizontalAlignment="Center" VerticalAlignment="Center"  Width="1192" Height="1688">
                         <Image Source="pack://application:,,,/GustavNoesisGUI;component/Assets/CharacterPanel_c/c_learnScrolls_bg.png" Stretch="None"/>
 
-                        <TextBlock x:Name="Title" Text="{Binding Source=h9d4b5933g552ag4656gb59fg8ab0b22a11cf, Converter={StaticResource TranslatedStringConverter}}" Margin="0,160,0,0" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="{StaticResource DefaultFontSize}"/>
+                        <Border Height="150" Width="{StaticResource TableWidth}" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,100,0,0">
+                            <TextBlock x:Name="Title" Text="{Binding Source=h9d4b5933g552ag4656gb59fg8ab0b22a11cf, Converter={StaticResource TranslatedStringConverter}}" FontSize="{StaticResource DefaultFontSize}" VerticalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center" MaxHeight="160" TextTrimming="CharacterEllipsis"/>
+                        </Border>
 
-                        <Grid Width="{StaticResource TableWidth}" Margin="0,270,0,0" HorizontalAlignment="Center" VerticalAlignment="Top">
+                        <Grid Width="{StaticResource TableWidthHeader}" Margin="0,270,0,0" HorizontalAlignment="Center" VerticalAlignment="Top">
                             <Grid.Resources>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="FontSize" Value="{StaticResource MediumFontSize}"/>
@@ -56,28 +61,28 @@
                             </Grid.Resources>
                             <!-- These columns should mirror the ones for the list items to ensure proper alignment -->
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="{StaticResource ColWidthQuantity}"/>
-                                <ColumnDefinition Width="{StaticResource ColWidthIcon}"/>
+                                <ColumnDefinition Width="{StaticResource ColWidthQuantity_header}"/>
+                                <ColumnDefinition Width="{StaticResource ColWidthIcon_header}" />
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="{StaticResource ColWidthStar}"/>
                                 <ColumnDefinition Width="{StaticResource ColWidthCost}"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock x:Name="QuantityTitle" Grid.Column="0" Text="{Binding Source=hd25888c3gd6c9g41bbga437gec871f50555f, Converter={StaticResource TranslatedStringConverter}}" HorizontalAlignment="Center" />
+                            <TextBlock x:Name="QuantityTitle" Grid.Column="0" Text="{Binding Source=hd25888c3gd6c9g41bbga437gec871f50555f, Converter={StaticResource TranslatedStringConverter}}" HorizontalAlignment="Left"/>
                             <TextBlock x:Name="NameTitle" Grid.Column="2" Text="{Binding Source=h28c02084gc184g4b93g8dfbgdfcd1fee3871, Converter={StaticResource TranslatedStringConverter}}"/>
                             <Image Grid.Column="4" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared_c/c_gold.png" Stretch="None" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </Grid>
 
-                        <ItemsControl x:Name="ScrollList" ItemsSource="{Binding Path=(b:Interaction.Behaviors)[0].SortedItems, ElementName=Container}" Height="966" Margin="60,334,0,0" HorizontalAlignment="Center" VerticalAlignment="Top" Visibility="{Binding LearnableScrolls.Count, Converter={StaticResource CountToVisibilityConverter}}">
+                        <ItemsControl x:Name="ScrollList" ItemsSource="{Binding Path=(b:Interaction.Behaviors)[0].SortedItems, ElementName=Container}" Height="966" Margin="60,334,60,0" HorizontalAlignment="left" VerticalAlignment="Top" Visibility="{Binding LearnableScrolls.Count, Converter={StaticResource CountToVisibilityConverter}}">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
-                                    <StackPanel Margin="0,12"/>
+                                    <StackPanel Margin="20,0,0,0"/>
                                 </ItemsPanelTemplate>
                             </ItemsControl.ItemsPanel>
 
                             <ItemsControl.Template>
                                 <ControlTemplate>
-                                    <ScrollViewer VerticalScrollBarVisibility="Visible" HorizontalAlignment="Left" VerticalAlignment="Top">
-                                        <ItemsPresenter Margin="0,0,60,0"/>
+                                    <ScrollViewer VerticalScrollBarVisibility="Visible" HorizontalAlignment="Center" VerticalAlignment="Top">
+                                        <ItemsPresenter Margin="0,0,0,0"/>
                                     </ScrollViewer>
                                 </ControlTemplate>
                             </ItemsControl.Template>
@@ -110,7 +115,7 @@
                                             </Grid>
                                             <TextBlock x:Name="Name" Grid.Column="2" Text="{Binding Name}" VerticalAlignment="Center" FontSize="{StaticResource DefaultFontSize}" Foreground="{StaticResource LS_baseTxtColor}"/>
                                             <Image x:Name="Star" Grid.Column="3" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/SpellBook/transcribe_ico_proficiency.png" Stretch="None" Visibility="{Binding HasDiscount, Converter={StaticResource BoolToVisibleConverter}, ConverterParameter='true'}"/>
-                                            <TextBlock x:Name="Cost" Grid.Column="4" Text="{Binding LearnCost}" VerticalAlignment="Center" FontSize="{StaticResource DefaultFontSize}" />
+                                            <TextBlock x:Name="Cost" Grid.Column="4" Text="{Binding LearnCost}" VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="{StaticResource DefaultFontSize}" />
                                         </Grid>
                                     </ls:LSNineSliceImage>
                                     <DataTemplate.Triggers>
@@ -200,31 +205,17 @@
 
                         <TextBlock x:Name="TranscribeText" FontSize="{StaticResource DefaultFontSize}" Text="{Binding Source=hcd33ba4egd67dg416dgb804g41cff983b560, Converter={StaticResource TranslatedStringConverter}}" Visibility="{Binding LearnableScrolls.Count, Converter={StaticResource CountToVisibilityConverter}}" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,150"/>
 
-                        <Grid HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="-4,0,0,12">
-                            <ls:LSButton x:Name="TranscribeBtn" Style="{StaticResource ControllerButton}" EatInput="False" EatEventInUI="True" DataContext="{Binding CurrentPlayer.UIData.InputEvents, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIAccept'}" Content="" HorizontalAlignment="Center" VerticalAlignment="Center">
-
-                                <b:Interaction.Triggers>
-                                    <b:EventTrigger EventName="LSButtonPressed" SourceName="TranscribeBtn">
-                                        <b:ControlStoryboardAction Storyboard="{StaticResource ControllerButtonHoldAnimation}"/>
-                                    </b:EventTrigger>
-                                    <b:EventTrigger EventName="LSButtonReleased" SourceName="TranscribeBtn">
-                                        <b:ControlStoryboardAction Storyboard="{StaticResource ControllerButtonHoldAnimation}" ControlStoryboardOption="Stop"/>
-                                    </b:EventTrigger>
-                                    <b:EventTrigger EventName="IsEnabledChanged" SourceName="TranscribeBtn">
-                                        <b:ControlStoryboardAction Storyboard="{StaticResource ControllerButtonHoldAnimation}" ControlStoryboardOption="Stop"/>
-                                    </b:EventTrigger>
-                                    <b:StoryboardCompletedTrigger Storyboard="{StaticResource ControllerButtonHoldAnimation}">
-                                        <b:InvokeCommandAction Command="{Binding DataContext.TranscribeScrollsCommand, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" CommandParameter="{Binding Path=FocusedElement.DataContext, ElementName=LearnSpells_c}"/>
-                                    </b:StoryboardCompletedTrigger>
-                                </b:Interaction.Triggers>
-                            </ls:LSButton>
-                            <ls:LSPie x:Name="ButtonHoldVisualizer" Value="0" SweepDirection="Counterclockwise" 
-                                        Visibility="{Binding ElementName=TakeAllBtn, Path=IsPressed, Converter={StaticResource BoolToVisibleConverter}}"
-                                        Width="100" Height="100" HorizontalAlignment="Center" VerticalAlignment="Center">
-                                <Image Source="/GustavNoesisGUI;component/Assets/Shared_c/c_tabSelector.png" Width="100" Height="100" VerticalAlignment="Center" HorizontalAlignment="Center" />
-                            </ls:LSPie>
+                        <ls:LSButton x:Name="TranscribeBtn" 
+                                     HorizontalAlignment="Center" 
+                                     VerticalAlignment="Bottom"
+                                     Margin="0,0,0,29"
+                                     Style="{StaticResource ControllerHoldButtonStyle}" 
+                                     Tag="" 
+                                     DataContext="{Binding DataContext.CurrentPlayer.UIData.InputEvents, ElementName=LearnSpells_c, Converter={StaticResource FindInputEventConverter}, ConverterParameter='UIAccept'}" 
+                                     Command="{Binding DataContext.TranscribeScrollsCommand, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"
+                                     CommandParameter="{Binding Path=FocusedElement.DataContext, ElementName=LearnSpells_c}" 
+                                     SoundID="UI_HUD_CC_VentureForth"/>
                         </Grid>
-                    </Grid>
 
                     <StackPanel Orientation="Horizontal" Margin="0,80,80,0" HorizontalAlignment="Right" VerticalAlignment="Top">
                         <TextBlock x:Name="PartyGold" FontSize="{StaticResource LargeFontSize}" Text="{Binding CurrentPlayer.PartyGold, StringFormat={}{0:N0}}" Margin="10,0,0,0"/>
@@ -232,17 +223,15 @@
                     </StackPanel>
 
                     <!-- Button hints -->
-                    <StackPanel x:Name="LeftHints" Style="{StaticResource ButtonHint.Container.Left}">
+                    <StackPanel x:Name="CenterHints" Style="{StaticResource ButtonHint.Container.Center}">
                         <ls:LSButton x:Name="ToggleTooltips"
                         Command="{Binding DataContext.ToggleTooltipOnUIElement, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"
                         CommandParameter="{Binding FocusedElement, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}"
                         ls:LSButton.BoundEvent="UIShowInfo"
                         ContentTemplate="{StaticResource ControllerButtonHint}"
                         Content="{Binding DataContext.CurrentPlayer.UIData.InputEvents, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}, ConverterParameter=UIShowInfo, Converter={StaticResource FindInputEventConverter}}"
-                        Tag="{Binding Source='h2a8cab0cgbfb8g4890gbfbdg5a9426e29457', Converter={StaticResource TranslatedStringConverter}}"/>
-                    </StackPanel>
+                        Tag="{Binding Source='hf8dd4c2fg97e0g4ccdgac1ag3cd1fe5060ef', Converter={StaticResource TranslatedStringConverter}}"/>
 
-                    <StackPanel x:Name="RightHints" Style="{StaticResource ButtonHint.Container.Right}">
                         <!-- Close the widget -->
                         <ls:LSButton x:Name="CloseWidgetButton"
                             Command="{Binding DataContext.CustomEvent, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" 
@@ -272,6 +261,10 @@
                     <Setter TargetName="TranscribeText" Property="Text" Value="{Binding Source='h183f948agcb5cg4382g8c1ag2bdf894391f0', Converter={StaticResource TranslatedStringConverter}}"/>
                     <Setter TargetName="TranscribeText" Property="Foreground" Value="{StaticResource LS_alertTxtColor}"/>
                 </DataTrigger>
+
+                <DataTrigger Binding="{Binding ShowUIElementTooltip}" Value="True">
+                    <Setter TargetName="ToggleTooltips" Property="Tag" Value="{Binding Source='hb33ec471gd611g4ee3gbbffg699af8f79167', Converter={StaticResource TranslatedStringConverter}}"/>
+                </DataTrigger>
             </ControlTemplate.Triggers>
         </ControlTemplate>
     </ls:UIWidget.Template>
@@ -280,6 +273,9 @@
         <b:EventTrigger EventName="GotKeyboardFocus">
             <b:InvokeCommandAction Command="{Binding ShowTooltipOnUIElement}" CommandParameter="{Binding Path=FocusedElement, ElementName=LearnSpells_c}"/>
         </b:EventTrigger>
+        <b:DataTrigger Binding="{Binding HasInputEnabled, ElementName=LearnSpells_c}" Value="True">
+            <b:InvokeCommandAction Command="{Binding ShowTooltipOnUIElement}" CommandParameter="{Binding FocusedElement, ElementName=LearnSpells_c}"/>
+        </b:DataTrigger>
     </b:Interaction.Triggers>
 </ls:UIWidget>
 

@@ -122,10 +122,8 @@
                     </ls:LSRadialListItem>
                     <ls:LSRadialListItem Tag="TadPoles" IsEnabled="{Binding CurrentPlayer.PartyUnlockedTadpolePowers}">
                         <Grid Visibility="{Binding CurrentPlayer.PartyUnlockedTadpolePowers, Converter={StaticResource BoolToVisibleConverter}}">
-                            <TextBlock x:Name="TadpoleCount" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="160,-60,-60,50" >
-            <Run Text="x"/><Run Text="{Binding PartyTadpoleCount}"/>
-                            </TextBlock>
-                            <Control Template="{StaticResource RadialItemIconTemplate}" HorizontalAlignment="Center" VerticalAlignment="Center" >
+                            <TextBlock x:Name="TadpoleCount" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="160,-60,-60,50" Text="{Binding CurrentPlayer.PartyTadpoleCount, StringFormat={}x{0}}"/>
+                                <Control Template="{StaticResource RadialItemIconTemplate}" HorizontalAlignment="Center" VerticalAlignment="Center" >
                                 <Control.Resources>
                                     <ImageSource x:Key="BaseImage">pack://application:,,,/GustavNoesisGUI;component/Assets/PanelSelect_c/c_ico_illithidPowers_d.png</ImageSource >
                                     <ImageSource x:Key="HLImage">pack://application:,,,/GustavNoesisGUI;component/Assets/PanelSelect_c/c_ico_illithidPowers_h.png</ImageSource>
@@ -199,19 +197,19 @@
                             </Control.Resources>
                         </Control>
                     </ls:LSRadialListItem>
+                    <ls:LSRadialListItem x:Name="WaypointsItem" Tag="Waypoints" IsEnabled="False">
+                        <Control Template="{StaticResource RadialItemIconTemplate}">
+                            <Control.Resources>
+                                <ImageSource x:Key="BaseImage">pack://application:,,,/GustavNoesisGUI;component/Assets/PanelSelect_c/c_ico_quickTravel_d.png</ImageSource>
+                                <ImageSource x:Key="HLImage">pack://application:,,,/GustavNoesisGUI;component/Assets/PanelSelect_c/c_ico_quickTravel_h.png</ImageSource>
+                            </Control.Resources>
+                        </Control>
+                    </ls:LSRadialListItem>
                     <ls:LSRadialListItem Tag="Alchemy">
                         <Control Template="{StaticResource RadialItemIconTemplate}">
                             <Control.Resources>
                                 <ImageSource x:Key="BaseImage">pack://application:,,,/GustavNoesisGUI;component/Assets/PanelSelect_c/c_ico_alchemy_d.png</ImageSource>
                                 <ImageSource x:Key="HLImage">pack://application:,,,/GustavNoesisGUI;component/Assets/PanelSelect_c/c_ico_alchemy_h.png</ImageSource>
-                            </Control.Resources>
-                        </Control>
-                    </ls:LSRadialListItem>
-                    <ls:LSRadialListItem x:Name="LevelUpItem" Tag="LevelUp" IsEnabled="{Binding CurrentPlayer.SelectedCharacter.Stats.Level.LevelUpAvailable}">
-                        <Control Template="{StaticResource RadialItemIconTemplate}">
-                            <Control.Resources>
-                                <ImageSource x:Key="BaseImage">pack://application:,,,/GustavNoesisGUI;component/Assets/PanelSelect_c/c_ico_levelUp_d.png</ImageSource>
-                                <ImageSource x:Key="HLImage">pack://application:,,,/GustavNoesisGUI;component/Assets/PanelSelect_c/c_ico_levelUp_h.png</ImageSource>
                             </Control.Resources>
                         </Control>
                     </ls:LSRadialListItem>
@@ -336,13 +334,6 @@
                                                 </MultiDataTrigger.Conditions>
                                                 <Setter TargetName="SlotBg" Property="Source" Value="{StaticResource RadialSlotActiveBg}"/>
                                             </MultiDataTrigger>
-                                            <MultiDataTrigger>
-                                                <MultiDataTrigger.Conditions>
-                                                    <Condition Binding="{Binding Tag, RelativeSource={RelativeSource Mode=Self}}" Value="LevelUp"/>
-                                                    <Condition Binding="{Binding CurrentPlayer.SelectedCharacter.Stats.Level.LevelUpAvailable}" Value="True"/>
-                                                </MultiDataTrigger.Conditions>
-                                                <Setter TargetName="SlotBg" Property="Source" Value="{StaticResource RadialSlotHighlightBg}"/>
-                                            </MultiDataTrigger>
                                         </ControlTemplate.Triggers>
                                     </ControlTemplate>
                                 </Setter.Value>
@@ -351,10 +342,38 @@
                     </ls:Radial.ItemContainerStyle>
                 </ls:Radial>
 
-                <Control x:Name="Gold" Template="{StaticResource GoldPanel}" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,56,96,0"
-                         DataContext="{Binding CurrentPlayer.SelectedCharacter.Inventory.Gold, Mode=OneWay, StringFormat={}{0:N0}}"/>
+                <Border Width="900" Height="900" x:Name="LevelupPrompt" Visibility="Collapsed" VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <Border.Background>
+                        <RadialGradientBrush>
+                            <GradientStop Offset="0" Color="#99C3962C"/>
+                            <GradientStop Offset="0.3" Color="#99C3962C"/>
+                            <GradientStop Offset="1" Color="#00FFCC00" />
+                        </RadialGradientBrush>
+                    </Border.Background>
+                    <Grid VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
 
-                <StackPanel Orientation="Horizontal"  VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,274,96,0">
+                    <Image Source="pack://application:,,,/GustavNoesisGUI;component/Assets/PanelSelect_c/c_ico_levelUp_d.png" Grid.Row="0" Stretch="Uniform" Height="260" Margin="0 0 0 -20"/>
+
+                    <TextBlock Text="{Binding Source='h19863f5ag397cg4718g91b4g0ab262e3c473', Converter={StaticResource TranslatedStringConverter}}" Grid.Row="1" 
+                               FontSize="{StaticResource ScaledMassiveFontSize}" Foreground="{StaticResource LS_specialTxtColor}"/>
+
+
+                    <ls:LSButton x:Name="LevelupButton" Grid.Row="2" Margin="0,-20,0,20"
+                             BoundEvent="UIAccept" ContentTemplate="{StaticResource ControllerButtonHintImageOnly}" 
+                             Content="{Binding CurrentPlayer.UIData.InputEvents, ConverterParameter=UIAccept, Converter={StaticResource FindInputEventConverter}}" 
+                             Command="{Binding StartLevelUp}" 
+                             CommandParameter="{Binding CurrentPlayer.SelectedCharacter}" />
+                </Grid>
+                </Border>
+
+                <Control x:Name="Gold" Style="{StaticResource PartyGoldStyle}" />
+
+                <StackPanel Orientation="Horizontal"  VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,174,96,0">
                     <TextBlock Text="{Binding Source='hea6d302egf0f6g48a5gb063gd2a165d1beb9', Converter={StaticResource TranslatedStringConverter}}" Foreground="{StaticResource LS_accent100TxtColor}" VerticalAlignment="Center" FontSize="{StaticResource MediumFontSize}" Margin="0,0,0,8"/>
                     <Image x:Name="IP1" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/PanelSelect_c/c_ico_inspirationShortCut_d.png" Width="96"  Margin="20,0,-20,0"/>
                     <Image x:Name="IP2" Source="pack://application:,,,/GustavNoesisGUI;component/Assets/PanelSelect_c/c_ico_inspirationShortCut_d.png" Width="96" Margin="0,0,-20,0"/>
@@ -377,6 +396,12 @@
                 </StackPanel>
 
                 <StackPanel x:Name="SaveLoadErrors" VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="0,0,0,170">
+                    <StackPanel.Tag>
+                        <MultiBinding Converter="{StaticResource EqualConverter}">
+                            <Binding Path="CurrentPlayer.UIData.CanLoadState"/>
+                            <Binding Path="CurrentPlayer.UIData.CanSaveState"/>
+                        </MultiBinding>
+                    </StackPanel.Tag>
                     <TextBlock x:Name="LoadError" Foreground="{StaticResource LS_alertTxtColor}" Visibility="Collapsed"/>
                     <TextBlock x:Name="SaveError" Foreground="{StaticResource LS_alertTxtColor}" Visibility="Collapsed"/>
                 </StackPanel>
@@ -464,6 +489,15 @@
 					<Setter TargetName="CloseMenuBinding" Property="IsEnabled" Value="False"/>
                     <Setter TargetName="MenuButton" Property="IsEnabled" Value="False"/>
                 </DataTrigger>
+                <MultiDataTrigger>
+                    <MultiDataTrigger.Conditions>
+                        <Condition Binding="{Binding SelectedItem, ElementName=MenuRadial}" Value="{x:Null}"/>
+                        <Condition Binding="{Binding CurrentPlayer.SelectedCharacter.Stats.Level.LevelUpAvailable}" Value="True"/>
+                    </MultiDataTrigger.Conditions>
+                    <MultiDataTrigger.Setters>
+                        <Setter TargetName="LevelupPrompt" Property="Visibility" Value="Visible"/>
+                    </MultiDataTrigger.Setters>
+                </MultiDataTrigger>
 
                 <!-- Radial Menu Actions-->
                 <DataTrigger Binding="{Binding SelectedItem.Tag, ElementName=MenuRadial}" Value="CharacterSheet">
@@ -509,17 +543,14 @@
                     <Setter TargetName="ActionTitle" Property="Text" Value="{Binding Source='h61f2ae78g6fdag424dg8317g529da326f53c', Converter={StaticResource TranslatedStringConverter}}"/>
                     <Setter TargetName="Description" Property="Text" Value="{Binding Source='hc490422fg0034g42d3ga147g870388ec0ac0', Converter={StaticResource TranslatedStringConverter}}"/>
                 </DataTrigger>
-                
                 <DataTrigger Binding="{Binding SelectedItem.Tag, ElementName=MenuRadial}" Value="LongRest">
                     <Setter TargetName="MenuButton" Property="Command" Value="{Binding CampTravel}"/>
                     <Setter TargetName="ActionTitle" Property="Text" Value="{Binding Source='h54a9edbag9cf2g4f2egb188g1431d56c3159', Converter={StaticResource TranslatedStringConverter}}"/>
-                    <Setter TargetName="Description" Property="Text" Value="{Binding Source='h2ee09f43g3923g42cag8038g1909fb51ec76', Converter={StaticResource TranslatedStringConverter}}"/>
+                    <Setter TargetName="Description" Property="Text" Value="{Binding Source='h5bab6273g9c24g4194ga177gad32c39eaaa1', Converter={StaticResource TranslatedStringConverter}}"/>
                 </DataTrigger>
-                
                 <DataTrigger Binding="{Binding CurrentPlayer.EndTheDayState}" Value="Disabled">
                     <Setter TargetName="LongRestItem" Property="IsEnabled" Value="False"/>
                 </DataTrigger>
-
                 <DataTrigger Binding="{Binding CurrentPlayer.EndTheDayState}" Value="Unavailable">
                     <Setter TargetName="LongRestItem" Property="IsEnabled" Value="False"/>
                 </DataTrigger>
@@ -540,6 +571,7 @@
                 </DataTrigger>
                 <DataTrigger Binding="{Binding CurrentPlayer.TravelError}" Value="None">
                     <Setter TargetName="CampItem" Property="IsEnabled" Value="True"/>
+                    <Setter TargetName="WaypointsItem" Property="IsEnabled" Value="True"/>
                 </DataTrigger>
 
 
@@ -553,6 +585,14 @@
                         <Setter TargetName="Description" Property="Text" Value="{Binding Source='h865f0babg0e8ag40d8g8105gf3aed981a394', Converter={StaticResource TranslatedStringConverter}}"/>
                     </MultiDataTrigger.Setters>
                 </MultiDataTrigger>
+
+                <DataTrigger Binding="{Binding SelectedItem.Tag, ElementName=MenuRadial}" Value="Waypoints">
+                    <Setter TargetName="MenuButton" Property="Command" Value="{Binding CustomEvent}"/>
+                    <Setter TargetName="MenuButton" Property="CommandParameter" Value="ToggleWaypoints"/>
+                    <Setter TargetName="ActionTitle" Property="Text" Value="{Binding Source='h4dd789bfg24f5g40f6gadccg5a6e39287311', Converter={StaticResource TranslatedStringConverter}}"/>
+                    <Setter TargetName="Description" Property="Text" Value="{Binding Source='h0f1425e9g68fdg4cbag8103g59bc99c00442', Converter={StaticResource TranslatedStringConverter}}"/>
+                </DataTrigger>
+
 
                 <DataTrigger Binding="{Binding Data.LongRest.IsActive}" Value="True">
                     <Setter TargetName="LongRestItem" Property="IsEnabled" Value="False"/>
@@ -570,12 +610,6 @@
                     <Setter TargetName="ActionTitle" Property="Text" Value="{Binding Source='h7c93a57bga2c1g42f2gaf44g494414ff2f56', Converter={StaticResource TranslatedStringConverter}}"/>
                     <Setter TargetName="Description" Property="Text" Value="{Binding Source='h63d91585g542dg452bga15bg81bee7abbe0a', Converter={StaticResource TranslatedStringConverter}}"/>
                 </DataTrigger>
-                <DataTrigger Binding="{Binding SelectedItem.Tag, ElementName=MenuRadial}" Value="LevelUp">
-                    <Setter TargetName="MenuButton" Property="Command" Value="{Binding StartLevelUp}"/>
-                    <Setter TargetName="MenuButton" Property="CommandParameter" Value="{Binding CurrentPlayer.SelectedCharacter}"/>
-                    <Setter TargetName="ActionTitle" Property="Text" Value="{Binding Source='h279c7a26gafe3g440cgb460g878bbfc0bdc0', Converter={StaticResource TranslatedStringConverter}}"/>
-                    <Setter TargetName="Description" Property="Text" Value="{Binding Source='h8766e7aag41a0g43d9g9bf2g213552e07992', Converter={StaticResource TranslatedStringConverter}}"/>
-                </DataTrigger>
                 <DataTrigger Binding="{Binding SelectedItem.Tag, ElementName=MenuRadial}" Value="FTB">
                     <Setter TargetName="MenuButton" Property="Command" Value="{Binding ToggleTurnBasedMode}"/>
                     <Setter TargetName="ActionTitle" Property="Text" Value="{Binding Source='h4be39006g604dg47cbg98c4g6cb5238b645d', Converter={StaticResource TranslatedStringConverter}}"/>
@@ -592,9 +626,8 @@
                 <DataTrigger Binding="{Binding CurrentPlayer.SelectedCharacter.CharacterMode}" Value="InCombat">
                     <Setter TargetName="FTBItem" Property="IsEnabled" Value="False"/>
                     <Setter TargetName="CampItem" Property="IsEnabled" Value="False"/>
-                    <Setter TargetName="ShortRestItem" Property="IsEnabled" Value="False"/>
                     <Setter TargetName="LongRestItem" Property="IsEnabled" Value="False"/>
-                    <Setter TargetName="LevelUpItem" Property="IsEnabled" Value="False"/>
+                    <Setter TargetName="ShortRestItem" Property="IsEnabled" Value="False"/>
                 </DataTrigger>
 
 				<MultiDataTrigger>
@@ -625,22 +658,18 @@
 					</MultiDataTrigger.Conditions>
 					<Setter TargetName="CloseMenuBinding" Property="IsEnabled" Value="False" />
 				</MultiDataTrigger>
-				
-				<MultiDataTrigger>
-					<MultiDataTrigger.Conditions>
-						<Condition Binding="{Binding CurrentPlayer.SelectedCharacter.CharacterMode}" Value="InCombat"/>
-						<Condition Binding="{Binding SelectedItem.Tag, ElementName=MenuRadial}" Value="LevelUp"/>
-					</MultiDataTrigger.Conditions>
-					<Setter TargetName="CloseMenuBinding" Property="IsEnabled" Value="False" />
-				</MultiDataTrigger>
+
+                <MultiDataTrigger>
+                    <MultiDataTrigger.Conditions>
+                        <Condition Binding="{Binding CurrentPlayer.SelectedCharacter.CharacterMode}" Value="InCombat"/>
+                        <Condition Binding="{Binding SelectedItem, ElementName=MenuRadial}" Value="{x:Null}"/>
+                    </MultiDataTrigger.Conditions>
+                    <Setter TargetName="LevelupPrompt" Property="Visibility" Value="Collapsed" />
+                </MultiDataTrigger>
 
                 <!-- Splitscreen -->
                 <DataTrigger Binding="{Binding Layout}" Value="Right">
                     <Setter TargetName="ButtonHintContainer" Property="Style" Value="{StaticResource ButtonHint.Container.Left}"/>
-                    <Setter TargetName="Gold" Property="Margin" Value="0,150,56,0"/>
-                </DataTrigger>
-                <DataTrigger Binding="{Binding Layout}" Value="Left">
-                    <Setter TargetName="Gold" Property="Margin" Value="0,150,56,0"/>
                 </DataTrigger>
 
                 <EventTrigger RoutedEvent="FrameworkElement.Loaded">
@@ -650,7 +679,7 @@
                 <!-- Save button states -->
                 <DataTrigger Binding="{Binding CurrentPlayer.UIData.CanSaveState}" Value="BlockedNoServer">
                     <Setter TargetName="QuickSave" Property="IsEnabled" Value="False"/>
-                    <Setter TargetName="SaveError" Property="Visibility" Value="Visible"/>
+                    <Setter TargetName="SaveError" Property="Visibility" Value="{Binding IsMainPlayer, Converter={StaticResource BoolToVisibleConverter}}"/>
                     <Setter TargetName="SaveError" Property="Text">
                         <Setter.Value>
                             <MultiBinding Converter="{StaticResource ParameterizedTranslatedStringConverter}">
@@ -662,7 +691,7 @@
                 </DataTrigger>
                 <DataTrigger Binding="{Binding CurrentPlayer.UIData.CanSaveState}" Value="BlockedCurrentlySaving">
                     <Setter TargetName="QuickSave" Property="IsEnabled" Value="False"/>
-                    <Setter TargetName="SaveError" Property="Visibility" Value="Visible"/>
+                    <Setter TargetName="SaveError" Property="Visibility" Value="{Binding IsMainPlayer, Converter={StaticResource BoolToVisibleConverter}}"/>
                     <Setter TargetName="SaveError" Property="Text">
                         <Setter.Value>
                             <MultiBinding Converter="{StaticResource ParameterizedTranslatedStringConverter}">
@@ -674,7 +703,7 @@
                 </DataTrigger>
                 <DataTrigger Binding="{Binding CurrentPlayer.UIData.CanSaveState}" Value="BlockedCurrentlyLoading">
                     <Setter TargetName="QuickSave" Property="IsEnabled" Value="False"/>
-                    <Setter TargetName="SaveError" Property="Visibility" Value="Visible"/>
+                    <Setter TargetName="SaveError" Property="Visibility" Value="{Binding IsMainPlayer, Converter={StaticResource BoolToVisibleConverter}}"/>
                     <Setter TargetName="SaveError" Property="Text">
                         <Setter.Value>
                             <MultiBinding Converter="{StaticResource ParameterizedTranslatedStringConverter}">
@@ -686,7 +715,7 @@
                 </DataTrigger>
                 <DataTrigger Binding="{Binding CurrentPlayer.UIData.CanSaveState}" Value="BlockedCurrentlySyncing">
                     <Setter TargetName="QuickSave" Property="IsEnabled" Value="False"/>
-                    <Setter TargetName="SaveError" Property="Visibility" Value="Visible"/>
+                    <Setter TargetName="SaveError" Property="Visibility" Value="{Binding IsMainPlayer, Converter={StaticResource BoolToVisibleConverter}}"/>
                     <Setter TargetName="SaveError" Property="Text">
                         <Setter.Value>
                             <MultiBinding Converter="{StaticResource ParameterizedTranslatedStringConverter}">
@@ -698,7 +727,7 @@
                 </DataTrigger>
                 <DataTrigger Binding="{Binding CurrentPlayer.UIData.CanSaveState}" Value="BlockedInCharacterCreation">
                     <Setter TargetName="QuickSave" Property="IsEnabled" Value="False"/>
-                    <Setter TargetName="SaveError" Property="Visibility" Value="Visible"/>
+                    <Setter TargetName="SaveError" Property="Visibility" Value="{Binding IsMainPlayer, Converter={StaticResource BoolToVisibleConverter}}"/>
                     <Setter TargetName="SaveError" Property="Text">
                         <Setter.Value>
                             <MultiBinding Converter="{StaticResource ParameterizedTranslatedStringConverter}">
@@ -710,7 +739,7 @@
                 </DataTrigger>
                 <DataTrigger Binding="{Binding CurrentPlayer.UIData.CanSaveState}" Value="BlockedInDialog">
                     <Setter TargetName="QuickSave" Property="IsEnabled" Value="False"/>
-                    <Setter TargetName="SaveError" Property="Visibility" Value="Visible"/>
+                    <Setter TargetName="SaveError" Property="Visibility" Value="{Binding IsMainPlayer, Converter={StaticResource BoolToVisibleConverter}}"/>
                     <Setter TargetName="SaveError" Property="Text">
                         <Setter.Value>
                             <MultiBinding Converter="{StaticResource ParameterizedTranslatedStringConverter}">
@@ -722,7 +751,7 @@
                 </DataTrigger>
                 <DataTrigger Binding="{Binding CurrentPlayer.UIData.CanSaveState}" Value="BlockedBySpell">
                     <Setter TargetName="QuickSave" Property="IsEnabled" Value="False"/>
-                    <Setter TargetName="SaveError" Property="Visibility" Value="Visible"/>
+                    <Setter TargetName="SaveError" Property="Visibility" Value="{Binding IsMainPlayer, Converter={StaticResource BoolToVisibleConverter}}"/>
                     <Setter TargetName="SaveError" Property="Text">
                         <Setter.Value>
                             <MultiBinding Converter="{StaticResource ParameterizedTranslatedStringConverter}">
@@ -734,7 +763,7 @@
                 </DataTrigger>
                 <DataTrigger Binding="{Binding CurrentPlayer.UIData.CanSaveState}" Value="BlockedInterruptInProgress">
                     <Setter TargetName="QuickSave" Property="IsEnabled" Value="False"/>
-                    <Setter TargetName="SaveError" Property="Visibility" Value="Visible"/>
+                    <Setter TargetName="SaveError" Property="Visibility" Value="{Binding IsMainPlayer, Converter={StaticResource BoolToVisibleConverter}}"/>
                     <Setter TargetName="SaveError" Property="Text">
                         <Setter.Value>
                             <MultiBinding Converter="{StaticResource ParameterizedTranslatedStringConverter}">
@@ -746,7 +775,7 @@
                 </DataTrigger>
                 <DataTrigger Binding="{Binding CurrentPlayer.UIData.CanSaveState}" Value="BlockedOutOfSpace">
                     <Setter TargetName="QuickSave" Property="IsEnabled" Value="False"/>
-                    <Setter TargetName="SaveError" Property="Visibility" Value="Visible"/>
+                    <Setter TargetName="SaveError" Property="Visibility" Value="{Binding IsMainPlayer, Converter={StaticResource BoolToVisibleConverter}}"/>
                     <Setter TargetName="SaveError" Property="Text">
                         <Setter.Value>
                             <MultiBinding Converter="{StaticResource ParameterizedTranslatedStringConverter}">
@@ -763,7 +792,7 @@
                 <!-- Load button states -->
                 <DataTrigger Binding="{Binding CurrentPlayer.UIData.CanLoadState}" Value="BlockedNoServer">
                     <Setter TargetName="QuickLoad" Property="IsEnabled" Value="False"/>
-                    <Setter TargetName="LoadError" Property="Visibility" Value="Visible"/>
+                    <Setter TargetName="LoadError" Property="Visibility" Value="{Binding IsMainPlayer, Converter={StaticResource BoolToVisibleConverter}}"/>
                     <Setter TargetName="LoadError" Property="Text">
                         <Setter.Value>
                             <MultiBinding Converter="{StaticResource ParameterizedTranslatedStringConverter}">
@@ -775,7 +804,7 @@
                 </DataTrigger>
                 <DataTrigger Binding="{Binding CurrentPlayer.UIData.CanLoadState}" Value="BlockedCurrentlySaving">
                     <Setter TargetName="QuickLoad" Property="IsEnabled" Value="False"/>
-                    <Setter TargetName="LoadError" Property="Visibility" Value="Visible"/>
+                    <Setter TargetName="LoadError" Property="Visibility" Value="{Binding IsMainPlayer, Converter={StaticResource BoolToVisibleConverter}}"/>
                     <Setter TargetName="LoadError" Property="Text">
                         <Setter.Value>
                             <MultiBinding Converter="{StaticResource ParameterizedTranslatedStringConverter}">
@@ -787,7 +816,7 @@
                 </DataTrigger>
                 <DataTrigger Binding="{Binding CurrentPlayer.UIData.CanLoadState}" Value="BlockedCurrentlyLoading">
                     <Setter TargetName="QuickLoad" Property="IsEnabled" Value="False"/>
-                    <Setter TargetName="LoadError" Property="Visibility" Value="Visible"/>
+                    <Setter TargetName="LoadError" Property="Visibility" Value="{Binding IsMainPlayer, Converter={StaticResource BoolToVisibleConverter}}"/>
                     <Setter TargetName="LoadError" Property="Text">
                         <Setter.Value>
                             <MultiBinding Converter="{StaticResource ParameterizedTranslatedStringConverter}">
@@ -799,7 +828,7 @@
                 </DataTrigger>
                 <DataTrigger Binding="{Binding CurrentPlayer.UIData.CanLoadState}" Value="BlockedCurrentlySyncing">
                     <Setter TargetName="QuickLoad" Property="IsEnabled" Value="False"/>
-                    <Setter TargetName="LoadError" Property="Visibility" Value="Visible"/>
+                    <Setter TargetName="LoadError" Property="Visibility" Value="{Binding IsMainPlayer, Converter={StaticResource BoolToVisibleConverter}}"/>
                     <Setter TargetName="LoadError" Property="Text">
                         <Setter.Value>
                             <MultiBinding Converter="{StaticResource ParameterizedTranslatedStringConverter}">
@@ -811,7 +840,7 @@
                 </DataTrigger>
                 <DataTrigger Binding="{Binding CurrentPlayer.UIData.CanLoadState}" Value="BlockedInDialog">
                     <Setter TargetName="QuickLoad" Property="IsEnabled" Value="False"/>
-                    <Setter TargetName="LoadError" Property="Visibility" Value="Visible"/>
+                    <Setter TargetName="LoadError" Property="Visibility" Value="{Binding IsMainPlayer, Converter={StaticResource BoolToVisibleConverter}}"/>
                     <Setter TargetName="LoadError" Property="Text">
                         <Setter.Value>
                             <MultiBinding Converter="{StaticResource ParameterizedTranslatedStringConverter}">
@@ -825,6 +854,90 @@
                     <Setter TargetName="QuickLoad" Property="IsEnabled" Value="False"/>
                 </DataTrigger>
 
+                <!-- Save and Load texts when they are the same -->
+                <MultiDataTrigger>
+                    <MultiDataTrigger.Conditions>
+                        <Condition Binding="{Binding Tag, ElementName=SaveLoadErrors}"  Value="True"/>
+                        <Condition Binding="{Binding CurrentPlayer.UIData.CanLoadState}" Value="BlockedNoServer"/>
+                    </MultiDataTrigger.Conditions>
+                    <Setter TargetName="SaveError" Property="Visibility" Value="Collapsed"/>
+                    <Setter TargetName="LoadError" Property="Text">
+                        <Setter.Value>
+                            <MultiBinding Converter="{StaticResource ParameterizedTranslatedStringConverter}">
+                                <Binding Source="hf0b9e10dgc790g4ff4g8304g4b33b979a487"/>
+                                <Binding Source="h5861653eg72aeg460dgae25g0db44d7bbca8" Converter="{StaticResource TranslatedStringConverter}"/>
+                            </MultiBinding>
+                        </Setter.Value>
+                    </Setter>
+                </MultiDataTrigger>
+                <MultiDataTrigger>
+                    <MultiDataTrigger.Conditions>
+                        <Condition Binding="{Binding Tag, ElementName=SaveLoadErrors}"  Value="True"/>
+                        <Condition Binding="{Binding CurrentPlayer.UIData.CanLoadState}" Value="BlockedCurrentlySaving"/>
+                    </MultiDataTrigger.Conditions>
+                    <Setter TargetName="SaveError" Property="Visibility" Value="Collapsed"/>
+                    <Setter TargetName="LoadError" Property="Text">
+                        <Setter.Value>
+                            <MultiBinding Converter="{StaticResource ParameterizedTranslatedStringConverter}">
+                                <Binding Source="hf0b9e10dgc790g4ff4g8304g4b33b979a487"/>
+                                <Binding Source="h185b5d6ag4f03g43c9g9b8eg059cffa98e29" Converter="{StaticResource TranslatedStringConverter}"/>
+                            </MultiBinding>
+                        </Setter.Value>
+                    </Setter>
+                </MultiDataTrigger>
+                <MultiDataTrigger>
+                    <MultiDataTrigger.Conditions>
+                        <Condition Binding="{Binding Tag, ElementName=SaveLoadErrors}"  Value="True"/>
+                        <Condition Binding="{Binding CurrentPlayer.UIData.CanLoadState}" Value="BlockedCurrentlyLoading"/>
+                    </MultiDataTrigger.Conditions>
+                    <Setter TargetName="SaveError" Property="Visibility" Value="Collapsed"/>
+                    <Setter TargetName="LoadError" Property="Text">
+                        <Setter.Value>
+                            <MultiBinding Converter="{StaticResource ParameterizedTranslatedStringConverter}">
+                                <Binding Source="hf0b9e10dgc790g4ff4g8304g4b33b979a487"/>
+                                <Binding Source="h13c1f09egc317g442egbde4g960247a366ce" Converter="{StaticResource TranslatedStringConverter}"/>
+                            </MultiBinding>
+                        </Setter.Value>
+                    </Setter>
+                </MultiDataTrigger>
+                <MultiDataTrigger>
+                    <MultiDataTrigger.Conditions>
+                        <Condition Binding="{Binding Tag, ElementName=SaveLoadErrors}"  Value="True"/>
+                        <Condition Binding="{Binding CurrentPlayer.UIData.CanLoadState}" Value="BlockedCurrentlySyncing"/>
+                    </MultiDataTrigger.Conditions>
+                    <Setter TargetName="SaveError" Property="Visibility" Value="Collapsed"/>
+                    <Setter TargetName="LoadError" Property="Text">
+                        <Setter.Value>
+                            <MultiBinding Converter="{StaticResource ParameterizedTranslatedStringConverter}">
+                                <Binding Source="hf0b9e10dgc790g4ff4g8304g4b33b979a487"/>
+                                <Binding Source="h4545105dge9a1g4ac7ga1bbgd5434f4ef1d1" Converter="{StaticResource TranslatedStringConverter}"/>
+                            </MultiBinding>
+                        </Setter.Value>
+                    </Setter>
+                </MultiDataTrigger>
+                <MultiDataTrigger>
+                    <MultiDataTrigger.Conditions>
+                        <Condition Binding="{Binding Tag, ElementName=SaveLoadErrors}"  Value="True"/>
+                        <Condition Binding="{Binding CurrentPlayer.UIData.CanLoadState}" Value="BlockedInDialog"/>
+                    </MultiDataTrigger.Conditions>
+                    <Setter TargetName="SaveError" Property="Visibility" Value="Collapsed"/>
+                    <Setter TargetName="LoadError" Property="Text">
+                        <Setter.Value>
+                            <MultiBinding Converter="{StaticResource ParameterizedTranslatedStringConverter}">
+                                <Binding Source="hf0b9e10dgc790g4ff4g8304g4b33b979a487"/>
+                                <Binding Source="h304a028dg335cg4703g95a5g4f8d38d53ac3" Converter="{StaticResource TranslatedStringConverter}"/>
+                            </MultiBinding>
+                        </Setter.Value>
+                    </Setter>
+                </MultiDataTrigger>
+
+                <!--Hide if client in MP-->
+                <DataTrigger Binding="{Binding IsHost}" Value="False">
+                    <Setter TargetName="LoadError" Property="Visibility" Value="Collapsed"/>
+                    <Setter TargetName="SaveError" Property="Visibility" Value="Collapsed"/>
+                    <Setter TargetName="QuickSave" Property="Visibility" Value="Collapsed"/>
+                    <Setter TargetName="QuickLoad" Property="Visibility" Value="Collapsed"/>
+                </DataTrigger>
             </ControlTemplate.Triggers>
         </ControlTemplate>
     </ls:UIWidget.Template>

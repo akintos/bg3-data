@@ -315,6 +315,9 @@
     <!-- General -->
     <ControlTemplate x:Key="NameAndDescriptionTemplate">
         <StackPanel>
+            <b:Interaction.Behaviors>
+                <ls:ConcatenateListBehavior x:Name="ClassList" ItemsSource="{Binding Stats.ClassList}" Separator="h2519408dg5fd7g4cbcg840cg14370239edf8"/>
+            </b:Interaction.Behaviors>
             <TextBlock Text="{Binding Name}" Foreground="{StaticResource LS_PrimaryColor}" HorizontalAlignment="Center"/>
 
             <TextBlock Foreground="{StaticResource LS_ActivePanelFontColor}" Margin="8,0,0,0" HorizontalAlignment="Center">
@@ -322,7 +325,7 @@
                     <MultiBinding Converter="{StaticResource ParameterizedTranslatedStringConverter}">
                         <Binding Source="h5df00b79ga6acg4d9fgb8dag23340151fba7"/>
                         <Binding Path="DataContext.Stats.Level.Value" RelativeSource="{RelativeSource Mode=Self}"/>
-                        <Binding Path="DataContext.Stats.ClassList" RelativeSource="{RelativeSource Mode=Self}" Converter="{StaticResource ListConcatenationConverter}" ConverterParameter="h2519408dg5fd7g4cbcg840cg14370239edf8"/>
+                        <Binding Path="Result" ElementName="ClassList"/>
                     </MultiBinding>
                 </TextBlock.Text>
             </TextBlock>
@@ -521,11 +524,11 @@
                                                             <TextBlock  Text="{Binding Source='h4353cf8eg6bb3g46f5g92eage382a75f4338', Converter={StaticResource TranslatedStringConverter}}" Style="{StaticResource TooltipBaseTextStyle}"/>
                                                         </ls:LSTooltip>
                                                     </StackPanel.ToolTip>
-                                                    <TextBlock x:Name="State" Text="{Binding Source=h0b717014gd250g44ccg9653g68b111f2fefb,Converter={StaticResource TranslatedStringConverter}}" Foreground="{StaticResource LS_baseTxtColor}" VerticalAlignment="Center"/>
+                                                    <TextBlock x:Name="State" Text="{Binding Source=h0b717014gd250g44ccg9653g68b111f2fefb,Converter={StaticResource TranslatedStringConverter}}" Foreground="{StaticResource LS_baseTxtColor}" FontSize="{StaticResource ScaledMediumFontSize}" VerticalAlignment="Center"/>
                                                     <Image Source="{StaticResource QuestionMarkIcon}" Stretch="Uniform" Margin="4,0,0,0" Height="36"/>
                                                     <Grid VerticalAlignment="Center">
                                                         <Image x:Name="bg" Source="{StaticResource ReactionCheckBoxBGImg}" Stretch="None"/>
-                                                        <Image x:Name="CheckImg" Source="{StaticResource ReactionCheckImg}" Stretch="None" Visibility="Hidden" Margin="0,0,0,6"/>
+                                                        <Image x:Name="CheckImg" Source="{StaticResource ReactionCheckImg}" Stretch="None" Visibility="Hidden" Margin="0,0,0,4"/>
                                                     </Grid>
                                                 </StackPanel>
                                                 <ControlTemplate.Triggers>
@@ -1980,7 +1983,7 @@
                             <ContentControl x:Name="SpellDCContainer" Grid.Column="4" Grid.Row="0" Style="{StaticResource CastInfoControlStyle}"
                                                             Visibility="{Binding Text, ElementName=SpellDC, Converter={StaticResource NullToCollapsedConverter}, ConverterParameter='EmptyString'}">
                                 <ContentControl.ToolTip>
-                                    <ls:LSTooltip Content="{Binding Path=(ls:TooltipExtender.Owner).Stats.SpellDifficultyCheck, RelativeSource={RelativeSource Mode=Self}}"/>
+                                    <ls:LSTooltip Content="{Binding Path=SelectedItem.Class.SpellDifficultyCheck, ElementName=Tabs}"/>
                                 </ContentControl.ToolTip>
                                 <StackPanel Orientation="Horizontal">
                                     <Image x:Name="SpellDCIcon" 
@@ -2161,7 +2164,7 @@
                                                 </ls:LSButton.Template>
                                                 <ls:LSButton.CommandParameter>
                                                     <MultiBinding Converter="{StaticResource PassThroughConverter}">
-                                                        <Binding Path="DataContext.CurrentPlayer.SelectedCharacter" RelativeSource="{RelativeSource AncestorType={x:Type ls:UIWidget}}"/>
+                                                        <Binding Path="DataContext" ElementName="ClassPanelRoot"/>
                                                         <Binding ElementName="ClassPanelRoot"/>
                                                         <Binding Path="ActualWidth" ElementName="ClassPanelRoot" Converter="{StaticResource MultiplierConverter}" ConverterParameter="0.8"/>
                                                     </MultiBinding>
@@ -2611,14 +2614,10 @@
                 <Setter TargetName="ClassActionsList" Property="ls:AttachedProperties.InheritedTag" Value="HideResources"/>
             </MultiDataTrigger>
 
-            <MultiDataTrigger>
-                <MultiDataTrigger.Conditions>
-                    <Condition Binding="{Binding SelectedItem.Class, ElementName=Tabs, Converter={StaticResource NullToBoolTrueConverter}}" Value="False"/>
-                    <Condition Binding="{Binding SelectedItem.Class.CanLearnSpells, ElementName=Tabs}" Value="True"/>
-                </MultiDataTrigger.Conditions>
+            <DataTrigger Binding="{Binding SelectedItem.Class.CanLearnSpells, ElementName=Tabs}" Value="True">
                 <Setter TargetName="LearnSpellsButton" Property="Visibility" Value="Visible"/>
                 <Setter TargetName="SpellsTitle" Property="Visibility" Value="Visible"/>
-            </MultiDataTrigger>
+            </DataTrigger>
 
             <DataTrigger Binding="{Binding SelectedItem.Class.MustPrepareSpells, ElementName=Tabs, FallbackValue=False}" Value="False">
                 <Setter TargetName="KnownSpellSection" Property="Visibility" Value="Collapsed"/>
@@ -4316,10 +4315,13 @@ Source="{StaticResource SavingThrowDice}" Opacity="1" Margin="0,52,0,0">
                         </DockPanel>
                     </ContentControl>
 
-                    <ContentControl Template="{StaticResource DetailedEntry}" Visibility="{Binding IsPlayableCharacter, Converter={StaticResource BoolToVisibleConverter}}">
+                    <ContentControl x:Name="darkVisionStat" Template="{StaticResource DetailedEntry}" Visibility="{Binding DataContext.IsPlayableCharacter, ElementName=DetailedPanelContent, Converter={StaticResource BoolToVisibleConverter}}" DataContext="{Binding Stats.DarkVisionRange}">
+                        <ContentControl.ToolTip>
+                            <ls:LSTooltip Content="{Binding ElementName=darkVisionStat,Path=DataContext}"/>
+                        </ContentControl.ToolTip>
                         <DockPanel>
-                            <Control x:Name="DarkVisionRangeName" Template="{StaticResource StatsDisplayName}" DataContext="{Binding Stats.DarkVisionRange}" Style="{StaticResource StatsNameStyle}"/>
-                            <TextBlock Text="{Binding Stats.DarkVisionRange.Value, Converter={StaticResource UnitConverter}, ConverterParameter='Distance Short'}" Style="{StaticResource SkillTitleTextStyle}"/>
+                            <Control x:Name="DarkVisionRangeName" Template="{StaticResource StatsDisplayName}" Style="{StaticResource StatsNameStyle}"/>
+                            <TextBlock Text="{Binding Value, Converter={StaticResource UnitConverter}, ConverterParameter='Distance Short'}" Style="{StaticResource SkillTitleTextStyle}"/>
                         </DockPanel>
                     </ContentControl>
 
@@ -4331,6 +4333,9 @@ Source="{StaticResource SavingThrowDice}" Opacity="1" Margin="0,52,0,0">
                     </ContentControl>
 
                     <ContentControl Template="{StaticResource DetailedEntry}">
+                        <ContentControl.ToolTip>
+                            <ls:LSTooltip Content="{Binding Source='h219ed287gbc86g4f87g93a6gb930860114e6',Converter={StaticResource TranslatedStringConverter}}"/>
+                        </ContentControl.ToolTip>
                         <DockPanel>
                             <TextBlock Text="{Binding Source='hfc7ce51bga5d6g4711g8e19g3fcebf236de0', Converter={StaticResource TranslatedStringConverter}}" Style="{StaticResource SkillTextStyle}"/>
                             <Control Template="{StaticResource ObjectSizeTextTemplate}">
@@ -4397,9 +4402,10 @@ Source="{StaticResource SavingThrowDice}" Opacity="1" Margin="0,52,0,0">
                         </ContentControl>
 
                         <ContentControl Template="{StaticResource DetailedEntry}">
-                            <StackPanel>
-                                <TextBlock Style="{StaticResource DetailedListText}" Text="{Binding Tags, Converter={StaticResource ListConcatenationConverter}, ConverterParameter='h2519408dg5fd7g4cbcg840cg14370239edf8'}" TextWrapping="Wrap" HorizontalAlignment="Center" TextAlignment="Center"/>
-                            </StackPanel>
+                            <b:Interaction.Behaviors>
+                                <ls:ConcatenateListBehavior x:Name="TagList" ItemsSource="{Binding Tags}" Separator="h2519408dg5fd7g4cbcg840cg14370239edf8"/>
+                            </b:Interaction.Behaviors>
+                            <TextBlock Style="{StaticResource DetailedListText}" Text="{Binding Result, ElementName=TagList}" TextWrapping="Wrap" HorizontalAlignment="Center" TextAlignment="Center"/>
                         </ContentControl>
                     </StackPanel>
 
@@ -5592,7 +5598,7 @@ Source="{StaticResource SavingThrowDice}" Opacity="1" Margin="0,52,0,0">
                         <Grid x:Name="CraftingExtract" Visibility="Collapsed">
                             <TextBlock x:Name="ExtractResultTut" Text="{Binding Source='h45fd5913g762cg44fbg8498g37522dcff3c3', Converter={StaticResource TranslatedStringConverter}}" FontSize="{StaticResource ScaledMediumFontSize}" Foreground="{StaticResource LS_accent25TxtColor}" Width="800" TextAlignment="Center" TextWrapping="Wrap"/>
 
-                            <TextBlock x:Name="ExtractResultName" Text="{Binding SelectedRecipe.BaseExtract.Item.Name}" FontSize="{StaticResource ScaledLargeFontSize}" Foreground="{StaticResource LS_accent100TxtColor}" Width="800" Margin="0,140,0,0" TextAlignment="Center"/>
+                            <TextBlock x:Name="ExtractResultName" Text="{Binding SelectedRecipe.BaseExtract.Item.Name}" FontSize="{StaticResource ScaledLargeFontSize}" Foreground="{StaticResource LS_accent100TxtColor}" Width="1000" Margin="0,140,0,0" TextAlignment="Center"/>
 
                             <TextBlock x:Name="ExtractResultCount" FontSize="{StaticResource ScaledMediumFontSize}" Foreground="{StaticResource LS_baseTxtColor}" Margin="0,190,0,0" TextAlignment="Center">
                                 <TextBlock.Text>
@@ -5645,21 +5651,22 @@ Source="{StaticResource SavingThrowDice}" Opacity="1" Margin="0,52,0,0">
                     </Grid>
                 </Grid>
 
-                <Grid Margin="0,32,0,0">
+                <Grid>
                     <!-- Errors -->
                     <TextBlock x:Name="ExtractCraftingError" 
                                    Style="{StaticResource AlchemyWrappingText}" 
                                    Foreground="{StaticResource LS_alertTxtColor}" 
                                    FontSize="{StaticResource ScaledLargeFontSize}" 
-                                   Visibility="Hidden" MaxWidth="800" Margin="0,16,0,0"/>
+                                   Visibility="Collapsed" MaxWidth="800" Margin="0,16,0,0"
+                               VerticalAlignment="Center"/>
                     <TextBlock x:Name="ExtractCraftingTutorial" Text="{Binding Source='h869eeab2g5859g4defg8eb7ge77cc11eaa1a',Converter={StaticResource TranslatedStringConverter}}" 
                                    Style="{StaticResource AlchemyWrappingText}" 
                                    Foreground="{StaticResource LS_accent100TxtColor}" 
                                    FontSize="{StaticResource ScaledDefaultFontSize}" 
-                                   Visibility="Hidden" MaxWidth="800" Margin="0,16,0,0"/>
+                                   Visibility="Collapsed" MaxWidth="800" Margin="0,16,0,0"/>
 
                     <!-- Amount Input -->
-                    <StackPanel x:Name="AmountInput" Visibility="Hidden">
+                    <StackPanel x:Name="AmountInput" Visibility="Hidden" Height="120">
 
                         <TextBlock x:Name="AmountInputTitle" Text="{Binding Source='h7a90a95cgf7b0g4b53g93efg2837c4dc267a', Converter={StaticResource TranslatedStringConverter}}" Foreground="{StaticResource LS_extraspecialTxtColor}" HorizontalAlignment="Center"/>
 
@@ -5744,7 +5751,9 @@ Source="{StaticResource SavingThrowDice}" Opacity="1" Margin="0,52,0,0">
                                  Command="{Binding CraftItems}"
                                  CommandParameter="All"
                                  Visibility="Collapsed"
-                                 Margin="0,4,0,0">
+                                 Margin="12,4,12,0"
+                                 Padding="40,0"
+                                 >
                     <ls:LSButton.Content>
                         <MultiBinding Converter="{StaticResource ParameterizedTranslatedStringConverter}">
                             <Binding Source="hf645785cg182fg40d2g9ed9g3f42fca2053c"/>
@@ -5767,7 +5776,7 @@ Source="{StaticResource SavingThrowDice}" Opacity="1" Margin="0,52,0,0">
                 <!-- Craft message -->
                 <TextBlock x:Name="ExtractCraftingMessage" 
                                Style="{StaticResource AlchemyWrappingText}"
-                               Foreground="{StaticResource LS_accent100TxtColor}" Width="800" Opacity="0" Margin="0,20,0,0">
+                               Foreground="{StaticResource LS_accent100TxtColor}" Width="1000" Opacity="0" Margin="0,20,0,0" FontSize="{StaticResource ScaledSmallishFontSize}">
                     <TextBlock.Text>
                         <MultiBinding Converter="{StaticResource ParameterizedTranslatedStringConverter}">
                             <Binding Source="h1b698442ga1f1g4ecagba7ag82b58143139a"/>
@@ -5784,7 +5793,7 @@ Source="{StaticResource SavingThrowDice}" Opacity="1" Margin="0,52,0,0">
                                      HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Column="0" Margin="44,88,0,0"
                                      Visibility="{Binding IsChecked, ElementName=SortToggleButton, Converter={StaticResource BoolToVisibleConverter}}">
                 <StackPanel>
-                    <TextBlock Text="{Binding Source='h9414328dgbabeg4602g82c1g4c947c1c8e34',Converter={StaticResource TranslatedStringConverter}}" Foreground="{StaticResource LS_accent25TxtColor}" FontSize="{StaticResource ScaledSmallishFontSize}" Margin="40,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                    <TextBlock Text="{Binding Source='h9414328dgbabeg4602g82c1g4c947c1c8e34',Converter={StaticResource TranslatedStringConverter}}" Foreground="{StaticResource LS_accent25TxtColor}" FontSize="{StaticResource ScaledSmallFontSize}" Margin="40,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
 
                     <ls:LSButton x:Name="SortNameButton" Template="{StaticResource SortButtonTemplate}"
                                      Tag="{Binding Source='h86ac5591g3822g45f1ga6d1gd39367a8481d',Converter={StaticResource TranslatedStringConverter}}"
@@ -5880,7 +5889,6 @@ Source="{StaticResource SavingThrowDice}" Opacity="1" Margin="0,52,0,0">
             <MultiDataTrigger>
                 <MultiDataTrigger.Conditions>
                     <Condition Binding="{Binding IsCreatingItems}" Value="False"/>
-                    <Condition Binding="{Binding SelectedRecipe, Converter={StaticResource NullToBoolFalseConverter}}" Value="True"/>
                     <Condition Binding="{Binding SelectedRecipe.Result.Item.Count}" Value="0"/>
                 </MultiDataTrigger.Conditions>
                 <Setter TargetName="ExtractCraftingButton" Property="IsEnabled" Value="False"/>
@@ -5892,13 +5900,9 @@ Source="{StaticResource SavingThrowDice}" Opacity="1" Margin="0,52,0,0">
                 <Setter TargetName="AmountInputBg" Property="Source" Value="{StaticResource AmountInputBg_h}"/>
             </DataTrigger>
 
-            <MultiDataTrigger>
-                <MultiDataTrigger.Conditions>
-                    <Condition Binding="{Binding SelectedRecipe, Converter={StaticResource NullToBoolFalseConverter}}" Value="True"/>
-                    <Condition Binding="{Binding SelectedRecipe.IsSolutionRecipe}" Value="True"/>
-                </MultiDataTrigger.Conditions>
+            <DataTrigger Binding="{Binding SelectedRecipe.IsSolutionRecipe}" Value="True">
                 <Setter TargetName="ExtractCrafting" Property="Margin" Value="0,-81,0,0"/>
-            </MultiDataTrigger>
+            </DataTrigger>
 
             <!-- If there's no real selected extra extract, set the tooltip to use the VMTooltipItemSectionDetail instead -->
             <DataTrigger Value="True">
@@ -5957,11 +5961,7 @@ Source="{StaticResource SavingThrowDice}" Opacity="1" Margin="0,52,0,0">
             </DataTrigger>
 
             <!-- EXTRACT CRAFTING -->
-            <MultiDataTrigger>
-                <MultiDataTrigger.Conditions>
-                    <Condition Binding="{Binding SelectedRecipe, Converter={StaticResource NullToBoolFalseConverter}}" Value="True"/>
-                    <Condition Binding="{Binding SelectedRecipe.IsSolutionRecipe}" Value="False"/>
-                </MultiDataTrigger.Conditions>
+            <DataTrigger Binding="{Binding SelectedRecipe.IsSolutionRecipe}" Value="False">
                 <Setter TargetName="CraftingTitle" Property="Visibility" Value="Collapsed"/>
                 <Setter TargetName="CraftingSolution" Property="Visibility" Value="Collapsed"/>
                 <Setter TargetName="CraftingExtract" Property="Visibility" Value="Visible"/>
@@ -5981,11 +5981,10 @@ Source="{StaticResource SavingThrowDice}" Opacity="1" Margin="0,52,0,0">
                 <Setter TargetName="AlchemyBg" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Alchemy/extract_flowLines_inactive.png"/>
                 <Setter TargetName="AlchemyBg" Property="VerticalAlignment" Value="Center"/>
                 <Setter TargetName="AlchemyBg" Property="Margin" Value="0,82,0,-82"/>
-            </MultiDataTrigger>
+            </DataTrigger>
 
             <MultiDataTrigger>
                 <MultiDataTrigger.Conditions>
-                    <Condition Binding="{Binding SelectedRecipe, Converter={StaticResource NullToBoolFalseConverter}}" Value="True"/>
                     <Condition Binding="{Binding SelectedRecipe.IsSolutionRecipe}" Value="False"/>
                     <Condition Binding="{Binding SelectedRecipe.CanBeCrafted}" Value="True"/>
                 </MultiDataTrigger.Conditions>
@@ -6087,7 +6086,7 @@ Source="{StaticResource SavingThrowDice}" Opacity="1" Margin="0,52,0,0">
 
 
                             <ContentPresenter IsHitTestVisible="False"/>
-                            <TextBlock x:Name="EquipmentLetter" Text="{Binding Source='h9079b9dcgb3b5g4f5cg9ca0gccadfa842d28',Converter={StaticResource TranslatedStringConverter}}" Style="{StaticResource EquippedTextStyle}" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="4,0,0,-4"/>
+                            <Control x:Name="EquipmentIcon" Template="{StaticResource EquippedItemIconIndicator}" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="4,0,0,4"/>
                             <Control Style="{StaticResource NewInventoryCellItemStyle}" />
                             <Image x:Name="SelectedImg" Source="{StaticResource InvSlot_Selector}" Visibility="Hidden" Stretch="Fill" IsHitTestVisible="False"/>
                             <Rectangle Fill="{StaticResource LS_DisabledPanelColor}" Visibility="{Binding Tag, ElementName=CharacterPanelHolder, Converter={StaticResource BoolToCollapsedConverter}}"/>
@@ -6103,12 +6102,6 @@ Source="{StaticResource SavingThrowDice}" Opacity="1" Margin="0,52,0,0">
                             <Setter TargetName="SelectedImg" Property="Visibility" Value="Visible"/>
                             <Setter TargetName="SelectedImg" Property="Opacity" Value="1"/>
                         </Trigger>
-                        <DataTrigger Binding="{Binding Object.Equipped}" Value="NotEquipped">
-                            <Setter TargetName="EquipmentLetter" Property="Visibility" Value="Collapsed"/>
-                        </DataTrigger>
-                        <DataTrigger Binding="{Binding Object, Converter={StaticResource TypeConverter}}" Value="ls.Character">
-                            <Setter TargetName="EquipmentLetter" Property="Visibility" Value="Collapsed"/>
-                        </DataTrigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
 
@@ -6960,7 +6953,7 @@ Source="{StaticResource SavingThrowDice}" Opacity="1" Margin="0,52,0,0">
                                                 <ls:LSTooltip Content="{Binding Path=DataContext.Object, RelativeSource={RelativeSource Mode=TemplatedParent}}" ls:TooltipExtender.Owner="{Binding Tag.CurrentPlayer.SelectedCharacter, ElementName=invCellBase}"/>
                                             </ls:LSEntityObject.ToolTip>
                                             <ContentPresenter IsHitTestVisible="False"/>
-                                            <TextBlock x:Name="EquipmentLetter" Text="{Binding Source='h9079b9dcgb3b5g4f5cg9ca0gccadfa842d28',Converter={StaticResource TranslatedStringConverter}}" Style="{StaticResource EquippedTextStyle}" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="4,0,0,-4"/>
+                                            <Control x:Name="EquipmentIcon" Template="{StaticResource EquippedItemIconIndicator}" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="4,0,0,4"/>
                                             <Control Style="{StaticResource NewInventoryCellItemStyle}" />
                                             <Image x:Name="SelectedImg" Source="{StaticResource InvSlot_Selector}" Visibility="Hidden" Stretch="Fill" IsHitTestVisible="False"/>
                                             <Rectangle x:Name="LockForeground" Fill="{StaticResource LS_DisabledPanelColor}" Visibility="Collapsed"/>
@@ -6974,11 +6967,8 @@ Source="{StaticResource SavingThrowDice}" Opacity="1" Margin="0,52,0,0">
                                                 <Setter TargetName="SelectedImg" Property="Visibility" Value="Visible"/>
                                                 <Setter TargetName="SelectedImg" Property="Opacity" Value="1"/>
                                             </Trigger>
-                                            <DataTrigger Binding="{Binding Object.Equipped}" Value="NotEquipped">
-                                                <Setter TargetName="EquipmentLetter" Property="Visibility" Value="Collapsed"/>
-                                            </DataTrigger>
                                             <DataTrigger Binding="{Binding Object, Converter={StaticResource TypeConverter}}" Value="ls.Character">
-                                                <Setter TargetName="EquipmentLetter" Property="Visibility" Value="Collapsed"/>
+                                                <Setter TargetName="EquipmentIcon" Property="Visibility" Value="Collapsed"/>
                                             </DataTrigger>
                                             <DataTrigger Binding="{Binding Tag, ElementName=CharacterPanelHolder}" Value="False">
                                                 <Setter TargetName="LockForeground" Property="Visibility" Value="Visible"/>
@@ -7044,7 +7034,7 @@ Source="{StaticResource SavingThrowDice}" Opacity="1" Margin="0,52,0,0">
 
                     <ls:FilteringContainer x:Name="FilteringContainerHolder" Margin="4,0,4,0" FilterPredicate="{Binding InventoryPredicate}" Template="{StaticResource FilterHolderTemplate}"
                                            CurrentFilter="{Binding DataContext.CurrentPlayer.UIData.GlobalSelectedFilter, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}, Mode=OneWay}"
-                                           ItemsList="{Binding InventoriesSlots, ElementName=InventoriesMerger}" DefaultViewItemsList="{Binding Inventory.Slots}" MaxDisplayedFilters="7"
+                                           ItemsList="{Binding InventoriesSlots, ElementName=InventoriesMerger}" DefaultViewItemsList="{Binding Inventory.Slots}" MaxDisplayedFilters="12"
                                            SortComparer="{Binding DataContext.Data.InventoryIndexSortComparer, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}">
                         <ls:FilteringContainer.EnumFiltersList>
                             <ls:EnumFilterItem EnumId="gui::EPopularFilters" Label="h977af483ga6d9g4334g9ee0g3b85b94c67db" AlwaysVisible="True" />

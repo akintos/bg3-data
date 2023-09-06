@@ -1,7 +1,7 @@
 {
    "save" : {
       "header" : {
-         "version" : "4.0.9.330"
+         "version" : "4.0.10.301"
       },
       "regions" : {
          "dialog" : {
@@ -1207,6 +1207,14 @@
                                  {
                                     "flag" : [
                                        {
+                                          "UUID" : {"type" : "FixedString", "value" : "7a3b6656-1cac-4967-d085-7db4625a7ae0"},
+                                          "paramval" : {"type" : "int32", "value" : 2},
+                                          "value" : {"type" : "bool", "value" : false}
+                                       }
+                                    ],"type" : {"type" : "FixedString", "value" : "Dialog"}},
+                                 {
+                                    "flag" : [
+                                       {
                                           "UUID" : {"type" : "FixedString", "value" : "dcf4bb90-caf1-079f-d9bb-c51c3463b79e"},"value" : {"type" : "bool", "value" : false}}
                                     ],"type" : {"type" : "FixedString", "value" : "Global"}}
                               ]
@@ -1328,7 +1336,20 @@
                               ]
                            }
                         ],
-                        "setflags" : [ {} ],
+                        "setflags" : [
+                           {
+                              "flaggroup" : [
+                                 {
+                                    "flag" : [
+                                       {
+                                          "UUID" : {"type" : "FixedString", "value" : "7a3b6656-1cac-4967-d085-7db4625a7ae0"},
+                                          "paramval" : {"type" : "int32", "value" : 2},
+                                          "value" : {"type" : "bool", "value" : true}
+                                       }
+                                    ],"type" : {"type" : "FixedString", "value" : "Dialog"}}
+                              ]
+                           }
+                        ],
                         "speaker" : {"type" : "int32", "value" : 2}
                      },
                      {

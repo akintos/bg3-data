@@ -1,7 +1,7 @@
 {
    "save" : {
       "header" : {
-         "version" : "4.0.9.331"
+         "version" : "4.1.0.0"
       },
       "regions" : {
          "dialog" : {
@@ -446,7 +446,7 @@
                                  },
                                  {
                                     "key" : {"type" : "FixedString", "value" : "CustomCineArtKeysPresent"},
-                                    "val" : {"type" : "LSString", "value" : "True"}
+                                    "val" : {"type" : "LSString", "value" : "False"}
                                  },
                                  {
                                     "key" : {"type" : "FixedString", "value" : "CustomLightingPresent"},
@@ -2820,7 +2820,20 @@
                         "ShowOnce" : {"type" : "bool", "value" : true},
                         "Tags" : [ {} ],
                         "UUID" : {"type" : "FixedString", "value" : "89b78c39-2682-aba2-30c9-00531d133df8"},
-                        "checkflags" : [ {} ],
+                        "checkflags" : [
+                           {
+                              "flaggroup" : [
+                                 {
+                                    "flag" : [
+                                       {
+                                          "UUID" : {"type" : "FixedString", "value" : "50e7beca-4e90-43cd-b7c5-c235e236077f"},
+                                          "paramval" : {"type" : "int32", "value" : 1},
+                                          "value" : {"type" : "bool", "value" : false}
+                                       }
+                                    ],"type" : {"type" : "FixedString", "value" : "Tag"}}
+                              ]
+                           }
+                        ],
                         "children" : [
                            {
                               "child" : [
@@ -3794,7 +3807,7 @@
                                  },
                                  {
                                     "key" : {"type" : "FixedString", "value" : "CustomCineArtKeysPresent"},
-                                    "val" : {"type" : "LSString", "value" : "True"}
+                                    "val" : {"type" : "LSString", "value" : "False"}
                                  },
                                  {
                                     "key" : {"type" : "FixedString", "value" : "CustomLightingPresent"},

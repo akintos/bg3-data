@@ -31,7 +31,7 @@
                             </Grid>
                         </Viewbox>
 
-                        <StackPanel x:Name="ControllerHints" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,30">
+                        <StackPanel x:Name="ControllerHints" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,30" Style="{StaticResource  ButtonHint.Container.Center}">
                             <ContentControl x:Name="TurnPage" Template="{StaticResource ButtonHint}" Tag="LeftStickX">
                                 <TextBlock DockPanel.Dock="Left" Text="{Binding Source='hecc6388dgad05g47edg82e1gdaaf3dd759b9',Converter={StaticResource TranslatedStringConverter}}" Style="{StaticResource BtnHint.TextStyle}"/>
                             </ContentControl>
@@ -151,9 +151,10 @@
                                 </ControlTemplate.Resources>
 
                                 <Grid>
-                                    <Control Template="{StaticResource GazetteTemplate}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-
-                                    <StackPanel x:Name="ControllerHints" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,30,30">
+                                    <Viewbox Stretch="Uniform" Height="1900">
+                                        <Control Template="{StaticResource GazetteTemplate}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,-50,0,50" />
+                                    </Viewbox>
+                                    <StackPanel x:Name="ControllerHints" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,30,30">
                                         <ls:LSButton x:Name="PickupBtn" BoundEvent="UIAccept" 
                                             Command="{Binding PickUpCommand}" 
                                             ContentTemplate="{StaticResource ControllerButtonHint}" 

@@ -155,10 +155,16 @@
     <!--Note: This fontsize IS hardcoded because it needs to match the dice art-->
     <Style x:Key="DieTextStyle" TargetType="TextBlock">
         <Setter Property="FontFamily" Value="#Quadraat Offc Pro,pack://application:,,,/GustavNoesisGUI;component/Assets/Fonts/#Quadraat Offc Pro"/>
-        <Setter Property="Foreground" Value="#EEEEEE"/>
+        <Setter Property="Foreground" Value="{Binding RelativeSource={RelativeSource AncestorType=ls:UIWidget},Path=DataContext.CurrentDiceStyle.FontColour}"/>
         <Setter Property="TextAlignment" Value="Center"/>
-        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="FontWeight" Value="DemiBold"/>
         <Setter Property="FontSize" Value="62"/>
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=ls:UIWidget},Path=DataContext.CurrentDiceStyle.FontColour,FallbackValue=''}" Value="">
+                <Setter Property="Foreground" Value="#EEEEEE"/>
+                <Setter Property="FontWeight" Value="Bold"/>
+            </DataTrigger>
+        </Style.Triggers>
     </Style>
 
     <ControlTemplate x:Key="DiceTemplate" TargetType="ContentControl">
@@ -3468,12 +3474,12 @@
                                     <Setter TargetName="advImg" Property="Visibility" Value="Visible" />
                                     <Setter TargetName="AdvantageText" Property="Text" Value="{Binding Source='hfc9b8156g8e4fg4086g9c6cg26dbb03aa466', Converter={StaticResource TranslatedStringConverter}}"/>
                                     <Setter TargetName="AdvantageText" Property="Foreground" Value="{StaticResource LS_bonusTxtColor}"/>
-                                    <Setter TargetName="advImg" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared/ico_advantage.png" />
+                                    <Setter TargetName="advImg" Property="Source" Value="{StaticResource IconAdvantage}" />
                                 </DataTrigger>
                                 <DataTrigger Binding="{Binding Roll.RollAdvantageType}" Value="Disadvantage">
                                     <Setter TargetName="advImg" Property="Visibility" Value="Visible" />
                                     <Setter TargetName="AdvantageText" Property="Text" Value="{Binding Source='h34944186g018cg474dg96d8gd56417c3e086', Converter={StaticResource TranslatedStringConverter}}"/>
-                                    <Setter TargetName="advImg" Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared/ico_disadvantage.png" />
+                                    <Setter TargetName="advImg" Property="Source" Value="{StaticResource IconDisadvantage}" />
                                     <Setter TargetName="AdvantageText" Property="Foreground" Value="{StaticResource LS_alertTxtColor}"/>
                                 </DataTrigger>
                             </ControlTemplate.Triggers>

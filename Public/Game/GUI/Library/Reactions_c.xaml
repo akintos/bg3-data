@@ -34,8 +34,9 @@
     <DataTemplate x:Key="InterruptItemTemplate" DataType="{x:Type ls:VMInterrupt}">
         <ContentControl x:Name="FocusableContent" Style="{StaticResource FocusableContentControlStyle}" ToolTip="{StaticResource ManagedTooltip}" ToolTipService.Placement="Right" ToolTipService.VerticalOffset="0"  ToolTipService.HorizontalOffset="70" Margin="0,0,0,12">
             <DockPanel Margin="20,10" LastChildFill="False">
-                <Rectangle x:Name="Icon" DockPanel.Dock="Left" VerticalAlignment="Center" Width="44" Height="44" Fill="{Binding Icon}"/>
+                <Rectangle x:Name="Icon" DockPanel.Dock="Left" VerticalAlignment="Center" Width="100" Height="100" Fill="{Binding Icon}"/>
                 <Image x:Name="State" DockPanel.Dock="Right" VerticalAlignment="Center" Stretch="None" Source="{StaticResource IconReactionOn}"/>
+                <Image x:Name="StateAsk" Visibility="Collapsed" DockPanel.Dock="Right" VerticalAlignment="Center" Stretch="None" Source="{StaticResource IconReactionAsk}"/>
                 <TextBlock x:Name="Name" DockPanel.Dock="Top" HorizontalAlignment="Stretch" TextAlignment="Left" Margin="20,0" FontSize="{StaticResource ScaledDefaultFontSize}" Text="{Binding Name}"
                            Foreground="{StaticResource LS_accent75TxtColor}" TextTrimming="CharacterEllipsis"/>
                 <StackPanel x:Name="Costs" DockPanel.Dock="Bottom" HorizontalAlignment="Left" Margin="20,0" Orientation="Horizontal">
@@ -63,6 +64,32 @@
             </DockPanel>
         </ContentControl>
         <DataTemplate.Triggers>
+            <DataTrigger Binding="{Binding Ask}" Value="True">
+                <Setter TargetName="StateAsk" Property="Visibility" Value="Visible"/>
+            </DataTrigger>
+
+            <DataTrigger Binding="{Binding Enabled}" Value="False">
+                <Setter TargetName="State" Property="Source" Value="{StaticResource IconReactionOff}"/>
+                <Setter TargetName="Name" Property="Foreground" Value="{StaticResource LS_accent00TxtColor}"/>
+                <Setter TargetName="Icon" Property="Opacity" Value="0.55"/>
+                <Setter TargetName="Icon" Property="Effect">
+                    <Setter.Value>
+                        <ls:SaturationEffect Saturation="0.1"/>
+                    </Setter.Value>
+                </Setter>
+                <Setter TargetName="CostTxt" Property="Foreground" Value="{StaticResource LS_accent00TxtColor}"/>
+                <Setter TargetName="CostsIcons" Property="Opacity" Value="0.5"/>
+                <Setter TargetName="CostFreeTxt" Property="Foreground" Value="{StaticResource LS_accent00TxtColor}"/>
+                <Setter TargetName="FocusableContent" Property="BorderThickness" Value="0"/>
+                <Setter TargetName="StateAsk" Property="Visibility" Value="Collapsed"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding CanUse}" Value="False">
+                <Setter TargetName="State" Property="Source" Value="{StaticResource IconReactionOnDisabled}"/>
+                <Setter TargetName="Icon" Property="Opacity" Value="0.35"/>
+                <Setter TargetName="CostsIcons" Property="Opacity" Value="0.5"/>
+                <Setter TargetName="FocusableContent" Property="BorderThickness" Value="0"/>
+                <Setter TargetName="StateAsk" Property="Visibility" Value="Collapsed"/>
+            </DataTrigger>
             <MultiDataTrigger>
                 <MultiDataTrigger.Conditions>
                     <Condition Binding="{Binding (ls:MoveFocus.IsFocused), ElementName=FocusableContent}" Value="True"/>
@@ -71,31 +98,6 @@
                 <Setter TargetName="Name" Property="Foreground" Value="{StaticResource LS_extraspecialTxtColor}"/>
                 <Setter TargetName="CostTxt" Property="Foreground" Value="{StaticResource LS_accent75TxtColor}"/>
                 <Setter TargetName="CostFreeTxt" Property="Foreground" Value="{StaticResource LS_extraspecialTxtColor}"/>
-            </MultiDataTrigger>
-            <DataTrigger Binding="{Binding Ask}" Value="True">
-                <Setter TargetName="State" Property="Source" Value="{StaticResource IconReactionAsk}"/>
-            </DataTrigger>
-            <DataTrigger Binding="{Binding Enabled}" Value="False">
-                <Setter TargetName="State" Property="Source" Value="{StaticResource IconReactionOff}"/>
-                <Setter TargetName="Name" Property="Foreground" Value="{StaticResource LS_accent00TxtColor}"/>
-                <Setter TargetName="Icon" Property="Opacity" Value="0.35"/>
-                <Setter TargetName="CostTxt" Property="Foreground" Value="{StaticResource LS_accent00TxtColor}"/>
-                <Setter TargetName="CostsIcons" Property="Opacity" Value="0.5"/>
-                <Setter TargetName="CostFreeTxt" Property="Foreground" Value="{StaticResource LS_accent00TxtColor}"/>
-                <Setter TargetName="FocusableContent" Property="BorderThickness" Value="0"/>
-            </DataTrigger>
-            <DataTrigger Binding="{Binding CanUse}" Value="False">
-                <Setter TargetName="State" Property="Source" Value="{StaticResource IconReactionOnDisabled}"/>
-                <Setter TargetName="Icon" Property="Opacity" Value="0.35"/>
-                <Setter TargetName="CostsIcons" Property="Opacity" Value="0.5"/>
-                <Setter TargetName="FocusableContent" Property="BorderThickness" Value="0"/>
-            </DataTrigger>
-            <MultiDataTrigger>
-                <MultiDataTrigger.Conditions>
-                    <Condition Binding="{Binding Ask}" Value="True"/>
-                    <Condition Binding="{Binding CanUse}" Value="False"/>
-                </MultiDataTrigger.Conditions>
-                <Setter TargetName="State" Property="Source" Value="{StaticResource IconReactionAskDisabled}"/>
             </MultiDataTrigger>
             <MultiDataTrigger>
                 <MultiDataTrigger.Conditions>

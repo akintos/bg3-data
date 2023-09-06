@@ -48,6 +48,10 @@
 
     <System:String x:Key="CarouselButtonSoundEvent">UI_HUD_CC_Class_Passive</System:String>
 
+    <System:Single x:Key="RightRotationRate">1.5</System:Single>
+    <System:Single x:Key="LeftRotationRate">-1.5</System:Single>
+    <System:Single x:Key="StopRotationRate">0.0</System:Single>
+
     <ls:LSTooltip x:Key="CCSpellTooltip" Content="{Binding Path=DataContext, RelativeSource={RelativeSource Mode=TemplatedParent}}"/>
     <ls:LSTooltip x:Key="CCSpellRefTooltip" Content="{Binding Path=DataContext.Spell, RelativeSource={RelativeSource Mode=TemplatedParent}}" Visibility="{Binding Path=DataContext.Spell, RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource NullToCollapsedConverter}}"/>
 
@@ -90,6 +94,18 @@
         <Setter Property="Margin" Value="48,0"/>
     </Style>
 
+    <Style x:Key="UpdateStateItemStyle" TargetType="FrameworkElement">
+        <Setter Property="Visibility" Value="Collapsed"/>
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding UpdateState}" Value="New">
+                <Setter Property="Visibility" Value="Visible"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding UpdateState}" Value="Replaced">
+                <Setter Property="Visibility" Value="Visible"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>    
+    
     <Style x:Key="DeityIconStyle" TargetType="Rectangle">
         <Style.Triggers>
             <DataTrigger Binding="{Binding Guid}" Value="182b6754-ca35-436a-a17a-8d30fe8e8179">

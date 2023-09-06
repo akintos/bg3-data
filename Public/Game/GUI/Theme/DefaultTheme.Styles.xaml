@@ -15,10 +15,20 @@
     <System:Double x:Key="MinNarrowTooltipContentWidth">500</System:Double>
     <Thickness x:Key="ExtraPadSpace">0,0,0,0</Thickness>
     <System:Double x:Key="TooltipStripOpacity">0.2</System:Double>
+    <System:Double x:Key="MaxWidthOnCollisionWithImage">550</System:Double>
+    <System:Double x:Key="SurfaceTooltipTextWidth">472</System:Double>
+    <System:Double x:Key="StatTooltipMinWidth">720</System:Double>
+    <System:Double x:Key="consistentIconSpace">56</System:Double>
+    <Thickness x:Key="bounceWarningFrom">0,-15,0,15</Thickness>
+    <Thickness x:Key="bounceWarningTo">0,-25,0,25</Thickness>
+    <System:Double x:Key="MinimumWarningIconSize">48</System:Double>
 
     <System:Double x:Key="TooltipActionIconSize">64</System:Double>
     <System:Double x:Key="TooltipActionIconFrameSize">86</System:Double>
     <System:Double x:Key="IconActionPointSize">48</System:Double>
+
+    <System:Double x:Key="IconStatusSize">48</System:Double>
+    <System:Double x:Key="IconStatusSurroundSize">64</System:Double>
 
     <System:Double x:Key="TurnOrderScale">0.8</System:Double>
 
@@ -42,6 +52,83 @@
     </Style>
 
     <!-- ============== TOOLTIPS ============== -->
+
+    <ImageSource x:Key="IconWarningSoft" >pack://application:,,,/GustavNoesisGUI;component/Assets/Tooltips/ico_warningSoft.png</ImageSource>
+    <ImageSource x:Key="IconWarning" >pack://application:,,,/GustavNoesisGUI;component/Assets/Tooltips/ico_warning.png</ImageSource>
+    <ImageSource x:Key="IconWarningGrey" >pack://application:,,,/GustavNoesisGUI;component/Assets/Tooltips/ico_warningGrey.png</ImageSource>
+    <ImageBrush x:Key="IconBrushWarningSoft" ImageSource="{StaticResource IconWarningSoft}"/>
+    <ImageBrush x:Key="IconBrushWarning" ImageSource="{StaticResource IconWarning}"/>
+    <ImageBrush x:Key="IconBrushWarningGrey" ImageSource="{StaticResource IconWarningGrey}"/>
+    <ImageBrush x:Key="IconGaleConsume" ImageSource="pack://application:,,,/GustavNoesisGUI;component/Assets/Tooltips/ico_galeConsumeTT.png"/>
+
+    <Style x:Key="leftAlignedTooltipIcon" TargetType="Image">
+        <Setter Property="VerticalAlignment" Value="Top"/>
+        <Setter Property="Width" Value="{StaticResource consistentIconSpace}"/>
+        <Setter Property="Margin" Value="0,4,0,0"/>
+    </Style>
+    <Style x:Key="leftAlignedTooltipWarningIcon" TargetType="Image">
+        <Setter Property="VerticalAlignment" Value="Top"/>
+        <Setter Property="Width" Value="{StaticResource consistentIconSpace}"/>
+        <Setter Property="Margin" Value="0,-6,0,0"/>
+    </Style>
+    <Style x:Key="AlertText" TargetType="TextBlock" >
+        <Setter Property="Foreground" Value="{StaticResource TooltipColor.Alert}" />
+        <Setter Property="TextWrapping" Value="Wrap" />
+        <Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
+    </Style>
+    <Style x:Key="DamageIconStyle" TargetType="Image">
+        <Setter Property="Source" Value="{x:Null}"/>
+        <Setter Property="Stretch" Value="Uniform"/>
+        <Setter Property="MaxHeight" Value="38"/>
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding DamageType}" Value="None">
+                <Setter Property="Visibility" Value="Collapsed"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding DamageType}" Value="Slashing">
+                <Setter Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared/ico_dmg_slashing.png"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding DamageType}" Value="Piercing">
+                <Setter Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared/ico_dmg_piercing.png"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding DamageType}" Value="Bludgeoning">
+                <Setter Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared/ico_dmg_blunt.png"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding DamageType}" Value="Acid">
+                <Setter Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared/ico_dmg_acid.png"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding DamageType}" Value="Thunder">
+                <Setter Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared/ico_dmg_thunder.png"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding DamageType}" Value="Necrotic">
+                <Setter Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared/ico_dmg_necrotic.png"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding DamageType}" Value="Fire">
+                <Setter Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared/ico_dmg_fire.png"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding DamageType}" Value="Lightning">
+                <Setter Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared/ico_dmg_lightning.png"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding DamageType}" Value="Cold">
+                <Setter Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared/ico_dmg_cold.png"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding DamageType}" Value="Psychic">
+                <Setter Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared/ico_dmg_psychic.png"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding DamageType}" Value="Poison">
+                <Setter Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared/ico_dmg_poison.png"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding DamageType}" Value="Radiant">
+                <Setter Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared/ico_dmg_radiant.png"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding DamageType}" Value="Force">
+                <Setter Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared/ico_dmg_force.png"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding DamageType}" Value="HealAmount">
+                <Setter Property="Source" Value="pack://application:,,,/GustavNoesisGUI;component/Assets/Shared/ico_healing.png"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
 
     <!-- Base Tooltip Template -->
     <ControlTemplate x:Key="BaseTooltipTemplate" TargetType="ContentControl">
@@ -133,12 +220,35 @@
         <Setter Property="Margin" Value="-36,0,-36,-25"/>
     </Style>
 
+    <!-- This empty style is here so that pad can specify a width for some stat tooltips whilst KBM doesn't require the fixed width-->
+    <Style x:Key="SmallTooltipWidth" TargetType="Grid">
+    </Style>
+
+    <Style x:Key="TooltipBodyStyle" TargetType="TextBlock" BasedOn="{StaticResource TooltipDefaultTextStyle}">
+        <Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="Foreground" Value="{StaticResource TooltipColor.Primary}" />
+        <Style.Triggers>
+            <Trigger Property="Text" Value="{x:Null}">
+                <Setter Property="Visibility" Value="Collapsed" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
     <Style x:Key="TooltipControlTitleStyle" TargetType="Control" >
         <Setter Property="FontFamily" Value="{StaticResource DefaultFont}" />
         <Setter Property="Margin" Value="{StaticResource TitleMargin}"/>
         <Setter Property="FontSize" Value="{StaticResource BigFontSize}" />
         <Setter Property="HorizontalAlignment" Value="Left" />
         <Setter Property="Foreground" Value="{StaticResource TooltipColor.Title}" />
+    </Style>
+
+
+    <Style x:Key="resourcePositioning" TargetType="Grid">
+        <Setter Property="Margin" Value="-10,0,8,0" />
+    </Style>
+    <Style x:Key="IconWarningFloat" TargetType="Image">
+        <Setter Property="Margin" Value="-48,-63,-48,-33" />
     </Style>
 
     <Style x:Key="TooltipTitleStyle" TargetType="TextBlock" BasedOn="{StaticResource TooltipDefaultTextStyle}">
@@ -161,7 +271,6 @@
         <Setter Property="IsHitTestVisible" Value="False" />
         <Setter Property="Margin" Value="0,-85,-95,0" />
         <Setter Property="ls:MeasurementProperties.CalculateMeasures" Value="True" />
-        <Setter Property="OpacityMask" Value="{StaticResource tooltipIconMask}" />
     </Style>
 
     <Style x:Key="roundStatusIcon" TargetType="Ellipse">
@@ -189,7 +298,10 @@
             </MultiDataTrigger>
         </Style.Triggers>
     </Style>
-
+    <Style x:Key="DamageText" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="{StaticResource BigFontSize}" />
+        <Setter Property="Foreground" Value="{StaticResource TooltipColor.Title}" />
+    </Style>
     <Style x:Key="TooltipCtxTransStringDefaultTitleStyle" TargetType="TextBlock" BasedOn="{StaticResource TooltipBaseTextStyle}">
         <Style.Triggers>
             <DataTrigger Binding="{Binding NameCTS.Text}" Value="">
@@ -200,7 +312,9 @@
             </DataTrigger>
         </Style.Triggers>
     </Style>
-
+    <Style x:Key="footerCostsList" TargetType="WrapPanel" >
+        <Setter Property="Orientation" Value="Horizontal" />
+    </Style>
     <Style x:Key="TooltipCtxTransStringTitleStyle" TargetType="TextBlock" BasedOn="{StaticResource TooltipCtxTransStringDefaultTitleStyle}">
         <Setter Property="TextAlignment" Value="Left" />
         <Setter Property="FontSize" Value="{StaticResource BigFontSize}" />
@@ -218,12 +332,60 @@
         <Setter Property="Visibility" Value="Collapsed" />
     </Style>
 
+    <Style x:Key="TooltipBoostIconStyle" TargetType="Rectangle">
+        <Setter Property="Width" Value="64" />
+        <Setter Property="Height" Value="64" />
+    </Style>
+
+    <Style x:Key="TooltipBoostIconBorderStyle" TargetType="Rectangle">
+        <Setter Property="Width" Value="80" />
+        <Setter Property="Height" Value="80" />
+        <Setter Property="StrokeThickness" Value="4" />
+        <Setter Property="Stroke" Value="{StaticResource TooltipColor.Primary}" />
+    </Style>
+
+    <Style x:Key="PropertyIconCost" TargetType="Image">
+        <Setter Property="Width" Value="48" />
+        <Setter Property="Height" Value="48" />
+    </Style>
+    <Style x:Key="leftAlignedEquippedIcon" TargetType="Image">
+        <Setter Property="VerticalAlignment" Value="Top"/>
+        <Setter Property="Width" Value="{StaticResource consistentIconSpace}"/>
+        <Setter Property="Margin" Value="0,2,0,0"/>
+        <Setter Property="Height" Value="44" />
+        <Setter Property="Stretch" Value="Uniform" />
+    </Style>
+    <Style x:Key="TooltipSectionTitleStyle" TargetType="TextBlock" BasedOn="{StaticResource TooltipBodyStyle}">
+        <Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="Foreground" Value="{StaticResource TooltipColor.Secondary}" />
+    </Style>
+
+    <Style x:Key="TooltipBoostIconBorderDashedStyle" TargetType="Rectangle" BasedOn="{StaticResource TooltipBoostIconBorderStyle}">
+        <Setter Property="Opacity" Value="0.5" />
+        <Setter Property="StrokeThickness" Value="2" />
+    </Style>
+
     <Style x:Key="TooltipSubTitleStyle" TargetType="TextBlock" BasedOn="{StaticResource TooltipDefaultTextStyle}">
         <Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
         <Setter Property="TextAlignment" Value="Left" />
         <Setter Property="HorizontalAlignment" Value="Left" />
         <Setter Property="Foreground" Value="{StaticResource TooltipColor.SubTitle}" />
         <Setter Property="Margin" Value="{StaticResource SubtitleMargin}" />
+    </Style>
+
+    <Style x:Key="TooltipSpecialDescriptionStyle" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="{StaticResource MediumFontSize}"/>
+        <Setter Property="FontStyle" Value="Italic"/>
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="Foreground" Value="{StaticResource TooltipColor.Lore}" />
+        <Setter Property="TextWrapping" Value="Wrap" />
+        <Setter Property="ls:MeasurementProperties.CalculateMeasures" Value="True" />
+    </Style>
+
+    <Style x:Key="TooltipBottomTextStyle" TargetType="TextBlock" BasedOn="{StaticResource TooltipDefaultTextStyle}">
+        <Setter Property="Foreground" Value="{StaticResource TooltipColor.Special}" />
+        <Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
     </Style>
 
     <Style x:Key="TooltipSubTitleNoCollapseStyle" TargetType="TextBlock">
@@ -242,6 +404,50 @@
         <Setter Property="Margin" Value="-16,4,0,0" />
         <Setter Property="DockPanel.Dock" Value="Left" />
         <Setter Property="Stretch" Value="None" />
+    </Style>
+
+
+    <Style x:Key="TooltipStringBodyStyle" TargetType="TextBlock" BasedOn="{StaticResource TooltipBaseTextStyle}">
+        <Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="Foreground" Value="{StaticResource TooltipColor.Primary}" />
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding Path=OwnerDCWidget.Data.UIInputMethod, RelativeSource={RelativeSource AncestorType={x:Type ls:LSElementCopy}}}" Value="Controller">
+                <Setter Property="FontWeight" Value="DemiBold"/>
+                <Setter Property="FontSize" Value="{StaticResource SmallishFontSize}"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="TooltipSectionTextStyle" TargetType="TextBlock" BasedOn="{StaticResource TooltipStringBodyStyle}">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding Highlight}" Value="True">
+                <Setter Property="Foreground" Value="{StaticResource TooltipColor.Alert}"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style TargetType="TextBlock" x:Key="SectionDescriptionStyle" BasedOn="{StaticResource TooltipSectionTextStyle}">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding IsOverridden}" Value="True">
+                <Setter Property="Foreground" Value="{StaticResource TooltipColor.PrimaryDisabled}"/>
+            </DataTrigger>
+
+            <DataTrigger Binding="{Binding TypeId}" Value="SoftWarning">
+                <Setter Property="Foreground" Value="{StaticResource TooltipColor.WarningSoft}"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding TypeId}" Value="Warning">
+                <Setter Property="Foreground" Value="{StaticResource TooltipColor.Warning}"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="IconDetailSectionTextStyle" TargetType="TextBlock" BasedOn="{StaticResource SectionDescriptionStyle}">
+        <Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
+        <Setter Property="Foreground" Value="{StaticResource TooltipColor.Keyword}" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="TextAlignment" Value="Left" />
     </Style>
 
     <Style x:Key="TooltipItemRarityTextStyle" TargetType="TextBlock" BasedOn="{StaticResource TooltipTitleStyle}">
@@ -737,6 +943,10 @@
     <ImageSource x:Key="LuckPointSpent">pack://application:,,,/GustavNoesisGUI;component/Assets/Shared/Resources/ico_classRes_luck_spent.png</ImageSource>
     <ImageSource x:Key="LuckPointUnavailable">pack://application:,,,/GustavNoesisGUI;component/Assets/Shared/Resources/ico_classRes_luck_missing.png</ImageSource>
 
+    <ImageSource x:Key="ShadowSpellSlot">pack://application:,,,/GustavNoesisGUI;component/Assets/Shared/Resources/ico_mini_spellSlot_shadow.png</ImageSource>
+    <ImageSource x:Key="ShadowSpellSlotUsed" >pack://application:,,,/GustavNoesisGUI;component/Assets/Shared/Resources/ico_mini_spellSlot_spent.png</ImageSource>
+    <ImageSource x:Key="ShadowSpellSlotUnavailable" >pack://application:,,,/GustavNoesisGUI;component/Assets/Tooltips/ico_spellSlotTT_missing.png</ImageSource>
+
     <ImageSource x:Key="IconMagicDamage" >pack://application:,,,/GustavNoesisGUI;component/Assets/Shared/ico_dmg_magic.png</ImageSource>
     <ImageSource x:Key="IconRange" >pack://application:,,,/GustavNoesisGUI;component/Assets/Tooltips/ico_range.png</ImageSource>
     <ImageSource x:Key="IconRadius" >pack://application:,,,/GustavNoesisGUI;component/Assets/Tooltips/ico_radius.png</ImageSource>
@@ -776,7 +986,12 @@
     <ImageSource x:Key="IconProficiencyArmour" >pack://application:,,,/GustavNoesisGUI;component/Assets/Tooltips/ico_AC.png</ImageSource>
     <ImageSource x:Key="IconUpcast" >pack://application:,,,/GustavNoesisGUI;component/Assets/Shared/ico_upcasting.png</ImageSource>
     <ImageSource x:Key="IconReroll" >pack://application:,,,/GustavNoesisGUI;component/Assets/CombatLog/ico_reroll.png</ImageSource>
-
+    <ImageSource x:Key="IconWeaponProficiency" >pack://application:,,,/GustavNoesisGUI;component/Assets/Tooltips/ico_proficiency.png</ImageSource>
+    <ImageSource x:Key="MagicalProperties" >pack://application:,,,/GustavNoesisGUI;component/Assets/Tooltips/ico_magicalProperties.png</ImageSource>
+    <ImageSource x:Key="IconConsume" >pack://application:,,,/GustavNoesisGUI;component/Assets/Tooltips/ico_consumeTT.png</ImageSource>
+    <ImageSource x:Key="IconEquipped" >pack://application:,,,/GustavNoesisGUI;component/Assets/Shared/ico_EQ_party.png</ImageSource>
+    <ImageSource x:Key="errorFloatBG" >pack://application:,,,/GustavNoesisGUI;component/Assets/Tooltips/errorFloat_d.png</ImageSource>
+    
     <!-- ContextMenuItem Style -->
     <Style x:Key="BaseLSContextMenuItem" TargetType="{x:Type ls:ContextMenuItem}" BasedOn="{StaticResource baseStyle}">
         <Setter Property="Template" >
@@ -824,22 +1039,22 @@
                                     </b:ControlStoryboardAction.Storyboard>
                                 </b:ControlStoryboardAction>
                             </b:EventTrigger>
-                            <b:TimerTrigger EventName="Loaded" MillisecondsPerTick="{Binding (ItemsControl.AlternationIndex), RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ls:ContextMenuItem}}, Converter={StaticResource MultiplierConverter}, ConverterParameter=50}" TotalTicks="1">
+                            <b:TimerTrigger EventName="Loaded" MillisecondsPerTick="{Binding (ItemsControl.AlternationIndex), RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ls:ContextMenuItem}}, Converter={StaticResource MultiplierConverter}, ConverterParameter=16}" TotalTicks="1">
                                 <b:ControlStoryboardAction>
                                     <b:ControlStoryboardAction.Storyboard>
                                         <Storyboard >
                                             <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(TranslateTransform.X)" >
-                                                <EasingDoubleKeyFrame KeyTime="0:0:0.0" Value="-110"/>
-                                                <EasingDoubleKeyFrame KeyTime="0:0:0.30" Value="0">
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.0" Value="-50"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="0">
                                                     <EasingDoubleKeyFrame.EasingFunction>
-                                                        <CubicEase EasingMode="EaseOut"/>
+                                                        <SineEase EasingMode="EaseOut"/>
                                                     </EasingDoubleKeyFrame.EasingFunction>
                                                 </EasingDoubleKeyFrame>
                                             </DoubleAnimationUsingKeyFrames>
 
                                             <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" >
-                                                <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
-                                                <EasingDoubleKeyFrame KeyTime="0:0:0.30" Value="1">
+                                                <EasingDoubleKeyFrame KeyTime="0" Value="0.8"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="1">
                                                     <EasingDoubleKeyFrame.EasingFunction>
                                                         <CubicEase EasingMode="EaseOut"/>
                                                     </EasingDoubleKeyFrame.EasingFunction>
@@ -1023,26 +1238,18 @@
                 <BeginStoryboard >
                     <Storyboard>
                         <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)">
-                            <LinearDoubleKeyFrame KeyTime="0:0:0" Value="0.3" />
-                            <EasingDoubleKeyFrame KeyTime="0:0:0.20" Value="1.0">
+                            <LinearDoubleKeyFrame KeyTime="0:0:0" Value="0.5" />
+                            <EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="1.0">
                                 <EasingDoubleKeyFrame.EasingFunction>
                                     <CubicEase EasingMode="EaseOut"/>
                                 </EasingDoubleKeyFrame.EasingFunction>
                             </EasingDoubleKeyFrame>
                         </DoubleAnimationUsingKeyFrames>
                         <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleY)">
-                            <LinearDoubleKeyFrame KeyTime="0:0:0" Value="0.3" />
-                            <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="1.0">
+                            <LinearDoubleKeyFrame KeyTime="0:0:0" Value="0.5" />
+                            <EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="1.0">
                                 <EasingDoubleKeyFrame.EasingFunction>
                                     <CubicEase EasingMode="EaseOut"/>
-                                </EasingDoubleKeyFrame.EasingFunction>
-                            </EasingDoubleKeyFrame>
-                        </DoubleAnimationUsingKeyFrames>
-                        <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="Opacity">
-                            <LinearDoubleKeyFrame KeyTime="0:0:0" Value="0" />
-                            <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="1.0">
-                                <EasingDoubleKeyFrame.EasingFunction>
-                                    <CubicEase EasingMode="EaseIn"/>
                                 </EasingDoubleKeyFrame.EasingFunction>
                             </EasingDoubleKeyFrame>
                         </DoubleAnimationUsingKeyFrames>
@@ -2235,6 +2442,16 @@
                         <b:EventTrigger EventName="Click" >
                             <b:InvokeCommandAction Command="{Binding DataContext.SelectMapMarker, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" CommandParameter="{Binding .}"/>
                         </b:EventTrigger>
+                        <b:EventTrigger EventName="Click" >
+                            <b:Interaction.Behaviors>
+                                <b:ConditionBehavior>
+                                    <b:ConditionalExpression>
+                                        <b:ComparisonCondition LeftOperand="{Binding Type}" RightOperand="CharacterParty"/>
+                                    </b:ConditionalExpression>
+                                </b:ConditionBehavior>
+                            </b:Interaction.Behaviors>
+                            <b:InvokeCommandAction Command="{Binding DataContext.SelectCharacter, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" CommandParameter="{Binding Path=DataContext.GameObject, RelativeSource={RelativeSource Mode=TemplatedParent}}"/>
+                        </b:EventTrigger>
                     </b:Interaction.Triggers>
                     <Button.RenderTransform>
                         <RotateTransform Angle="{Binding Rotation, RelativeSource={RelativeSource TemplatedParent}}"/>
@@ -2331,6 +2548,18 @@
                             </TransformGroup>
                         </Image.RenderTransform>
                     </Image>
+                    <b:Interaction.Triggers>
+                        <b:EventTrigger EventName="Click" >
+                            <b:Interaction.Behaviors>
+                                <b:ConditionBehavior>
+                                    <b:ConditionalExpression>
+                                        <b:ComparisonCondition LeftOperand="{Binding Type}" RightOperand="CharacterParty"/>
+                                    </b:ConditionalExpression>
+                                </b:ConditionBehavior>
+                            </b:Interaction.Behaviors>
+                            <b:InvokeCommandAction Command="{Binding DataContext.SelectCharacter, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" CommandParameter="{Binding Path=DataContext.GameObject, RelativeSource={RelativeSource Mode=TemplatedParent}}"/>
+                        </b:EventTrigger>
+                    </b:Interaction.Triggers>
                 </Button>
                 <Image x:Name="HeightIndicator" Style="{StaticResource MarkerHeightIndicatorStyle}"/>
                
@@ -2353,6 +2582,18 @@
                             </Ellipse.RenderTransform>
                         </Ellipse>
                     </Canvas>
+                    <b:Interaction.Triggers>
+                        <b:EventTrigger EventName="Click" >
+                            <b:Interaction.Behaviors>
+                                <b:ConditionBehavior>
+                                    <b:ConditionalExpression>
+                                        <b:ComparisonCondition LeftOperand="{Binding Type}" RightOperand="CharacterParty"/>
+                                    </b:ConditionalExpression>
+                                </b:ConditionBehavior>
+                            </b:Interaction.Behaviors>
+                            <b:InvokeCommandAction Command="{Binding DataContext.SelectCharacter, RelativeSource={RelativeSource AncestorType={x:Type ls:UIWidget}}}" CommandParameter="{Binding GameObject}"/>
+                        </b:EventTrigger>
+                    </b:Interaction.Triggers>
                 </Button>
             </Canvas>
         </Canvas>

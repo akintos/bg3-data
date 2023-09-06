@@ -99,6 +99,26 @@
         <Setter Property="TextAlignment" Value="Center"/>
     </Style>
 
+    <Style x:Key="CameraPanningSpeedSliderValueStyle" TargetType="TextBlock">
+        <Setter Property="Margin" Value="0,0,0,100"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="TextAlignment" Value="Center"/>
+        <Setter Property="Visibility" Value="Visible"/>
+        <!-- Default, 'Normal' case, less than 1, greater than -1 -->
+        <Setter Property="Text" Value="{Binding Source='h6311cf93gc2fdg4dbbga861g2c7a44f394d8', Converter={StaticResource TranslatedStringConverter}}"/>
+
+        <Style.Triggers>
+            <!-- 'Slow' case: less than -1 -->
+            <DataTrigger Binding="{Binding Value, Converter={StaticResource LessThanConverter}, ConverterParameter=-1}" Value="True">
+                <Setter Property="Text" Value="{Binding Source='hc71f7bb4g5029g4e4bg9de5g637a4a3e34f7', Converter={StaticResource TranslatedStringConverter}}"/>
+            </DataTrigger>
+            <!-- 'Fast' case: more than 1 -->
+            <DataTrigger Binding="{Binding Value, Converter={StaticResource GreaterThanConverter}, ConverterParameter=1}" Value="True">
+                <Setter Property="Text" Value="{Binding Source='h51157197gd1b8g414bga9b8gd205000c0415', Converter={StaticResource TranslatedStringConverter}}"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
     <Style x:Key="FontSizeSliderValueStyle" BasedOn="{StaticResource FontSizeSliderValueSharedStyle}" TargetType="TextBlock">
         <Setter Property="Margin" Value="0,0,0,100"/>
         <Setter Property="HorizontalAlignment" Value="Center"/>
@@ -138,6 +158,9 @@
             </DataTrigger>
             <DataTrigger Binding="{Binding OptionType}" Value="OVERHEAD_FONT_SIZE">
                 <Setter Property="Style" Value="{StaticResource FontSizeSliderValueStyle}" TargetName="PART_ValueLabel"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding OptionType}" Value="PANNING_SPEED">
+                <Setter Property="Style" Value="{StaticResource CameraPanningSpeedSliderValueStyle}" TargetName="PART_ValueLabel"/>
             </DataTrigger>
             
             <DataTrigger Binding="{Binding OptionType}" Value="UIScaling">
@@ -264,6 +287,35 @@
                 </MultiDataTrigger.Conditions>
                 <Setter Property="Template" Value="{StaticResource PasswordBoxTemplate}" TargetName="content"/>
             </MultiDataTrigger>
+
+            <!-- Sub elements list -->
+            <DataTrigger Binding="{Binding OptionType}" Value="AUTO_SAVES">
+                <Setter Property="Margin" Value="{StaticResource SubOptionMargin}" TargetName="label"/>
+            </DataTrigger>
+
+            <DataTrigger Binding="{Binding OptionType}" Value="PANNING_SPEED">
+                <Setter Property="Margin" Value="{StaticResource SubOptionMargin}" TargetName="label"/>
+            </DataTrigger>
+
+            <DataTrigger Binding="{Binding OptionType}" Value="FRAME_CAP">
+                <Setter Property="Margin" Value="{StaticResource SubOptionMargin}" TargetName="label"/>
+            </DataTrigger>
+
+            <DataTrigger Binding="{Binding OptionType}" Value="SHARPNESS_VALUE">
+                <Setter Property="Margin" Value="{StaticResource SubOptionMargin}" TargetName="label"/>
+            </DataTrigger>
+
+            <DataTrigger Binding="{Binding OptionType}" Value="SHOW_SPEAKER">
+                <Setter Property="Margin" Value="{StaticResource SubOptionMargin}" TargetName="label"/>
+            </DataTrigger>
+
+            <DataTrigger Binding="{Binding OptionType}" Value="TEXT_BACKGROUND_OPACITY">
+                <Setter Property="Margin" Value="{StaticResource SubOptionMargin}" TargetName="label"/>
+            </DataTrigger>
+
+            <DataTrigger Binding="{Binding OptionType}" Value="GAME_CAMERA_AUTO_ROTATION_SPEED">
+                <Setter Property="Margin" Value="{StaticResource SubOptionMargin}" TargetName="label"/>
+            </DataTrigger>
 
             <!-- UI where the options have less room -->
             <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ls:UIWidget}}, Path=ContextName}" Value="Lobby">
@@ -492,7 +544,7 @@
         <StackPanel VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="0,0,0,40">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                 <Image Source="{StaticResource SideDecorations}" Stretch="None" VerticalAlignment="Center" Margin="-20,0"/>
-                <ls:LSButton x:Name="CloseButtonBottom" HorizontalAlignment="Center" Style="{StaticResource BigBrownButtonStyle}" Content="{Binding Source='hfe928c0dgb014g4eb2g8c52g6ed43b026e20', Converter={StaticResource TranslatedStringConverter}}" SoundID="UI_HUD_Options_Close" Command="{Binding CancelCommand}">
+                <ls:LSButton x:Name="CloseButtonBottom" HorizontalAlignment="Center" Style="{StaticResource BigBrownButtonStyle}" Content="{Binding Source='hfe928c0dgb014g4eb2g8c52g6ed43b026e20', Converter={StaticResource TranslatedStringConverter}}" SoundID="UI_HUD_Options_Close" Command="{Binding CustomEvent}" CommandParameter="CloseWidget">
                     <ls:LSButton.Resources>
                         <ImageBrush x:Key="IconNormal" ImageSource="pack://application:,,,/GustavNoesisGUI;component/Assets/Buttons/ico_btn_cross_d.png" Stretch="Fill"/>
                         <ImageBrush x:Key="IconPressed" ImageSource="pack://application:,,,/GustavNoesisGUI;component/Assets/Buttons/ico_btn_cross_d.png" Stretch="Fill"/>

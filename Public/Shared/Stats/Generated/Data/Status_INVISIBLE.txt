@@ -19,6 +19,13 @@ data "RemoveConditions" "(IsStatusEvent(StatusEvent.OnSpellCast) and not HasSpel
 data "StatusGroups" "SG_Invisible;SG_RemoveOnRespec"
 data "StatusEffect" "d26436d4-d019-4dfc-b2f1-da0ac195575f"
 
+new entry "INVISIBLE_MAGEHAND"
+type "StatusData"
+data "StatusType" "INVISIBLE"
+using "INVISIBLE"
+data "StatusPropertyFlags" "UnavailableInActiveRoll;ExcludeFromPortraitRendering;IgnoreResting"
+data "OnRemoveFunctors" "ApplyStatus(MAGEHAND_REST,100,-1)"
+
 new entry "INVISIBILITY"
 type "StatusData"
 data "StatusType" "INVISIBLE"
